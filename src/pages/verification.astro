@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const tokens = [
+  { name: '--color-ivory', value: '#F5F3EE' },
+  { name: '--color-burgundy', value: '#4A1624' },
+  { name: '--color-gold', value: '#AA8B52' },
+  { name: '--color-marian', value: '#6F9EB8' },
+] as const;
+---
+
+<BaseLayout
+  title="Vérification technique"
+  description="Route statique de vérification de la fondation Astro."
+>
+  <section class="mx-auto max-w-6xl px-5 py-14 md:px-8 lg:py-20">
+    <p class="text-sm font-bold tracking-[0.14em] text-gold uppercase">
+      Route Astro native
+    </p>
+    <h1 class="mt-3 text-5xl font-semibold text-burgundy">
+      Vérification technique
+    </h1>
+    <p class="mt-5 max-w-3xl text-lg leading-8 text-muted">
+      Cette URL est générée par le fichier <code
+        >src/pages/verification.astro</code
+      >. Aucun routeur React n’est utilisé.
+    </p>
+
+    <section class="mt-12" aria-labelledby="titre-couleurs">
+      <h2 id="titre-couleurs" class="text-3xl font-semibold text-charcoal">
+        Variables de couleur
+      </h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          tokens.map((token) => (
+            <li class="border border-gold/25 bg-surface p-4">
+              <span
+                class="block h-20 border border-charcoal/10"
+                style={`background-color: var(${token.name})`}
+                aria-hidden="true"
+              />
+              <code class="mt-3 block text-sm font-semibold text-charcoal">
+                {token.name}
+              </code>
+              <span class="text-sm text-muted">{token.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <a class="mt-12 inline-block font-bold text-burgundy" href="/"
+      >Retour à l’accueil</a
+    >
+  </section>
+</BaseLayout>

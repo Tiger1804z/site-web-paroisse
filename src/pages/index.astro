@@ -1,0 +1,55 @@
+---
+import ReactIntegrationCheck from '@/components/ui/ReactIntegrationCheck';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import parishInterior from '@/assets/images/paroisse/interieur-eglise-decor-violet-01.jpg';
+---
+
+<BaseLayout title="Fondation technique">
+  <section class="bg-ivory">
+    <div
+      class="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:px-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:py-20"
+    >
+      <div>
+        <p class="font-script text-4xl text-gold">Bienvenue</p>
+        <h1
+          class="mt-2 text-5xl leading-none font-semibold text-burgundy md:text-6xl"
+        >
+          Fondation du site paroissial
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-8 text-muted">
+          Cette page temporaire confirme l’architecture Astro statique, les
+          styles Tailwind 4, les actifs locaux et l’intégration React. Elle ne
+          constitue pas une migration de la maquette.
+        </p>
+        <a
+          class="mt-8 inline-flex bg-burgundy px-6 py-3 font-semibold text-ivory no-underline hover:bg-burgundy-dark"
+          href="/verification"
+        >
+          Voir la route de vérification
+        </a>
+      </div>
+
+      <figure class="overflow-hidden border border-gold/30 bg-paper">
+        <img
+          class="aspect-4/3 h-auto w-full object-cover"
+          src={parishInterior.src}
+          width={parishInterior.width}
+          height={parishInterior.height}
+          alt="Vue intérieure de l’église avec l’autel et un décor violet"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+        <figcaption class="px-4 py-3 text-sm text-muted">
+          Photographie réelle conservée sans compression ni retouche.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="bg-paper px-5 py-14 md:px-8">
+    <div class="mx-auto max-w-6xl">
+      <ReactIntegrationCheck client:load />
+    </div>
+  </section>
+</BaseLayout>

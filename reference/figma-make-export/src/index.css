@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&family=Allura&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-script: 'Allura', cursive;
+
+  --color-ivory: #F7F2E8;
+  --color-paper: #EFE7DA;
+  --color-burgundy: #501B2A;
+  --color-burgundy-dark: #3A1220;
+  --color-plum: #68405F;
+  --color-brick: #6B4438;
+  --color-wood: #7B4C2F;
+  --color-charcoal: #191716;
+  --color-warm-gray: #746E68;
+  --color-gold: #B49352;
+  --color-rose: #D8B3BE;
+  --color-marian: #6F9EB8;
+}
+
+@layer base {
+  html {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background-color: #F7F2E8;
+    color: #191716;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background-color: #F7F2E8;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #B49352 #EFE7DA;
+  }
+}
+
+@layer utilities {
+  .font-script {
+    font-family: 'Allura', cursive;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .section-padding {
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+
+  @media (min-width: 768px) {
+    .section-padding {
+      padding-top: 140px;
+      padding-bottom: 140px;
+    }
+  }
+
+  .light-beam {
+    background: linear-gradient(180deg, rgba(247,242,232,0) 0%, rgba(247,242,232,0.15) 40%, rgba(247,242,232,0.08) 70%, rgba(247,242,232,0) 100%);
+    width: 1px;
+    position: absolute;
+  }
+}

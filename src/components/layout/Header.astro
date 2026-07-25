@@ -1,0 +1,43 @@
+---
+const navigation = [
+  { href: '/', label: 'Accueil' },
+  { href: '/verification', label: 'Vérification technique' },
+] as const;
+---
+
+<header class="border-b border-gold/25 bg-surface">
+  <div
+    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 md:px-8"
+  >
+    <a
+      class="group leading-tight no-underline"
+      href="/"
+      aria-label="Retour à l’accueil"
+    >
+      <span class="block font-serif text-2xl font-semibold text-burgundy"
+        >Paroisse — nom temporaire</span
+      >
+      <span
+        class="block text-xs font-semibold tracking-[0.16em] text-gold uppercase"
+        >Fondation technique</span
+      >
+    </a>
+
+    <nav aria-label="Navigation principale">
+      <ul class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {
+          navigation.map((item) => (
+            <li>
+              <a
+                class="font-semibold text-charcoal hover:text-burgundy"
+                href={item.href}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

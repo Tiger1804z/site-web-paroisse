@@ -1,0 +1,8 @@
+.astro/
+dist/
+node_modules/
+coverage/
+reference/
+pnpm-lock.yaml
+src/assets/images/
+public/

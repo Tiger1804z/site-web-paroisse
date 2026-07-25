@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page introuvable">
+  <section class="mx-auto max-w-3xl px-5 py-20 text-center md:px-8 lg:py-28">
+    <p class="font-script text-5xl text-gold">404</p>
+    <h1 class="mt-2 text-5xl font-semibold text-burgundy">
+      Cette page semble introuvable
+    </h1>
+    <p class="mt-6 text-lg leading-8 text-muted">
+      La route demandée n’existe pas dans cette fondation technique.
+    </p>
+    <a
+      class="mt-8 inline-flex bg-burgundy px-6 py-3 font-semibold text-ivory no-underline hover:bg-burgundy-dark"
+      href="/"
+    >
+      Retour à l’accueil
+    </a>
+  </section>
+</BaseLayout>

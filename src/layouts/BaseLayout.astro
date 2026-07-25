@@ -1,0 +1,37 @@
+---
+import Footer from '@/components/layout/Footer.astro';
+import Header from '@/components/layout/Header.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Fondation technique du futur site Web de la paroisse.',
+} = Astro.props;
+const siteName = 'Paroisse — nom temporaire';
+const documentTitle = title === siteName ? title : `${title} | ${siteName}`;
+---
+
+<!doctype html>
+<html lang="fr-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{documentTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu-principal">Aller au contenu principal</a
+    >
+    <Header />
+    <main id="contenu-principal">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

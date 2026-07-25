@@ -1,0 +1,10 @@
+{
+  "description": "Offers a modern, responsive website design tailored for a French-speaking Catholic parish in Quebec to enhance community engagement and communication.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
