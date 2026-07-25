@@ -182,9 +182,29 @@ Cette rotation est une divergence demandée par rapport au hero statique du prot
 - annonce masquable et rotation du hero en JavaScript natif minimal;
 - aucun composant React supplémentaire ni bibliothèque d’animation.
 
+## Page Horaires dans S1-T03
+
+- hero de 40 vh et 320 px minimum, recadré sur
+  `autel-decor-rouge-01.jpg`;
+- conteneur de 1280 px et gouttières globales 20/40/80 px;
+- grille principale fluide avec sidebar de 360 px à partir de 1024 px;
+- horaires présentés avec Cormorant Garamond 24 px, séparateurs fins et fonds
+  papier;
+- alertes différenciées par un filet et un pictogramme, jamais uniquement par
+  la couleur;
+- panneaux saisonniers ajoutés avec le même vocabulaire visuel que Figma;
+- FAQ migrée vers `<details>/<summary>` sans JavaScript ni React;
+- CTA de feuillet et secrétariat transformés en liens honnêtes vers des routes
+  existantes;
+- états vides et textes longs prévus dans les composants.
+
+Les contenus sont séparés du design par `SchedulePageData`. Les classes, fonds,
+colonnes et icônes restent dans les composants; les horaires, alertes, périodes
+et libellés résident dans la source de contenu.
+
 ## Limites actuelles
 
-- seule la page d’accueil publique est considérée comme migrée;
+- seules les pages Accueil et Horaires sont considérées comme migrées;
 - l’adresse, le téléphone, le courriel, les horaires, les dates et les réseaux sociaux restent temporaires;
 - les polices distantes pourront être auto-hébergées après vérification des licences;
 - les recadrages sont réalisés par CSS et variantes Astro; les originaux ne sont ni retouchés ni recompressés;

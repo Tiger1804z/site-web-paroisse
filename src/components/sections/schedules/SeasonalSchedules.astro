@@ -1,0 +1,194 @@
+---
+import type { SchedulePeriod } from '@/types/schedule';
+
+interface Props {
+  schedules: readonly SchedulePeriod[];
+}
+
+const { schedules } = Astro.props;
+const activeSchedules = schedules.filter((schedule) => schedule.active);
+---
+
+{
+  activeSchedules.length > 0 && (
+    <section
+      class="seasonal-schedules"
+      aria-labelledby="seasonal-schedules-title"
+    >
+      <h2 id="seasonal-schedules-title">Horaires saisonniers</h2>
+      <div class="seasonal-schedules__list">
+        {activeSchedules.map((schedule) => (
+          <article aria-labelledby={`seasonal-${schedule.id}`}>
+            <div class="seasonal-schedules__heading">
+              <div>
+                <p class="seasonal-schedules__eyebrow">Période particulière</p>
+                <h3 id={`seasonal-${schedule.id}`}>{schedule.title}</h3>
+              </div>
+              {(schedule.validFromLabel || schedule.validUntilLabel) && (
+                <p class="seasonal-schedules__period">
+                  <span>Période</span>
+                  <strong>
+                    {schedule.validFromLabel ?? '[DATE DE DÉBUT]'} au{' '}
+                    {schedule.validUntilLabel ?? '[DATE DE FIN]'}
+                  </strong>
+                </p>
+              )}
+            </div>
+
+            {schedule.description && <p>{schedule.description}</p>}
+
+            {schedule.entries.length > 0 && (
+              <dl class="seasonal-schedules__entries">
+                {schedule.entries.map((entry) => (
+                  <div>
+                    <dt>
+                      {entry.dayLabel}
+                      {entry.note && <small>{entry.note}</small>}
+                    </dt>
+                    <dd>
+                      {entry.times.map((time) => (
+                        <span>
+                          {time.label}
+                          {time.note && <small>{time.note}</small>}
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .seasonal-schedules h2 {
+    margin: 0 0 1.5rem;
+    color: var(--color-charcoal);
+    font-size: clamp(1.75rem, calc(1.471rem + 1.143vw), 2.25rem);
+    font-weight: 600;
+    line-height: 1.16;
+  }
+
+  .seasonal-schedules__list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .seasonal-schedules article {
+    padding: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 24%, transparent);
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-gold) 5%, transparent),
+        transparent 35%
+      ),
+      var(--color-surface);
+  }
+
+  .seasonal-schedules__heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .seasonal-schedules__eyebrow,
+  .seasonal-schedules__period span {
+    margin: 0 0 0.25rem;
+    color: var(--color-wood);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .seasonal-schedules h3 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .seasonal-schedules article > p {
+    max-width: 38rem;
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .seasonal-schedules__period {
+    display: grid;
+    margin: 0;
+    text-align: right;
+  }
+
+  .seasonal-schedules__period strong {
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+  }
+
+  .seasonal-schedules__entries {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .seasonal-schedules__entries > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, auto);
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .seasonal-schedules__entries dt,
+  .seasonal-schedules__entries dd,
+  .seasonal-schedules__entries dd span {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .seasonal-schedules__entries dt {
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+  }
+
+  .seasonal-schedules__entries dd {
+    justify-items: end;
+    margin: 0;
+    color: var(--color-burgundy);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    text-align: right;
+  }
+
+  .seasonal-schedules__entries small {
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 30rem) {
+    .seasonal-schedules__period {
+      text-align: left;
+    }
+
+    .seasonal-schedules__entries > div {
+      grid-template-columns: 1fr;
+    }
+
+    .seasonal-schedules__entries dd {
+      justify-items: start;
+      text-align: left;
+    }
+  }
+</style>

@@ -9,6 +9,21 @@ Elle ne modifie aucune route ni aucun composant public. Le sitemap proposé dans
 [`SITEMAP.md`](./SITEMAP.md) doit être validé avant toute adaptation de la
 navigation.
 
+`S1-T03` migre `/horaires/` et introduit le premier flux de contenu local typé
+préparé pour une source CMS :
+
+```text
+src/data/schedules.ts
+    ↓
+src/lib/content/getSchedulePageData.ts
+    ↓
+frontmatter de src/pages/horaires.astro
+    ↓
+composants Astro typés
+    ↓
+HTML statique
+```
+
 ## Pourquoi Astro
 
 Le site paroissial sera principalement composé de contenu éditorial, d’horaires, d’événements et de renseignements pratiques. Astro produit du HTML statique par défaut, limite le JavaScript envoyé au navigateur et fournit un routage fondé sur les fichiers. Ce modèle favorise la performance, le référencement, la résilience et l’accessibilité.
@@ -54,6 +69,9 @@ La route `/verification/` est interne, marquée `noindex` et absente de la navig
 - `lib/` : fonctions pures et adaptateurs futurs;
 - `types/` : types partagés;
 - `assets/` : actifs traités ou référencés par Astro.
+- `data/` : sources locales temporaires conformes aux contrats internes;
+- `lib/content/` : fonctions d’accès et futurs normaliseurs de contenu;
+- `types/schedule.ts` : contrat interne indépendant de la source CMS.
 
 ### Composants livrés par S1-T01
 
@@ -75,6 +93,22 @@ La route `/verification/` est interne, marquée `noindex` et absente de la navig
 - `lib/site.ts` : identité confirmée partagée entre le layout, le header et le footer.
 
 Les photographies passent par `astro:assets`. `sharp` génère les variantes responsives durant le build; les fichiers source ne sont pas modifiés.
+
+### Composants livrés par S1-T03
+
+- `sections/schedules/SchedulesHero.astro` : hero Figma avec image locale
+  optimisée au build;
+- `BeforeYouVisitBanner.astro` et `ScheduleNotice.astro` : prudence durable et
+  changement activable;
+- `RegularSchedule.astro` et `SeasonalSchedules.astro` : périodes et entrées
+  typées, y compris plusieurs heures par jour;
+- `SpecialCelebrations.astro` : liste et état vide;
+- `ScheduleFaq.astro` : accordéon HTML natif sans JavaScript;
+- `ScheduleSidebar.astro` : feuillets et secrétariat sans faux téléchargement
+  ni coordonnées inventées.
+
+La page appelle seulement `getSchedulePageData()`. Les composants ne connaissent
+ni le fichier local ni le futur fournisseur CMS.
 
 ## Stratégie CSS et fidélité
 
@@ -117,6 +151,13 @@ Le CMS sera intégré comme source de données, pas comme moteur de routage côt
 
 Aucun package CMS n’est installé pendant l’initialisation.
 
+La page Horaires démontre cette frontière avant l’installation du CMS. Une
+future implémentation Sanity de `getSchedulePageData()` exécutera une requête
+GROQ, transmettra sa réponse brute à un normaliseur, puis retournera toujours
+`SchedulePageData`. Une publication Sanity devra déclencher un nouveau build
+pour modifier le HTML statique déployé. Le détail pédagogique est consigné dans
+[`ASTRO_SANITY_SCHEDULES_PREPARATION.md`](./ASTRO_SANITY_SCHEDULES_PREPARATION.md).
+
 ### Architecture du contenu
 
 Les sources sont hiérarchisées ainsi :
@@ -148,7 +189,7 @@ demande, jamais une réservation confirmée.
 
 ## Limites actuelles
 
-- les routes publiques autres que l’accueil restent des placeholders techniques;
+- les routes publiques autres que l’accueil et Horaires restent des placeholders techniques;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;
