@@ -1,0 +1,32 @@
+---
+import AboutClosing from '@/components/sections/about/AboutClosing.astro';
+import AboutHero from '@/components/sections/about/AboutHero.astro';
+import AboutIntroduction from '@/components/sections/about/AboutIntroduction.astro';
+import AboutPrinciples from '@/components/sections/about/AboutPrinciples.astro';
+import ArchitectsSection from '@/components/sections/about/ArchitectsSection.astro';
+import ArchitectureStory from '@/components/sections/about/ArchitectureStory.astro';
+import ParishHistory from '@/components/sections/about/ParishHistory.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getAboutPageData } from '@/lib/content/getAboutPageData';
+
+const aboutPageData = await getAboutPageData();
+---
+
+<BaseLayout
+  title={aboutPageData.seo.title}
+  description={aboutPageData.seo.description}
+  pageClass="about-page"
+  headerVariant="transparent"
+>
+  <AboutHero hero={aboutPageData.hero} />
+  <AboutIntroduction introduction={aboutPageData.introduction} />
+  <ParishHistory history={aboutPageData.history} />
+  <AboutPrinciples principles={aboutPageData.principles} />
+  <ArchitectureStory architecture={aboutPageData.architecture} />
+  {
+    aboutPageData.architects && (
+      <ArchitectsSection architects={aboutPageData.architects} />
+    )
+  }
+  <AboutClosing closing={aboutPageData.closing} />
+</BaseLayout>

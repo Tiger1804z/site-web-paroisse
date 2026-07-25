@@ -8,7 +8,7 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 4. ✅ **Accueil — complété dans S1-T02** : composition Figma, photographies réelles, contenus temporaires explicites, interactions légères et responsive de la route `/`.
 5. ✅ **Audit du contenu et sitemap — complété dans S1-T02.5** : site existant, fiabilité, contradictions, matrice, confirmations et arborescence proposée; aucune nouvelle page publique migrée.
 6. ✅ **Horaires — complété dans S1-T03** : composition Figma, données locales typées, avis et périodes en placeholders, FAQ native et couche d’accès prête pour une future source Sanity.
-7. **Notre paroisse** — migrer la page narrative et ses médias à partir des faits historiques confirmés.
+7. ✅ **Notre paroisse — complété dans S1-T04** : composition narrative Figma, photographies locales, source typée `AboutPageData` et couche d’accès prête pour une future source Sanity. Les faits historiques restent à confirmer éditorialement.
 8. **Première visite** — migrer le parcours rassurant et les FAQ.
 9. **Sacrements et services** — structurer les démarches et préparer les pages de détail.
 10. **Catéchèse** — créer la page durable et prévoir les campagnes d’inscription comme contenus volatils.
@@ -28,4 +28,4 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 24. **Formulaires** — concevoir validation, backend, consentement et courriels.
 25. **Déploiement** — choisir l’hébergeur, le domaine, la CI/CD et l’observabilité.
 
-Prochain ticket recommandé : `S1-T04 — Migrer la page Notre paroisse 1:1 depuis l’export Figma`.
+Prochain ticket recommandé : `S1-T05 — Migrer la page Première visite 1:1 depuis l’export Figma`.

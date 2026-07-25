@@ -4,7 +4,7 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil et Horaires migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires et Notre paroisse migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -15,6 +15,12 @@ Les autres pages complètes, le CMS, les formulaires connectés et le déploieme
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
 de contenu local typé et sa future connexion à Sanity sont expliqués dans
 [docs/ASTRO_SANITY_SCHEDULES_PREPARATION.md](docs/ASTRO_SANITY_SCHEDULES_PREPARATION.md).
+
+La route `/notre-paroisse/` utilise une source locale `AboutPageData`. Les
+textes historiques sont réécrits prudemment et conservent leur statut de
+confirmation. Le futur flux Sanity, Portable Text et les images avec hotspot
+sont expliqués dans
+[docs/ASTRO_SANITY_ABOUT_PREPARATION.md](docs/ASTRO_SANITY_ABOUT_PREPARATION.md).
 
 ## Stack
 
@@ -154,11 +160,11 @@ La CI l’exécute sur les pushes et pull requests visant `main` ou `staging`.
 
 Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Le prochain ticket recommandé est :
 
-`S1-T03 — Migrer la page Horaires 1:1 depuis l’export Figma`
+`S1-T05 — Migrer la page Première visite 1:1 depuis l’export Figma`
 
 ## Volontairement non implémenté
 
-- migration complète des pages autres que l’accueil;
+- migration complète des pages autres que l’accueil, Horaires et Notre paroisse;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;
