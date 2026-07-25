@@ -43,6 +43,23 @@ Un seul import Google Fonts regroupe les trois familles. Ce choix est temporaire
 - photographie utilisée avec une description et des droits vérifiés;
 - composants Astro par défaut, React sur justification.
 
+## Catégories photographiques disponibles
+
+L’inventaire de référence couvre actuellement les catégories suivantes :
+
+- architecture extérieure;
+- nef et intérieur;
+- autel et célébrations;
+- décorations liturgiques;
+- Noël;
+- détails architecturaux;
+- art religieux;
+- plaques historiques.
+
+Ces catégories pourront alimenter plus tard un hero, les pages Notre paroisse et Première visite, une galerie, des événements saisonniers, des sections éditoriales, du contenu historique ainsi que les informations de contact et d’itinéraire. Ce sont des utilisations potentielles seulement : aucune photographie n’est intégrée dans une page pendant le ticket S1-T00.
+
+Les photographies ne doivent pas être intégrées publiquement avant la confirmation des droits du photographe et des autorisations de publication applicables. Lorsqu’une personne est visible, son consentement doit être vérifié séparément.
+
 ## À ne pas figer pendant l’initialisation
 
 - échelle typographique finale;
