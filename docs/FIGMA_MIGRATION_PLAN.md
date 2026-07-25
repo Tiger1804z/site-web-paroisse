@@ -5,7 +5,7 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 1. ✅ **Design system — complété dans S1-T01** : tokens, typographie, espacements, états, contrastes et composants UI fondamentaux.
 2. ✅ **Layout global — complété dans S1-T01** : document, conteneurs, métadonnées minimales, header, navigation responsive et footer partagés.
 3. **Header et footer dans les pages** — les fondations globales sont livrées; vérifier leur contexte, leur état actif et leur fidélité pendant chaque migration de page.
-4. **Accueil** — migrer la composition visuelle et les appels à l’action.
+4. ✅ **Accueil — complété dans S1-T02** : composition Figma, photographies réelles, contenus temporaires explicites, interactions légères et responsive de la route `/`.
 5. **Horaires** — structurer les horaires et avis temporaires.
 6. **Notre paroisse** — migrer la page narrative et ses médias.
 7. **Première visite** — migrer le parcours rassurant et les FAQ.
@@ -23,4 +23,4 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 19. **Formulaires** — concevoir validation, backend, consentement et courriels.
 20. **Déploiement** — choisir l’hébergeur, le domaine, la CI/CD et l’observabilité.
 
-Prochain ticket recommandé : `S1-T02 — Migrer la page d’accueil 1:1 depuis l’export Figma`.
+Prochain ticket recommandé : `S1-T03 — Migrer la page Horaires 1:1 depuis l’export Figma`.

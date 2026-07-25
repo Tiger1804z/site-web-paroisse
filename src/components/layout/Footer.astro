@@ -5,6 +5,7 @@ import {
   primaryNavigation,
   scheduleNavigation,
 } from '@/lib/navigation';
+import { SITE_DESCRIPTOR, SITE_NAME } from '@/lib/site';
 
 interface Props {
   variant?: 'default' | 'compact';
@@ -20,8 +21,8 @@ const currentYear = new Date().getFullYear();
       <div class="site-footer__identity">
         <div class="site-footer__brand">
           <p class="site-footer__welcome">Bienvenue</p>
-          <p class="site-footer__name">[NOM DE LA PAROISSE]</p>
-          <p class="site-footer__descriptor">Paroisse catholique</p>
+          <p class="site-footer__name">{SITE_NAME}</p>
+          <p class="site-footer__descriptor">{SITE_DESCRIPTOR}</p>
         </div>
         <p class="site-footer__statement">
           Un lieu de foi, de paix et de rencontre ouvert à tous, au cœur de
@@ -79,7 +80,8 @@ const currentYear = new Date().getFullYear();
 
     <div class="site-footer__legal">
       <p>
-        © {currentYear} Paroisse [NOM DE LA PAROISSE]. Tous droits réservés.
+        © {currentYear}
+        {SITE_NAME}. Tous droits réservés.
       </p>
       <div class="site-footer__legal-links">
         {

@@ -1,12 +1,12 @@
-# Site Web de la paroisse
+# Site Web de la Paroisse Saint-René-Goupil
 
-Fondation de production du futur site Web d’une paroisse catholique francophone située au Québec.
+Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholique francophone située au Québec.
 
 ## Statut actuel
 
-Le dépôt contient l’initialisation technique, pas le site final. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global et la page d’accueil migrée depuis Figma. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
-Les pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés.
+Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders.
 
 ## Stack
 
@@ -42,7 +42,7 @@ Si `corepack enable` ne peut pas écrire dans l’installation système de Node 
 pnpm install --frozen-lockfile
 ```
 
-Le fichier `pnpm-workspace.yaml` autorise uniquement le script d’installation d’`esbuild`, nécessaire à la construction Astro.
+Le fichier `pnpm-workspace.yaml` autorise uniquement le script d’installation d’`esbuild`. `sharp` utilise ici son binaire précompilé résolu pour Windows; aucun script d’installation supplémentaire n’a dû être autorisé.
 
 ## Démarrage local
 
@@ -128,11 +128,11 @@ La CI l’exécute sur les pushes et pull requests visant `main` ou `staging`.
 
 Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Le prochain ticket recommandé est :
 
-`S1-T01 — Migrer le design system et le layout global depuis l’export Figma`
+`S1-T03 — Migrer la page Horaires 1:1 depuis l’export Figma`
 
 ## Volontairement non implémenté
 
-- migration complète des pages;
+- migration complète des pages autres que l’accueil;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;
