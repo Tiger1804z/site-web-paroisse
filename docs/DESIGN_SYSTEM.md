@@ -202,6 +202,28 @@ Les contenus sont séparés du design par `SchedulePageData`. Les classes, fonds
 colonnes et icônes restent dans les composants; les horaires, alertes, périodes
 et libellés résident dans la source de contenu.
 
+## Identité officielle dans S1-T03.5
+
+Le logo officiel approuvé est documenté dans
+[`BRAND_ASSETS.md`](./BRAND_ASSETS.md). Ses couleurs, proportions et effets ne
+sont jamais recalculés à partir des tokens CSS.
+
+- le header utilise le monogramme recadré à 48 px sur mobile et 56 px dès
+  768 px;
+- les hauteurs existantes de 64 et 80 px sont conservées;
+- une ombre extérieure discrète sépare le symbole d’une photographie, sans fond
+  blanc ni recoloration;
+- le même symbole reste visible dans l’en-tête lorsque le menu mobile est
+  ouvert;
+- le footer utilise le logo complet avec une largeur fluide de 152 à 192 px;
+- les favicons utilisent uniquement le monogramme;
+- chaque lien d’accueil qui ne montre que le symbole possède un nom accessible
+  explicite.
+
+`BrandLogo.astro` centralise les variantes `full` et `mark`. Il génère du HTML
+statique et des sorties PNG responsives avec `astro:assets`; aucun JavaScript
+client ni composant React n’est ajouté.
+
 ## Limites actuelles
 
 - seules les pages Accueil et Horaires sont considérées comme migrées;

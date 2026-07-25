@@ -5,7 +5,8 @@ import {
   primaryNavigation,
   scheduleNavigation,
 } from '@/lib/navigation';
-import { SITE_DESCRIPTOR, SITE_NAME } from '@/lib/site';
+import BrandLogo from '@/components/ui/BrandLogo.astro';
+import { SITE_NAME } from '@/lib/site';
 
 interface Props {
   variant?: 'default' | 'compact';
@@ -19,11 +20,12 @@ const currentYear = new Date().getFullYear();
   <div class="site-container">
     <div class="site-footer__grid">
       <div class="site-footer__identity">
-        <div class="site-footer__brand">
-          <p class="site-footer__welcome">Bienvenue</p>
-          <p class="site-footer__name">{SITE_NAME}</p>
-          <p class="site-footer__descriptor">{SITE_DESCRIPTOR}</p>
-        </div>
+        <BrandLogo
+          class="site-footer__brand"
+          variant="full"
+          linked
+          loading="lazy"
+        />
         <p class="site-footer__statement">
           Un lieu de foi, de paix et de rencontre ouvert à tous, au cœur de
           notre communauté québécoise.
@@ -182,26 +184,10 @@ const currentYear = new Date().getFullYear();
   }
 
   .site-footer__brand {
+    width: clamp(9.5rem, 18vw, 12rem);
     margin-bottom: 1.25rem;
   }
 
-  .site-footer__welcome {
-    margin: 0 0 0.25rem;
-    color: var(--color-gold);
-    font-family: var(--font-script);
-    font-size: 1.875rem;
-    line-height: 1;
-  }
-
-  .site-footer__name {
-    margin: 0;
-    color: var(--color-ivory);
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    line-height: 1.2;
-  }
-
-  .site-footer__descriptor,
   .site-footer__heading,
   .site-footer__office-label {
     color: var(--color-gold);
@@ -209,10 +195,6 @@ const currentYear = new Date().getFullYear();
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-  }
-
-  .site-footer__descriptor {
-    margin: 0.25rem 0 0;
   }
 
   .site-footer__statement {

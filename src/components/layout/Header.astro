@@ -5,7 +5,8 @@ import {
   primaryNavigation,
   scheduleNavigation,
 } from '@/lib/navigation';
-import { SITE_DESCRIPTOR, SITE_NAME } from '@/lib/site';
+import BrandLogo from '@/components/ui/BrandLogo.astro';
+import { SITE_NAME } from '@/lib/site';
 
 interface Props {
   variant?: 'light' | 'transparent';
@@ -28,9 +29,8 @@ const informationIsActive = informationNavigation.some(
 >
   <div class="site-container site-header__container">
     <div class="site-header__inner">
-      <a class="site-identity" href="/">
-        <span class="site-identity__name">{SITE_NAME}</span>
-        <span class="site-identity__descriptor">{SITE_DESCRIPTOR}</span>
+      <a class="site-identity" href="/" aria-label={`Accueil — ${SITE_NAME}`}>
+        <BrandLogo variant="mark" alt="" priority />
       </a>
 
       <nav class="site-header__desktop-nav" aria-label="Navigation principale">
@@ -460,43 +460,29 @@ const informationIsActive = informationNavigation.some(
   }
 
   .site-identity {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    color: inherit;
-    line-height: 1.15;
+    display: inline-flex;
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
-  }
-
-  .site-identity__name {
-    max-width: 9.5rem;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 0.95;
-    letter-spacing: 0.025em;
-    white-space: normal;
-    transition: color var(--duration-normal) var(--ease-editorial);
-  }
-
-  .site-identity__descriptor {
-    color: var(--color-wood);
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transition: color var(--duration-normal) var(--ease-editorial);
-  }
-
-  .site-header[data-variant='light'] .site-identity__name,
-  .site-header[data-scrolled='true'] .site-identity__name {
-    color: var(--color-burgundy);
+    transition:
+      filter var(--duration-normal) var(--ease-editorial),
+      opacity var(--duration-short) var(--ease-editorial);
   }
 
   .site-header[data-variant='transparent'][data-scrolled='false']
-    .site-identity__descriptor {
-    color: color-mix(in srgb, var(--color-ivory) 85%, transparent);
+    .site-identity {
+    filter: drop-shadow(0 1px 5px rgb(28 25 24 / 45%));
+  }
+
+  .site-identity:hover {
+    opacity: 0.9;
+  }
+
+  .site-identity :global(.brand-logo) {
+    width: 100%;
   }
 
   .site-header__desktop-nav,
@@ -579,12 +565,8 @@ const informationIsActive = informationNavigation.some(
     backdrop-filter: none;
   }
 
-  .site-header[data-menu-open='true'] .site-identity__name {
-    color: var(--color-ivory);
-  }
-
-  .site-header[data-menu-open='true'] .site-identity__descriptor {
-    color: var(--color-gold);
+  .site-header[data-menu-open='true'] .site-identity {
+    filter: drop-shadow(0 1px 5px rgb(28 25 24 / 35%));
   }
 
   .site-header[data-menu-open='true'] .site-header__mobile-schedule {
@@ -697,9 +679,9 @@ const informationIsActive = informationNavigation.some(
   }
 
   @media (min-width: 48rem) {
-    .site-identity__name {
-      max-width: 12rem;
-      font-size: 1.125rem;
+    .site-identity {
+      width: 3.5rem;
+      height: 3.5rem;
     }
   }
 
@@ -710,13 +692,6 @@ const informationIsActive = informationNavigation.some(
   }
 
   @media (min-width: 82rem) {
-    .site-identity__name {
-      max-width: none;
-      font-size: 1.25rem;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
     .site-header__desktop-nav,
     .site-header__desktop-actions {
       display: flex;

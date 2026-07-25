@@ -6,6 +6,10 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil et Horaires migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
+Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
+footer et aux favicons. Ses variantes et restrictions sont documentées dans
+[docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
+
 Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
@@ -75,10 +79,12 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 .
 ├── .github/workflows/       # Intégration continue
 ├── docs/                    # Architecture, audit et plans
-├── public/                  # Actifs servis tels quels, vide pour l’instant
+├── public/                  # Favicons servis à des URL stables
 ├── reference/
+│   ├── brand/               # Original officiel du logo, inchangé
 │   └── figma-make-export/   # Copie lisible et inchangée de l’export
 ├── src/
+│   ├── assets/brand/        # Variantes de logo traitées par Astro
 │   ├── assets/images/paroisse/
 │   ├── components/
 │   │   ├── layout/
