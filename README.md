@@ -4,9 +4,9 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global et la page d’accueil migrée depuis Figma. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, la page d’accueil migrée depuis Figma et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
-Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders.
+Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
 
 ## Stack
 
@@ -101,6 +101,22 @@ Une fonctionnalité doit être validée localement avec `pnpm validate` avant d�
 Le prototype vient de `Maquettes site Web paroisse.zip`, généré par Figma Make. Le ZIP original reste hors du dépôt et n’est jamais modifié. Sa copie extraite est conservée sous `reference/figma-make-export/` comme référence visuelle, textuelle et interactive.
 
 Le prototype React/Vite n’est pas l’application de production. Son audit se trouve dans [docs/FIGMA_EXPORT_AUDIT.md](docs/FIGMA_EXPORT_AUDIT.md) et le plan de migration dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md).
+
+## Contenu et sitemap
+
+L’ancien site paroissial a été audité sans copier ses pages ni télécharger ses
+médias. Les documents de référence sont :
+
+- [audit du site existant](docs/LEGACY_SITE_CONTENT_AUDIT.md);
+- [inventaire du contenu](docs/CONTENT_INVENTORY.md);
+- [sitemap proposé](docs/SITEMAP.md);
+- [matrice de migration](docs/CONTENT_MIGRATION_MATRIX.md);
+- [questions de confirmation](docs/PARISH_CONTENT_CONFIRMATION.md).
+
+Le sitemap reste une proposition. Le header, le footer et
+`src/lib/navigation.ts` ne doivent pas être modifiés avant sa validation. Les
+horaires, tarifs, capacités, personnes, événements, inscriptions, annonceurs et
+coordonnées doivent être confirmés par la paroisse avant publication.
 
 ## Photographies
 

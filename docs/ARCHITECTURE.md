@@ -4,6 +4,11 @@
 
 Cette fondation transforme le prototype visuel Figma Make en projet de production maintenable. `S1-T01` livre le système de design et le layout global; `S1-T02` migre la première page publique complète, l’accueil.
 
+`S1-T02.5` ajoute une architecture de contenu issue de l’audit du site existant.
+Elle ne modifie aucune route ni aucun composant public. Le sitemap proposé dans
+[`SITEMAP.md`](./SITEMAP.md) doit être validé avant toute adaptation de la
+navigation.
+
 ## Pourquoi Astro
 
 Le site paroissial sera principalement composé de contenu éditorial, d’horaires, d’événements et de renseignements pratiques. Astro produit du HTML statique par défaut, limite le JavaScript envoyé au navigateur et fournit un routage fondé sur les fichiers. Ce modèle favorise la performance, le référencement, la résilience et l’accessibilité.
@@ -112,10 +117,41 @@ Le CMS sera intégré comme source de données, pas comme moteur de routage côt
 
 Aucun package CMS n’est installé pendant l’initialisation.
 
+### Architecture du contenu
+
+Les sources sont hiérarchisées ainsi :
+
+1. validation datée de la paroisse;
+2. documents officiels approuvés;
+3. inventaire et audit du site existant;
+4. notes extraites des photographies;
+5. export Figma comme référence de structure et de contenu temporaire.
+
+Une information précise trouvée sur l’ancien site ne monte pas automatiquement
+au premier niveau. Les horaires, tarifs, capacités, événements, inscriptions,
+personnes, coordonnées personnelles et partenaires exigent toujours une
+confirmation.
+
+Le futur CMS devra séparer :
+
+- contenu durable : identité, histoire validée, mission et présentation;
+- contenu opérationnel : coordonnées, procédures, équipements et politiques;
+- contenu temporel : horaires saisonniers, événements, pèlerinages, campagnes,
+  fermetures et annonces;
+- contenu relationnel : personnes, groupes, partenaires et annonceurs;
+- documents : feuillets et formulaires approuvés.
+
+Les modèles `Event`, `Pilgrimage`, `CatechesisRegistration` et `Advertiser` sont
+décrits dans `SITEMAP.md`. Ils ne sont pas encore implémentés. La disponibilité
+d’une salle restera vérifiée manuellement; un futur formulaire exprimera une
+demande, jamais une réservation confirmée.
+
 ## Limites actuelles
 
 - les routes publiques autres que l’accueil restent des placeholders techniques;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
+- le sitemap consolidé est une proposition en attente de validation;
+- les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;
 - aucun CMS, formulaire, backend ou déploiement n’est configuré;
 - `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.
