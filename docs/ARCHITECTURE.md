@@ -94,6 +94,31 @@ La route `/verification/` est interne, marquée `noindex` et absente de la navig
 
 Les photographies passent par `astro:assets`. `sharp` génère les variantes responsives durant le build; les fichiers source ne sont pas modifiés.
 
+### Actifs de marque
+
+Le flux du logo officiel sépare trois responsabilités :
+
+```text
+reference/brand/
+    original approuvé et inchangé
+        ↓ recadrage documenté
+src/assets/brand/
+    variantes importables par Astro
+        ↓ astro:assets + Sharp au build
+HTML et fichiers PNG hachés adaptés à l’affichage
+```
+
+Les composants importent seulement `src/assets/brand/`. Astro lit les dimensions
+intrinsèques pendant le build, génère les `srcset` et réserve le ratio dans le
+HTML afin de limiter le layout shift. Les sorties du logo restent en PNG sans
+perte.
+
+Les favicons suivent une autre règle : leurs noms et URL doivent rester
+prévisibles pour les navigateurs. Ils sont donc placés sous `public/` et
+référencés directement depuis `BaseLayout.astro`. Le détail des recadrages,
+empreintes et restrictions se trouve dans
+[`BRAND_ASSETS.md`](./BRAND_ASSETS.md).
+
 ### Composants livrés par S1-T03
 
 - `sections/schedules/SchedulesHero.astro` : hero Figma avec image locale

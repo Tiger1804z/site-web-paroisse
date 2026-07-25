@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import fullLogo from '@/assets/brand/logo-saint-rene-goupil.png';
+import markLogo from '@/assets/brand/logo-mark-srg.png';
+import { SITE_NAME } from '@/lib/site';
+
+interface Props {
+  variant?: 'full' | 'mark';
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  priority?: boolean;
+  linked?: boolean;
+  alt?: string;
+}
+
+const {
+  variant = 'full',
+  class: className,
+  loading = 'lazy',
+  priority = false,
+  linked = false,
+  alt,
+} = Astro.props;
+
+const asset = variant === 'mark' ? markLogo : fullLogo;
+const widths = variant === 'mark' ? [64, 96, 128] : [192, 288, 384];
+const sizes =
+  variant === 'mark'
+    ? '(min-width: 48rem) 56px, 48px'
+    : '(min-width: 48rem) 192px, 168px';
+const imageAlt = alt ?? (linked ? '' : SITE_NAME);
+const imageLoading = priority ? 'eager' : loading;
+---
+
+{
+  linked ? (
+    <a
+      class:list={['brand-logo', className]}
+      data-variant={variant}
+      href="/"
+      aria-label={`Accueil — ${SITE_NAME}`}
+    >
+      <Image
+        class="brand-logo__image"
+        src={asset}
+        alt={imageAlt}
+        format="png"
+        widths={widths}
+        sizes={sizes}
+        loading={imageLoading}
+        decoding="async"
+        fetchpriority={priority ? 'high' : 'auto'}
+      />
+    </a>
+  ) : (
+    <span
+      class:list={['brand-logo', className]}
+      data-variant={variant}
+      aria-hidden={imageAlt === '' ? 'true' : undefined}
+    >
+      <Image
+        class="brand-logo__image"
+        src={asset}
+        alt={imageAlt}
+        format="png"
+        widths={widths}
+        sizes={sizes}
+        loading={imageLoading}
+        decoding="async"
+        fetchpriority={priority ? 'high' : 'auto'}
+      />
+    </span>
+  )
+}
+
+<style>
+  .brand-logo {
+    display: inline-flex;
+    max-width: 100%;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  .brand-logo__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
