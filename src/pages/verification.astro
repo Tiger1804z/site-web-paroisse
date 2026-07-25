@@ -1,56 +1,641 @@
 ---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Divider from '@/components/ui/Divider.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import IconButton from '@/components/ui/IconButton.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+import heroImage from '@/assets/images/paroisse/nef-vue-generale-02.webp';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const tokens = [
-  { name: '--color-ivory', value: '#F5F3EE' },
-  { name: '--color-burgundy', value: '#4A1624' },
-  { name: '--color-gold', value: '#AA8B52' },
-  { name: '--color-marian', value: '#6F9EB8' },
+const colors = [
+  { name: '--color-ivory', value: '#F5F3EE', label: 'Ivory' },
+  { name: '--color-paper', value: '#E8E3DA', label: 'Paper' },
+  { name: '--color-surface', value: '#FCFBF8', label: 'Surface' },
+  { name: '--color-burgundy', value: '#4A1624', label: 'Burgundy' },
+  {
+    name: '--color-burgundy-dark',
+    value: '#2E1019',
+    label: 'Burgundy dark',
+  },
+  { name: '--color-plum', value: '#60445D', label: 'Plum' },
+  { name: '--color-brick', value: '#68433A', label: 'Brick' },
+  { name: '--color-wood', value: '#70452E', label: 'Wood' },
+  { name: '--color-charcoal', value: '#1C1918', label: 'Charcoal' },
+  { name: '--color-muted', value: '#6F6862', label: 'Muted' },
+  { name: '--color-gold', value: '#AA8B52', label: 'Gold' },
+  { name: '--color-rose', value: '#D8B3BE', label: 'Rose' },
+  { name: '--color-marian', value: '#6F9EB8', label: 'Marian' },
 ] as const;
 ---
 
 <BaseLayout
-  title="Vérification technique"
-  description="Route statique de vérification de la fondation Astro."
+  title="Démonstration du design system"
+  description="Page interne de validation du design system et du layout global."
+  pageClass="design-system-page"
+  headerVariant="transparent"
+  noIndex
 >
-  <section class="mx-auto max-w-6xl px-5 py-14 md:px-8 lg:py-20">
-    <p class="text-sm font-bold tracking-[0.14em] text-gold uppercase">
-      Route Astro native
-    </p>
-    <h1 class="mt-3 text-5xl font-semibold text-burgundy">
-      Vérification technique
-    </h1>
-    <p class="mt-5 max-w-3xl text-lg leading-8 text-muted">
-      Cette URL est générée par le fichier <code
-        >src/pages/verification.astro</code
-      >. Aucun routeur React n’est utilisé.
-    </p>
+  <section class="design-hero" aria-labelledby="design-system-title">
+    <img
+      src={heroImage.src}
+      width={heroImage.width}
+      height={heroImage.height}
+      alt="Vue intérieure de l’église orientée vers l’autel"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+    <div class="design-hero__overlay" aria-hidden="true"></div>
+    <div class="design-hero__beams" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <Container class="design-hero__content">
+      <div class="design-hero__copy">
+        <p class="type-script-accent design-hero__script">
+          Lumière & communauté
+        </p>
+        <h1 id="design-system-title" class="type-display-xl">
+          Système de<br />design global
+        </h1>
+        <p class="type-body-large design-hero__description">
+          Démonstration interne des fondations visuelles migrées depuis le
+          prototype Figma Make.
+        </p>
+        <div class="design-hero__actions">
+          <Button href="#palette" variant="light"
+            >Explorer les composants</Button
+          >
+          <Button href="/" variant="dark">Retour à l’accueil</Button>
+        </div>
+      </div>
+    </Container>
+  </section>
 
-    <section class="mt-12" aria-labelledby="titre-couleurs">
-      <h2 id="titre-couleurs" class="text-3xl font-semibold text-charcoal">
-        Variables de couleur
-      </h2>
-      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <section id="palette" class="section-block demo-section">
+    <Container>
+      <SectionHeading eyebrow="Palette de production" headingId="palette-title">
+        Couleurs premium, rôles Figma
+        <p slot="description">
+          Les valeurs évoluent, mais les surfaces claires, les profondeurs
+          bourgogne et charbon et les détails dorés conservent exactement leur
+          rôle dans la composition.
+        </p>
+      </SectionHeading>
+
+      <ul class="color-grid" aria-labelledby="palette-title">
         {
-          tokens.map((token) => (
-            <li class="border border-gold/25 bg-surface p-4">
+          colors.map((color) => (
+            <li class="color-card">
               <span
-                class="block h-20 border border-charcoal/10"
-                style={`background-color: var(${token.name})`}
+                class="color-card__swatch"
+                style={`background-color: var(${color.name})`}
                 aria-hidden="true"
               />
-              <code class="mt-3 block text-sm font-semibold text-charcoal">
-                {token.name}
-              </code>
-              <span class="text-sm text-muted">{token.value}</span>
+              <span class="color-card__label">{color.label}</span>
+              <code>{color.name}</code>
+              <span>{color.value}</span>
             </li>
           ))
         }
       </ul>
-    </section>
+    </Container>
+  </section>
 
-    <a class="mt-12 inline-block font-bold text-burgundy" href="/"
-      >Retour à l’accueil</a
-    >
+  <section class="section-block typography-demo">
+    <Container>
+      <SectionHeading
+        eyebrow="Hiérarchie typographique"
+        headingId="typography-title"
+      >
+        Une voix éditoriale généreuse
+        <p slot="description">
+          Cormorant Garamond porte les titres, Manrope l’information et Allura
+          les rares accents manuscrits.
+        </p>
+      </SectionHeading>
+
+      <div class="type-specimens" aria-labelledby="typography-title">
+        <div>
+          <p class="specimen-label">Display XL · 52–88 px</p>
+          <p class="type-display-xl">La lumière nous rassemble</p>
+        </div>
+        <div>
+          <p class="specimen-label">Display · 48–80 px</p>
+          <p class="type-display">Un lieu ouvert à tous</p>
+        </div>
+        <div>
+          <p class="specimen-label">H1 · 44–60 px</p>
+          <p class="type-h1">Bienvenue dans notre communauté</p>
+        </div>
+        <div>
+          <p class="specimen-label">H2 · 40–60 px</p>
+          <p class="type-h2">Une présence au cœur du quartier</p>
+        </div>
+        <div>
+          <p class="specimen-label">H3 · 28–40 px</p>
+          <p class="type-h3">Célébrer et cheminer ensemble</p>
+        </div>
+        <div>
+          <p class="specimen-label">H4 · 24–28 px</p>
+          <p class="type-h4">Informations pratiques</p>
+        </div>
+        <div class="body-specimen">
+          <p class="specimen-label">Body large · 18–20 px</p>
+          <p class="type-body-large">
+            Une introduction accueillante et lisible accompagne les grandes
+            compositions éditoriales.
+          </p>
+        </div>
+        <div class="body-specimen">
+          <p class="specimen-label">Body · 16–18 px</p>
+          <p class="type-body">
+            Le texte courant conserve un rythme ample pour faciliter la lecture
+            sur tous les écrans.
+          </p>
+        </div>
+        <div>
+          <p class="specimen-label">Eyebrow · 11 px</p>
+          <Eyebrow>Vie communautaire</Eyebrow>
+        </div>
+        <div>
+          <p class="specimen-label">Label · 14 px</p>
+          <p class="type-label">Horaire à confirmer</p>
+        </div>
+        <div>
+          <p class="specimen-label">Accent manuscrit · 36–48 px</p>
+          <p class="type-script-accent script-specimen">Bienvenue</p>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <section id="controls" class="section-block controls-demo">
+    <Container>
+      <SectionHeading
+        eyebrow="Composants fondamentaux"
+        headingId="controls-title"
+      >
+        Actions claires, détails sobres
+        <p slot="description">
+          Les contrôles gardent des angles presque carrés, des filets fins et
+          des transitions de 200 ms.
+        </p>
+      </SectionHeading>
+
+      <div class="controls-grid" aria-labelledby="controls-title">
+        <article class="control-panel">
+          <h3 class="type-h4">Boutons sur fond clair</h3>
+          <div class="control-row">
+            <Button href="/horaires">Principal</Button>
+            <Button href="/notre-paroisse" variant="secondary"
+              >Secondaire</Button
+            >
+            <Button type="button" variant="text">Texte</Button>
+            <Button type="button" disabled>Désactivé</Button>
+          </div>
+        </article>
+
+        <article class="control-panel control-panel--dark">
+          <h3 class="type-h4">Boutons sur fond profond</h3>
+          <div class="control-row">
+            <Button href="/premiere-visite" variant="light">Clair</Button>
+            <Button href="/contact" variant="dark">Contour clair</Button>
+            <IconButton label="Exemple de bouton icône" variant="dark">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  d="m19 9-7 7-7-7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </IconButton>
+          </div>
+        </article>
+
+        <article class="control-panel">
+          <h3 class="type-h4">Liens éditoriaux</h3>
+          <div class="control-row control-row--stack">
+            <TextLink href="/notre-paroisse">Découvrir la paroisse</TextLink>
+            <TextLink href="/contact" showRule={false}
+              >Lien textuel souligné</TextLink
+            >
+          </div>
+        </article>
+
+        <article class="control-panel focus-panel">
+          <h3 class="type-h4">Clavier et focus</h3>
+          <p class="type-body-small">
+            Utilisez la touche Tab : l’anneau bicolore est volontairement plus
+            visible que dans le prototype afin de respecter WCAG AA.
+          </p>
+          <Button data-focus-preview type="button" variant="secondary"
+            >Cible de focus</Button
+          >
+        </article>
+      </div>
+    </Container>
+  </section>
+
+  <section class="section-block structure-demo">
+    <Container>
+      <SectionHeading
+        eyebrow="Structure"
+        headingId="structure-title"
+        align="center"
+      >
+        Conteneurs et séparateurs
+        <p slot="description">
+          La largeur maximale demeure 1280 px et les marges suivent les valeurs
+          20, 40 et 80 px du prototype.
+        </p>
+      </SectionHeading>
+
+      <div class="container-specimens" aria-labelledby="structure-title">
+        <div class="container-specimen">
+          <span>Conteneur principal · 1280 px</span>
+        </div>
+        <Container size="narrow" class="nested-container">
+          <span>Conteneur étroit · 800 px de lecture</span>
+        </Container>
+        <Container size="reading" class="nested-container">
+          <span>Conteneur éditorial · 680 px de lecture</span>
+        </Container>
+      </div>
+
+      <div class="divider-specimens">
+        <Divider />
+        <Divider tone="accent" />
+      </div>
+
+      <div class="header-behavior-note">
+        <Eyebrow>Header global</Eyebrow>
+        <h3 class="type-h3">Transparent sur le hero, ivoire au défilement</h3>
+        <p class="type-body">
+          Remontez au premier écran pour voir l’état photographique. À partir de
+          60 px de défilement, le même composant devient clair et fixe.
+        </p>
+      </div>
+    </Container>
   </section>
 </BaseLayout>
+
+<script>
+  const setupPreview = () => {
+    const query = new URLSearchParams(window.location.search);
+    const preview = query.get('preview');
+    const previewTargets: Record<string, string> = {
+      palette: '#palette',
+      controls: '#controls',
+      footer: '#pied-de-page',
+    };
+
+    window.requestAnimationFrame(() => {
+      if (preview && previewTargets[preview]) {
+        document
+          .querySelector<HTMLElement>(previewTargets[preview])
+          ?.scrollIntoView({
+            block: preview === 'footer' ? 'end' : 'start',
+          });
+      }
+
+      if (query.get('focus') === 'button') {
+        document
+          .querySelector<HTMLElement>('[data-focus-preview]')
+          ?.focus({ preventScroll: true });
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupPreview, { once: true });
+  } else {
+    setupPreview();
+  }
+</script>
+
+<style>
+  .design-hero {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .design-hero > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .design-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      var(--overlay-hero-start),
+      var(--overlay-hero-middle),
+      var(--overlay-hero-end)
+    );
+  }
+
+  .design-hero__beams {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .design-hero__beams span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-ivory) 8%, transparent),
+      transparent
+    );
+  }
+
+  .design-hero__beams span:nth-child(2) {
+    left: 48%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 8%, transparent),
+      transparent
+    );
+  }
+
+  .design-hero__beams span:nth-child(3) {
+    left: 52%;
+  }
+
+  .design-hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100svh;
+    align-items: center;
+    padding-block: calc(var(--header-height) + 3rem) 8rem;
+  }
+
+  .design-hero__copy {
+    max-width: 42.5rem;
+  }
+
+  .design-hero__script {
+    margin: 0 0 0.75rem;
+    color: color-mix(in srgb, var(--color-ivory) 75%, transparent);
+  }
+
+  .design-hero h1 {
+    margin: 0;
+    color: var(--color-ivory);
+  }
+
+  .design-hero__description {
+    max-width: 32.5rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+  }
+
+  .design-hero__actions,
+  .control-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .demo-section,
+  .structure-demo {
+    background: var(--color-ivory);
+  }
+
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: 1rem;
+    margin: 3rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .color-card {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    align-items: center;
+    gap: 0.15rem 1rem;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: 0.75rem;
+  }
+
+  .color-card__swatch {
+    grid-row: span 3;
+    width: 3.5rem;
+    height: 4.5rem;
+    border: 1px solid rgb(28 25 24 / 12%);
+  }
+
+  .color-card__label {
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .color-card code {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .color-card > :last-child {
+    color: var(--color-muted);
+  }
+
+  .typography-demo {
+    background: var(--color-paper);
+  }
+
+  .type-specimens {
+    display: grid;
+    gap: 0;
+    margin-top: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .type-specimens > div {
+    display: grid;
+    gap: 1rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .type-specimens > div > :last-child {
+    margin: 0;
+  }
+
+  .specimen-label {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .body-specimen > :last-child {
+    max-width: 42.5rem;
+  }
+
+  .script-specimen {
+    color: var(--color-wood);
+  }
+
+  .controls-demo {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .controls-demo::before {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 12%, transparent),
+      transparent
+    );
+    content: '';
+    pointer-events: none;
+  }
+
+  .controls-grid {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .control-panel {
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-ivory);
+  }
+
+  .control-panel > h3 {
+    margin: 0;
+  }
+
+  .control-panel--dark {
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .control-panel--dark h3 {
+    color: var(--color-ivory);
+  }
+
+  .control-row--stack {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .focus-panel > p {
+    max-width: 31rem;
+    color: var(--color-muted);
+  }
+
+  .structure-demo {
+    overflow: hidden;
+  }
+
+  .container-specimens {
+    display: grid;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .container-specimen,
+  .nested-container {
+    display: flex;
+    min-height: 5rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-burgundy);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .nested-container {
+    padding-block: 1rem;
+    background: var(--color-surface);
+  }
+
+  .divider-specimens {
+    display: grid;
+    gap: 2rem;
+    margin-block: 4rem;
+  }
+
+  .header-behavior-note {
+    max-width: 42.5rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--color-gold);
+  }
+
+  .header-behavior-note > p {
+    margin-block: 0.75rem 0;
+  }
+
+  .header-behavior-note > .type-body {
+    color: var(--color-muted);
+  }
+
+  @media (min-width: 48rem) {
+    .type-specimens > div {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      align-items: baseline;
+    }
+
+    .controls-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .design-hero__actions :global(.ui-button) {
+      width: 100%;
+    }
+
+    .control-panel {
+      padding: 1.5rem;
+    }
+  }
+</style>

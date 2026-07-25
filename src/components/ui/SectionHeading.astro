@@ -1,0 +1,64 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Eyebrow from './Eyebrow.astro';
+
+type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4';
+type HeadingAlignment = 'start' | 'center';
+type HeadingTone = 'default' | 'light';
+
+type Props = Omit<HTMLAttributes<'div'>, 'class'> & {
+  level?: HeadingLevel;
+  eyebrow?: string;
+  headingId?: string;
+  align?: HeadingAlignment;
+  tone?: HeadingTone;
+  class?: string;
+};
+
+const {
+  level = 'h2',
+  eyebrow,
+  headingId,
+  align = 'start',
+  tone = 'default',
+  class: className,
+  ...attributes
+} = Astro.props;
+
+const HeadingTag = level;
+const hasEyebrowSlot = Astro.slots.has('eyebrow');
+const hasDescription = Astro.slots.has('description');
+---
+
+<div
+  {...attributes}
+  class:list={[
+    'ui-section-heading',
+    `ui-section-heading--${align}`,
+    `ui-section-heading--${tone}`,
+    className,
+  ]}
+>
+  {
+    (eyebrow || hasEyebrowSlot) && (
+      <Eyebrow tone={tone}>{eyebrow || <slot name="eyebrow" />}</Eyebrow>
+    )
+  }
+  <HeadingTag
+    id={headingId}
+    class:list={[
+      'ui-section-heading__title',
+      `type-${level}`,
+      tone === 'light' && 'ui-section-heading__title--light',
+    ]}
+  >
+    <slot />
+  </HeadingTag>
+  {
+    hasDescription && (
+      <div class="ui-section-heading__description">
+        <slot name="description" />
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,49 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type TextLinkTone = 'default' | 'light';
+
+type Props = Omit<HTMLAttributes<'a'>, 'class' | 'href'> & {
+  href: string;
+  tone?: TextLinkTone;
+  showRule?: boolean;
+  class?: string;
+};
+
+const {
+  href,
+  tone = 'default',
+  showRule = true,
+  class: className,
+  target,
+  rel,
+  ...attributes
+} = Astro.props;
+
+const safeRel =
+  target === '_blank'
+    ? [rel, 'noopener', 'noreferrer'].filter(Boolean).join(' ')
+    : rel;
+---
+
+<a
+  {...attributes}
+  class:list={[
+    'ui-text-link',
+    `ui-text-link--${tone}`,
+    !showRule && 'ui-text-link--without-rule',
+    className,
+  ]}
+  href={href}
+  target={target}
+  rel={safeRel}
+>
+  <span class="ui-text-link__label"><slot /></span>
+  {
+    showRule && (
+      <span class="ui-text-link__rule" aria-hidden="true">
+        <span class="ui-text-link__arrow" />
+      </span>
+    )
+  }
+</a>

@@ -1,21 +1,41 @@
 ---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Page introuvable">
-  <section class="mx-auto max-w-3xl px-5 py-20 text-center md:px-8 lg:py-28">
-    <p class="font-script text-5xl text-gold">404</p>
-    <h1 class="mt-2 text-5xl font-semibold text-burgundy">
-      Cette page semble introuvable
-    </h1>
-    <p class="mt-6 text-lg leading-8 text-muted">
-      La route demandée n’existe pas dans cette fondation technique.
-    </p>
-    <a
-      class="mt-8 inline-flex bg-burgundy px-6 py-3 font-semibold text-ivory no-underline hover:bg-burgundy-dark"
-      href="/"
-    >
-      Retour à l’accueil
-    </a>
+<BaseLayout title="Page introuvable" noIndex>
+  <section class="error-page" aria-labelledby="error-title">
+    <Container size="reading">
+      <p class="type-script-accent">404</p>
+      <h1 id="error-title" class="type-h1">Cette page semble introuvable</h1>
+      <p class="type-body-large">
+        La route demandée n’existe pas ou son contenu n’est pas encore
+        disponible.
+      </p>
+      <Button href="/">Retour à l’accueil</Button>
+    </Container>
   </section>
 </BaseLayout>
+
+<style>
+  .error-page {
+    padding-block: var(--space-section);
+    text-align: center;
+  }
+
+  .error-page .type-script-accent {
+    margin: 0;
+    color: var(--color-gold);
+  }
+
+  .error-page h1 {
+    margin: 0.5rem 0 0;
+    color: var(--color-burgundy);
+  }
+
+  .error-page .type-body-large {
+    margin: 1.5rem 0 2rem;
+    color: var(--color-muted);
+  }
+</style>

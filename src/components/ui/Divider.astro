@@ -1,0 +1,33 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type DividerOrientation = 'horizontal' | 'vertical';
+type DividerTone = 'subtle' | 'accent' | 'light';
+
+type Props = Omit<HTMLAttributes<'span'>, 'class'> & {
+  orientation?: DividerOrientation;
+  tone?: DividerTone;
+  decorative?: boolean;
+  class?: string;
+};
+
+const {
+  orientation = 'horizontal',
+  tone = 'subtle',
+  decorative = true,
+  class: className,
+  ...attributes
+} = Astro.props;
+---
+
+<span
+  {...attributes}
+  class:list={[
+    'ui-divider',
+    `ui-divider--${orientation}`,
+    `ui-divider--${tone}`,
+    className,
+  ]}
+  role={decorative ? undefined : 'separator'}
+  aria-orientation={decorative ? undefined : orientation}
+  aria-hidden={decorative ? 'true' : undefined}></span>

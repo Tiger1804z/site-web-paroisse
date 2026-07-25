@@ -6,11 +6,19 @@ import '@/styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  pageClass?: string;
+  headerVariant?: 'light' | 'transparent';
+  footerVariant?: 'default' | 'compact';
+  noIndex?: boolean;
 }
 
 const {
   title,
   description = 'Fondation technique du futur site Web de la paroisse.',
+  pageClass,
+  headerVariant = 'light',
+  footerVariant = 'default',
+  noIndex = false,
 } = Astro.props;
 const siteName = 'Paroisse — nom temporaire';
 const documentTitle = title === siteName ? title : `${title} | ${siteName}`;
@@ -20,18 +28,32 @@ const documentTitle = title === siteName ? title : `${title} | ${siteName}`;
 <html lang="fr-CA">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{documentTitle}</title>
   </head>
-  <body>
+  <body
+    class:list={['site-shell', 'has-mobile-actions', pageClass]}
+    data-header-variant={headerVariant}
+  >
     <a class="skip-link" href="#contenu-principal">Aller au contenu principal</a
     >
-    <Header />
-    <main id="contenu-principal">
+    <Header variant={headerVariant} />
+    <main
+      id="contenu-principal"
+      class:list={{
+        'site-main--light': headerVariant === 'light',
+      }}
+      tabindex="-1"
+    >
       <slot />
     </main>
-    <Footer />
+    <Footer variant={footerVariant} />
   </body>
 </html>

@@ -1,0 +1,81 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type IconButtonVariant = 'ghost' | 'light' | 'dark';
+type ButtonType = 'button' | 'submit' | 'reset';
+type ButtonAttributes = Omit<
+  HTMLAttributes<'button'>,
+  'aria-label' | 'class' | 'disabled' | 'type'
+>;
+
+type Props = ButtonAttributes & {
+  label: string;
+  variant?: IconButtonVariant;
+  href?: string;
+  type?: ButtonType;
+  disabled?: boolean;
+  class?: string;
+  target?: '_self' | '_blank' | '_parent' | '_top';
+  rel?: string;
+};
+
+const {
+  label,
+  variant = 'ghost',
+  href,
+  type = 'button',
+  disabled = false,
+  class: className,
+  target,
+  rel,
+  ...attributes
+} = Astro.props;
+
+const isLink = typeof href === 'string';
+const safeRel =
+  target === '_blank'
+    ? [rel, 'noopener', 'noreferrer'].filter(Boolean).join(' ')
+    : rel;
+const classes = [
+  'ui-icon-button',
+  `ui-icon-button--${variant}`,
+  disabled && 'is-disabled',
+  className,
+];
+---
+
+{
+  isLink && !disabled ? (
+    <a
+      {...attributes}
+      class:list={classes}
+      href={href}
+      aria-label={label}
+      target={target}
+      rel={safeRel}
+    >
+      <slot />
+    </a>
+  ) : isLink ? (
+    <span
+      {...attributes}
+      class:list={classes}
+      role="link"
+      aria-label={label}
+      aria-disabled="true"
+      data-disabled-link
+    >
+      <slot />
+    </span>
+  ) : (
+    <button
+      {...attributes}
+      class:list={classes}
+      type={type}
+      disabled={disabled}
+      aria-label={label}
+    >
+      <slot />
+    </button>
+  )
+}
