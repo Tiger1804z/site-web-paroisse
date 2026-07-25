@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type EyebrowTag = 'p' | 'span' | 'div';
+type EyebrowTone = 'default' | 'light' | 'muted';
+
+type Props = Omit<HTMLAttributes<'p'>, 'class'> & {
+  as?: EyebrowTag;
+  tone?: EyebrowTone;
+  class?: string;
+};
+
+const {
+  as = 'p',
+  tone = 'default',
+  class: className,
+  ...attributes
+} = Astro.props;
+const Tag = as;
+---
+
+<Tag
+  {...attributes}
+  class:list={['ui-eyebrow', 'type-eyebrow', `ui-eyebrow--${tone}`, className]}
+>
+  <slot />
+</Tag>
