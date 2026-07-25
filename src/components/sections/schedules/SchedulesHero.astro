@@ -1,0 +1,113 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { ScheduleHero } from '@/types/schedule';
+
+interface Props {
+  hero: ScheduleHero;
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="schedules-hero" aria-labelledby="schedules-hero-title">
+  <div class="schedules-hero__media">
+    <Image
+      src={heroImage}
+      alt={hero.imageAlt}
+      widths={[640, 960, 1360, 1920]}
+      sizes="100vw"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="schedules-hero__overlay" aria-hidden="true"></div>
+
+  <Container class="schedules-hero__content">
+    <div class="schedules-hero__copy">
+      <Eyebrow tone="light">{hero.eyebrow}</Eyebrow>
+      <h1 id="schedules-hero-title" class="type-h1">{hero.title}</h1>
+      <p class="type-body-large">{hero.introduction}</p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .schedules-hero {
+    position: relative;
+    min-height: 20rem;
+    height: 40vh;
+    overflow: hidden;
+    background: var(--color-burgundy-dark);
+    color: var(--color-ivory);
+  }
+
+  .schedules-hero__media,
+  .schedules-hero__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .schedules-hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 44%;
+  }
+
+  .schedules-hero__overlay {
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-burgundy) 82%, transparent) 0%,
+        color-mix(in srgb, var(--color-burgundy) 70%, transparent) 52%,
+        color-mix(in srgb, var(--color-burgundy-dark) 58%, transparent) 100%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-charcoal) 18%, transparent),
+        color-mix(in srgb, var(--color-charcoal) 35%, transparent)
+      );
+  }
+
+  .schedules-hero__content {
+    position: relative;
+    display: flex;
+    height: 100%;
+    align-items: flex-end;
+    padding-block: calc(var(--header-height) + 1.5rem) 3.5rem;
+  }
+
+  .schedules-hero__copy {
+    max-width: 52rem;
+  }
+
+  .schedules-hero h1 {
+    margin: 0.75rem 0 0;
+    color: var(--color-ivory);
+  }
+
+  .schedules-hero p:last-child {
+    max-width: 33.75rem;
+    margin: 0.75rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 76%, transparent);
+  }
+
+  @media (max-width: 47.999rem) {
+    .schedules-hero {
+      min-height: 22rem;
+      height: 46svh;
+    }
+
+    .schedules-hero__media :global(img) {
+      object-position: 54% 45%;
+    }
+
+    .schedules-hero__content {
+      padding-bottom: 2.75rem;
+    }
+  }
+</style>

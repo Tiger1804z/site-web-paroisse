@@ -1,0 +1,141 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+import type { BeforeYouVisitContent } from '@/types/schedule';
+
+interface Props {
+  content: BeforeYouVisitContent;
+  lastUpdatedLabel: string;
+}
+
+const { content, lastUpdatedLabel } = Astro.props;
+---
+
+<section
+  class="visit-banner"
+  aria-labelledby="visit-banner-title"
+  data-visit-banner
+>
+  <Container>
+    <div class="visit-banner__inner">
+      <svg
+        class="visit-banner__icon"
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+        <path
+          d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+
+      <div class="visit-banner__copy">
+        <h2 id="visit-banner-title">{content.title}</h2>
+        <p>{content.message}</p>
+        <p class="visit-banner__updated">
+          <span>Dernière mise à jour</span>
+          <strong>{lastUpdatedLabel}</strong>
+        </p>
+      </div>
+
+      <div class="visit-banner__actions">
+        <Button href={content.contactLink.href} variant="secondary">
+          {content.contactLink.label}
+        </Button>
+        <TextLink href={content.bulletinLink.href} showRule={false}>
+          {content.bulletinLink.label}
+        </TextLink>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .visit-banner {
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: var(--color-paper);
+  }
+
+  .visit-banner__inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+    align-items: start;
+    padding-block: 1.25rem;
+  }
+
+  .visit-banner__icon {
+    margin-top: 0.2rem;
+    color: var(--color-wood);
+  }
+
+  .visit-banner__copy h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .visit-banner__copy > p {
+    max-width: 42.5rem;
+    margin: 0.25rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .visit-banner__updated {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+  }
+
+  .visit-banner__updated span {
+    color: var(--color-muted);
+  }
+
+  .visit-banner__updated strong {
+    color: var(--color-burgundy);
+  }
+
+  .visit-banner__actions {
+    display: flex;
+    grid-column: 2;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+  }
+
+  @media (min-width: 64rem) {
+    .visit-banner__inner {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
+    .visit-banner__actions {
+      grid-column: auto;
+      justify-content: flex-end;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .visit-banner__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .visit-banner__actions :global(.ui-button),
+    .visit-banner__actions :global(.ui-text-link) {
+      width: 100%;
+    }
+  }
+</style>

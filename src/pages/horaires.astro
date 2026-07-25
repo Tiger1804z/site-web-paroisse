@@ -1,0 +1,91 @@
+---
+import BeforeYouVisitBanner from '@/components/sections/schedules/BeforeYouVisitBanner.astro';
+import RegularSchedule from '@/components/sections/schedules/RegularSchedule.astro';
+import ScheduleFaq from '@/components/sections/schedules/ScheduleFaq.astro';
+import ScheduleNotice from '@/components/sections/schedules/ScheduleNotice.astro';
+import ScheduleSidebar from '@/components/sections/schedules/ScheduleSidebar.astro';
+import SchedulesHero from '@/components/sections/schedules/SchedulesHero.astro';
+import SeasonalSchedules from '@/components/sections/schedules/SeasonalSchedules.astro';
+import SpecialCelebrations from '@/components/sections/schedules/SpecialCelebrations.astro';
+import Container from '@/components/ui/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getSchedulePageData } from '@/lib/content/getSchedulePageData';
+
+const schedulePageData = await getSchedulePageData();
+---
+
+<BaseLayout
+  title="Horaires et célébrations"
+  description="Consultez les horaires des messes et les changements liés aux célébrations spéciales de la Paroisse Saint-René-Goupil."
+  pageClass="schedules-page"
+  headerVariant="light"
+>
+  <SchedulesHero hero={schedulePageData.hero} />
+  <BeforeYouVisitBanner
+    content={schedulePageData.beforeYouVisit}
+    lastUpdatedLabel={schedulePageData.lastUpdatedLabel}
+  />
+
+  <section class="schedules-content" aria-label="Horaires de la paroisse">
+    <Container>
+      <div class="schedules-layout">
+        <div class="schedules-layout__main">
+          <ScheduleNotice notice={schedulePageData.notice} />
+          <RegularSchedule
+            period={schedulePageData.regularSchedule}
+            lastUpdatedLabel={schedulePageData.lastUpdatedLabel}
+          />
+          <SeasonalSchedules schedules={schedulePageData.seasonalSchedules} />
+          <SpecialCelebrations
+            celebrations={schedulePageData.specialCelebrations}
+            emptyMessage={schedulePageData.specialCelebrationsEmptyMessage}
+          />
+          <ScheduleFaq items={schedulePageData.faq} />
+        </div>
+
+        <ScheduleSidebar content={schedulePageData.sidebar} />
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
+
+<style>
+  :global(body.schedules-page .site-main--light) {
+    padding-top: 0;
+  }
+
+  .schedules-content {
+    padding-block: 4rem 6rem;
+    background: var(--color-ivory);
+  }
+
+  .schedules-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .schedules-layout__main {
+    display: grid;
+    gap: 3.5rem;
+    min-width: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .schedules-content {
+      padding-block: 5rem 7rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .schedules-content {
+      padding-block: 6rem;
+    }
+
+    .schedules-layout {
+      grid-template-columns: minmax(0, 1fr) 22.5rem;
+      gap: 3rem;
+    }
+  }
+</style>
