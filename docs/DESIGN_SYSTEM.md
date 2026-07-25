@@ -2,9 +2,9 @@
 
 ## Statut
 
-La fondation globale a été migrée pendant `S1-T01`. L’export Figma Make demeure la source de vérité pour la composition, les proportions, les espacements et les comportements. La seule divergence esthétique volontaire est la palette premium de production. La cartographie détaillée des valeurs observées se trouve dans [`FIGMA_DESIGN_MAPPING.md`](./FIGMA_DESIGN_MAPPING.md).
+La fondation globale a été migrée pendant `S1-T01` et la page d’accueil pendant `S1-T02`. L’export Figma Make demeure la source de vérité pour la composition, les proportions, les espacements et les comportements. La seule divergence esthétique volontaire commune à toutes les pages est la palette premium de production. Les cartographies détaillées se trouvent dans [`FIGMA_DESIGN_MAPPING.md`](./FIGMA_DESIGN_MAPPING.md) et [`FIGMA_HOMEPAGE_MAPPING.md`](./FIGMA_HOMEPAGE_MAPPING.md).
 
-Ce ticket stabilise les fondations partagées; il ne valide pas encore le rendu définitif de chaque page publique.
+Le rendu de l’accueil est maintenant migré; les autres pages publiques restent à traiter séparément.
 
 ## Sources et implémentation
 
@@ -146,7 +146,21 @@ Ces corrections ne modifient ni la composition éditoriale, ni la hiérarchie, n
 
 Les catégories disponibles sont : architecture extérieure, nef et intérieur, autel et célébrations, décorations liturgiques, Noël, détails architecturaux, art religieux et plaques historiques.
 
-Elles pourront alimenter plus tard les héros, Notre paroisse, Première visite, la galerie, les événements saisonniers, les sections éditoriales, l’histoire, le contact et l’itinéraire. Aucune image ne doit être publiée avant confirmation des droits du photographe et des autorisations applicables; le consentement des personnes visibles doit être vérifié séparément.
+L’accueil emploie des variantes générées par `astro:assets`, sans modifier les originaux. Le hero présente au maximum trois vues architecturales sans personne : `autel-decor-rouge-01.jpg` en premier, `interieur-eglise-decor-violet-01.jpg` et `autel-fleurs-blanches-01.jpg`. Les autres sections utilisent seulement des médias inventoriés; les images associées aux événements et groupes sont explicitement illustratives.
+
+Aucune image ne doit être mise en ligne avant confirmation des droits du photographe et des autorisations applicables; le consentement des personnes visibles doit être vérifié séparément. Cette réserve vaut aussi lorsque personne n’apparaît dans le cadre.
+
+### Mouvement du hero de l’accueil
+
+- rotation de trois images toutes les 8 secondes;
+- fondu croisé de 1,4 seconde, sans déplacement horizontal;
+- zoom cinématographique limité à `scale(1.03)`;
+- indicateurs accessibles de 48 px et cadence réinitialisée après une sélection;
+- texte, actions, carte d’horaires et header fixes;
+- recadrages distincts sur mobile et desktop pour préserver l’axe architectural;
+- avec `prefers-reduced-motion`, première image fixe, sans zoom ni rotation.
+
+Cette rotation est une divergence demandée par rapport au hero statique du prototype; la composition du contenu demeure inchangée.
 
 ## Validation de S1-T01
 
@@ -158,10 +172,20 @@ Elles pourront alimenter plus tard les héros, Notre paroisse, Première visite,
 - aucune exception JavaScript, erreur console ou réponse locale HTTP en erreur;
 - captures conservées uniquement dans le dossier temporaire de la machine, jamais dans Git.
 
-## Limites du ticket
+## Validation de S1-T02
 
-- aucune page publique complète n’est considérée comme migrée;
-- l’identité, l’adresse, le téléphone, le courriel et les réseaux sociaux sont temporaires;
+- accueil découpé selon les dix sections observées dans `Home.tsx`;
+- fonds, grilles, proportions, hiérarchie typographique et ordre responsive conservés;
+- vrais liens Astro à la place du faux routage React;
+- contenus non confirmés conservés entre crochets;
+- CTA de feuillet ajusté pour ne pas annoncer un téléchargement inexistant;
+- annonce masquable et rotation du hero en JavaScript natif minimal;
+- aucun composant React supplémentaire ni bibliothèque d’animation.
+
+## Limites actuelles
+
+- seule la page d’accueil publique est considérée comme migrée;
+- l’adresse, le téléphone, le courriel, les horaires, les dates et les réseaux sociaux restent temporaires;
 - les polices distantes pourront être auto-hébergées après vérification des licences;
-- le recadrage et l’optimisation des photographies restent hors périmètre;
-- les composants seront confrontés à chaque contexte réel pendant les tickets de pages.
+- les recadrages sont réalisés par CSS et variantes Astro; les originaux ne sont ni retouchés ni recompressés;
+- les composants globaux continueront d’être confrontés à chaque contexte réel pendant les tickets de pages.

@@ -1,0 +1,216 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+---
+
+<section
+  class="practical-services section-block"
+  aria-labelledby="practical-services-title"
+>
+  <Container>
+    <div class="practical-services__heading">
+      <Eyebrow>Services paroissiaux</Eyebrow>
+      <h2 id="practical-services-title" class="type-h2">À votre service</h2>
+    </div>
+
+    <div class="practical-services__grid">
+      <a class="service-panel service-panel--light" href="/friperie">
+        <span class="service-panel__motif" aria-hidden="true"></span>
+        <span class="service-panel__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <h3>La friperie</h3>
+        <p>
+          Donnez une seconde vie aux objets et découvrez nos ventes spéciales.
+        </p>
+        <span class="service-panel__link">
+          Découvrir la friperie
+          <span aria-hidden="true"></span>
+        </span>
+      </a>
+
+      <a class="service-panel service-panel--dark" href="/location-de-salle">
+        <span class="service-panel__motif" aria-hidden="true"></span>
+        <span class="service-panel__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <h3>Location de salle</h3>
+        <p>Informez-vous sur la disponibilité et les modalités de location.</p>
+        <span class="service-panel__link">
+          Demander de l’information
+          <span aria-hidden="true"></span>
+        </span>
+      </a>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .practical-services {
+    background: var(--color-ivory);
+  }
+
+  .practical-services__heading {
+    margin-bottom: 3.5rem;
+    text-align: center;
+  }
+
+  .practical-services__heading :global(.ui-eyebrow) {
+    color: var(--color-wood);
+  }
+
+  .practical-services h2 {
+    margin: 0.75rem 0 0;
+    color: var(--color-charcoal);
+  }
+
+  .practical-services__grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .service-panel {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 2rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .service-panel--light {
+    background: var(--color-paper);
+    color: var(--color-charcoal);
+  }
+
+  .service-panel--light:hover {
+    background: color-mix(
+      in srgb,
+      var(--color-paper) 82%,
+      var(--color-surface)
+    );
+  }
+
+  .service-panel--dark {
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .service-panel--dark:hover {
+    background: color-mix(
+      in srgb,
+      var(--color-charcoal) 92%,
+      var(--color-plum)
+    );
+  }
+
+  .service-panel__motif {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 0 0 0 100%;
+    background: color-mix(in srgb, var(--color-gold) 6%, transparent);
+  }
+
+  .service-panel__icon {
+    position: relative;
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    background: color-mix(in srgb, var(--color-gold) 20%, transparent);
+    color: var(--color-gold);
+  }
+
+  .service-panel h3 {
+    position: relative;
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .service-panel > p {
+    position: relative;
+    max-width: 34rem;
+    margin: 1rem 0 2rem;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .service-panel--light > p {
+    color: var(--color-muted);
+  }
+
+  .service-panel--dark > p {
+    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
+  }
+
+  .service-panel__link {
+    position: relative;
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+  }
+
+  .service-panel--dark .service-panel__link {
+    color: var(--color-gold);
+  }
+
+  .service-panel__link > span {
+    width: 2rem;
+    height: 1px;
+    background: currentColor;
+    transition: width var(--duration-short) var(--ease-editorial);
+  }
+
+  .service-panel:hover .service-panel__link > span {
+    width: 3rem;
+  }
+
+  @media (min-width: 48rem) {
+    .practical-services__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .service-panel {
+      padding: 2.5rem;
+    }
+  }
+</style>

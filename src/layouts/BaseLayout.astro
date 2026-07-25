@@ -1,11 +1,13 @@
 ---
 import Footer from '@/components/layout/Footer.astro';
 import Header from '@/components/layout/Header.astro';
+import { SITE_NAME } from '@/lib/site';
 import '@/styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
+  titleOrder?: 'page-first' | 'site-first';
   pageClass?: string;
   headerVariant?: 'light' | 'transparent';
   footerVariant?: 'default' | 'compact';
@@ -14,14 +16,19 @@ interface Props {
 
 const {
   title,
-  description = 'Fondation technique du futur site Web de la paroisse.',
+  description = 'Site Web de la Paroisse Saint-René-Goupil.',
+  titleOrder = 'page-first',
   pageClass,
   headerVariant = 'light',
   footerVariant = 'default',
   noIndex = false,
 } = Astro.props;
-const siteName = 'Paroisse — nom temporaire';
-const documentTitle = title === siteName ? title : `${title} | ${siteName}`;
+const documentTitle =
+  title === SITE_NAME
+    ? title
+    : titleOrder === 'site-first'
+      ? `${SITE_NAME} | ${title}`
+      : `${title} | ${SITE_NAME}`;
 ---
 
 <!doctype html>

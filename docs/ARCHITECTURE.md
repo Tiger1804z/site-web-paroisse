@@ -2,7 +2,7 @@
 
 ## Objectif et état
 
-Cette fondation transforme le prototype visuel Figma Make en projet de production maintenable. `S1-T01` livre le système de design et le layout global sans entreprendre la migration complète d’une page publique.
+Cette fondation transforme le prototype visuel Figma Make en projet de production maintenable. `S1-T01` livre le système de design et le layout global; `S1-T02` migre la première page publique complète, l’accueil.
 
 ## Pourquoi Astro
 
@@ -36,6 +36,8 @@ Chaque fichier de `src/pages/` devient une route :
 
 Les destinations sont centralisées dans `src/lib/navigation.ts`. Elles emploient des URL françaises, stables et lisibles; aucune navigation n’utilise un état React simulé. Chaque placeholder sera remplacé par un fichier de page dédié dans son ticket. React Router ne sera pas ajouté.
 
+L’accueil assemble ses sections depuis `src/components/sections/home/`. Ce découpage suit les grandes compositions de `Home.tsx` sans transformer les petits fragments éditoriaux en abstractions inutiles. Les données restent statiques et explicitement temporaires jusqu’à l’arrivée du CMS.
+
 La route `/verification/` est interne, marquée `noindex` et absente de la navigation publique. Elle rassemble les couleurs, la typographie, les contrôles, les conteneurs et les états globaux nécessaires aux revues visuelles. Ses paramètres `preview`, `header`, `menu` et `focus` rendent les états de capture déterministes; ils n’ont aucun effet sur les autres routes. `noindex` n’est pas un contrôle d’accès : cette route ne doit pas être déployée avec sa photographie tant que les droits ne sont pas confirmés.
 
 ## Organisation des composants
@@ -58,6 +60,17 @@ La route `/verification/` est interne, marquée `noindex` et absente de la navig
 
 `BaseLayout` expose volontairement peu de propriétés : `title`, `description`, `pageClass`, `headerVariant`, `footerVariant` et `noIndex`. Un système SEO complet est différé jusqu’à la connaissance du domaine et des contenus officiels.
 
+### Composants livrés par S1-T02
+
+- `sections/home/HomeHero.astro` : hero photographique, carte d’horaires et rotation accessible;
+- `ImportantNotice.astro` et `WelcomeSection.astro` : annonce locale et composition éditoriale;
+- `MassSchedulePreview.astro` et `UpcomingEvents.astro` : aperçus statiques avec placeholders;
+- `ParishLifePreview.astro` et `ParishBulletin.astro` : mosaïque illustrative et feuillet sans faux téléchargement;
+- `PracticalServices.astro`, `HomeGallery.astro` et `VisitSection.astro` : services, bande photographique et coordonnées temporaires;
+- `lib/site.ts` : identité confirmée partagée entre le layout, le header et le footer.
+
+Les photographies passent par `astro:assets`. `sharp` génère les variantes responsives durant le build; les fichiers source ne sont pas modifiés.
+
 ## Stratégie CSS et fidélité
 
 Les valeurs répétées et structurantes sont des tokens sémantiques dans `global.css`; les dimensions propres à un seul composant restent près de ce composant. Cette séparation évite à la fois les valeurs magiques dispersées et une couche de tokens artificielle.
@@ -76,6 +89,8 @@ Le script du header est inclus par Astro et initialisé une fois par instance. I
 6. la fermeture au changement de largeur.
 
 Le balisage et les liens restent utilisables sans routeur client. Aucun état global React n’est réintroduit.
+
+Sur l’accueil, deux scripts natifs et locaux suffisent : l’annonce peut être masquée, et le hero change de photographie avec un temporisateur remis à zéro après une action manuelle. La préférence de réduction des mouvements désactive rotation et zoom. Aucun état applicatif partagé n’est introduit.
 
 ## Migration progressive
 
@@ -100,7 +115,7 @@ Aucun package CMS n’est installé pendant l’initialisation.
 ## Limites actuelles
 
 - les routes publiques autres que l’accueil restent des placeholders techniques;
-- les coordonnées et l’identité paroissiale ne sont pas confirmées;
+- l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - aucun CMS, formulaire, backend ou déploiement n’est configuré;
-- aucun package n’a été ajouté par `S1-T01`;
+- `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.

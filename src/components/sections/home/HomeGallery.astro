@@ -1,0 +1,184 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import redAltarImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
+import floralImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
+import crossImage from '@/assets/images/paroisse/croix-verre-entree-01.webp';
+import bellTowersImage from '@/assets/images/paroisse/eglise-exterieur-clochers-01.webp';
+import identificationImage from '@/assets/images/paroisse/eglise-exterieur-identification-01.webp';
+import interiorImage from '@/assets/images/paroisse/interieur-eglise-decoration-01.webp';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+
+interface GalleryItem {
+  image: ImageMetadata;
+  alt: string;
+  aspect: 'landscape' | 'portrait';
+  objectPosition?: string;
+}
+
+const gallery: readonly GalleryItem[] = [
+  {
+    image: redAltarImage,
+    alt: 'Vue intérieure de l’autel avec une décoration rouge',
+    aspect: 'landscape',
+  },
+  {
+    image: bellTowersImage,
+    alt: 'Vue extérieure de l’église et des structures portant des cloches',
+    aspect: 'portrait',
+    objectPosition: '38% center',
+  },
+  {
+    image: crossImage,
+    alt: 'Croix composée de verre coloré intégrée à une paroi de béton',
+    aspect: 'portrait',
+  },
+  {
+    image: floralImage,
+    alt: 'Vue intérieure de l’autel entouré de fleurs blanches',
+    aspect: 'landscape',
+  },
+  {
+    image: interiorImage,
+    alt: 'Vue verticale de l’autel avec une décoration liturgique',
+    aspect: 'portrait',
+  },
+  {
+    image: identificationImage,
+    alt: 'Vue extérieure du bâtiment et de l’identification de la paroisse',
+    aspect: 'landscape',
+  },
+];
+---
+
+<section class="home-gallery" aria-labelledby="home-gallery-title">
+  <Container class="home-gallery__heading">
+    <div>
+      <Eyebrow>Photographie</Eyebrow>
+      <h2 id="home-gallery-title" class="type-h2">La paroisse en images</h2>
+    </div>
+    <TextLink href="/galerie">Voir toute la galerie</TextLink>
+  </Container>
+
+  <div class="home-gallery__strip">
+    {
+      gallery.map((item) => (
+        <a
+          class:list={[
+            'home-gallery__item',
+            `home-gallery__item--${item.aspect}`,
+          ]}
+          href="/galerie"
+          aria-label={`Voir la galerie : ${item.alt}`}
+        >
+          <Image
+            src={item.image}
+            alt={item.alt}
+            widths={[256, 288, 576]}
+            sizes="(min-width: 48rem) 18rem, 16rem"
+            loading="lazy"
+            style={
+              item.objectPosition
+                ? `object-position: ${item.objectPosition}`
+                : undefined
+            }
+          />
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .home-gallery {
+    overflow: hidden;
+    padding-block: 5rem;
+    background: var(--color-paper);
+  }
+
+  .home-gallery__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .home-gallery__heading h2 {
+    margin: 0.75rem 0 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.25rem, 1.971rem + 1.143vw, 3rem);
+  }
+
+  .home-gallery__heading :global(.ui-eyebrow) {
+    color: var(--color-wood);
+  }
+
+  .home-gallery__heading :global(.ui-text-link) {
+    align-self: flex-start;
+  }
+
+  .home-gallery__strip {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 0 var(--gutter-page) 1rem;
+    scrollbar-width: none;
+  }
+
+  .home-gallery__strip::after {
+    width: max(0.5rem, calc((100vw - var(--layout-max)) / 2));
+    flex: 0 0 auto;
+    content: '';
+  }
+
+  .home-gallery__strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-gallery__item {
+    width: 16rem;
+    flex: 0 0 auto;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .home-gallery__item--landscape {
+    aspect-ratio: 4 / 3;
+  }
+
+  .home-gallery__item--portrait {
+    aspect-ratio: 3 / 4;
+  }
+
+  .home-gallery__item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--duration-media) var(--ease-editorial);
+  }
+
+  .home-gallery__item:hover :global(img) {
+    scale: 1.05;
+  }
+
+  @media (min-width: 48rem) {
+    .home-gallery__heading {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .home-gallery__item {
+      width: 18rem;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .home-gallery__strip {
+      padding-left: max(var(--gutter-page), calc((100vw - 80rem) / 2 + 5rem));
+    }
+  }
+</style>

@@ -5,6 +5,7 @@ import {
   primaryNavigation,
   scheduleNavigation,
 } from '@/lib/navigation';
+import { SITE_DESCRIPTOR, SITE_NAME } from '@/lib/site';
 
 interface Props {
   variant?: 'light' | 'transparent';
@@ -28,8 +29,8 @@ const informationIsActive = informationNavigation.some(
   <div class="site-container site-header__container">
     <div class="site-header__inner">
       <a class="site-identity" href="/">
-        <span class="site-identity__name">[NOM DE LA PAROISSE]</span>
-        <span class="site-identity__descriptor">Paroisse catholique</span>
+        <span class="site-identity__name">{SITE_NAME}</span>
+        <span class="site-identity__descriptor">{SITE_DESCRIPTOR}</span>
       </a>
 
       <nav class="site-header__desktop-nav" aria-label="Navigation principale">
