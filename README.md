@@ -4,7 +4,7 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires et Notre paroisse migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse et Première visite migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -21,6 +21,13 @@ textes historiques sont réécrits prudemment et conservent leur statut de
 confirmation. Le futur flux Sanity, Portable Text et les images avec hotspot
 sont expliqués dans
 [docs/ASTRO_SANITY_ABOUT_PREPARATION.md](docs/ASTRO_SANITY_ABOUT_PREPARATION.md).
+
+La route `/premiere-visite/` utilise une source locale
+`FirstVisitPageData`. Les coordonnées, le stationnement et les détails
+d’accessibilité restent explicitement à confirmer. La séparation entre le futur
+document `firstVisitPage` et les réglages globaux `siteSettings` est expliquée
+dans
+[docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md](docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md).
 
 ## Stack
 
@@ -160,11 +167,11 @@ La CI l’exécute sur les pushes et pull requests visant `main` ou `staging`.
 
 Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Le prochain ticket recommandé est :
 
-`S1-T05 — Migrer la page Première visite 1:1 depuis l’export Figma`
+`S1-T06 — Migrer la page Sacrements 1:1 depuis l’export Figma`
 
 ## Volontairement non implémenté
 
-- migration complète des pages autres que l’accueil, Horaires et Notre paroisse;
+- migration complète des pages autres que l’accueil, Horaires, Notre paroisse et Première visite;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;
