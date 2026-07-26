@@ -1,4 +1,5 @@
 ---
+import MotionController from '@/components/motion/MotionController.astro';
 import AboutClosing from '@/components/sections/about/AboutClosing.astro';
 import AboutHero from '@/components/sections/about/AboutHero.astro';
 import AboutIntroduction from '@/components/sections/about/AboutIntroduction.astro';
@@ -29,4 +30,5 @@ const aboutPageData = await getAboutPageData();
     )
   }
   <AboutClosing closing={aboutPageData.closing} />
+  <MotionController />
 </BaseLayout>

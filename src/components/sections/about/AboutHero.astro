@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import AmbientHero from '@/components/motion/AmbientHero.astro';
 import Container from '@/components/ui/Container.astro';
 import type { AboutHero as AboutHeroContent } from '@/types/about';
 
@@ -30,6 +31,7 @@ const heroStyle = [
     fetchpriority="high"
   />
   <div class="about-hero__overlay" aria-hidden="true"></div>
+  <AmbientHero class="about-hero__ambient" particles={6} />
   <div class="about-hero__beam" aria-hidden="true"></div>
 
   <Container class="about-hero__container">
@@ -68,6 +70,8 @@ const heroStyle = [
     height: 100%;
     object-fit: cover;
     object-position: var(--about-hero-position-mobile);
+    animation: about-hero-cinematic var(--motion-duration-cinematic)
+      var(--motion-ease-cinematic) infinite alternate;
   }
 
   .about-hero__overlay {
@@ -97,6 +101,10 @@ const heroStyle = [
       color-mix(in srgb, var(--color-ivory) 10%, transparent),
       transparent
     );
+  }
+
+  :global(.about-hero__ambient) {
+    z-index: -1;
   }
 
   .about-hero__container {
@@ -145,6 +153,24 @@ const heroStyle = [
   @media (min-width: 64rem) {
     .about-hero__container {
       padding-bottom: 5rem;
+    }
+  }
+
+  @keyframes about-hero-cinematic {
+    from {
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: scale(var(--motion-scale-cinematic))
+        translate3d(0.25rem, -0.2rem, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-hero__image {
+      animation: none;
+      transform: none;
     }
   }
 </style>

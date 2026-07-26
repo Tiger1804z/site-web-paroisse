@@ -69,7 +69,7 @@ const [featuredEvent, ...secondaryEvents] = events;
   aria-labelledby="upcoming-events-title"
 >
   <Container>
-    <div class="upcoming-events__heading">
+    <div class="upcoming-events__heading" data-motion-reveal>
       <div>
         <Eyebrow>Vie communautaire</Eyebrow>
         <h2 id="upcoming-events-title" class="type-h2">Prochaines activités</h2>
@@ -78,7 +78,11 @@ const [featuredEvent, ...secondaryEvents] = events;
     </div>
 
     <div class="upcoming-events__grid">
-      <article class="featured-event">
+      <article
+        class="featured-event"
+        data-motion-reveal
+        data-motion-variant="image"
+      >
         <Image
           src={featuredEvent.image}
           alt={featuredEvent.imageAlt}
@@ -102,13 +106,14 @@ const [featuredEvent, ...secondaryEvents] = events;
         </div>
       </article>
 
-      <div class="secondary-events">
+      <div class="secondary-events" data-motion-stagger>
         {
           secondaryEvents.map((event) => (
             <a
               class="secondary-event"
               href="/evenements"
               aria-label={`Voir les détails de l’activité temporaire « ${event.title} »`}
+              data-motion-item
             >
               <span class="secondary-event__image" aria-hidden="true">
                 <Image
@@ -181,7 +186,7 @@ const [featuredEvent, ...secondaryEvents] = events;
   }
 
   .featured-event:hover > :global(img) {
-    scale: 1.05;
+    scale: var(--motion-scale-hover);
     opacity: 0.8;
   }
 
@@ -284,7 +289,7 @@ const [featuredEvent, ...secondaryEvents] = events;
   }
 
   .secondary-event:hover .secondary-event__image :global(img) {
-    scale: 1.05;
+    scale: var(--motion-scale-hover);
   }
 
   .secondary-event__copy {

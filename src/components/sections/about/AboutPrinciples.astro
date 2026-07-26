@@ -27,17 +27,17 @@ const symbolPaths: Record<AboutPrincipleSymbol, string> = {
 >
   <div class="about-principles__beam" aria-hidden="true"></div>
   <Container>
-    <header class="about-principles__header">
+    <header class="about-principles__header" data-motion-reveal>
       <Eyebrow tone="light">{principles.eyebrow}</Eyebrow>
       <h2 id="principles-title" class="about-principles__title type-h2">
         {principles.title}
       </h2>
     </header>
 
-    <div class="about-principles__grid">
+    <div class="about-principles__grid" data-motion-stagger>
       {
         principles.items.map((item) => (
-          <article class="about-principles__item">
+          <article class="about-principles__item" data-motion-item>
             <div class="about-principles__icon" aria-hidden="true">
               <svg
                 viewBox="0 0 24 24"

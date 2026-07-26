@@ -1,0 +1,1136 @@
+---
+/**
+ * « Le vitrail vivant de la communauté »
+ *
+ * Adaptation de production de l’œuvre fournie pour S1-T06.5. Les IDs SVG
+ * sont fixes : ce composant doit rester limité à une instance par page.
+ */
+interface Props {
+  class?: string;
+  intensity?: number;
+  speed?: number;
+  parallax?: number;
+  grain?: boolean;
+  label?: string;
+}
+
+type GlassFragment = {
+  points: string;
+  angle: number;
+  colors: readonly [string, string, string];
+  tx: string;
+  ty: string;
+  rotation: string;
+  delay: number;
+  opacity: number;
+  shimmer?: boolean;
+};
+
+const {
+  class: className = '',
+  intensity = 0.9,
+  speed = 0.8,
+  parallax = 4,
+  grain = true,
+  label = 'Vitrail abstrait bourgogne et doré dont les fragments convergent vers une lumière centrale en forme de croix.',
+} = Astro.props;
+
+const safeIntensity = Math.min(Math.max(intensity, 0.6), 1);
+const safeSpeed = Math.min(Math.max(speed, 0.5), 1);
+const safeParallax = Math.min(Math.max(parallax, 0), 5);
+
+const ivory = ['#faf2e1', '#f8ecd4', '#b6a598'] as const;
+const cream = ['#f4e2ba', '#f0d69c', '#b19672'] as const;
+const gold = ['#e6c892', '#dcb063', '#a37c4b'] as const;
+const rose = ['#e9c5bf', '#e0aca4', '#a67a77'] as const;
+const amber = ['#e2b381', '#d5924b', '#9f683b'] as const;
+const wood = ['#d1a079', '#bd7740', '#8e5633'] as const;
+const burgundy = ['#a66470', '#802232', '#651c2a'] as const;
+const red = ['#c2727b', '#a83543', '#802935'] as const;
+
+const fragments: GlassFragment[] = [
+  {
+    points: '245.1,241.2 274.9,254.0 308.2,195.1 237.9,159.0',
+    angle: 218,
+    colors: ivory,
+    tx: '4.7px',
+    ty: '-20.1px',
+    rotation: '-2.9deg',
+    delay: 0.048,
+    opacity: 0.95,
+    shimmer: true,
+  },
+  {
+    points: '274.9,254.0 286.4,300.8 339.2,304.9 308.2,195.1',
+    angle: 256,
+    colors: cream,
+    tx: '18.8px',
+    ty: '-10.2px',
+    rotation: '-2deg',
+    delay: 0.086,
+    opacity: 0.97,
+    shimmer: true,
+  },
+  {
+    points: '286.4,300.8 268.5,346.6 296.0,419.0 339.2,304.9',
+    angle: 260,
+    colors: ivory,
+    tx: '13.3px',
+    ty: '10.3px',
+    rotation: '0.2deg',
+    delay: 0.116,
+    opacity: 0.95,
+    shimmer: true,
+  },
+  {
+    points: '268.5,346.6 239.0,352.9 220.0,447.7 296.0,419.0',
+    angle: 229,
+    colors: cream,
+    tx: '1.9px',
+    ty: '21.1px',
+    rotation: '2.4deg',
+    delay: 0.171,
+    opacity: 0.97,
+  },
+  {
+    points: '239.0,352.9 215.3,319.8 167.4,349.8 220.0,447.7',
+    angle: 114,
+    colors: gold,
+    tx: '-9.2px',
+    ty: '12.8px',
+    rotation: '-1.5deg',
+    delay: 0.197,
+    opacity: 0.99,
+  },
+  {
+    points: '215.3,319.8 222.1,267.9 177.4,219.8 167.4,349.8',
+    angle: 276,
+    colors: ivory,
+    tx: '-16.7px',
+    ty: '-2.4px',
+    rotation: '3.3deg',
+    delay: 0.253,
+    opacity: 0.95,
+    shimmer: true,
+  },
+  {
+    points: '222.1,267.9 245.1,241.2 237.9,159.0 177.4,219.8',
+    angle: 40,
+    colors: ivory,
+    tx: '-11.2px',
+    ty: '-23.3px',
+    rotation: '2.1deg',
+    delay: 0.251,
+    opacity: 0.95,
+  },
+  {
+    points: '275.5,167.5 320.9,221.6 384.3,153.3 294.8,68.4',
+    angle: 132,
+    colors: cream,
+    tx: '15.3px',
+    ty: '-26.6px',
+    rotation: '1.8deg',
+    delay: 0.14,
+    opacity: 0.96,
+  },
+  {
+    points: '320.9,221.6 330.1,294.4 392.3,291.6 384.3,153.3',
+    angle: 206,
+    colors: gold,
+    tx: '25.1px',
+    ty: '-10.4px',
+    rotation: '1.8deg',
+    delay: 0.203,
+    opacity: 0.94,
+  },
+  {
+    points: '330.1,294.4 324.8,385.7 375.2,444.8 392.3,291.6',
+    angle: 87,
+    colors: rose,
+    tx: '22.1px',
+    ty: '8.9px',
+    rotation: '0.4deg',
+    delay: 0.183,
+    opacity: 0.97,
+  },
+  {
+    points: '324.8,385.7 281.2,449.8 300.7,544.3 375.2,444.8',
+    angle: 36,
+    colors: cream,
+    tx: '14.3px',
+    ty: '25.4px',
+    rotation: '-1.9deg',
+    delay: 0.259,
+    opacity: 0.98,
+    shimmer: true,
+  },
+  {
+    points: '281.2,449.8 223.7,431.1 199.3,554.4 300.7,544.3',
+    angle: 299,
+    colors: amber,
+    tx: '0.2px',
+    ty: '34.8px',
+    rotation: '-1.4deg',
+    delay: 0.25,
+    opacity: 0.92,
+    shimmer: true,
+  },
+  {
+    points: '223.7,431.1 183.3,381.8 123.0,457.7 199.3,554.4',
+    angle: 267,
+    colors: gold,
+    tx: '-16px',
+    ty: '29.9px',
+    rotation: '2.5deg',
+    delay: 0.289,
+    opacity: 0.92,
+  },
+  {
+    points: '183.3,381.8 154.9,291.7 102.6,288.2 123.0,457.7',
+    angle: 151,
+    colors: ivory,
+    tx: '-18.7px',
+    ty: '7.8px',
+    rotation: '-0.7deg',
+    delay: 0.285,
+    opacity: 0.94,
+    shimmer: true,
+  },
+  {
+    points: '154.9,291.7 177.9,205.8 131.2,146.2 102.6,288.2',
+    angle: 10,
+    colors: cream,
+    tx: '-19.5px',
+    ty: '-9.4px',
+    rotation: '3.1deg',
+    delay: 0.339,
+    opacity: 0.95,
+  },
+  {
+    points: '177.9,205.8 224.4,170.3 199.6,46.7 131.2,146.2',
+    angle: 197,
+    colors: cream,
+    tx: '-11.3px',
+    ty: '-21.1px',
+    rotation: '-1.7deg',
+    delay: 0.377,
+    opacity: 0.93,
+  },
+  {
+    points: '224.4,170.3 275.5,167.5 294.8,68.4 199.6,46.7',
+    angle: 32,
+    colors: gold,
+    tx: '-0.1px',
+    ty: '-35.6px',
+    rotation: '1.8deg',
+    delay: 0.367,
+    opacity: 0.96,
+  },
+  {
+    points: '271.7,31.2 333.1,94.4 376.3,-11.4 280.7,-79.0',
+    angle: 335,
+    colors: gold,
+    tx: '9.4px',
+    ty: '-32.7px',
+    rotation: '-2.4deg',
+    delay: 0.28,
+    opacity: 0.9,
+  },
+  {
+    points: '333.1,94.4 381.2,193.9 451.3,138.3 376.3,-11.4',
+    angle: 157,
+    colors: amber,
+    tx: '21.4px',
+    ty: '-24.5px',
+    rotation: '2.3deg',
+    delay: 0.271,
+    opacity: 0.95,
+    shimmer: true,
+  },
+  {
+    points: '381.2,193.9 406.1,313.2 467.7,319.3 451.3,138.3',
+    angle: 187,
+    colors: rose,
+    tx: '28.1px',
+    ty: '-7.3px',
+    rotation: '-3.3deg',
+    delay: 0.289,
+    opacity: 0.94,
+    shimmer: true,
+  },
+  {
+    points: '406.1,313.2 374.5,452.9 425.6,516.5 467.7,319.3',
+    angle: 12,
+    colors: wood,
+    tx: '25.8px',
+    ty: '12.6px',
+    rotation: '1.3deg',
+    delay: 0.313,
+    opacity: 0.93,
+  },
+  {
+    points: '374.5,452.9 307.7,546.5 330.6,644.8 425.6,516.5',
+    angle: 74,
+    colors: gold,
+    tx: '18.6px',
+    ty: '32.7px',
+    rotation: '-1.6deg',
+    delay: 0.385,
+    opacity: 0.96,
+  },
+  {
+    points: '307.7,546.5 225.4,567.1 214.9,682.7 330.6,644.8',
+    angle: 22,
+    colors: amber,
+    tx: '3.4px',
+    ty: '42px',
+    rotation: '1.4deg',
+    delay: 0.379,
+    opacity: 0.91,
+  },
+  {
+    points: '225.4,567.1 158.7,491.9 115.7,583.0 214.9,682.7',
+    angle: 340,
+    colors: rose,
+    tx: '-13.4px',
+    ty: '41.3px',
+    rotation: '0.3deg',
+    delay: 0.371,
+    opacity: 0.91,
+  },
+  {
+    points: '158.7,491.9 121.3,398.8 60.7,446.2 115.7,583.0',
+    angle: 269,
+    colors: gold,
+    tx: '-26.2px',
+    ty: '27.9px',
+    rotation: '-2.5deg',
+    delay: 0.431,
+    opacity: 0.95,
+  },
+  {
+    points: '121.3,398.8 103.2,262.4 39.9,247.1 60.7,446.2',
+    angle: 267,
+    colors: wood,
+    tx: '-26.2px',
+    ty: '5.2px',
+    rotation: '1.8deg',
+    delay: 0.469,
+    opacity: 0.91,
+  },
+  {
+    points: '103.2,262.4 135.2,148.2 72.2,66.0 39.9,247.1',
+    angle: 293,
+    colors: gold,
+    tx: '-31.4px',
+    ty: '-17.9px',
+    rotation: '-2deg',
+    delay: 0.483,
+    opacity: 0.96,
+    shimmer: true,
+  },
+  {
+    points: '135.2,148.2 188.1,84.2 152.4,-39.3 72.2,66.0',
+    angle: 148,
+    colors: amber,
+    tx: '-20.5px',
+    ty: '-33.9px',
+    rotation: '0.5deg',
+    delay: 0.467,
+    opacity: 0.9,
+  },
+  {
+    points: '188.1,84.2 271.7,31.2 280.7,-79.0 152.4,-39.3',
+    angle: 198,
+    colors: rose,
+    tx: '-5.4px',
+    ty: '-45.2px',
+    rotation: '3.4deg',
+    delay: 0.492,
+    opacity: 0.93,
+  },
+  {
+    points: '445.5,400.3 386.6,567.8 454.1,701.2 525.2,441.9',
+    angle: 331,
+    colors: wood,
+    tx: '29.1px',
+    ty: '25.9px',
+    rotation: '2.4deg',
+    delay: 0.456,
+    opacity: 0.94,
+  },
+  {
+    points: '386.6,567.8 303.2,679.7 319.1,793.7 454.1,701.2',
+    angle: 239,
+    colors: burgundy,
+    tx: '16.7px',
+    ty: '44.5px',
+    rotation: '2.1deg',
+    delay: 0.483,
+    opacity: 0.89,
+    shimmer: true,
+  },
+  {
+    points: '303.2,679.7 177.1,651.7 151.7,775.0 319.1,793.7',
+    angle: 141,
+    colors: amber,
+    tx: '-2px',
+    ty: '51.3px',
+    rotation: '-1.3deg',
+    delay: 0.503,
+    opacity: 0.9,
+    shimmer: true,
+  },
+  {
+    points: '177.1,651.7 105.9,548.3 29.0,682.0 151.7,775.0',
+    angle: 217,
+    colors: red,
+    tx: '-19.4px',
+    ty: '42.5px',
+    rotation: '1deg',
+    delay: 0.565,
+    opacity: 0.94,
+  },
+  {
+    points: '105.9,548.3 33.8,372.3 -26.9,393.1 29.0,682.0',
+    angle: 242,
+    colors: wood,
+    tx: '-32.3px',
+    ty: '23.9px',
+    rotation: '0.8deg',
+    delay: 0.582,
+    opacity: 0.9,
+  },
+];
+
+const links = [
+  'M318.9,152.7 Q314.5,164.7 314.2,162.4',
+  'M251.2,494.9 Q239.9,473 250.9,448',
+  'M182.3,456.3 Q188.5,441 191,435.9',
+  'M385.5,103.8 Q354,152.4 335.8,175',
+  'M359.6,540.2 Q321.8,501.4 311.8,434.7',
+  'M269.7,610.3 Q262.6,527.6 259.4,447.7',
+  'M178.7,581.2 Q207.9,512.3 213.4,443.5',
+  'M114.1,480 Q133.1,452 160.3,418.2',
+  'M81.3,338.6 Q101,335.2 104.2,333.1',
+  'M87.6,180.9 Q117.6,194.1 128.3,210.3',
+  'M136.9,64.8 Q165.3,125.6 184.6,163',
+  'M223.2,-0.7 Q231.9,78.7 236.6,148.6',
+  'M452.9,527.8 Q408.2,470.7 349.3,410.5',
+  'M35.5,498.9 Q89.5,454.4 140.5,400.5',
+];
+
+const nodes = [
+  [318.9, 152.7, 2.6],
+  [355.6, 354.1, 2.8],
+  [251.2, 494.9, 3.7],
+  [182.3, 456.3, 3.3],
+  [141, 354.8, 3.3],
+  [141.7, 233, 3.6],
+  [385.5, 103.8, 3],
+  [359.6, 540.2, 3.8],
+  [269.7, 610.3, 3.8],
+  [178.7, 581.2, 3.2],
+  [114.1, 480, 3.2],
+  [81.3, 338.6, 3],
+  [87.6, 180.9, 3.7],
+  [136.9, 64.8, 2.7],
+  [223.2, -0.7, 3.2],
+  [452.9, 527.8, 2.8],
+  [35.5, 498.9, 3.7],
+] as const;
+
+const motes = [
+  [320.2, 298, 1.4, -34, 19, 4],
+  [220.7, 412.9, 1.9, -39, 20.7, 4.55],
+  [162.4, 205.9, 2.4, -44, 22.4, 5.1],
+  [359.4, 199.1, 1.4, -49, 24.1, 5.65],
+  [288, 499.9, 1.9, -54, 25.8, 6.2],
+  [78.9, 280.1, 2.4, -59, 27.5, 6.75],
+  [325.5, 52.9, 1.4, -64, 29.2, 7.3],
+  [407.6, 496, 1.9, -69, 30.9, 7.85],
+] as const;
+
+const seconds = (value: number) => `${(value / safeSpeed).toFixed(3)}s`;
+const rootStyle = [
+  `--lsg-intensity:${safeIntensity}`,
+  `--lsg-halo-opacity:${(safeIntensity * 0.92).toFixed(3)}`,
+  `--lsg-bloom-opacity:${(safeIntensity * 0.5).toFixed(3)}`,
+  `--lsg-cross-opacity:${(safeIntensity * 0.78).toFixed(3)}`,
+  `--lsg-sweep-opacity:${(safeIntensity * 0.72).toFixed(3)}`,
+  `--lsg-sweep-soft-opacity:${(safeIntensity * 0.45).toFixed(3)}`,
+  `--lsg-parallax-max:${safeParallax}`,
+  `--lsg-intro-duration:${seconds(0.95)}`,
+  `--lsg-stage-duration:${seconds(0.55)}`,
+  `--lsg-halo-duration:${seconds(1.4)}`,
+  `--lsg-halo-delay:${seconds(1.3)}`,
+  `--lsg-bloom-duration:${seconds(1.2)}`,
+  `--lsg-bloom-delay:${seconds(1.7)}`,
+  `--lsg-cross-duration:${seconds(1.1)}`,
+  `--lsg-cross-delay:${seconds(2.1)}`,
+  `--lsg-tracery-duration:${seconds(1.2)}`,
+  `--lsg-tracery-delay:${seconds(0.9)}`,
+  `--lsg-ambient-duration:${seconds(18)}`,
+  `--lsg-cross-ambient-duration:${seconds(23.4)}`,
+  `--lsg-rays-duration:${seconds(240)}`,
+  `--lsg-sweep-duration:${seconds(18)}`,
+].join(';');
+---
+
+<div
+  class:list={['lsg', className]}
+  data-lsg
+  style={rootStyle}
+  data-lsg-fixed-ids
+>
+  <svg
+    class="lsg-svg"
+    viewBox="0 0 500 710"
+    role="img"
+    aria-label={label}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      {
+        fragments.map((fragment, index) => (
+          <linearGradient
+            id={`lsgF${index}`}
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+            gradientTransform={`rotate(${fragment.angle} .5 .5)`}
+          >
+            <stop offset="0%" stop-color={fragment.colors[0]} />
+            <stop offset="46%" stop-color={fragment.colors[1]} />
+            <stop offset="100%" stop-color={fragment.colors[2]} />
+          </linearGradient>
+        ))
+      }
+      <radialGradient id="lsgHalo" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fff6e2" stop-opacity=".72"></stop>
+        <stop offset="24%" stop-color="#ffe6ae" stop-opacity=".58"></stop>
+        <stop offset="48%" stop-color="#f2b96c" stop-opacity=".34"></stop>
+        <stop offset="76%" stop-color="#d98a49" stop-opacity=".13"></stop>
+        <stop offset="100%" stop-color="#c2703c" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient id="lsgCore" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fffaf0" stop-opacity=".95"></stop>
+        <stop offset="55%" stop-color="#ffdda2" stop-opacity=".38"></stop>
+        <stop offset="100%" stop-color="#eaa757" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient id="lsgBack" cx="50%" cy="42%" r="66%">
+        <stop offset="0%" stop-color="#4f1e2a"></stop>
+        <stop offset="100%" stop-color="#33111b"></stop>
+      </radialGradient>
+      <linearGradient id="lsgSweep" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#fff3d6" stop-opacity="0"></stop>
+        <stop offset="42%" stop-color="#fff3d6" stop-opacity=".2"></stop>
+        <stop offset="52%" stop-color="#ffffff" stop-opacity=".3"></stop>
+        <stop offset="62%" stop-color="#ffe4b0" stop-opacity=".16"></stop>
+        <stop offset="100%" stop-color="#ffe4b0" stop-opacity="0"></stop>
+      </linearGradient>
+      <linearGradient id="lsgStone" x1="0" y1="0" x2=".6" y2="1">
+        <stop offset="0%" stop-color="#f1eadd"></stop>
+        <stop offset="52%" stop-color="#e9dfca"></stop>
+        <stop offset="100%" stop-color="#cdbfa0"></stop>
+      </linearGradient>
+      <linearGradient id="lsgBrass" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#e7d0a0"></stop>
+        <stop offset="46%" stop-color="#bf9a58"></stop>
+        <stop offset="100%" stop-color="#a07e42"></stop>
+      </linearGradient>
+      <radialGradient id="lsgVig" cx="50%" cy="42%" r="64%">
+        <stop offset="52%" stop-color="#3a1119" stop-opacity="0"></stop>
+        <stop offset="82%" stop-color="#33101a" stop-opacity=".3"></stop>
+        <stop offset="100%" stop-color="#280c14" stop-opacity=".62"></stop>
+      </radialGradient>
+      <filter id="lsgSoft" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="7"></feGaussianBlur>
+      </filter>
+      <filter id="lsgBloom" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+      </filter>
+      <clipPath id="lsgClip">
+        <path d="M60 700 L60 285 A190 245 0 0 1 440 285 L440 700 Z"></path>
+      </clipPath>
+    </defs>
+
+    <g class="lsg-stage">
+      <g clip-path="url(#lsgClip)">
+        <path
+          d="M60 700 L60 285 A190 245 0 0 1 440 285 L440 700 Z"
+          fill="url(#lsgBack)"></path>
+        <g class="lsg-halo lsg-par">
+          <g class="lsg-halo-in">
+            <ellipse cx="250" cy="298" rx="250" ry="300" fill="url(#lsgHalo)"
+            ></ellipse>
+            <g class="lsg-rays" opacity=".28">
+              {
+                [0, 22, 44, 66, 88, 110, 132, 154, 176].map((angle) => (
+                  <rect
+                    x="246"
+                    y="-2"
+                    width="8"
+                    height="600"
+                    rx="4"
+                    fill="url(#lsgCore)"
+                    transform={`rotate(${angle} 250 298)`}
+                  />
+                ))
+              }
+            </g>
+          </g>
+        </g>
+
+        <g class="lsg-par">
+          <g class="lsg-glass">
+            {
+              fragments.map((fragment, index) => (
+                <polygon
+                  class:list={['lsg-frag', { 'is-shimmer': fragment.shimmer }]}
+                  points={fragment.points}
+                  fill={`url(#lsgF${index})`}
+                  style={[
+                    `--lsg-tx:${fragment.tx}`,
+                    `--lsg-ty:${fragment.ty}`,
+                    `--lsg-rotation:${fragment.rotation}`,
+                    `--lsg-delay:${seconds(fragment.delay)}`,
+                    `--lsg-glimmer-delay:${seconds(fragment.delay + 3)}`,
+                    `--lsg-fragment-opacity:${fragment.opacity}`,
+                  ].join(';')}
+                />
+              ))
+            }
+          </g>
+        </g>
+
+        <path
+          class="lsg-vignette"
+          d="M60 700 L60 285 A190 245 0 0 1 440 285 L440 700 Z"
+          fill="url(#lsgVig)"></path>
+
+        <g class="lsg-tracery">
+          <ellipse
+            cx="250"
+            cy="298"
+            rx="150"
+            ry="252"
+            fill="none"
+            stroke="url(#lsgBrass)"
+            stroke-width="1.6"
+            opacity=".42"></ellipse>
+          <ellipse
+            cx="250"
+            cy="298"
+            rx="141"
+            ry="238"
+            fill="none"
+            stroke="url(#lsgBrass)"
+            stroke-width=".8"
+            opacity=".26"></ellipse>
+          <path
+            d="M60 285 H440"
+            stroke="url(#lsgBrass)"
+            stroke-width="1.4"
+            opacity=".28"></path>
+          <path
+            d="M173 285 V700 M327 285 V700"
+            stroke="url(#lsgBrass)"
+            stroke-width="1"
+            opacity=".18"></path>
+        </g>
+
+        <g class="lsg-links lsg-par">
+          {
+            links.map((path, index) => (
+              <path
+                class="lsg-link"
+                d={path}
+                pathLength="1"
+                style={`--lsg-link-delay:${seconds(1.45 + index * 0.03)}`}
+              />
+            ))
+          }
+          {
+            nodes.map(([cx, cy, radius], index) => (
+              <g
+                class="lsg-node"
+                style={`--lsg-node-delay:${seconds(1.9 + index * 0.035)}`}
+              >
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={radius}
+                  fill="#ffe9bd"
+                  opacity=".9"
+                />
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={radius * 3.55}
+                  fill="#ffd98f"
+                  opacity=".16"
+                />
+              </g>
+            ))
+          }
+        </g>
+
+        <g class="lsg-cross lsg-par">
+          <g class="lsg-cross-in">
+            <g fill="#fff4dc" opacity=".34" filter="url(#lsgSoft)">
+              <rect x="241.5" y="198" width="17" height="204" rx="8"></rect>
+              <rect x="197" y="269" width="106" height="17" rx="8"></rect>
+            </g>
+            <g fill="#fffaf0" opacity=".6">
+              <rect x="241.5" y="198" width="17" height="204" rx="8"></rect>
+              <rect x="197" y="269" width="106" height="17" rx="8"></rect>
+            </g>
+            <g fill="none" stroke="#e7d0a0" stroke-width="1.1" opacity=".55">
+              <rect x="241.5" y="198" width="17" height="204" rx="8"></rect>
+              <rect x="197" y="269" width="106" height="17" rx="8"></rect>
+            </g>
+          </g>
+        </g>
+
+        <circle
+          class="lsg-bloom"
+          cx="250"
+          cy="298"
+          r="132"
+          fill="url(#lsgCore)"
+          filter="url(#lsgBloom)"></circle>
+        <g class="lsg-sweep-wrap">
+          <rect
+            class="lsg-sweep"
+            x="-340"
+            y="-140"
+            width="230"
+            height="1000"
+            fill="url(#lsgSweep)"></rect>
+        </g>
+        <g class="lsg-motes lsg-par">
+          {
+            motes.map(([cx, cy, radius, distance, duration, delay]) => (
+              <circle
+                class="lsg-mote"
+                cx={cx}
+                cy={cy}
+                r={radius}
+                fill="#ffdc9c"
+                style={[
+                  `--lsg-mote-distance:${distance}px`,
+                  `--lsg-mote-duration:${seconds(duration)}`,
+                  `--lsg-mote-delay:${seconds(delay)}`,
+                ].join(';')}
+              />
+            ))
+          }
+        </g>
+      </g>
+
+      <path
+        class="lsg-frame"
+        d="M60 700 L60 285 A190 245 0 0 1 440 285 L440 700 Z"
+        pathLength="1"
+        fill="none"
+        stroke="url(#lsgStone)"
+        stroke-width="17"
+        stroke-linejoin="round"></path>
+      <path
+        class="lsg-frame-accent"
+        d="M60 700 L60 285 A190 245 0 0 1 440 285 L440 700 Z"
+        pathLength="1"
+        fill="none"
+        stroke="url(#lsgBrass)"
+        stroke-width="2.2"
+        transform="translate(250 372) scale(.962) translate(-250 -372)"
+        opacity=".8"></path>
+      <path
+        class="lsg-frame-edge"
+        d="M60 700 L60 285 A190 245 0 0 1 440 285 L440 700 Z"
+        pathLength="1"
+        fill="none"
+        stroke="#cdbfa0"
+        stroke-width="1.4"
+        transform="translate(250 372) scale(1.028) translate(-250 -372)"
+        opacity=".85"></path>
+    </g>
+  </svg>
+
+  {grain && <span class="lsg-grain" aria-hidden="true" />}
+</div>
+
+<script is:inline>
+  (() => {
+    if (
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      !('IntersectionObserver' in window)
+    ) {
+      return;
+    }
+
+    document
+      .querySelectorAll('[data-lsg]:not([data-lsg-js])')
+      .forEach((element) => element.setAttribute('data-lsg-js', ''));
+  })();
+</script>
+
+<style>
+  .lsg {
+    --lsg-intensity: 0.9;
+    --lsg-parallax-max: 4;
+    --lsg-parallax-x: 0px;
+    --lsg-parallax-y: 0px;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 500 / 710;
+    contain: layout paint;
+    filter: drop-shadow(0 1.25rem 2.625rem rgb(96 32 44 / 17%));
+  }
+
+  .lsg-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .lsg-stage {
+    opacity: 1;
+  }
+
+  [data-lsg-js]:not([data-lsg-visible]) .lsg-stage,
+  [data-lsg-js]:not([data-lsg-visible]) .lsg-grain {
+    opacity: 0;
+  }
+
+  [data-lsg-visible] .lsg-stage {
+    animation: lsg-stage-in var(--lsg-stage-duration)
+      var(--motion-ease-standard) both;
+  }
+
+  .lsg-par {
+    transform: translate3d(var(--lsg-parallax-x), var(--lsg-parallax-y), 0);
+    transition: transform var(--motion-duration-normal)
+      var(--motion-ease-standard);
+  }
+
+  .lsg-frag {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.984);
+    fill-opacity: var(--lsg-fragment-opacity, 0.94);
+    stroke: #b8934e;
+    stroke-width: 1.3;
+    stroke-opacity: 0.72;
+    stroke-linejoin: round;
+  }
+
+  [data-lsg-visible] .lsg-frag {
+    animation: lsg-fragment-in var(--lsg-intro-duration)
+      var(--motion-ease-emphasized) var(--lsg-delay) both;
+  }
+
+  [data-lsg-visible] .lsg-frag.is-shimmer {
+    animation:
+      lsg-fragment-in var(--lsg-intro-duration) var(--motion-ease-emphasized)
+        var(--lsg-delay) both,
+      lsg-glimmer var(--lsg-ambient-duration) ease-in-out
+        var(--lsg-glimmer-delay) infinite;
+  }
+
+  .lsg-halo {
+    opacity: var(--lsg-halo-opacity);
+  }
+
+  .lsg-bloom {
+    opacity: var(--lsg-bloom-opacity);
+  }
+
+  .lsg-cross {
+    opacity: var(--lsg-cross-opacity);
+  }
+
+  .lsg-halo-in,
+  .lsg-cross-in {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  [data-lsg-visible] .lsg-halo {
+    animation: lsg-fade var(--lsg-halo-duration) ease-out var(--lsg-halo-delay)
+      both;
+  }
+
+  [data-lsg-visible] .lsg-bloom {
+    animation: lsg-fade var(--lsg-bloom-duration) ease-out
+      var(--lsg-bloom-delay) both;
+  }
+
+  [data-lsg-visible] .lsg-cross {
+    animation: lsg-fade var(--lsg-cross-duration) ease-out
+      var(--lsg-cross-delay) both;
+  }
+
+  [data-lsg-visible] .lsg-halo-in {
+    animation: lsg-breathe var(--lsg-ambient-duration) ease-in-out 4s infinite
+      alternate;
+  }
+
+  [data-lsg-visible] .lsg-cross-in {
+    animation: lsg-breathe-soft var(--lsg-cross-ambient-duration) ease-in-out
+      4.5s infinite alternate;
+  }
+
+  [data-lsg-visible] .lsg-rays {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: lsg-turn var(--lsg-rays-duration) linear 4s infinite;
+  }
+
+  .lsg-tracery {
+    opacity: 0.9;
+  }
+
+  [data-lsg-visible] .lsg-tracery {
+    animation: lsg-fade var(--lsg-tracery-duration) ease-out
+      var(--lsg-tracery-delay) both;
+  }
+
+  .lsg-link {
+    fill: none;
+    stroke: #d9b877;
+    stroke-width: 0.9;
+    stroke-opacity: 0.5;
+    stroke-linecap: round;
+  }
+
+  [data-lsg-visible] .lsg-link {
+    stroke-dasharray: 1;
+    animation: lsg-draw var(--lsg-intro-duration) ease-out var(--lsg-link-delay)
+      both;
+  }
+
+  [data-lsg-visible] .lsg-node {
+    animation:
+      lsg-fade var(--lsg-intro-duration) ease-out var(--lsg-node-delay) both,
+      lsg-node-breathe var(--lsg-ambient-duration) ease-in-out 5s infinite;
+  }
+
+  .lsg-sweep {
+    transform-box: view-box;
+    transform-origin: 250px 355px;
+    opacity: 0;
+  }
+
+  [data-lsg-visible] .lsg-sweep {
+    animation: lsg-sweep var(--lsg-sweep-duration) linear 3s infinite;
+  }
+
+  .lsg-mote {
+    fill-opacity: 0.36;
+  }
+
+  [data-lsg-visible] .lsg-mote {
+    animation: lsg-float var(--lsg-mote-duration) ease-in-out
+      var(--lsg-mote-delay) infinite;
+  }
+
+  .lsg-grain {
+    position: absolute;
+    inset: 4% 7%;
+    z-index: 2;
+    border-radius: 48% 48% 0 0 / 24% 24% 0 0;
+    background-image:
+      radial-gradient(
+        circle at 20% 30%,
+        rgb(255 255 255 / 30%) 0 0.5px,
+        transparent 0.8px
+      ),
+      radial-gradient(
+        circle at 70% 65%,
+        rgb(75 20 31 / 26%) 0 0.55px,
+        transparent 0.85px
+      );
+    background-size:
+      4px 4px,
+      5px 5px;
+    mix-blend-mode: soft-light;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  @keyframes lsg-stage-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lsg-fragment-in {
+    from {
+      opacity: 0;
+      transform: translate(var(--lsg-tx), var(--lsg-ty))
+        rotate(var(--lsg-rotation)) scale(0.93);
+    }
+    62% {
+      opacity: 1;
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg) scale(0.984);
+    }
+  }
+
+  @keyframes lsg-glimmer {
+    0%,
+    100% {
+      filter: brightness(0.96);
+    }
+    50% {
+      filter: brightness(1.04);
+    }
+  }
+
+  @keyframes lsg-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lsg-breathe {
+    from {
+      transform: scale(0.985);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(1.025);
+      opacity: 1;
+    }
+  }
+
+  @keyframes lsg-breathe-soft {
+    from {
+      opacity: 0.86;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes lsg-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes lsg-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+
+  @keyframes lsg-node-breathe {
+    0%,
+    100% {
+      opacity: 0.62;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes lsg-sweep {
+    0%,
+    72% {
+      transform: rotate(-17deg) translateX(0);
+      opacity: 0;
+    }
+    76% {
+      opacity: var(--lsg-sweep-opacity);
+    }
+    86% {
+      opacity: var(--lsg-sweep-soft-opacity);
+    }
+    92%,
+    100% {
+      transform: rotate(-17deg) translateX(930px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes lsg-float {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.18;
+    }
+    50% {
+      transform: translateY(var(--lsg-mote-distance));
+      opacity: 0.52;
+    }
+  }
+
+  @media (max-width: 64rem) {
+    .lsg-motes .lsg-mote:nth-child(n + 5) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .lsg {
+      --lsg-parallax-max: 0;
+      width: min(100%, 20rem);
+      margin-inline: auto;
+      filter: drop-shadow(0 1rem 2rem rgb(96 32 44 / 14%));
+    }
+
+    .lsg-grain,
+    .lsg-motes,
+    .lsg-bloom {
+      display: none;
+    }
+
+    .lsg-par {
+      transition: none;
+    }
+
+    [data-lsg-visible] .lsg-frag.is-shimmer {
+      animation: lsg-fragment-in var(--lsg-intro-duration)
+        var(--motion-ease-emphasized) var(--lsg-delay) both;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lsg-stage,
+    .lsg-frag,
+    .lsg-halo,
+    .lsg-halo-in,
+    .lsg-bloom,
+    .lsg-cross,
+    .lsg-cross-in,
+    .lsg-rays,
+    .lsg-tracery,
+    .lsg-link,
+    .lsg-node,
+    .lsg-sweep,
+    .lsg-mote,
+    .lsg-par {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .lsg-stage,
+    .lsg-grain {
+      opacity: 1 !important;
+    }
+
+    .lsg-motes,
+    .lsg-grain,
+    .lsg-sweep,
+    .lsg-bloom {
+      display: none;
+    }
+  }
+</style>
