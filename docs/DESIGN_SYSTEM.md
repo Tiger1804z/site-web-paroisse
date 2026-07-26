@@ -270,3 +270,16 @@ prioritaire sur le texte intégré aux pixels.
 La chronologie réutilise les tokens `--motion-*`; elle n’ajoute ni nouvelle
 palette ni bibliothèque. Les règles détaillées sont documentées dans
 [`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
+
+## Illustrations éditoriales — Événements
+
+Les illustrations SVG de la friperie, du repas partagé et de la chaîne
+intergénérationnelle emploient la palette existante, des formes éditoriales
+simples et une amplitude de mouvement faible. Elles évitent de présenter de
+faux locaux ou de fausses activités comme des photographies documentaires.
+
+Le mouvement reste décoratif, limité à `transform` et `opacity`, sans
+JavaScript frame par frame. `prefers-reduced-motion` immobilise l’œuvre. Le
+portant et le repas reçoivent leur libellé accessible par props; la chaîne est
+décorative parce que son sens est déjà exprimé par le HTML adjacent. Aucun SVG
+ne contient de programmation paroissiale ni de texte.

@@ -189,6 +189,10 @@ Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_P
 
 `S1-T07 — Migrer la page Événements 1:1 depuis l’export Figma`
 
+S1-T07 est en cours : le premier lot visuel prépare cinq catégories et
+l’architecture de contenu, mais la page reste incomplète et `noindex`. Voir
+[docs/EVENTS_VISUALS_BATCH_1.md](docs/EVENTS_VISUALS_BATCH_1.md).
+
 ## Volontairement non implémenté
 
 - migration complète des pages autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services;

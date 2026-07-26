@@ -1,0 +1,228 @@
+---
+interface Props {
+  accessibleLabel: string;
+}
+
+const { accessibleLabel } = Astro.props;
+---
+
+<svg
+  class="clothing-rack"
+  viewBox="0 0 720 560"
+  role="img"
+  aria-label={accessibleLabel}
+>
+  <rect class="clothing-rack__background" width="720" height="560" rx="2"
+  ></rect>
+  <path
+    class="clothing-rack__arch"
+    d="M126 472V210C126 112 226 52 360 52s234 60 234 158v262"></path>
+  <circle class="clothing-rack__light" cx="360" cy="222" r="150"></circle>
+  <ellipse class="clothing-rack__shadow" cx="360" cy="470" rx="228" ry="24"
+  ></ellipse>
+
+  <g class="clothing-rack__frame">
+    <path d="M204 178H516"></path>
+    <path d="M224 178V448M496 178V448"></path>
+    <path d="M190 448H258M462 448H530"></path>
+  </g>
+  <path class="clothing-rack__highlight" d="M206 178H264" aria-hidden="true"
+  ></path>
+
+  <g class="clothing-rack__garment clothing-rack__garment--coat">
+    <path class="clothing-rack__hanger" d="M286 190l-42 27h84z"></path>
+    <path
+      class="clothing-rack__fabric clothing-rack__fabric--burgundy"
+      d="M258 214l-38 30 23 46 20-13-10 131h69l-9-131 19 13 23-46-37-30-20 17h-20z"
+    ></path>
+    <path class="clothing-rack__detail" d="M288 230v178M274 270h28"></path>
+  </g>
+
+  <g class="clothing-rack__garment clothing-rack__garment--dress">
+    <path class="clothing-rack__hanger" d="M368 190l-40 27h80z"></path>
+    <path
+      class="clothing-rack__fabric clothing-rack__fabric--ivory"
+      d="M345 215l-23 69 24 9-18 115h81l-20-115 25-9-23-69-14 13h-18z"></path>
+    <path class="clothing-rack__detail" d="M352 273h33M346 326h48"></path>
+  </g>
+
+  <g class="clothing-rack__garment clothing-rack__garment--shirt">
+    <path class="clothing-rack__hanger" d="M451 190l-39 27h78z"></path>
+    <path
+      class="clothing-rack__fabric clothing-rack__fabric--gold"
+      d="M429 214l-37 25 19 49 21-12-5 102h48l-5-102 21 12 19-49-37-25-15 16h-14z"
+    ></path>
+    <path class="clothing-rack__detail" d="M451 231v146M440 253h22"></path>
+  </g>
+
+  <g class="clothing-rack__accent" aria-hidden="true">
+    <circle cx="173" cy="354" r="4"></circle>
+    <circle cx="560" cy="294" r="3"></circle>
+    <path d="M164 326h18M551 320h18"></path>
+  </g>
+</svg>
+
+<style>
+  .clothing-rack {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .clothing-rack__background {
+    fill: var(--color-charcoal);
+  }
+
+  .clothing-rack__arch {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-gold) 40%, transparent);
+    stroke-width: 1.5;
+  }
+
+  .clothing-rack__light {
+    fill: color-mix(in srgb, var(--color-gold) 7%, transparent);
+    animation: rack-light 7.5s var(--motion-ease-cinematic) infinite alternate;
+  }
+
+  .clothing-rack__shadow {
+    fill: rgb(0 0 0 / 24%);
+  }
+
+  .clothing-rack__frame {
+    fill: none;
+    stroke: var(--color-gold);
+    stroke-width: 8;
+    stroke-linecap: square;
+  }
+
+  .clothing-rack__highlight {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-ivory) 78%, var(--color-gold));
+    stroke-width: 3;
+    stroke-linecap: round;
+    opacity: 0;
+    animation: rack-highlight 6.5s var(--motion-ease-standard) infinite;
+  }
+
+  .clothing-rack__garment {
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+  }
+
+  .clothing-rack__garment--coat {
+    animation: garment-sway-left 5.6s var(--motion-ease-cinematic) infinite
+      alternate;
+  }
+
+  .clothing-rack__garment--dress {
+    animation: garment-focus 6s var(--motion-ease-cinematic) infinite;
+  }
+
+  .clothing-rack__garment--shirt {
+    animation: garment-sway-right 5.8s -1.4s var(--motion-ease-cinematic)
+      infinite alternate;
+  }
+
+  .clothing-rack__hanger,
+  .clothing-rack__detail {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-gold) 78%, var(--color-ivory));
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .clothing-rack__fabric {
+    stroke: color-mix(in srgb, var(--color-ivory) 22%, transparent);
+    stroke-width: 1.5;
+  }
+
+  .clothing-rack__fabric--burgundy {
+    fill: var(--color-burgundy);
+  }
+
+  .clothing-rack__fabric--ivory {
+    fill: color-mix(in srgb, var(--color-ivory) 88%, var(--color-paper));
+  }
+
+  .clothing-rack__fabric--gold {
+    fill: color-mix(in srgb, var(--color-gold) 78%, var(--color-brick));
+  }
+
+  .clothing-rack__accent {
+    fill: var(--color-gold);
+    stroke: color-mix(in srgb, var(--color-gold) 55%, transparent);
+    stroke-width: 1;
+    opacity: 0.6;
+  }
+
+  @keyframes garment-sway-left {
+    from {
+      transform: translate3d(-0.4rem, 0.25rem, 0) rotate(3.2deg);
+    }
+
+    to {
+      transform: translate3d(0.45rem, -0.55rem, 0) rotate(-3.8deg);
+    }
+  }
+
+  @keyframes garment-sway-right {
+    from {
+      transform: translate3d(0.5rem, -0.45rem, 0) rotate(-3.4deg);
+    }
+
+    to {
+      transform: translate3d(-0.4rem, 0.35rem, 0) rotate(3.6deg);
+    }
+  }
+
+  @keyframes garment-focus {
+    0%,
+    100% {
+      transform: translate3d(0, 0.25rem, 0) scale(1);
+    }
+
+    50% {
+      transform: translate3d(0, -1.5rem, 0) scale(1.05);
+    }
+  }
+
+  @keyframes rack-light {
+    from {
+      opacity: 0.42;
+      transform: translate3d(-0.5rem, 0.2rem, 0) scale(0.97);
+    }
+
+    to {
+      opacity: 0.92;
+      transform: translate3d(0.5rem, -0.2rem, 0) scale(1.04);
+    }
+  }
+
+  @keyframes rack-highlight {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 0, 0);
+    }
+
+    16%,
+    84% {
+      opacity: 0.72;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(15.625rem, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .clothing-rack__light,
+    .clothing-rack__garment,
+    .clothing-rack__highlight {
+      animation: none;
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import EventCategories from '@/components/sections/events/EventCategories.astro';
+import EventsHero from '@/components/sections/events/EventsHero.astro';
+import PastEventsSection from '@/components/sections/events/PastEventsSection.astro';
+import UpcomingEventsSection from '@/components/sections/events/UpcomingEventsSection.astro';
+import MotionController from '@/components/motion/MotionController.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getEventsPageData } from '@/lib/content/getEventsPageData';
+import {
+  getEventsPageSettings,
+  getPastParishEvents,
+  getUpcomingParishEvents,
+} from '@/lib/content/getParishEvents';
+
+const buildTime = new Date();
+const [eventsPageData, eventSettings, upcomingEvents, pastEvents] =
+  await Promise.all([
+    getEventsPageData(),
+    getEventsPageSettings(),
+    getUpcomingParishEvents(buildTime),
+    getPastParishEvents(buildTime),
+  ]);
+---
+
+<BaseLayout
+  title={eventsPageData.seo.title}
+  description={eventsPageData.seo.description}
+  pageClass="events-page"
+  headerVariant="light"
+  noIndex
+>
+  <EventsHero hero={eventsPageData.hero} />
+  {
+    eventSettings.showUpcomingSection && upcomingEvents.length > 0 && (
+      <UpcomingEventsSection
+        title={eventSettings.upcomingSectionTitle}
+        events={upcomingEvents}
+      />
+    )
+  }
+  <EventCategories
+    overview={eventsPageData.overview}
+    categories={eventsPageData.categories}
+  />
+  {
+    eventSettings.showPastSection && pastEvents.length > 0 && (
+      <PastEventsSection
+        title={eventSettings.pastSectionTitle}
+        events={pastEvents}
+      />
+    )
+  }
+  <MotionController />
+</BaseLayout>
