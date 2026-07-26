@@ -205,8 +205,8 @@ ni le fichier local ni le futur fournisseur CMS.
 - `sections/about/AboutHero.astro` : hero photographique avec recadrages
   distincts et header transparent;
 - `AboutIntroduction.astro` : introduction centrée et accent manuscrit;
-- `ParishHistory.astro` : repères historiques sémantiques, diptyque et
-  consécration facultative;
+- `ImmersiveHistoryTimeline.astro` : neuf repères historiques sémantiques,
+  compositions alternées, illustrations artistiques et interlude documentaire;
 - `AboutPrinciples.astro` : trois panneaux sombres fidèles à la composition
   Figma, sans mission officielle inventée;
 - `ArchitectureStory.astro` : image asymétrique, récit et caractéristiques;
@@ -353,6 +353,22 @@ du vitrail utilise un `requestAnimationFrame` ponctuel.
 de contenu. Sanity pourra modifier le texte voisin, mais ne pilotera pas les
 fragments SVG ou leurs animations. L’architecture et les contraintes sont
 documentées dans [`MOTION_SYSTEM.md`](./MOTION_SYSTEM.md).
+
+La chronologie de Notre paroisse réutilise les tokens et les principes
+d’amélioration progressive, mais possède un initialiseur ciblé :
+`src/scripts/history-timeline.ts`. Ce second observateur ne duplique pas les
+révélations génériques; il maintient un chapitre actif et fait progresser les
+segments de l’axe. Il n’écoute jamais l’événement `scroll`.
+
+Le rendu reste visible sans JavaScript. Le script ajoute seulement
+l’accentuation active après avoir confirmé `IntersectionObserver` et l’absence
+de préférence reduced motion. Toutes les images restent dans leur article.
+
+Le contrat `HistoryTimelineContent` sépare les dates, textes, images, types de
+source et statuts éditoriaux du comportement visuel. Sanity pourra remplacer la
+source locale; Astro conservera la grille alternée, les transitions, la ligne
+et les breakpoints. Voir
+[`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
 
 ## Limites actuelles
 

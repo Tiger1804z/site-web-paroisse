@@ -1,0 +1,607 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { HistoryImageKind, HistoryTimelineContent } from '@/types/about';
+
+interface Props {
+  history: HistoryTimelineContent;
+}
+
+const { history } = Astro.props;
+
+const imageKindLabels = {
+  'ai-illustration': 'Illustration artistique — non documentaire',
+  'documentary-photo': 'Repère documentaire — photographie prise dans l’église',
+  'current-photo': 'Photographie actuelle',
+} satisfies Record<HistoryImageKind, string>;
+---
+
+<section
+  class="history-timeline section-block"
+  aria-labelledby="history-timeline-title"
+  data-history-timeline
+>
+  <Container>
+    <header class="history-timeline__header">
+      <Eyebrow tone="light">{history.eyebrow}</Eyebrow>
+      <h2 id="history-timeline-title" class="history-timeline__title type-h2">
+        {history.title}
+      </h2>
+      <p class="history-timeline__introduction type-body-large">
+        {history.introduction}
+      </p>
+      <aside class="history-timeline__disclosure" role="note">
+        <span aria-hidden="true">✦</span>
+        <p>{history.illustrationDisclosure}</p>
+      </aside>
+    </header>
+
+    <ol
+      class="history-timeline__chapters"
+      aria-label="Neuf repères de l’histoire paroissiale"
+    >
+      {
+        history.entries.map((entry, index) => (
+          <li class="history-timeline__chapter-item">
+            <article
+              class:list={[
+                'history-timeline__chapter',
+                entry.imageKind === 'documentary-photo' &&
+                  'history-timeline__chapter--documentary',
+              ]}
+              aria-labelledby={`history-chapter-${entry.id}`}
+              data-history-chapter
+              data-history-index={index}
+              data-history-image-kind={entry.imageKind}
+              data-history-editorial-status={entry.editorialStatus}
+            >
+              <div class="history-timeline__axis" aria-hidden="true">
+                <span class="history-timeline__marker">
+                  {entry.stepNumber.toString().padStart(2, '0')}
+                </span>
+              </div>
+
+              <div class="history-timeline__chapter-content">
+                <p class="history-timeline__period type-label">
+                  {entry.periodLabel}
+                </p>
+                {entry.imageKind === 'documentary-photo' && (
+                  <p class="history-timeline__document-label type-eyebrow">
+                    Repère documentaire
+                  </p>
+                )}
+                <h3
+                  id={`history-chapter-${entry.id}`}
+                  class="history-timeline__chapter-title type-h3"
+                >
+                  {entry.title}
+                </h3>
+                <p class="history-timeline__summary type-body">
+                  {entry.summary}
+                </p>
+
+                {entry.body?.map((paragraph) => (
+                  <p class="history-timeline__body">{paragraph}</p>
+                ))}
+
+                <p class="history-timeline__source">
+                  <span>Source éditoriale</span>
+                  {entry.sourceLabel}
+                </p>
+
+                {entry.disclosure && (
+                  <p class="history-timeline__entry-disclosure">
+                    {entry.disclosure}
+                  </p>
+                )}
+              </div>
+
+              <figure
+                class:list={[
+                  'history-timeline__figure',
+                  `history-timeline__figure--${entry.imageKind}`,
+                ]}
+              >
+                <Image
+                  src={entry.image}
+                  alt={entry.imageAlt}
+                  widths={[360, 540, 720, 900]}
+                  sizes="(min-width: 64rem) 42vw, calc(100vw - 5rem)"
+                  format="webp"
+                  quality={88}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{imageKindLabels[entry.imageKind]}</figcaption>
+              </figure>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+
+    {
+      history.epilogue && (
+        <aside
+          class="history-timeline__epilogue"
+          aria-labelledby="history-epilogue-title"
+        >
+          {history.epilogue.eyebrow && (
+            <Eyebrow>{history.epilogue.eyebrow}</Eyebrow>
+          )}
+          <h3 id="history-epilogue-title" class="type-h3">
+            {history.epilogue.title}
+          </h3>
+          <div>
+            {history.epilogue.paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+        </aside>
+      )
+    }
+  </Container>
+</section>
+
+<script>
+  import '@/scripts/history-timeline';
+</script>
+
+<style>
+  .history-timeline {
+    position: relative;
+    overflow: clip;
+    background:
+      radial-gradient(
+        circle at 15% 12%,
+        color-mix(in srgb, var(--color-burgundy) 65%, transparent),
+        transparent 34rem
+      ),
+      linear-gradient(
+        155deg,
+        var(--color-burgundy-dark),
+        var(--color-charcoal) 52%,
+        #25191b
+      );
+    color: var(--color-ivory);
+  }
+
+  .history-timeline::before {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 3%, transparent),
+      transparent
+    );
+    content: '';
+    pointer-events: none;
+  }
+
+  .history-timeline__header {
+    position: relative;
+    z-index: 1;
+    max-width: 49rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .history-timeline__title {
+    margin: 1rem 0 1.5rem;
+    color: var(--color-ivory);
+  }
+
+  .history-timeline__introduction {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-ivory) 76%, transparent);
+  }
+
+  .history-timeline__disclosure {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    max-width: 43rem;
+    margin: 2rem auto 0;
+    padding: 1rem 1.125rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+    background: color-mix(in srgb, var(--color-charcoal) 55%, transparent);
+    color: color-mix(in srgb, var(--color-ivory) 80%, transparent);
+    text-align: left;
+  }
+
+  .history-timeline__disclosure span {
+    color: var(--color-gold);
+  }
+
+  .history-timeline__disclosure p {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+  }
+
+  .history-timeline__chapters {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    max-width: 48rem;
+    margin: clamp(4.5rem, 10vw, 8rem) auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .history-timeline__chapter-item {
+    margin: 0;
+    padding: 0;
+  }
+
+  .history-timeline__chapter {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1.75rem 1.25rem;
+    min-width: 0;
+    padding-block: clamp(2.75rem, 8vw, 4.5rem);
+  }
+
+  .history-timeline__axis {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1 / -1;
+    min-height: 100%;
+  }
+
+  .history-timeline__axis::before,
+  .history-timeline__axis::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: color-mix(in srgb, var(--color-gold) 24%, transparent);
+    content: '';
+    transform: translateX(-50%);
+  }
+
+  .history-timeline__axis::after {
+    background: var(--color-gold);
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top;
+    transition: transform var(--motion-duration-slow)
+      var(--motion-ease-emphasized);
+  }
+
+  .history-timeline__chapter-item:first-child .history-timeline__axis::before,
+  .history-timeline__chapter-item:first-child .history-timeline__axis::after {
+    top: 1.0625rem;
+  }
+
+  .history-timeline__chapter-item:last-child .history-timeline__axis::before,
+  .history-timeline__chapter-item:last-child .history-timeline__axis::after {
+    bottom: calc(100% - 1.0625rem);
+  }
+
+  .history-timeline__chapter[data-history-past] .history-timeline__axis::after {
+    transform: translateX(-50%) scaleY(1);
+  }
+
+  .history-timeline__chapter[data-history-active]
+    .history-timeline__axis::after {
+    transform: translateX(-50%) scaleY(0.5);
+  }
+
+  .history-timeline__chapter-item:first-child
+    .history-timeline__chapter[data-history-active]
+    .history-timeline__axis::after {
+    transform: translateX(-50%) scaleY(0);
+  }
+
+  .history-timeline__chapter-item:last-child
+    .history-timeline__chapter[data-history-active]
+    .history-timeline__axis::after {
+    transform: translateX(-50%) scaleY(1);
+  }
+
+  .history-timeline__marker {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 50%;
+    display: grid;
+    width: 2.125rem;
+    height: 2.125rem;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 62%, transparent);
+    border-radius: 50%;
+    background: var(--color-charcoal);
+    color: var(--color-gold);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    box-shadow: 0 0 0 0.45rem var(--color-charcoal);
+    transform: translateX(-50%);
+    transition:
+      transform var(--motion-duration-normal) var(--motion-ease-emphasized),
+      background-color var(--motion-duration-normal) var(--motion-ease-standard),
+      color var(--motion-duration-normal) var(--motion-ease-standard);
+  }
+
+  .history-timeline__chapter[data-history-active] .history-timeline__marker {
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+    transform: translateX(-50%) scale(1.12);
+  }
+
+  .history-timeline__chapter-content {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .history-timeline__period,
+  .history-timeline__document-label,
+  .history-timeline__chapter-title,
+  .history-timeline__summary,
+  .history-timeline__body,
+  .history-timeline__source,
+  .history-timeline__entry-disclosure {
+    margin: 0;
+  }
+
+  .history-timeline__period {
+    color: var(--color-gold);
+  }
+
+  .history-timeline__document-label {
+    margin-top: 0.75rem;
+    color: var(--color-rose);
+  }
+
+  .history-timeline__chapter-title {
+    margin-top: 0.65rem;
+    color: var(--color-ivory);
+  }
+
+  .history-timeline__summary {
+    margin-top: 1rem;
+    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+  }
+
+  .history-timeline__body {
+    margin-top: 1rem;
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+    font-size: 0.9375rem;
+    line-height: 1.75;
+  }
+
+  .history-timeline__source {
+    display: grid;
+    gap: 0.2rem;
+    margin-top: 1.5rem;
+    color: color-mix(in srgb, var(--color-ivory) 56%, transparent);
+    font-size: 0.75rem;
+    line-height: 1.55;
+  }
+
+  .history-timeline__source span {
+    color: var(--color-gold);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .history-timeline__entry-disclosure {
+    margin-top: 0.75rem;
+    color: color-mix(in srgb, var(--color-ivory) 58%, transparent);
+    font-size: 0.6875rem;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .history-timeline__figure {
+    display: grid;
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    max-width: 38rem;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 32%, transparent);
+    background: #171313;
+    box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 24%);
+    transition:
+      transform 900ms var(--motion-ease-emphasized),
+      border-color var(--motion-duration-normal) var(--motion-ease-standard);
+  }
+
+  .history-timeline__figure--documentary-photo {
+    padding: 0.5rem;
+    border-color: color-mix(in srgb, var(--color-ivory) 48%, transparent);
+    background: var(--color-paper);
+  }
+
+  .history-timeline__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1122 / 1402;
+    object-fit: contain;
+    background: #171313;
+  }
+
+  .history-timeline__figure--documentary-photo img {
+    background: var(--color-paper);
+  }
+
+  .history-timeline__figure figcaption {
+    padding: 0.75rem 0.875rem;
+    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
+
+  .history-timeline__figure--documentary-photo figcaption {
+    color: var(--color-brick);
+  }
+
+  .history-timeline__chapter--documentary .history-timeline__chapter-content {
+    padding: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
+    background: color-mix(in srgb, var(--color-ivory) 7%, transparent);
+  }
+
+  .history-timeline__epilogue {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1.25rem;
+    max-width: 58rem;
+    margin: clamp(5rem, 10vw, 8rem) auto 0;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 42%, transparent);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 22%, transparent);
+    background: color-mix(in srgb, var(--color-burgundy) 28%, transparent);
+  }
+
+  .history-timeline__epilogue h3,
+  .history-timeline__epilogue p {
+    margin: 0;
+  }
+
+  .history-timeline__epilogue h3 {
+    color: var(--color-ivory);
+  }
+
+  .history-timeline__epilogue div {
+    display: grid;
+    gap: 0.75rem;
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+  }
+
+  @media (min-width: 64rem) {
+    .history-timeline__chapters {
+      max-width: none;
+    }
+
+    .history-timeline__chapter {
+      grid-template-columns:
+        minmax(0, 1fr) clamp(4.5rem, 6vw, 6.5rem)
+        minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+      min-height: clamp(42rem, 88vh, 56rem);
+      align-items: center;
+      padding-block: 4rem;
+    }
+
+    .history-timeline__axis {
+      grid-column: 2;
+      grid-row: 1;
+      height: 100%;
+    }
+
+    .history-timeline__axis::before,
+    .history-timeline__axis::after {
+      top: 0;
+      bottom: 0;
+    }
+
+    .history-timeline__chapter-item:first-child .history-timeline__axis::before,
+    .history-timeline__chapter-item:first-child .history-timeline__axis::after {
+      top: 50%;
+    }
+
+    .history-timeline__chapter-item:last-child .history-timeline__axis::before,
+    .history-timeline__chapter-item:last-child .history-timeline__axis::after {
+      bottom: 50%;
+    }
+
+    .history-timeline__marker {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .history-timeline__chapter[data-history-active] .history-timeline__marker {
+      transform: translate(-50%, -50%) scale(1.16);
+    }
+
+    .history-timeline__chapter-content,
+    .history-timeline__figure {
+      grid-row: 1;
+      align-self: center;
+    }
+
+    .history-timeline__chapter-item:nth-child(odd) .history-timeline__figure {
+      grid-column: 1;
+      justify-self: end;
+    }
+
+    .history-timeline__chapter-item:nth-child(odd)
+      .history-timeline__chapter-content {
+      grid-column: 3;
+    }
+
+    .history-timeline__chapter-item:nth-child(even) .history-timeline__figure {
+      grid-column: 3;
+      justify-self: start;
+    }
+
+    .history-timeline__chapter-item:nth-child(even)
+      .history-timeline__chapter-content {
+      grid-column: 1;
+    }
+
+    .history-timeline[data-history-ready] .history-timeline__chapter {
+      opacity: 0.78;
+      transform: translate3d(0, var(--motion-distance-small), 0);
+      transition:
+        opacity var(--motion-duration-reveal) var(--motion-ease-emphasized),
+        transform var(--motion-duration-reveal) var(--motion-ease-emphasized);
+    }
+
+    .history-timeline[data-history-ready]
+      .history-timeline__chapter[data-history-active] {
+      opacity: 1;
+      transform: none;
+    }
+
+    .history-timeline[data-history-ready]
+      .history-timeline__chapter:not([data-history-active])
+      .history-timeline__figure {
+      transform: translate3d(0, 0.625rem, 0) scale(0.995);
+    }
+
+    .history-timeline[data-history-ready]
+      .history-timeline__chapter[data-history-active]
+      .history-timeline__figure {
+      border-color: color-mix(in srgb, var(--color-gold) 58%, transparent);
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .history-timeline__axis::after,
+    .history-timeline__marker,
+    .history-timeline__figure,
+    .history-timeline__chapter {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .history-timeline__marker {
+      transform: translateX(-50%) !important;
+    }
+  }
+
+  @media (min-width: 64rem) and (prefers-reduced-motion: reduce) {
+    .history-timeline__marker {
+      transform: translate(-50%, -50%) !important;
+    }
+  }
+</style>

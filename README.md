@@ -11,10 +11,11 @@ footer et aux favicons. Ses variantes et restrictions sont documentées dans
 [docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
 
 Un système de mouvement léger est appliqué aux pages pilotes Accueil, Notre
-paroisse et Sacrements. Il repose sur CSS, un seul `IntersectionObserver` et
-une amélioration progressive sans dépendance. Le vitrail vivant est intégré
-une seule fois à l’accueil. Les règles de performance et d’accessibilité sont
-documentées dans [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
+paroisse et Sacrements. Il repose sur CSS, un observateur partagé pour les
+révélations et un observateur ciblé pour la chronologie, sans listener scroll
+continu ni dépendance. Le vitrail vivant est intégré une seule fois à
+l’accueil. Les règles de performance et d’accessibilité sont documentées dans
+[docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
 
 Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
 
@@ -27,6 +28,11 @@ textes historiques sont réécrits prudemment et conservent leur statut de
 confirmation. Le futur flux Sanity, Portable Text et les images avec hotspot
 sont expliqués dans
 [docs/ASTRO_SANITY_ABOUT_PREPARATION.md](docs/ASTRO_SANITY_ABOUT_PREPARATION.md).
+Sa chronologie immersive présente huit illustrations artistiques explicitement
+non documentaires et une photographie réelle de la plaque de consécration. Le
+récit demeure entièrement disponible en HTML, y compris sans JavaScript. Son
+architecture est décrite dans
+[docs/IMMERSIVE_HISTORY_TIMELINE.md](docs/IMMERSIVE_HISTORY_TIMELINE.md).
 
 La route `/premiere-visite/` utilise une source locale
 `FirstVisitPageData`. Les coordonnées, le stationnement et les détails

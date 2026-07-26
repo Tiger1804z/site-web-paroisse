@@ -149,3 +149,24 @@ générique de mouvement.
   sur petit mobile et en reduced motion;
 - les fichiers d’aperçu, leurs contrôles, leurs polices et leurs styles de page
   ne sont pas copiés dans l’application.
+
+## Ajout ciblé — Chronologie immersive S1-T06.6
+
+La chronologie historique est une nouvelle expérience spécifique à Notre
+paroisse. Elle ne remplace ni le reveal générique, ni le vitrail, ni les
+ambiances de hero.
+
+| Élément          | État avant S1-T06.6                                                              | Risque                                                | Décision                                                                   | Implémentation                                         |
+| ---------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Récit historique | Trois repères compacts, une photographie extérieure et un encart de consécration | Récit trop condensé; 2018 séparé du fil chronologique | Neuf articles sémantiques dans l’ordre chronologique                       | `ImmersiveHistoryTimeline.astro`                       |
+| Illustrations    | Absentes                                                                         | Confusion possible avec des archives                  | Mention publique, alt explicites et `imageKind` typé                       | Huit PNG artistiques et une photographie documentaire  |
+| Activation       | Aucun chapitre actif                                                             | Un listener scroll continu serait coûteux             | Observer une bande centrale et mettre à jour seulement aux franchissements | `history-timeline.ts`                                  |
+| Composition      | Diptyque statique                                                                | Un panneau partagé dissocierait l’image de son récit  | Chaque article possède son image; alternance gauche/droite sur desktop     | Grille à trois colonnes                                |
+| Sans JavaScript  | Contenu visible                                                                  | Un état actif pourrait masquer un chapitre            | Les neuf articles restent entièrement visibles                             | `data-history-ready` améliore seulement l’accentuation |
+| Reduced motion   | Règles globales                                                                  | Une accentuation animée peut être inconfortable       | Conserver la grille et désactiver les transitions                          | Test `matchMedia` et CSS                               |
+| Progression      | Absente                                                                          | Animation de `height` ou dépendance à la couleur      | `scaleY`, numéros et contraste                                             | Segments `data-history-past`                           |
+
+Le script spécialisé ne concurrence pas `motion.ts` : ce dernier révèle une
+cible une seule fois, tandis que la chronologie maintient un état actif qui
+peut évoluer dans les deux sens. Aucun chapitre n’utilise simultanément les
+deux systèmes.

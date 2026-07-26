@@ -37,6 +37,32 @@ Import effectué le 25 juillet 2026 depuis le dossier local `incoming-images/`. 
 | `outside4.webp` | `eglise-exterieur-allee-01.webp`          | WebP   | 763 × 1020 px  | 0,16 Mio (168 364 octets) | Portrait    | `e84ae4df14481f03e5640128d91ee1da83df95e57b710a591451ca04ab522c5c` | Vue extérieure avec allée, garde-corps et structures portant des cloches.                   | Oui, personnes éloignées au fond de l’allée        | Autorisation de publication à confirmer; personnes visibles — consentement à confirmer. | Contact, itinéraire, première visite ou galerie.         | Ne pas publier avant confirmation des droits et du consentement des personnes visibles. |
 | `outside5.webp` | `eglise-exterieur-jardin-01.webp`         | WebP   | 763 × 1020 px  | 0,19 Mio (195 312 octets) | Portrait    | `019c28f83e8715389c6835118ea74c759914c7aa694dc25f75f50647c806f641` | Vue extérieure avec pelouse, végétation, bâtiment et structures portant des cloches.        | Non                                                | Autorisation de publication à confirmer.                                                | Notre paroisse, contact, galerie ou contenu éditorial.   | Date de prise de vue inconnue.                                                          |
 
+## Illustrations de la chronologie — S1-T06.6
+
+Import effectué le 26 juillet 2026 depuis les fichiers fournis localement par
+le client. Les copies de production sont binaires et leurs empreintes
+correspondent aux sources. Malgré l’attente initiale RGBA, les huit fichiers
+sont des PNG sRGB à trois canaux, sans transparence.
+
+Tous contiennent du texte intégré dans les pixels et des éléments générés. Ils
+ne sont ni des photographies d’archives, ni des reproductions officielles, ni
+des preuves historiques.
+
+| Fichier de production                   | Chapitre        | Format  | Dimensions  |            Poids | SHA-256                                                            | Type et précaution                                                                   |
+| --------------------------------------- | --------------- | ------- | ----------- | ---------------: | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `01-avant-1959.png`                     | Avant 1959      | PNG RGB | 1122 × 1402 | 2 814 420 octets | `75d61c03f343985e806a80af369a62927a566bc18fb88b3b132ae4991d7c32f8` | Illustration artistique d’un quartier; ni photographie aérienne ni plan authentique. |
+| `02-fondation-1959.png`                 | 23 février 1959 | PNG RGB | 1122 × 1402 | 2 680 762 octets | `452e7b74f5f7530d244a4a8eb826c3b644d386ea643b30b6f0002c091f084219` | Portrait et décret générés; aucun des deux n’est documentaire.                       |
+| `03-achat-terrain-1960.png`             | 1960            | PNG RGB | 1122 × 1402 | 2 932 608 octets | `59ea0660c635364a55f78a78fd54e39d7915fe4dd001111f3cfb8444e01e32e8` | Plan de terrain stylisé; ne constitue pas un plan cadastral.                         |
+| `04-paroisse-sans-eglise-1959-1963.png` | 1959–1963       | PNG RGB | 1122 × 1402 | 2 189 470 octets | `e77b96b934b65fb4fc1a8ac1df2c1faa438650301b0479268f6216bb126d2206` | Personnes et lieux reconstitués artistiquement.                                      |
+| `05-construction-eglise-1963-1964.png`  | 1963–1964       | PNG RGB | 1122 × 1402 | 2 779 410 octets | `1303bbd7415f0b35e9e974c4381c2f05baa9aadd2304d922147ddc72c08ad13b` | Chantier et portraits d’architectes non documentaires.                               |
+| `06-architecture-1964.png`              | 1964            | PNG RGB | 1122 × 1402 | 2 506 417 octets | `3384ed8abaa7a244dd2685ed83b5a28573f00dd9807dccb2d5264237b861b4a3` | Interprétation artistique de l’intérieur et de ses matériaux.                        |
+| `07-evolution-vers-1990.png`            | Vers 1990       | PNG RGB | 1122 × 1402 | 2 759 441 octets | `6a63ef56d9340db262b2c6cb178a35a863ae354bf020556116c336f338f014a8` | Collage généré imitant des photographies; non documentaire.                          |
+| `08-patrimoine-vivant-aujourdhui.png`   | Aujourd’hui     | PNG RGB | 1122 × 1402 | 2 669 299 octets | `1f9c751ecab77828fd3afce27e941c95945f31082fc25c27d08a08c1f28a308c` | Rassemblement généré; ne documente aucun événement ou programme actuel.              |
+
+Poids total des huit sources : 21 331 827 octets, soit 20,34 Mio. Astro produit
+des variantes WebP adaptées au build; aucune seconde copie source optimisée
+n’est conservée dans le dépôt.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.

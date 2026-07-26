@@ -182,6 +182,30 @@ L’œuvre est sous le premier écran, ne charge aucune image et ne concurrence 
 le LCP photographique du hero. Elle n’utilise ni Canvas, ni WebGL, ni
 dépendance.
 
+## Chronologie immersive de Notre paroisse
+
+La chronologie constitue un usage spécialisé du système, pas une nouvelle
+bibliothèque. `ImmersiveHistoryTimeline.astro` réutilise les tokens
+`--motion-*`; `history-timeline.ts` ajoute un observateur dédié uniquement
+parce que l’interface doit conserver un chapitre actif et faire progresser les
+segments de la ligne.
+
+Le script n’effectue aucun reveal générique et les chapitres n’utilisent pas
+`data-motion-reveal`. Cette séparation évite une double mise à `opacity: 0`.
+L’observateur écoute une bande centrale du viewport, puis compare les centres
+des neuf articles. Il n’existe aucun listener `scroll`, aucune boucle
+`requestAnimationFrame` et aucune animation JavaScript continue.
+
+À partir de 1024 px, chaque article alterne son image et son texte autour d’un
+axe central. Il n’existe aucun panneau partagé : les neuf images restent dans
+leurs neuf articles. Sur mobile, la composition devient une pile verticale.
+
+Les transitions se limitent à une variation d’`opacity` qui ne descend jamais
+à zéro, `translate3d`, une échelle inférieure à 1 % et `scaleY` pour la ligne.
+Reduced motion conserve la structure, mais retire l’accentuation active et
+toutes les transitions. Le détail se trouve dans
+[`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
+
 ## Règles d’utilisation
 
 Utiliser le système pour les compositions éditoriales et photographiques
