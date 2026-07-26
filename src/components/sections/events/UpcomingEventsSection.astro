@@ -222,6 +222,8 @@ const { title, events } = Astro.props;
   }
 
   .upcoming-event__media :global(img) {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -257,7 +259,8 @@ const { title, events } = Astro.props;
 
   .upcoming-event__gallery-item {
     position: relative;
-    height: 9rem;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
     margin: 0;
     overflow: hidden;
     background: var(--color-charcoal);
@@ -267,6 +270,7 @@ const { title, events } = Astro.props;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
   }
 
   .upcoming-event__gallery-item figcaption {
@@ -394,9 +398,26 @@ const { title, events } = Astro.props;
     }
 
     .upcoming-event__media-column {
-      display: grid;
-      min-height: 38rem;
-      grid-template-rows: minmax(0, 1fr) auto;
+      position: relative;
+      display: block;
+      min-height: 43rem;
+    }
+
+    .upcoming-event__media-column > .upcoming-event__media {
+      position: absolute;
+      inset: 0;
+      min-height: 0;
+    }
+
+    .upcoming-event__gallery {
+      position: absolute;
+      z-index: 1;
+      right: 1.25rem;
+      bottom: 1.25rem;
+      width: min(48%, 22rem);
+      padding: 2px;
+      border: 1px solid rgb(247 242 233 / 68%);
+      box-shadow: 0 1.25rem 3rem rgb(28 25 24 / 28%);
     }
 
     .upcoming-event--without-image {
