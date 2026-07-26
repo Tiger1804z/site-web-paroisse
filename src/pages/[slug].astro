@@ -1,0 +1,113 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface PlaceholderPage {
+  slug: string;
+  title: string;
+  description: string;
+}
+
+export function getStaticPaths() {
+  const placeholderPages = [
+    {
+      slug: 'vie-paroissiale',
+      title: 'Vie paroissiale',
+      description:
+        'Vie de la communauté — contenu temporaire en attente de migration.',
+    },
+    {
+      slug: 'evenements',
+      title: 'Événements',
+      description:
+        'Événements paroissiaux — contenu temporaire en attente de migration.',
+    },
+    {
+      slug: 'feuillets-paroissiaux',
+      title: 'Feuillets paroissiaux',
+      description:
+        'Feuillets paroissiaux — contenu temporaire en attente de migration.',
+    },
+    {
+      slug: 'friperie',
+      title: 'Friperie',
+      description:
+        'Information sur la friperie — contenu temporaire en attente de migration.',
+    },
+    {
+      slug: 'location-de-salle',
+      title: 'Location de salle',
+      description:
+        'Information sur la location de salle — contenu temporaire en attente de migration.',
+    },
+    {
+      slug: 'galerie',
+      title: 'Galerie',
+      description:
+        'Galerie de la paroisse — contenu temporaire en attente de migration.',
+    },
+    {
+      slug: 'contact',
+      title: 'Contact',
+      description:
+        'Coordonnées de la paroisse — contenu temporaire en attente de confirmation et de migration.',
+    },
+    {
+      slug: 'politique-de-confidentialite',
+      title: 'Politique de confidentialité',
+      description:
+        'Politique de confidentialité — contenu temporaire en attente de rédaction.',
+    },
+    {
+      slug: 'mentions-legales',
+      title: 'Mentions légales',
+      description:
+        'Mentions légales — contenu temporaire en attente de rédaction.',
+    },
+  ] as const satisfies readonly PlaceholderPage[];
+
+  return placeholderPages.map((page) => ({
+    params: { slug: page.slug },
+    props: page,
+  }));
+}
+
+const { title, description } = Astro.props as PlaceholderPage;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  headerVariant="light"
+  noIndex
+>
+  <section
+    class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
+    aria-labelledby="placeholder-title"
+  >
+    <div class="mx-auto max-w-[1280px] px-5 md:px-10 lg:px-20">
+      <div class="max-w-[680px]">
+        <p
+          class="mb-4 text-[0.6875rem] font-semibold tracking-[0.2em] text-muted uppercase"
+        >
+          Page en préparation
+        </p>
+        <h1
+          id="placeholder-title"
+          class="font-display text-[3rem] leading-[1.05] font-semibold text-charcoal md:text-[4.25rem]"
+        >
+          {title}
+        </h1>
+        <p class="mt-6 max-w-[38rem] text-lg leading-relaxed text-muted">
+          Cette route réserve la structure du futur site. Son contenu complet
+          sera migré fidèlement depuis l’export Figma dans un ticket dédié.
+        </p>
+        <a
+          class="mt-10 inline-flex min-h-12 items-center border border-burgundy px-6 py-3 text-sm font-semibold tracking-wide text-burgundy transition-colors duration-200 hover:bg-burgundy hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-burgundy"
+          href="/"
+        >
+          Retour à l’accueil
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

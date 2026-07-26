@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@/components/ui/Container.astro';
+import type { SacramentsHero as SacramentsHeroContent } from '@/types/sacraments';
+
+interface Props {
+  hero: SacramentsHeroContent;
+}
+
+const { hero } = Astro.props;
+const heroStyle = [
+  `--sacraments-hero-position-desktop: ${hero.image.desktopPosition ?? 'center'}`,
+  `--sacraments-hero-position-mobile: ${hero.image.mobilePosition ?? hero.image.desktopPosition ?? 'center'}`,
+].join('; ');
+---
+
+<section
+  class="sacraments-hero"
+  style={heroStyle}
+  aria-labelledby="sacraments-hero-title"
+>
+  <Image
+    class="sacraments-hero__image"
+    src={hero.image.image}
+    alt={hero.image.alt}
+    widths={[640, 960, 1280, 1600, 1920]}
+    sizes="100vw"
+    loading="eager"
+    decoding="async"
+    fetchpriority="high"
+  />
+  <div class="sacraments-hero__overlay" aria-hidden="true"></div>
+
+  <Container class="sacraments-hero__container">
+    <div class="sacraments-hero__content">
+      <p class="sacraments-hero__eyebrow type-eyebrow">{hero.eyebrow}</p>
+      <h1 id="sacraments-hero-title" class="sacraments-hero__title">
+        {hero.title}
+      </h1>
+      <p class="sacraments-hero__introduction">{hero.introduction}</p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .sacraments-hero {
+    position: relative;
+    display: grid;
+    height: 45svh;
+    min-height: 21.25rem;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--color-plum);
+  }
+
+  .sacraments-hero__image,
+  .sacraments-hero__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .sacraments-hero__image {
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--sacraments-hero-position-mobile);
+  }
+
+  .sacraments-hero__overlay {
+    z-index: -1;
+    background:
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--color-charcoal) 25%, transparent),
+        transparent 58%
+      ),
+      color-mix(in srgb, var(--color-plum) 78%, transparent);
+  }
+
+  .sacraments-hero__container {
+    display: flex;
+    min-height: inherit;
+    align-items: flex-end;
+    padding-top: calc(var(--header-height) + 3rem);
+    padding-bottom: 3.5rem;
+  }
+
+  .sacraments-hero__content {
+    max-width: 40rem;
+  }
+
+  .sacraments-hero__eyebrow {
+    margin: 0 0 0.75rem;
+    color: color-mix(in srgb, var(--color-gold) 82%, transparent);
+  }
+
+  .sacraments-hero__title {
+    margin: 0;
+    color: var(--color-ivory);
+    font-size: clamp(2.75rem, calc(2.029rem + 2.954vw), 3.75rem);
+    font-weight: 600;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .sacraments-hero__introduction {
+    max-width: 35rem;
+    margin: 0.75rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 76%, transparent);
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  @media (min-width: 48rem) {
+    .sacraments-hero__image {
+      object-position: var(--sacraments-hero-position-desktop);
+    }
+  }
+
+  @media (max-height: 43.75rem) and (min-width: 48rem) {
+    .sacraments-hero {
+      height: auto;
+    }
+  }
+</style>

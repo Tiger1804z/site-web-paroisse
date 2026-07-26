@@ -1,0 +1,206 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+
+interface ScheduleRow {
+  day: string;
+  note: string;
+  time: string;
+}
+
+const schedule = [
+  { day: 'Samedi', note: 'Célébration', time: '[HEURE]' },
+  { day: 'Dimanche', note: 'Célébration', time: '[HEURE]' },
+  { day: 'Dimanche', note: 'Célébration', time: '[HEURE]' },
+] as const satisfies readonly ScheduleRow[];
+---
+
+<section
+  class="mass-schedule section-block"
+  aria-labelledby="mass-schedule-title"
+>
+  <div class="mass-schedule__beam" aria-hidden="true"></div>
+  <Container>
+    <div class="mass-schedule__grid">
+      <div class="mass-schedule__copy">
+        <Eyebrow tone="light">Célébrations</Eyebrow>
+        <h2 id="mass-schedule-title" class="type-h2">Célébrer avec nous</h2>
+        <p class="type-body">
+          Les horaires réguliers seront publiés après leur confirmation. Ils
+          peuvent être modifiés lors des fêtes et des célébrations spéciales.
+        </p>
+        <div class="mass-schedule__actions">
+          <Button href="/horaires">Voir tous les horaires</Button>
+          <Button href="/feuillets-paroissiaux" variant="dark">
+            Consulter les feuillets
+          </Button>
+        </div>
+      </div>
+
+      <div class="mass-schedule__list">
+        {
+          schedule.map((item) => (
+            <div class="mass-schedule__row">
+              <div>
+                <h3>{item.day}</h3>
+                <p>{item.note}</p>
+              </div>
+              <span>{item.time}</span>
+            </div>
+          ))
+        }
+        <div class="mass-schedule__special">
+          <div>
+            <h3>Célébrations spéciales</h3>
+            <p>Consultez les annonces récentes avant de vous déplacer.</p>
+          </div>
+        </div>
+        <p class="mass-schedule__updated">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+          Dernière mise à jour&nbsp;: [DATE]
+        </p>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .mass-schedule {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .mass-schedule__beam {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-gold) 10%, transparent),
+      color-mix(in srgb, var(--color-gold) 5%, transparent),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .mass-schedule__grid {
+    position: relative;
+    display: grid;
+    gap: 4rem;
+  }
+
+  .mass-schedule__copy {
+    max-width: 37.5rem;
+  }
+
+  .mass-schedule h2 {
+    margin: 1rem 0 0;
+    color: var(--color-ivory);
+  }
+
+  .mass-schedule__copy > .type-body {
+    max-width: 30rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
+  }
+
+  .mass-schedule__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .mass-schedule__list {
+    display: grid;
+  }
+
+  .mass-schedule__row,
+  .mass-schedule__special {
+    display: flex;
+    min-height: 5.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-inline: -1rem;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-ivory) 10%, transparent);
+    transition: background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .mass-schedule__row:hover,
+  .mass-schedule__special:hover {
+    background: color-mix(in srgb, var(--color-ivory) 5%, transparent);
+  }
+
+  .mass-schedule__row h3,
+  .mass-schedule__special h3 {
+    margin: 0;
+    color: var(--color-ivory);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .mass-schedule__row p,
+  .mass-schedule__special p {
+    margin: 0.25rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+
+  .mass-schedule__row > span {
+    flex: 0 0 auto;
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .mass-schedule__updated {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 50%, transparent);
+    font-size: 0.75rem;
+  }
+
+  .mass-schedule__updated svg {
+    flex: 0 0 auto;
+  }
+
+  @media (min-width: 64rem) {
+    .mass-schedule__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .mass-schedule__actions :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

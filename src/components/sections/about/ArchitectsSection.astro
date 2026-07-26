@@ -1,0 +1,233 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { AboutArchitects } from '@/types/about';
+
+interface Props {
+  architects: AboutArchitects;
+}
+
+const { architects } = Astro.props;
+
+function getInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 3)
+    .toUpperCase();
+}
+---
+
+<section class="architects section-block" aria-labelledby="architects-title">
+  <Container>
+    <header class="architects__header">
+      <Eyebrow>{architects.eyebrow}</Eyebrow>
+      <h2 id="architects-title" class="architects__title type-h2">
+        {architects.title}
+      </h2>
+      <p>{architects.introduction}</p>
+    </header>
+
+    <div class="architects__grid">
+      {
+        architects.profiles.map((profile) => (
+          <article class="architects__profile">
+            <div class="architects__monogram" aria-hidden="true">
+              <span>{getInitials(profile.name)}</span>
+            </div>
+            <p class="architects__label type-eyebrow">Conception</p>
+            <h3>{profile.name}</h3>
+            <p class="architects__role">{profile.role}</p>
+            {profile.description && (
+              <p class="architects__description">{profile.description}</p>
+            )}
+            {profile.confirmationRequired && (
+              <p class="architects__status">
+                Information à confirmer éditorialement
+              </p>
+            )}
+          </article>
+        ))
+      }
+
+      <aside class="architects__validation">
+        <div class="architects__validation-icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <p class="architects__validation-eyebrow type-eyebrow">
+          {architects.validationCard.eyebrow}
+        </p>
+        <h3>{architects.validationCard.title}</h3>
+        <p>{architects.validationCard.text}</p>
+      </aside>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .architects {
+    background: var(--color-paper);
+  }
+
+  .architects__header {
+    max-width: 44rem;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+
+  .architects__title {
+    margin: 1rem 0 1.25rem;
+    color: var(--color-charcoal);
+  }
+
+  .architects__header > p {
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .architects__grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .architects__profile {
+    min-width: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-ivory);
+  }
+
+  .architects__monogram {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 1.25rem;
+    place-items: center;
+    border: 1px solid var(--color-border);
+    background:
+      linear-gradient(
+        135deg,
+        transparent 49.8%,
+        color-mix(in srgb, var(--color-gold) 20%, transparent) 50%,
+        transparent 50.2%
+      ),
+      var(--color-paper);
+    color: color-mix(in srgb, var(--color-burgundy) 65%, transparent);
+  }
+
+  .architects__monogram span {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .architects__label,
+  .architects__profile h3,
+  .architects__profile p {
+    margin: 0;
+  }
+
+  .architects__label {
+    color: var(--color-gold);
+  }
+
+  .architects__profile h3 {
+    margin-top: 0.35rem;
+    color: var(--color-charcoal);
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .architects__role {
+    margin-top: 0.35rem !important;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .architects__description {
+    margin-top: 1rem !important;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .architects__status {
+    margin-top: 1rem !important;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-brick);
+    font-size: 0.75rem;
+  }
+
+  .architects__validation {
+    min-width: 0;
+    padding: 1.5rem;
+    background: var(--color-burgundy);
+    color: var(--color-ivory);
+  }
+
+  .architects__validation-icon {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1.25rem;
+    place-items: center;
+    background: color-mix(in srgb, var(--color-ivory) 10%, transparent);
+    color: var(--color-gold);
+  }
+
+  .architects__validation-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .architects__validation-eyebrow,
+  .architects__validation h3,
+  .architects__validation p {
+    margin: 0;
+  }
+
+  .architects__validation-eyebrow {
+    color: color-mix(in srgb, var(--color-gold) 85%, transparent);
+  }
+
+  .architects__validation h3 {
+    margin-top: 0.35rem;
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .architects__validation h3 + p {
+    margin-top: 1rem;
+    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+
+  @media (min-width: 48rem) {
+    .architects__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .architects__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

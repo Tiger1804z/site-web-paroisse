@@ -1,12 +1,39 @@
-# Site Web de la paroisse
+# Site Web de la Paroisse Saint-René-Goupil
 
-Fondation de production du futur site Web d’une paroisse catholique francophone située au Québec.
+Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholique francophone située au Québec.
 
 ## Statut actuel
 
-Le dépôt contient l’initialisation technique, pas le site final. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite et Sacrements et services migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
-Les pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés.
+Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
+footer et aux favicons. Ses variantes et restrictions sont documentées dans
+[docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
+
+Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
+
+La route `/horaires/` utilise également uniquement des placeholders. Son flux
+de contenu local typé et sa future connexion à Sanity sont expliqués dans
+[docs/ASTRO_SANITY_SCHEDULES_PREPARATION.md](docs/ASTRO_SANITY_SCHEDULES_PREPARATION.md).
+
+La route `/notre-paroisse/` utilise une source locale `AboutPageData`. Les
+textes historiques sont réécrits prudemment et conservent leur statut de
+confirmation. Le futur flux Sanity, Portable Text et les images avec hotspot
+sont expliqués dans
+[docs/ASTRO_SANITY_ABOUT_PREPARATION.md](docs/ASTRO_SANITY_ABOUT_PREPARATION.md).
+
+La route `/premiere-visite/` utilise une source locale
+`FirstVisitPageData`. Les coordonnées, le stationnement et les détails
+d’accessibilité restent explicitement à confirmer. La séparation entre le futur
+document `firstVisitPage` et les réglages globaux `siteSettings` est expliquée
+dans
+[docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md](docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md).
+
+La route `/sacrements/` utilise `SacramentsPageData`. Les slugs préparent de
+futures pages détaillées, mais aucun lien ni fichier `[slug].astro` n’est créé
+tant que le contenu n’est pas validé. Le futur flux `sacramentsPage`,
+références, documents `sacrament` et `getStaticPaths()` est documenté dans
+[docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md](docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
 
 ## Stack
 
@@ -42,7 +69,7 @@ Si `corepack enable` ne peut pas écrire dans l’installation système de Node 
 pnpm install --frozen-lockfile
 ```
 
-Le fichier `pnpm-workspace.yaml` autorise uniquement le script d’installation d’`esbuild`, nécessaire à la construction Astro.
+Le fichier `pnpm-workspace.yaml` autorise uniquement le script d’installation d’`esbuild`. `sharp` utilise ici son binaire précompilé résolu pour Windows; aucun script d’installation supplémentaire n’a dû être autorisé.
 
 ## Démarrage local
 
@@ -71,10 +98,12 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 .
 ├── .github/workflows/       # Intégration continue
 ├── docs/                    # Architecture, audit et plans
-├── public/                  # Actifs servis tels quels, vide pour l’instant
+├── public/                  # Favicons servis à des URL stables
 ├── reference/
+│   ├── brand/               # Original officiel du logo, inchangé
 │   └── figma-make-export/   # Copie lisible et inchangée de l’export
 ├── src/
+│   ├── assets/brand/        # Variantes de logo traitées par Astro
 │   ├── assets/images/paroisse/
 │   ├── components/
 │   │   ├── layout/
@@ -102,6 +131,22 @@ Le prototype vient de `Maquettes site Web paroisse.zip`, généré par Figma Mak
 
 Le prototype React/Vite n’est pas l’application de production. Son audit se trouve dans [docs/FIGMA_EXPORT_AUDIT.md](docs/FIGMA_EXPORT_AUDIT.md) et le plan de migration dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md).
 
+## Contenu et sitemap
+
+L’ancien site paroissial a été audité sans copier ses pages ni télécharger ses
+médias. Les documents de référence sont :
+
+- [audit du site existant](docs/LEGACY_SITE_CONTENT_AUDIT.md);
+- [inventaire du contenu](docs/CONTENT_INVENTORY.md);
+- [sitemap proposé](docs/SITEMAP.md);
+- [matrice de migration](docs/CONTENT_MIGRATION_MATRIX.md);
+- [questions de confirmation](docs/PARISH_CONTENT_CONFIRMATION.md).
+
+Le sitemap reste une proposition. Le header, le footer et
+`src/lib/navigation.ts` ne doivent pas être modifiés avant sa validation. Les
+horaires, tarifs, capacités, personnes, événements, inscriptions, annonceurs et
+coordonnées doivent être confirmés par la paroisse avant publication.
+
 ## Photographies
 
 - Les fichiers source ne doivent pas être retouchés, recompressés ou remplacés sans ticket explicite.
@@ -128,11 +173,11 @@ La CI l’exécute sur les pushes et pull requests visant `main` ou `staging`.
 
 Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Le prochain ticket recommandé est :
 
-`S1-T01 — Migrer le design system et le layout global depuis l’export Figma`
+`S1-T07 — Migrer la page Événements 1:1 depuis l’export Figma`
 
 ## Volontairement non implémenté
 
-- migration complète des pages;
+- migration complète des pages autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;

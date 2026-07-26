@@ -1,0 +1,157 @@
+---
+import IconButton from '@/components/ui/IconButton.astro';
+---
+
+<aside
+  id="annonce-importante"
+  class="important-notice"
+  aria-label="Annonce importante"
+  data-important-notice
+>
+  <div class="site-container important-notice__inner">
+    <div class="important-notice__message">
+      <span class="important-notice__dot" aria-hidden="true"></span>
+      <p>
+        <strong>Célébration spéciale</strong>
+        <span>L’horaire du [DATE] a été modifié.</span>
+      </p>
+    </div>
+    <div class="important-notice__actions">
+      <a href="/horaires">Voir les détails <span aria-hidden="true">→</span></a>
+      <IconButton
+        label="Fermer l’annonce"
+        variant="ghost"
+        data-important-notice-close
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M6 18 18 6M6 6l12 12"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </IconButton>
+    </div>
+  </div>
+</aside>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>('[data-important-notice]')
+    .forEach((notice) => {
+      if (notice.dataset.initialized === 'true') return;
+      notice.dataset.initialized = 'true';
+
+      notice
+        .querySelector<HTMLButtonElement>('[data-important-notice-close]')
+        ?.addEventListener('click', () => {
+          notice.hidden = true;
+          document.querySelector<HTMLElement>('#bienvenue-title')?.focus();
+        });
+    });
+</script>
+
+<style>
+  .important-notice {
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: var(--color-paper);
+  }
+
+  .important-notice__inner {
+    display: flex;
+    min-height: 5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.75rem;
+  }
+
+  .important-notice__message,
+  .important-notice__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .important-notice__message {
+    min-width: 0;
+    gap: 1rem;
+  }
+
+  .important-notice__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--color-gold);
+  }
+
+  .important-notice p {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: 0.875rem;
+  }
+
+  .important-notice strong {
+    margin-right: 0.75rem;
+    color: var(--color-wood);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .important-notice__actions {
+    flex: 0 0 auto;
+    gap: 0.25rem;
+  }
+
+  .important-notice__actions > a {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .important-notice__actions > a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 39.999rem) {
+    .important-notice__inner {
+      align-items: flex-start;
+      padding-block: 1rem;
+    }
+
+    .important-notice__dot {
+      display: none;
+    }
+
+    .important-notice p {
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .important-notice strong {
+      margin-right: 0;
+    }
+
+    .important-notice__actions {
+      align-items: flex-start;
+    }
+
+    .important-notice__actions > a {
+      max-width: 5.5rem;
+      align-items: flex-start;
+      padding-top: 0.25rem;
+      line-height: 1.35;
+    }
+  }
+</style>

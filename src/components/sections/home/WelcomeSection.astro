@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets';
+import mainImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
+import portraitImage from '@/assets/images/paroisse/interieur-eglise-decoration-01.webp';
+import floralImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
+import Container from '@/components/ui/Container.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+---
+
+<section
+  class="welcome-section section-block"
+  aria-labelledby="bienvenue-title"
+>
+  <Container>
+    <div class="welcome-section__grid">
+      <div class="welcome-section__copy">
+        <p class="type-script-accent welcome-section__script">Ensemble</p>
+        <h2 id="bienvenue-title" class="type-h2" tabindex="-1">
+          Une communauté<br />enracinée dans la foi
+        </h2>
+        <p class="type-body welcome-section__introduction">
+          Notre paroisse est un lieu de prière, de rencontre et de solidarité,
+          ouvert à toutes les personnes qui souhaitent cheminer dans la foi. Que
+          vous soyez de passage ou enraciné dans le quartier, vous êtes les
+          bienvenus parmi nous.
+        </p>
+        <blockquote>
+          <p>
+            « Là où deux ou trois sont rassemblés en mon nom, je suis au milieu
+            d’eux. »
+          </p>
+          <cite>Matthieu 18,20</cite>
+        </blockquote>
+        <TextLink href="/notre-paroisse">
+          En savoir plus sur notre paroisse
+        </TextLink>
+      </div>
+
+      <div class="welcome-section__photos">
+        <div class="welcome-media welcome-media--wide">
+          <Image
+            src={mainImage}
+            alt="Vue intérieure de l’autel avec une décoration rouge"
+            widths={[480, 840]}
+            sizes="(min-width: 64rem) 26.25rem, calc(100vw - 2.5rem)"
+            loading="lazy"
+          />
+        </div>
+        <div class="welcome-media welcome-media--portrait">
+          <Image
+            src={portraitImage}
+            alt="Vue verticale de l’autel avec une décoration liturgique"
+            widths={[240, 420]}
+            sizes="(min-width: 64rem) 12.625rem, calc((100vw - 3.25rem) / 2)"
+            loading="lazy"
+          />
+        </div>
+        <div class="welcome-media welcome-media--portrait">
+          <Image
+            src={floralImage}
+            alt="Vue intérieure de l’autel entouré de fleurs blanches"
+            widths={[240, 420]}
+            sizes="(min-width: 64rem) 12.625rem, calc((100vw - 3.25rem) / 2)"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .welcome-section {
+    overflow: hidden;
+    background: var(--color-ivory);
+  }
+
+  .welcome-section__grid {
+    display: grid;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .welcome-section__copy {
+    max-width: 42.5rem;
+  }
+
+  .welcome-section__script {
+    margin: 0 0 1rem;
+    color: var(--color-wood);
+  }
+
+  .welcome-section h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+  }
+
+  .welcome-section__introduction {
+    max-width: 36.25rem;
+    margin: 2rem 0;
+    color: var(--color-muted);
+  }
+
+  .welcome-section blockquote {
+    max-width: 34rem;
+    margin: 0 0 2.5rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--color-gold);
+  }
+
+  .welcome-section blockquote p {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-charcoal) 84%, transparent);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  .welcome-section cite {
+    display: block;
+    margin-top: 0.75rem;
+    color: var(--color-wood);
+    font-size: 0.6875rem;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .welcome-section__photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .welcome-media {
+    overflow: hidden;
+    background: var(--color-paper);
+  }
+
+  .welcome-media--wide {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3;
+  }
+
+  .welcome-media--portrait {
+    aspect-ratio: 3 / 4;
+  }
+
+  .welcome-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--duration-media) var(--ease-editorial);
+  }
+
+  .welcome-media:hover :global(img) {
+    scale: 1.05;
+  }
+
+  @media (min-width: 64rem) {
+    .welcome-section__grid {
+      grid-template-columns: minmax(0, 1fr) 26.25rem;
+      gap: 4rem;
+    }
+
+    .welcome-section__photos {
+      gap: 1rem;
+    }
+  }
+</style>

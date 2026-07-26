@@ -1,0 +1,100 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { AboutClosing as AboutClosingContent } from '@/types/about';
+
+interface Props {
+  closing: AboutClosingContent;
+}
+
+const { closing } = Astro.props;
+---
+
+<section class="about-closing" aria-labelledby="about-closing-title">
+  <Container size="reading">
+    <div class="about-closing__content">
+      {
+        closing.accent && (
+          <p class="about-closing__accent type-script-accent">
+            {closing.accent}
+          </p>
+        )
+      }
+      <h2 id="about-closing-title" class="about-closing__title type-h2">
+        {closing.title}
+      </h2>
+      <p class="about-closing__text type-body-large">{closing.text}</p>
+      <div class="about-closing__actions">
+        <Button href={closing.primaryCta.href}>
+          {closing.primaryCta.label}
+        </Button>
+        {
+          closing.secondaryCta && (
+            <Button href={closing.secondaryCta.href} variant="secondary">
+              {closing.secondaryCta.label}
+            </Button>
+          )
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-closing {
+    padding-block: 5rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-ivory);
+  }
+
+  .about-closing__content {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .about-closing__accent,
+  .about-closing__title,
+  .about-closing__text {
+    margin: 0;
+  }
+
+  .about-closing__accent {
+    color: var(--color-gold);
+  }
+
+  .about-closing__title {
+    margin-top: 0.75rem;
+    color: var(--color-charcoal);
+  }
+
+  .about-closing__text {
+    max-width: 34rem;
+    margin-top: 1.5rem;
+    color: var(--color-muted);
+  }
+
+  .about-closing__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 30rem) {
+    .about-closing__actions {
+      width: 100%;
+    }
+
+    .about-closing__actions :global(.ui-button) {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .about-closing {
+      padding-block: 6.25rem;
+    }
+  }
+</style>

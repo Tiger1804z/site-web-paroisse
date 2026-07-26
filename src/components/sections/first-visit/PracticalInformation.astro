@@ -1,0 +1,237 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@/components/ui/Container.astro';
+import Button from '@/components/ui/Button.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { PracticalInformation as PracticalInformationContent } from '@/types/firstVisit';
+
+interface Props {
+  information: PracticalInformationContent;
+}
+
+const { information } = Astro.props;
+const imageStyle = information.image
+  ? [
+      `--practical-image-position-desktop: ${information.image.desktopPosition ?? 'center'}`,
+      `--practical-image-position-mobile: ${information.image.mobilePosition ?? information.image.desktopPosition ?? 'center'}`,
+    ].join('; ')
+  : undefined;
+---
+
+<section
+  class="practical-information section-block"
+  aria-labelledby="practical-information-title"
+>
+  <Container>
+    <div class="practical-information__layout">
+      <div class="practical-information__content">
+        <Eyebrow>{information.eyebrow}</Eyebrow>
+        <h2
+          id="practical-information-title"
+          class="practical-information__title"
+        >
+          {information.title}
+        </h2>
+
+        <dl class="practical-information__list">
+          {
+            information.items.map((item) => (
+              <div class="practical-information__item">
+                <dt>{item.label}</dt>
+                <dd>
+                  {item.href ? (
+                    <a href={item.href}>{item.value}</a>
+                  ) : (
+                    item.value
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <div class="practical-information__actions">
+          <Button href={information.primaryCta.href}>
+            {information.primaryCta.label}
+          </Button>
+          {
+            information.secondaryCta && (
+              <Button variant="secondary" href={information.secondaryCta.href}>
+                {information.secondaryCta.label}
+              </Button>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        information.image ? (
+          <figure class="practical-information__figure" style={imageStyle}>
+            <Image
+              src={information.image.image}
+              alt={information.image.alt}
+              widths={[640, 960, 1280]}
+              sizes="(min-width: 64rem) 42vw, 100vw"
+              loading="lazy"
+              decoding="async"
+            />
+            {information.image.caption && (
+              <figcaption>{information.image.caption}</figcaption>
+            )}
+          </figure>
+        ) : (
+          <div
+            class="practical-information__placeholder"
+            aria-label="Repère visuel à confirmer"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934a1.125 1.125 0 0 1-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689A1.125 1.125 0 0 0 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934a1.125 1.125 0 0 1 1.006 0l4.994 2.497a1.125 1.125 0 0 0 1.006 0Z"
+              />
+            </svg>
+            <p>[INFORMATION À CONFIRMER]</p>
+          </div>
+        )
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .practical-information {
+    background: var(--color-ivory);
+  }
+
+  .practical-information__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .practical-information__content {
+    min-width: 0;
+  }
+
+  .practical-information__title {
+    margin: 1rem 0 2rem;
+    color: var(--color-charcoal);
+    font-size: clamp(2.25rem, calc(2.064rem + 0.762vw), 2.75rem);
+    font-weight: 600;
+    line-height: 1.14;
+  }
+
+  .practical-information__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    margin: 0;
+  }
+
+  .practical-information__item {
+    min-width: 0;
+  }
+
+  .practical-information__item dt,
+  .practical-information__item dd {
+    margin: 0;
+  }
+
+  .practical-information__item dt {
+    color: var(--color-gold);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .practical-information__item dd {
+    margin-top: 0.25rem;
+    overflow-wrap: anywhere;
+    color: var(--color-charcoal);
+    line-height: 1.55;
+  }
+
+  .practical-information__item a {
+    color: var(--color-burgundy);
+    font-weight: 600;
+  }
+
+  .practical-information__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .practical-information__figure,
+  .practical-information__placeholder {
+    min-height: 22.5rem;
+    margin: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+  }
+
+  .practical-information__figure {
+    display: grid;
+    grid-template-rows: minmax(22.5rem, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .practical-information__figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--practical-image-position-mobile);
+  }
+
+  .practical-information__figure figcaption {
+    padding: 0.75rem 1rem;
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
+
+  .practical-information__placeholder {
+    display: grid;
+    place-items: center;
+    color: color-mix(in srgb, var(--color-muted) 55%, transparent);
+    text-align: center;
+  }
+
+  .practical-information__placeholder svg {
+    width: 2.5rem;
+    margin-inline: auto;
+    stroke-width: 1;
+  }
+
+  .practical-information__placeholder p {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 40rem) and (max-width: 63.999rem) {
+    .practical-information__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .practical-information__layout {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3rem;
+    }
+
+    .practical-information__figure img {
+      object-position: var(--practical-image-position-desktop);
+    }
+  }
+</style>

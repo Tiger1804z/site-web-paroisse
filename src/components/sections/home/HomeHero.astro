@@ -1,0 +1,558 @@
+---
+import { Image } from 'astro:assets';
+import redAltarImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
+import floralAltarImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
+import violetAltarImage from '@/assets/images/paroisse/interieur-eglise-decor-violet-01.jpg';
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+
+const heroSlides = [
+  {
+    image: redAltarImage,
+    alt: 'Vue intérieure symétrique de l’autel avec une décoration rouge',
+    desktopPosition: 'center 46%',
+    mobilePosition: 'center 45%',
+    label: 'Autel avec décoration rouge',
+  },
+  {
+    image: violetAltarImage,
+    alt: 'Vue intérieure symétrique de l’autel avec une décoration violette',
+    desktopPosition: 'center 45%',
+    mobilePosition: 'center 44%',
+    label: 'Autel avec décoration violette',
+  },
+  {
+    image: floralAltarImage,
+    alt: 'Vue intérieure symétrique de l’autel entouré de fleurs blanches',
+    desktopPosition: 'center 45%',
+    mobilePosition: 'center 44%',
+    label: 'Autel entouré de fleurs blanches',
+  },
+] as const;
+---
+
+<section class="home-hero" aria-labelledby="home-hero-title" data-home-hero>
+  <div class="home-hero__media">
+    {
+      heroSlides.map((slide, index) => (
+        <div
+          class="home-hero__slide"
+          data-home-hero-slide
+          data-active={index === 0 ? 'true' : 'false'}
+          aria-hidden={index === 0 ? 'false' : 'true'}
+          style={`--hero-position-desktop: ${slide.desktopPosition}; --hero-position-mobile: ${slide.mobilePosition};`}
+        >
+          <Image
+            src={slide.image}
+            alt={slide.alt}
+            widths={[640, 960, 1360, 1920]}
+            sizes="100vw"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchpriority={index === 0 ? 'high' : 'low'}
+          />
+        </div>
+      ))
+    }
+  </div>
+  <div class="home-hero__overlay" aria-hidden="true"></div>
+  <div class="home-hero__beams" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <Container class="home-hero__content">
+    <div class="home-hero__copy">
+      <p class="type-script-accent home-hero__script">Bienvenue</p>
+      <h1 id="home-hero-title" class="type-display-xl">
+        Un lieu de foi,<br />
+        de paix et<br />
+        de rencontre.
+      </h1>
+      <p class="type-body-large home-hero__introduction">
+        Bienvenue à la Paroisse Saint-René-Goupil. Découvrez nos célébrations,
+        nos activités et la vie de notre communauté.
+      </p>
+      <div class="home-hero__actions">
+        <Button href="/horaires" variant="light">Voir les horaires</Button>
+        <Button href="/notre-paroisse" variant="dark">
+          Découvrir la paroisse
+        </Button>
+      </div>
+    </div>
+  </Container>
+
+  <aside class="home-hero__schedule" aria-labelledby="hero-schedule-title">
+    <p id="hero-schedule-title" class="home-hero__schedule-label">
+      Prochaines messes
+    </p>
+    <dl class="home-hero__schedule-list">
+      <div>
+        <dt>Samedi</dt>
+        <dd>[HEURE]</dd>
+      </div>
+      <div>
+        <dt>Dimanche</dt>
+        <dd>[HEURE]</dd>
+      </div>
+      <div>
+        <dt>Dimanche</dt>
+        <dd>[HEURE]</dd>
+      </div>
+    </dl>
+    <a class="home-hero__schedule-link" href="/horaires">
+      Consulter tous les horaires
+      <span aria-hidden="true">→</span>
+    </a>
+    <p class="home-hero__schedule-note">
+      Horaires sujets à changement lors des célébrations spéciales.
+    </p>
+  </aside>
+
+  <div
+    class="home-hero__indicators"
+    role="group"
+    aria-label="Choisir l’image du hero"
+  >
+    {
+      heroSlides.map((slide, index) => (
+        <button
+          type="button"
+          aria-label={`Afficher l’image ${index + 1} sur ${heroSlides.length} : ${slide.label}`}
+          aria-pressed={index === 0 ? 'true' : 'false'}
+          data-home-hero-indicator
+        >
+          <span aria-hidden="true" />
+        </button>
+      ))
+    }
+  </div>
+
+  <a
+    class="home-hero__scroll"
+    href="#annonce-importante"
+    aria-label="Faire défiler vers l’annonce importante"
+  >
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path d="m19 9-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"
+      ></path>
+    </svg>
+  </a>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-home-hero]').forEach((hero) => {
+    if (hero.dataset.initialized === 'true') return;
+    hero.dataset.initialized = 'true';
+
+    const slides = Array.from(
+      hero.querySelectorAll<HTMLElement>('[data-home-hero-slide]'),
+    );
+    const indicators = Array.from(
+      hero.querySelectorAll<HTMLButtonElement>('[data-home-hero-indicator]'),
+    );
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activeIndex = 0;
+    let rotationTimer: number | undefined;
+
+    const stopRotation = () => {
+      if (rotationTimer !== undefined) {
+        window.clearInterval(rotationTimer);
+        rotationTimer = undefined;
+      }
+    };
+
+    const selectSlide = (index: number) => {
+      activeIndex = index;
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === index;
+        slide.dataset.active = String(isActive);
+        slide.setAttribute('aria-hidden', String(!isActive));
+      });
+      indicators.forEach((indicator, indicatorIndex) => {
+        indicator.setAttribute(
+          'aria-pressed',
+          String(indicatorIndex === index),
+        );
+      });
+    };
+
+    const startRotation = () => {
+      stopRotation();
+      if (reducedMotion.matches || slides.length < 2) return;
+      rotationTimer = window.setInterval(() => {
+        selectSlide((activeIndex + 1) % slides.length);
+      }, 8000);
+    };
+
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        selectSlide(index);
+        startRotation();
+      });
+    });
+
+    reducedMotion.addEventListener('change', () => {
+      if (reducedMotion.matches) {
+        stopRotation();
+        selectSlide(0);
+      } else {
+        startRotation();
+      }
+    });
+
+    window.addEventListener('pagehide', stopRotation, { once: true });
+    startRotation();
+  });
+</script>
+
+<style>
+  .home-hero {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .home-hero__media,
+  .home-hero__slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  .home-hero__slide {
+    opacity: 0;
+    transition: opacity 1.4s var(--ease-editorial);
+  }
+
+  .home-hero__slide[data-active='true'] {
+    z-index: 1;
+    opacity: 1;
+  }
+
+  .home-hero__slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--hero-position-mobile);
+  }
+
+  .home-hero__slide[data-active='true'] :global(img) {
+    animation: home-hero-zoom 8s linear both;
+  }
+
+  @keyframes home-hero-zoom {
+    from {
+      scale: 1;
+    }
+
+    to {
+      scale: 1.03;
+    }
+  }
+
+  .home-hero__overlay {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    background:
+      linear-gradient(
+        to right,
+        rgb(28 25 24 / 74%) 0%,
+        rgb(28 25 24 / 52%) 44%,
+        rgb(28 25 24 / 18%) 78%,
+        rgb(28 25 24 / 12%) 100%
+      ),
+      linear-gradient(
+        to bottom,
+        rgb(28 25 24 / 34%),
+        rgb(28 25 24 / 10%) 48%,
+        rgb(28 25 24 / 58%)
+      );
+  }
+
+  .home-hero__beams {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .home-hero__beams span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-ivory) 8%, transparent),
+      transparent
+    );
+  }
+
+  .home-hero__beams span:nth-child(2) {
+    left: 48%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 5%, transparent),
+      transparent
+    );
+  }
+
+  .home-hero__beams span:nth-child(3) {
+    left: 52%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 5%, transparent),
+      transparent
+    );
+  }
+
+  .home-hero__content {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    min-height: 100svh;
+    align-items: center;
+    padding-block: calc(var(--header-height) + 2.5rem) 8rem;
+  }
+
+  .home-hero__copy {
+    max-width: 42.5rem;
+  }
+
+  .home-hero__script {
+    margin: 0 0 0.75rem;
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+  }
+
+  .home-hero h1 {
+    margin: 0;
+    color: var(--color-ivory);
+  }
+
+  .home-hero__introduction {
+    max-width: 32.5rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+  }
+
+  .home-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .home-hero__schedule {
+    position: absolute;
+    z-index: 5;
+    right: var(--gutter-page);
+    bottom: 3rem;
+    display: none;
+    width: 16.25rem;
+    padding: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
+    background: color-mix(in srgb, var(--color-ivory) 97%, transparent);
+    color: var(--color-charcoal);
+    box-shadow: var(--shadow-elevated);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  .home-hero__schedule-label {
+    margin: 0 0 1rem;
+    color: var(--color-wood);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .home-hero__schedule-list {
+    margin: 0;
+  }
+
+  .home-hero__schedule-list div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--color-paper);
+  }
+
+  .home-hero__schedule-list div:first-child {
+    padding-top: 0;
+  }
+
+  .home-hero__schedule-list div:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .home-hero__schedule-list dt {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+  }
+
+  .home-hero__schedule-list dd {
+    margin: 0;
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .home-hero__schedule-link {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    color: var(--color-burgundy);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    text-decoration: none;
+  }
+
+  .home-hero__schedule-link span {
+    transition: translate var(--duration-short) var(--ease-editorial);
+  }
+
+  .home-hero__schedule-link:hover span {
+    translate: 0.25rem;
+  }
+
+  .home-hero__schedule-note {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.625rem;
+    line-height: 1.35;
+  }
+
+  .home-hero__scroll {
+    position: absolute;
+    z-index: 5;
+    bottom: 2rem;
+    left: 50%;
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    translate: -50%;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in srgb, var(--color-ivory) 60%, transparent);
+    animation: home-scroll-nudge 2s ease-in-out infinite;
+  }
+
+  .home-hero__indicators {
+    position: absolute;
+    z-index: 5;
+    bottom: 5rem;
+    left: 50%;
+    display: flex;
+    translate: -50%;
+    align-items: center;
+  }
+
+  .home-hero__indicators button {
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-ivory);
+    cursor: pointer;
+  }
+
+  .home-hero__indicators span {
+    width: 0.375rem;
+    height: 0.375rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    transition:
+      width var(--duration-short) var(--ease-editorial),
+      background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .home-hero__indicators button[aria-pressed='true'] span {
+    width: 1.5rem;
+    border-radius: 0;
+    background: currentColor;
+  }
+
+  @keyframes home-scroll-nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(0.35rem);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .home-hero__slide :global(img) {
+      object-position: var(--hero-position-desktop);
+    }
+
+    .home-hero__schedule {
+      display: block;
+    }
+  }
+
+  @media (max-width: 47.999rem) {
+    .home-hero__copy {
+      max-width: 35rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .home-hero__actions :global(.ui-button) {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-hero__slide {
+      display: none;
+      transition: none;
+    }
+
+    .home-hero__slide:first-child {
+      display: block;
+      opacity: 1;
+    }
+
+    .home-hero__slide :global(img),
+    .home-hero__slide[data-active='true'] :global(img) {
+      animation: none;
+      scale: 1;
+    }
+
+    .home-hero__indicators {
+      display: none;
+    }
+  }
+</style>

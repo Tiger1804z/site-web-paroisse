@@ -1,0 +1,30 @@
+---
+import GeneralProcess from '@/components/sections/sacraments/GeneralProcess.astro';
+import SacramentsExplorer from '@/components/sections/sacraments/SacramentsExplorer.astro';
+import SacramentsFaq from '@/components/sections/sacraments/SacramentsFaq.astro';
+import SacramentsHero from '@/components/sections/sacraments/SacramentsHero.astro';
+import SacramentsNotice from '@/components/sections/sacraments/SacramentsNotice.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getSacramentsPageData } from '@/lib/content/getSacramentsPageData';
+
+const sacramentsPageData = await getSacramentsPageData();
+---
+
+<BaseLayout
+  title={sacramentsPageData.seo.title}
+  description={sacramentsPageData.seo.description}
+  pageClass="sacraments-page"
+  headerVariant="light"
+>
+  <SacramentsHero hero={sacramentsPageData.hero} />
+  <SacramentsNotice notice={sacramentsPageData.notice} />
+  <SacramentsExplorer items={sacramentsPageData.overview.items} />
+  <GeneralProcess process={sacramentsPageData.generalProcess} />
+  <SacramentsFaq faq={sacramentsPageData.faq} />
+</BaseLayout>
+
+<style>
+  :global(body.sacraments-page .site-main--light) {
+    padding-top: 0;
+  }
+</style>

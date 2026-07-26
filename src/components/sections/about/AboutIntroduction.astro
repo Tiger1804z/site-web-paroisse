@@ -1,0 +1,100 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { AboutIntroduction as AboutIntroductionContent } from '@/types/about';
+
+interface Props {
+  introduction: AboutIntroductionContent;
+}
+
+const { introduction } = Astro.props;
+---
+
+<section
+  class="about-introduction section-block"
+  aria-labelledby="about-introduction-title"
+>
+  <Container size="reading">
+    <div class="about-introduction__content">
+      {introduction.eyebrow && <Eyebrow>{introduction.eyebrow}</Eyebrow>}
+      {
+        introduction.accent && (
+          <p
+            class="about-introduction__accent type-script-accent"
+            aria-hidden="true"
+          >
+            {introduction.accent}
+          </p>
+        )
+      }
+      <h2
+        id="about-introduction-title"
+        class="about-introduction__title type-h2"
+      >
+        {introduction.title}
+      </h2>
+      <div class="about-introduction__copy">
+        {
+          introduction.paragraphs.map((paragraph) => (
+            <p class="type-body-large">{paragraph}</p>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-introduction {
+    background: var(--color-ivory);
+  }
+
+  .about-introduction__content {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .about-introduction__accent {
+    position: absolute;
+    top: 1.75rem;
+    right: clamp(0rem, 4vw, 2rem);
+    margin: 0;
+    rotate: -5deg;
+    color: color-mix(in srgb, var(--color-gold) 72%, transparent);
+  }
+
+  .about-introduction__title {
+    max-width: 40rem;
+    margin: 1rem 0 2rem;
+    color: var(--color-charcoal);
+  }
+
+  .about-introduction__copy {
+    display: grid;
+    max-width: 42.5rem;
+    gap: 1.25rem;
+    color: var(--color-muted);
+  }
+
+  .about-introduction__copy p {
+    margin: 0;
+  }
+
+  @media (max-width: 30rem) {
+    .about-introduction__accent {
+      position: static;
+      margin-top: 0.75rem;
+      order: 1;
+    }
+
+    .about-introduction__title {
+      order: 2;
+    }
+
+    .about-introduction__copy {
+      order: 3;
+    }
+  }
+</style>
