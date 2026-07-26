@@ -1,0 +1,137 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { VisitPreparation as VisitPreparationContent } from '@/types/firstVisit';
+
+interface Props {
+  preparation: VisitPreparationContent;
+}
+
+const { preparation } = Astro.props;
+---
+
+<section
+  class="visit-preparation section-block"
+  aria-labelledby="visit-preparation-title"
+>
+  <Container>
+    <header class="visit-preparation__header">
+      <Eyebrow>{preparation.eyebrow}</Eyebrow>
+      <h2 id="visit-preparation-title" class="visit-preparation__title type-h2">
+        {preparation.title}
+      </h2>
+      {
+        preparation.introduction && (
+          <p class="visit-preparation__introduction">
+            {preparation.introduction}
+          </p>
+        )
+      }
+    </header>
+
+    <ol class="visit-preparation__grid">
+      {
+        preparation.steps.map((step) => (
+          <li class="visit-preparation__card">
+            <span class="visit-preparation__number" aria-hidden="true">
+              {step.numberLabel}
+            </span>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            {step.note && <p class="visit-preparation__note">{step.note}</p>}
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .visit-preparation {
+    background: var(--color-ivory);
+  }
+
+  .visit-preparation__header {
+    max-width: 45rem;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+
+  .visit-preparation__title {
+    margin: 1rem 0 0;
+    color: var(--color-charcoal);
+  }
+
+  .visit-preparation__introduction {
+    max-width: 38rem;
+    margin: 1.25rem auto 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .visit-preparation__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .visit-preparation__card {
+    min-width: 0;
+    padding: 1.75rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+  }
+
+  .visit-preparation__number {
+    display: block;
+    margin-bottom: 1rem;
+    color: color-mix(in srgb, var(--color-gold) 52%, transparent);
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .visit-preparation__card h3,
+  .visit-preparation__card p {
+    margin: 0;
+  }
+
+  .visit-preparation__card h3 {
+    color: var(--color-charcoal);
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .visit-preparation__card h3 + p {
+    margin-top: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .visit-preparation__note {
+    margin-top: 1rem !important;
+    color: var(--color-brick);
+    font-size: 0.75rem !important;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    line-height: 1.5 !important;
+  }
+
+  @media (min-width: 48rem) {
+    .visit-preparation__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .visit-preparation__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

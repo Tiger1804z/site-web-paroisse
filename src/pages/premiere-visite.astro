@@ -1,0 +1,30 @@
+---
+import FirstVisitFaq from '@/components/sections/first-visit/FirstVisitFaq.astro';
+import FirstVisitHero from '@/components/sections/first-visit/FirstVisitHero.astro';
+import PracticalInformation from '@/components/sections/first-visit/PracticalInformation.astro';
+import VisitPreparation from '@/components/sections/first-visit/VisitPreparation.astro';
+import WhatToExpect from '@/components/sections/first-visit/WhatToExpect.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getFirstVisitPageData } from '@/lib/content/getFirstVisitPageData';
+
+const firstVisitPageData = await getFirstVisitPageData();
+---
+
+<BaseLayout
+  title={firstVisitPageData.seo.title}
+  description={firstVisitPageData.seo.description}
+  pageClass="first-visit-page"
+  headerVariant="light"
+>
+  <FirstVisitHero hero={firstVisitPageData.hero} />
+  <VisitPreparation preparation={firstVisitPageData.preparation} />
+  <WhatToExpect expectations={firstVisitPageData.expectations} />
+  <PracticalInformation information={firstVisitPageData.practicalInformation} />
+  {firstVisitPageData.faq && <FirstVisitFaq faq={firstVisitPageData.faq} />}
+</BaseLayout>
+
+<style>
+  :global(body.first-visit-page .site-main--light) {
+    padding-top: 0;
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+import Container from '@/components/ui/Container.astro';
+import type { FirstVisitHero as FirstVisitHeroContent } from '@/types/firstVisit';
+
+interface Props {
+  hero: FirstVisitHeroContent;
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="first-visit-hero" aria-labelledby="first-visit-hero-title">
+  <div class="first-visit-hero__beam" aria-hidden="true"></div>
+  <Container>
+    <div class="first-visit-hero__content">
+      <p class="first-visit-hero__eyebrow type-eyebrow">{hero.eyebrow}</p>
+      <h1 id="first-visit-hero-title" class="first-visit-hero__title">
+        {hero.title}
+      </h1>
+      <p class="first-visit-hero__introduction">{hero.introduction}</p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .first-visit-hero {
+    position: relative;
+    overflow: hidden;
+    padding-top: calc(var(--header-height) + 3rem);
+    padding-bottom: 5rem;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .first-visit-hero__beam {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 10%, transparent),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .first-visit-hero__content {
+    position: relative;
+    max-width: 43rem;
+  }
+
+  .first-visit-hero__eyebrow {
+    margin: 0 0 1rem;
+    color: var(--color-gold);
+  }
+
+  .first-visit-hero__title {
+    margin: 0;
+    color: var(--color-ivory);
+    font-size: clamp(3rem, calc(2.35rem + 2.65vw), 4.75rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+  }
+
+  .first-visit-hero__introduction {
+    max-width: 35rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
+    font-size: clamp(1.125rem, calc(1.079rem + 0.19vw), 1.25rem);
+    line-height: 1.75;
+  }
+
+  @media (min-width: 48rem) {
+    .first-visit-hero {
+      padding-top: calc(var(--header-height) + 2rem);
+    }
+  }
+</style>

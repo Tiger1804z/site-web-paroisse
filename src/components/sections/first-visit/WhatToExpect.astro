@@ -1,0 +1,125 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { WhatToExpect as WhatToExpectContent } from '@/types/firstVisit';
+
+interface Props {
+  expectations: WhatToExpectContent;
+}
+
+const { expectations } = Astro.props;
+---
+
+<section
+  class="what-to-expect section-block"
+  aria-labelledby="what-to-expect-title"
+>
+  <Container size="narrow">
+    <header class="what-to-expect__header">
+      <Eyebrow>{expectations.eyebrow}</Eyebrow>
+      <h2 id="what-to-expect-title" class="what-to-expect__title">
+        {expectations.title}
+      </h2>
+      {
+        expectations.introduction && (
+          <p class="what-to-expect__introduction">
+            {expectations.introduction}
+          </p>
+        )
+      }
+    </header>
+
+    <ol class="what-to-expect__list">
+      {
+        expectations.items.map((item) => (
+          <li class="what-to-expect__item">
+            <span class="what-to-expect__line" aria-hidden="true" />
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .what-to-expect {
+    background: var(--color-paper);
+  }
+
+  .what-to-expect__header {
+    max-width: 43rem;
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+
+  .what-to-expect__title {
+    margin: 1rem 0 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.25rem, calc(2.064rem + 0.762vw), 2.75rem);
+    font-weight: 600;
+    line-height: 1.14;
+  }
+
+  .what-to-expect__introduction {
+    margin: 1.25rem auto 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .what-to-expect__list {
+    display: grid;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .what-to-expect__item {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-ivory);
+  }
+
+  .what-to-expect__line {
+    width: 0.25rem;
+    flex: 0 0 0.25rem;
+    align-self: stretch;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-gold) 62%, transparent),
+      color-mix(in srgb, var(--color-gold) 20%, transparent)
+    );
+  }
+
+  .what-to-expect__item h3,
+  .what-to-expect__item p {
+    margin: 0;
+  }
+
+  .what-to-expect__item h3 {
+    color: var(--color-charcoal);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .what-to-expect__item p {
+    margin-top: 0.5rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 24rem) {
+    .what-to-expect__item {
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+  }
+</style>
