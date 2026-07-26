@@ -96,3 +96,22 @@ Le site existant audité ne reprend pas cette consécration.
 - les sources documentaires que la paroisse souhaite citer.
 
 Aucun texte final pour Notre paroisse n’est rédigé pendant cet audit.
+
+## Utilisation prudente dans S1-T04
+
+La page `/notre-paroisse/` réécrit de courts repères à partir de cet inventaire,
+sans nouvelle recherche externe. Son contrat `AboutPageData` conserve un statut
+éditorial pour chaque fait :
+
+- l’érection de 1959 et la construction de 1963 à 1964 restent identifiées comme
+  provenant de l’ancien site;
+- l’acquisition du terrain, les rôles des architectes, les clochers et le
+  presbytère restent à confirmer;
+- la consécration du 6 mai 2018 demeure explicitement issue de la photographie;
+- aucune désignation patrimoniale officielle n’est affirmée;
+- les textes de foi, de rencontre et de solidarité sont temporaires et ne
+  constituent pas une mission officielle.
+
+Les photographies restent soumises à la confirmation des droits de publication.
+La page évite l’image Figma du hero, car elle contient une personne, et utilise
+une vue extérieure sans personne visible.

@@ -1,0 +1,178 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { AboutArchitecture } from '@/types/about';
+
+interface Props {
+  architecture: AboutArchitecture;
+}
+
+const { architecture } = Astro.props;
+const imageStyle = [
+  `--architecture-position-desktop: ${architecture.image.desktopPosition ?? 'center'}`,
+  `--architecture-position-mobile: ${architecture.image.mobilePosition ?? architecture.image.desktopPosition ?? 'center'}`,
+].join('; ');
+---
+
+<section
+  class="architecture-story section-block"
+  aria-labelledby="architecture-title"
+>
+  <Container>
+    <div class="architecture-story__layout">
+      <figure class="architecture-story__media" style={imageStyle}>
+        <Image
+          src={architecture.image.image}
+          alt={architecture.image.alt}
+          widths={[480, 720, 960]}
+          sizes="(min-width: 64rem) 420px, 100vw"
+          loading="lazy"
+          decoding="async"
+        />
+        {
+          architecture.image.caption && (
+            <figcaption>{architecture.image.caption}</figcaption>
+          )
+        }
+      </figure>
+
+      <div class="architecture-story__content">
+        <Eyebrow>{architecture.eyebrow}</Eyebrow>
+        <h2 id="architecture-title" class="architecture-story__title type-h2">
+          {architecture.title}
+        </h2>
+        <div class="architecture-story__copy">
+          {
+            architecture.paragraphs.map((paragraph) => (
+              <p class="type-body-large">{paragraph}</p>
+            ))
+          }
+        </div>
+
+        <div
+          class="architecture-story__features"
+          aria-label="Caractéristiques architecturales"
+        >
+          {
+            architecture.features.map((feature) => (
+              <article class="architecture-story__feature">
+                <span class="architecture-story__dot" aria-hidden="true" />
+                <div>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .architecture-story {
+    background: var(--color-ivory);
+  }
+
+  .architecture-story__layout {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .architecture-story__media {
+    display: grid;
+    margin: 0;
+    overflow: hidden;
+    background: var(--color-paper);
+  }
+
+  .architecture-story__media img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: var(--architecture-position-mobile);
+  }
+
+  .architecture-story__media figcaption {
+    padding: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+  }
+
+  .architecture-story__title {
+    margin: 1rem 0 2rem;
+    color: var(--color-charcoal);
+  }
+
+  .architecture-story__copy {
+    display: grid;
+    gap: 1.25rem;
+    color: var(--color-muted);
+  }
+
+  .architecture-story__copy p {
+    margin: 0;
+  }
+
+  .architecture-story__features {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  .architecture-story__feature {
+    display: grid;
+    grid-template-columns: 0.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .architecture-story__dot {
+    width: 0.3rem;
+    height: 0.3rem;
+    margin-top: 0.55rem;
+    border-radius: 50%;
+    background: var(--color-gold);
+  }
+
+  .architecture-story__feature h3,
+  .architecture-story__feature p {
+    margin: 0;
+  }
+
+  .architecture-story__feature h3 {
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .architecture-story__feature p {
+    margin-top: 0.25rem;
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 40rem) {
+    .architecture-story__features {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .architecture-story__layout {
+      grid-template-columns: 26.25rem minmax(0, 1fr);
+      gap: 4.5rem;
+    }
+
+    .architecture-story__media img {
+      aspect-ratio: 3 / 4;
+      object-position: var(--architecture-position-desktop);
+    }
+  }
+</style>
