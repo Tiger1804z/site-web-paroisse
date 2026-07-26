@@ -149,3 +149,26 @@ générique de mouvement.
   sur petit mobile et en reduced motion;
 - les fichiers d’aperçu, leurs contrôles, leurs polices et leurs styles de page
   ne sont pas copiés dans l’application.
+
+## Ajout ciblé — Chronologie immersive S1-T06.6
+
+La chronologie historique est une nouvelle expérience spécifique à Notre
+paroisse. Elle ne remplace ni le reveal générique, ni le vitrail, ni les
+ambiances de hero.
+
+| Élément          | État avant S1-T06.6                                                              | Risque                                                                              | Décision                                                                             | Implémentation                                        |
+| ---------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| Récit historique | Trois repères compacts, une photographie extérieure et un encart de consécration | Récit trop condensé; 2018 séparé du fil chronologique                               | Neuf articles sémantiques dans l’ordre chronologique                                 | `ImmersiveHistoryTimeline.astro`                      |
+| Illustrations    | Absentes                                                                         | Confusion possible avec des archives                                                | Mention publique, alt explicites et `imageKind` typé                                 | Huit PNG artistiques et une photographie documentaire |
+| Révélation       | Chapitres visibles avant leur entrée                                             | Le seuil de 12 % d’un article de 88 vh déclenchait le contenu vers 79 % du viewport | Marqueur inline pré-paint, ancre à 62 % et état `data-history-revealed` irréversible | Observer spécialisé sur un déclencheur de 1 px        |
+| Activation       | Ligne visuellement en retard sur le contenu                                      | Un seuil commun ne peut pas guider puis révéler                                     | Ligne à 78 %, repère et période à 70 %, contenu à 62 %                               | Trois observateurs aux responsabilités distinctes     |
+| Composition      | Diptyque statique                                                                | Un panneau partagé dissocierait l’image de son récit                                | Chaque article possède son image; alternance gauche/droite sur desktop               | Grille à trois colonnes                               |
+| Sans JavaScript  | Contenu visible                                                                  | Un état initial pourrait rester masqué                                              | Les neuf articles restent entièrement visibles                                       | `data-history-motion` absent ou retiré par garde-fou  |
+| Reduced motion   | Règles globales                                                                  | Une accentuation animée peut être inconfortable                                     | Conserver la grille et désactiver les transitions                                    | Test `matchMedia` et CSS                              |
+| Progression      | Absente                                                                          | Animation de `height` ou dépendance à la couleur                                    | `scaleY`, numéros et contraste                                                       | Segments `data-history-past`                          |
+
+Le script spécialisé ne concurrence pas `motion.ts` : la chronologie possède
+son propre reveal une seule fois parce qu’elle doit aussi maintenir un état
+actif indépendant pour sa ligne. Les zones d’observation s’étendent du haut du
+viewport jusqu’à leur ancre afin qu’un scroll rapide ne saute pas une bande
+étroite. Aucun chapitre n’utilise simultanément les deux systèmes.
