@@ -373,9 +373,37 @@ source locale; Astro conservera la grille alternée, les transitions, la ligne
 et les breakpoints. Voir
 [`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
 
+## Architecture Événements — lot 1
+
+La route `/evenements/` possède maintenant une première implémentation
+volontairement incomplète et `noindex`. Son contenu suit la frontière :
+
+```text
+src/data/events.ts
+  → src/lib/content/getEventsPageData.ts
+  → frontmatter Astro
+  → composants de sections typés
+  → HTML statique
+```
+
+`EventVisual` est une union discriminée qui accepte une image Astro ou l’une
+des œuvres SVG contrôlées par le code (`clothing-rack`, `community-meal` et
+`generations-chain`). Sanity pourra plus tard fournir un
+`visualType`; le normalisateur le transformera en cette union. Le CMS ne
+stockera ni SVG, ni CSS, ni animation.
+
+Les catégories du lot 1 ne sont pas des événements datés. Les dates, archives,
+filtres et autres contenus de la page Figma seront intégrés dans les lots
+suivants. La chaîne intergénérationnelle réutilise l’`IntersectionObserver`
+global et n’ajoute ni listener `scroll`, ni boucle d’animation JavaScript. Voir
+[`EVENTS_VISUALS_BATCH_1.md`](./EVENTS_VISUALS_BATCH_1.md) et
+[`ASTRO_SANITY_EVENTS_PREPARATION.md`](./ASTRO_SANITY_EVENTS_PREPARATION.md).
+
 ## Limites actuelles
 
-- les routes publiques autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services restent des placeholders techniques;
+- la route Événements expose seulement son premier lot visuel et reste
+  `noindex`; les autres routes publiques non migrées restent des placeholders
+  techniques;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;

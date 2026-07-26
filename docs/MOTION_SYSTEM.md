@@ -219,3 +219,31 @@ importantes. Ne pas l’appliquer automatiquement aux horaires, coordonnées,
 FAQ, longs tableaux, formulaires ou informations urgentes. Ne pas imbriquer
 plusieurs reveals sur le même contenu et ne pas ajouter un second observateur
 pour une responsabilité déjà couverte.
+
+## Chaîne intergénérationnelle — Événements
+
+`AnimatedGenerationsChain.astro` est une illustration éditoriale propre à la
+cinquième catégorie du lot Événements. Elle représente quatre générations
+reliées de gauche à droite. Sa séquence dure environ 3,55 secondes : les
+silhouettes apparaissent successivement, les trois liens de mains se dessinent,
+puis une lumière dorée traverse brièvement l’ensemble. Rien ne reboucle.
+
+Le composant utilise les tokens `--motion-ease-*` et le contrôleur
+`src/scripts/motion.ts` déjà chargé sur la page. L’observateur partagé détecte
+`data-generations-chain`, ajoute `data-art-visible`, puis cesse d’observer
+l’œuvre. Le JavaScript ne calcule aucune animation et n’écoute pas le
+défilement : le navigateur exécute uniquement les keyframes CSS basées sur
+`transform` et `opacity`.
+
+Le SVG est visible par défaut. Un court script inline ajoute
+`data-art-motion` avant le premier rendu uniquement lorsque
+`IntersectionObserver` est disponible et que reduced motion est désactivé. Si
+le module partagé ne confirme pas l’observation, un délai de sécurité retire ce
+marqueur. Un élément correctement observé peut donc rester préparé hors écran
+sans perdre son animation. Sans JavaScript ou avec
+`prefers-reduced-motion: reduce`, les quatre personnes et leurs liens sont
+immédiatement visibles et stables.
+
+Le titre, le résumé et un éventuel CTA restent des contenus éditoriaux
+normalisables depuis Sanity. Les silhouettes, la palette, les timings et la
+composition SVG restent dans Astro.

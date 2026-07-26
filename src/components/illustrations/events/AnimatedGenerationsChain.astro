@@ -1,0 +1,424 @@
+<div class="generations-chain" data-generations-chain aria-hidden="true">
+  <script is:inline>
+    (() => {
+      const root = document.currentScript?.closest('[data-generations-chain]');
+      const reducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      );
+
+      if (root && 'IntersectionObserver' in window && !reducedMotion.matches) {
+        root.setAttribute('data-art-motion', '');
+
+        window.setTimeout(() => {
+          if (
+            !root.hasAttribute('data-art-visible') &&
+            !root.hasAttribute('data-art-observed')
+          ) {
+            root.removeAttribute('data-art-motion');
+          }
+        }, 2500);
+      }
+    })();
+  </script>
+
+  <svg class="generations-chain__art" viewBox="0 0 720 560" focusable="false">
+    <rect class="generations-chain__background" width="720" height="560" rx="2"
+    ></rect>
+    <path
+      class="generations-chain__arch"
+      d="M104 468V214C104 112 215 48 360 48s256 64 256 166v254"></path>
+    <ellipse
+      class="generations-chain__ground"
+      cx="360"
+      cy="474"
+      rx="276"
+      ry="30"></ellipse>
+    <ellipse
+      class="generations-chain__ambient-light"
+      cx="360"
+      cy="286"
+      rx="244"
+      ry="190"></ellipse>
+
+    <g class="generations-chain__person generations-chain__person--child">
+      <circle class="generations-chain__skin--deep" cx="114" cy="258" r="26"
+      ></circle>
+      <path
+        class="generations-chain__hair--deep"
+        d="M90 257c-1-23 10-39 25-39 18 0 28 16 25 39-8-8-17-12-27-12-8 0-15 4-23 12z"
+      ></path>
+      <path
+        class="generations-chain__clothing--burgundy"
+        d="M87 300c0-18 12-30 28-30s29 12 29 30v89H87z"></path>
+      <path
+        class="generations-chain__skin--deep generations-chain__limb"
+        d="M93 301c-18 16-29 35-34 59l13 4c8-22 18-35 33-46z"></path>
+      <path
+        class="generations-chain__skin--deep generations-chain__limb"
+        d="M139 301c16 9 28 19 39 31l-11 11c-12-11-24-18-38-23z"></path>
+      <path
+        class="generations-chain__clothing--ivory"
+        d="M87 384h57l-5 82h-20l-5-55-7 55H87z"></path>
+      <path
+        class="generations-chain__shoe"
+        d="M82 463h27v12H79c-4 0-5-8 3-12zM119 463h25l8 12h-34z"></path>
+    </g>
+
+    <g class="generations-chain__connection generations-chain__connection--one">
+      <path d="M170 338C184 327 194 326 208 333"></path>
+      <circle cx="171" cy="338" r="7"></circle>
+      <circle cx="208" cy="333" r="7"></circle>
+    </g>
+
+    <g class="generations-chain__person generations-chain__person--teen">
+      <circle class="generations-chain__skin--olive" cx="252" cy="231" r="30"
+      ></circle>
+      <path
+        class="generations-chain__hair--brown"
+        d="M223 231c0-28 12-44 31-44 21 0 32 18 28 47-8-13-19-20-32-20-10 0-18 6-27 17z"
+      ></path>
+      <path
+        class="generations-chain__clothing--gold"
+        d="M217 280c0-21 15-34 35-34s36 13 36 34v110h-71z"></path>
+      <path
+        class="generations-chain__skin--olive generations-chain__limb"
+        d="M223 285c-11 14-19 28-22 47l14 5c5-17 13-29 24-39z"></path>
+      <path
+        class="generations-chain__skin--olive generations-chain__limb"
+        d="M282 285c24 12 39 23 51 38l-12 11c-14-13-30-22-49-29z"></path>
+      <path
+        class="generations-chain__clothing--charcoal"
+        d="M217 385h71l-9 82h-24l-4-57-7 57h-25z"></path>
+      <path
+        class="generations-chain__shoe"
+        d="M212 463h34v12h-37c-5 0-5-8 3-12zM255 463h28l9 12h-37z"></path>
+    </g>
+
+    <g class="generations-chain__connection generations-chain__connection--two">
+      <path d="M326 328C342 316 356 316 372 326"></path>
+      <circle cx="326" cy="328" r="7"></circle>
+      <circle cx="372" cy="326" r="7"></circle>
+    </g>
+
+    <g class="generations-chain__person generations-chain__person--adult">
+      <circle class="generations-chain__skin--warm" cx="416" cy="216" r="32"
+      ></circle>
+      <path
+        class="generations-chain__hair--black"
+        d="M382 222c-3-36 12-54 35-54 25 0 39 20 35 57l-12 21-7-33c-12-14-30-15-41 1l-5 32z"
+      ></path>
+      <path
+        class="generations-chain__clothing--plum"
+        d="M378 271c0-23 16-38 38-38s39 15 39 38v120h-77z"></path>
+      <path
+        class="generations-chain__skin--warm generations-chain__limb"
+        d="M385 278c-21 10-38 24-54 45l12 11c17-18 33-29 51-36z"></path>
+      <path
+        class="generations-chain__skin--warm generations-chain__limb"
+        d="M449 278c19 13 32 29 42 48l-13 8c-11-16-23-28-39-38z"></path>
+      <path
+        class="generations-chain__clothing--ivory"
+        d="M378 386h77l-8 81h-25l-6-58-7 58h-25z"></path>
+      <path
+        class="generations-chain__shoe"
+        d="M379 463h31v12h-35c-5 0-5-8 4-12zM423 463h27l10 12h-37z"></path>
+    </g>
+
+    <g
+      class="generations-chain__connection generations-chain__connection--three"
+    >
+      <path d="M484 329C500 319 513 321 527 334"></path>
+      <circle cx="484" cy="329" r="7"></circle>
+      <circle cx="527" cy="334" r="7"></circle>
+    </g>
+
+    <g class="generations-chain__person generations-chain__person--elder">
+      <circle class="generations-chain__skin--medium" cx="570" cy="238" r="30"
+      ></circle>
+      <path
+        class="generations-chain__hair--silver"
+        d="M541 238c-1-26 11-43 30-43 20 0 32 17 29 44-10-11-20-16-30-16s-19 5-29 15z"
+      ></path>
+      <path
+        class="generations-chain__clothing--cream"
+        d="M534 287c0-21 15-35 36-35s37 14 37 35v105h-73z"></path>
+      <path
+        class="generations-chain__clothing--burgundy generations-chain__scarf"
+        d="M550 257l20 35 20-35-5 91-16-19-15 19z"></path>
+      <path
+        class="generations-chain__skin--medium generations-chain__limb"
+        d="M540 291c-15 10-28 24-38 43l13 8c11-16 23-27 38-35z"></path>
+      <path
+        class="generations-chain__skin--medium generations-chain__limb"
+        d="M602 291c16 14 28 31 35 51l-14 6c-8-17-18-30-32-40z"></path>
+      <path
+        class="generations-chain__clothing--charcoal"
+        d="M534 387h73l-8 80h-24l-5-55-7 55h-24z"></path>
+      <path
+        class="generations-chain__shoe"
+        d="M533 463h31v12h-35c-5 0-5-8 4-12zM576 463h27l10 12h-37z"></path>
+    </g>
+
+    <g class="generations-chain__final-light">
+      <path d="M74 361C218 300 492 300 647 361"></path>
+      <circle cx="72" cy="361" r="5"></circle>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .generations-chain {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .generations-chain__art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .generations-chain__background {
+    fill: var(--color-charcoal);
+  }
+
+  .generations-chain__arch {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-gold) 34%, transparent);
+    stroke-width: 1.5;
+  }
+
+  .generations-chain__ground {
+    fill: rgb(0 0 0 / 24%);
+  }
+
+  .generations-chain__ambient-light {
+    fill: color-mix(in srgb, var(--color-gold) 8%, transparent);
+  }
+
+  .generations-chain__person {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+
+  .generations-chain__person--child {
+    --generation-enter-x: -2.75rem;
+  }
+
+  .generations-chain__person--teen {
+    --generation-enter-x: -2.25rem;
+  }
+
+  .generations-chain__person--adult {
+    --generation-enter-x: 2.25rem;
+  }
+
+  .generations-chain__person--elder {
+    --generation-enter-x: 2.75rem;
+  }
+
+  .generations-chain__connection {
+    fill: var(--color-gold);
+    stroke: color-mix(in srgb, var(--color-gold) 74%, var(--color-ivory));
+    stroke-width: 7;
+    stroke-linecap: round;
+    transform-box: fill-box;
+    transform-origin: left center;
+  }
+
+  .generations-chain__limb {
+    stroke: color-mix(in srgb, var(--color-ivory) 12%, transparent);
+    stroke-width: 1;
+  }
+
+  .generations-chain__skin--deep {
+    fill: #5e382b;
+  }
+
+  .generations-chain__skin--olive {
+    fill: #b58564;
+  }
+
+  .generations-chain__skin--warm {
+    fill: #d1a17f;
+  }
+
+  .generations-chain__skin--medium {
+    fill: #ae765c;
+  }
+
+  .generations-chain__hair--deep,
+  .generations-chain__hair--black {
+    fill: #211d1a;
+  }
+
+  .generations-chain__hair--brown {
+    fill: #493127;
+  }
+
+  .generations-chain__hair--silver {
+    fill: color-mix(in srgb, var(--color-ivory) 76%, var(--color-muted));
+  }
+
+  .generations-chain__clothing--burgundy {
+    fill: var(--color-burgundy);
+  }
+
+  .generations-chain__clothing--plum {
+    fill: color-mix(in srgb, var(--color-burgundy) 72%, var(--color-charcoal));
+  }
+
+  .generations-chain__clothing--gold {
+    fill: color-mix(in srgb, var(--color-gold) 72%, var(--color-brick));
+  }
+
+  .generations-chain__clothing--cream {
+    fill: color-mix(in srgb, var(--color-ivory) 86%, var(--color-paper));
+  }
+
+  .generations-chain__clothing--ivory {
+    fill: color-mix(in srgb, var(--color-ivory) 84%, var(--color-paper));
+  }
+
+  .generations-chain__clothing--charcoal {
+    fill: color-mix(in srgb, var(--color-charcoal) 82%, var(--color-burgundy));
+  }
+
+  .generations-chain__scarf {
+    stroke: color-mix(in srgb, var(--color-gold) 32%, transparent);
+    stroke-width: 1;
+  }
+
+  .generations-chain__shoe {
+    fill: #171412;
+  }
+
+  .generations-chain__final-light {
+    fill: var(--color-gold);
+    stroke: color-mix(in srgb, var(--color-gold) 70%, var(--color-ivory));
+    stroke-width: 10;
+    stroke-linecap: round;
+    opacity: 0;
+  }
+
+  [data-art-motion]:not([data-art-visible]) .generations-chain__person,
+  [data-art-motion]:not([data-art-visible]) .generations-chain__connection {
+    opacity: 0;
+  }
+
+  [data-art-motion]:not([data-art-visible]) .generations-chain__person {
+    transform: translate3d(var(--generation-enter-x), 0, 0) scale(0.97);
+  }
+
+  [data-art-motion]:not([data-art-visible]) .generations-chain__connection {
+    transform: scaleX(0.12);
+  }
+
+  [data-art-visible] .generations-chain__person--child {
+    animation: generation-enter 850ms var(--motion-ease-emphasized) both;
+  }
+
+  [data-art-visible] .generations-chain__person--teen {
+    animation: generation-enter 850ms 350ms var(--motion-ease-emphasized) both;
+  }
+
+  [data-art-visible] .generations-chain__connection--one {
+    animation: generation-connect 520ms 950ms var(--motion-ease-standard) both;
+  }
+
+  [data-art-visible] .generations-chain__person--adult {
+    animation: generation-enter 850ms 1100ms var(--motion-ease-emphasized) both;
+  }
+
+  [data-art-visible] .generations-chain__connection--two {
+    animation: generation-connect 520ms 1750ms var(--motion-ease-standard) both;
+  }
+
+  [data-art-visible] .generations-chain__person--elder {
+    animation: generation-enter 850ms 1900ms var(--motion-ease-emphasized) both;
+  }
+
+  [data-art-visible] .generations-chain__connection--three {
+    animation: generation-connect 520ms 2550ms var(--motion-ease-standard) both;
+  }
+
+  [data-art-visible] .generations-chain__final-light {
+    animation: generation-light 700ms 2850ms var(--motion-ease-standard) both;
+  }
+
+  @keyframes generation-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(var(--generation-enter-x), 0, 0) scale(0.97);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @keyframes generation-connect {
+    from {
+      opacity: 0;
+      transform: scaleX(0.12);
+    }
+
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes generation-light {
+    0% {
+      opacity: 0;
+      transform: translate3d(-10rem, 0, 0) scaleX(0.5);
+    }
+
+    45% {
+      opacity: 0.62;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(10rem, 0, 0) scaleX(1);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .generations-chain__person--child {
+      --generation-enter-x: -1.75rem;
+    }
+
+    .generations-chain__person--teen {
+      --generation-enter-x: -1.25rem;
+    }
+
+    .generations-chain__person--adult {
+      --generation-enter-x: 1.25rem;
+    }
+
+    .generations-chain__person--elder {
+      --generation-enter-x: 1.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .generations-chain__person,
+    .generations-chain__connection,
+    .generations-chain__final-light {
+      animation: none !important;
+      opacity: 1;
+      transform: none;
+    }
+
+    .generations-chain__final-light {
+      opacity: 0;
+    }
+  }
+</style>

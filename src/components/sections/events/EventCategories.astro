@@ -1,0 +1,222 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+import EventVisual from '@/components/sections/events/EventVisual.astro';
+import type {
+  EventCategory,
+  EventCategoryKind,
+  EventsPageData,
+} from '@/types/events';
+
+interface Props {
+  overview: EventsPageData['overview'];
+  categories: readonly EventCategory[];
+}
+
+const { overview, categories } = Astro.props;
+const categoryLabels: Readonly<Record<EventCategoryKind, string>> = {
+  cultural: 'Culture',
+  liturgical: 'Célébrations',
+  community: 'Communauté',
+  'mutual-aid': 'Entraide',
+};
+---
+
+<section
+  class="event-categories section-block"
+  aria-labelledby="event-categories-title"
+>
+  <Container>
+    <header class="event-categories__header">
+      <div>
+        <Eyebrow>{overview.eyebrow}</Eyebrow>
+        <h2 id="event-categories-title" class="event-categories__title type-h2">
+          {overview.title}
+        </h2>
+      </div>
+      <div class="event-categories__introduction">
+        <p>{overview.introduction}</p>
+        <p class="event-categories__note">
+          <span aria-hidden="true"></span>
+          {overview.confirmationNote}
+        </p>
+      </div>
+    </header>
+
+    <div class="event-categories__list">
+      {
+        categories.map((category, index) => (
+          <article
+            id={category.slug}
+            class:list={[
+              'event-category',
+              index % 2 === 1 && 'event-category--reversed',
+              category.featured && 'event-category--featured',
+            ]}
+            data-confirmation-required={category.confirmationRequired}
+          >
+            <div class="event-category__media">
+              <EventVisual
+                visual={category.visual}
+                featured={category.featured}
+              />
+            </div>
+            <div class="event-category__content">
+              <p class="event-category__eyebrow type-eyebrow">
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                {categoryLabels[category.category]}
+              </p>
+              <h3 class="event-category__title type-h3">{category.title}</h3>
+              <p class="event-category__summary">{category.summary}</p>
+              {category.cta && (
+                <TextLink href={category.cta.href}>
+                  {category.cta.label}
+                </TextLink>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .event-categories {
+    overflow: clip;
+    background: var(--color-ivory);
+  }
+
+  .event-categories__header {
+    display: grid;
+    gap: 1.75rem;
+    align-items: end;
+    padding-bottom: clamp(3.5rem, 8vw, 6.5rem);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .event-categories__title {
+    max-width: 38rem;
+    margin: 0.9rem 0 0;
+    color: var(--color-charcoal);
+  }
+
+  .event-categories__introduction {
+    display: grid;
+    max-width: 37rem;
+    gap: 1.25rem;
+    color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .event-categories__introduction p {
+    margin: 0;
+  }
+
+  .event-categories__note {
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .event-categories__note span {
+    height: 1px;
+    margin-top: 0.75rem;
+    background: var(--color-gold);
+  }
+
+  .event-categories__list {
+    display: grid;
+    gap: clamp(4rem, 9vw, 8rem);
+    padding-top: clamp(4rem, 9vw, 7rem);
+  }
+
+  .event-category {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .event-category__media {
+    min-width: 0;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-charcoal);
+    box-shadow: 0 1.5rem 4rem rgb(28 25 24 / 10%);
+  }
+
+  .event-category__content {
+    max-width: 34rem;
+  }
+
+  .event-category__eyebrow {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0;
+    color: var(--color-gold);
+  }
+
+  .event-category__eyebrow span {
+    color: var(--color-burgundy);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+  }
+
+  .event-category__title {
+    margin: 1rem 0 0;
+    color: var(--color-charcoal);
+  }
+
+  .event-category__summary {
+    margin: 1.25rem 0 0;
+    color: var(--color-muted);
+    font-size: clamp(1rem, calc(0.954rem + 0.19vw), 1.125rem);
+    line-height: 1.8;
+  }
+
+  .event-category :global(.ui-text-link) {
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 48rem) {
+    .event-categories__header {
+      grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.9fr);
+      gap: 3rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .event-category {
+      grid-template-columns: minmax(0, 7fr) minmax(20rem, 5fr);
+      gap: clamp(3rem, 7vw, 6.5rem);
+    }
+
+    .event-category--reversed {
+      grid-template-columns: minmax(20rem, 5fr) minmax(0, 7fr);
+    }
+
+    .event-category--reversed .event-category__media {
+      grid-column: 2;
+    }
+
+    .event-category--reversed .event-category__content {
+      grid-row: 1;
+      grid-column: 1;
+      justify-self: end;
+    }
+
+    .event-category--featured .event-category__media {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

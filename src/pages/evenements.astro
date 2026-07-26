@@ -1,0 +1,24 @@
+---
+import EventCategories from '@/components/sections/events/EventCategories.astro';
+import EventsHero from '@/components/sections/events/EventsHero.astro';
+import MotionController from '@/components/motion/MotionController.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getEventsPageData } from '@/lib/content/getEventsPageData';
+
+const eventsPageData = await getEventsPageData();
+---
+
+<BaseLayout
+  title={eventsPageData.seo.title}
+  description={eventsPageData.seo.description}
+  pageClass="events-page"
+  headerVariant="light"
+  noIndex
+>
+  <EventsHero hero={eventsPageData.hero} />
+  <EventCategories
+    overview={eventsPageData.overview}
+    categories={eventsPageData.categories}
+  />
+  <MotionController />
+</BaseLayout>

@@ -6,7 +6,7 @@ if (documentRoot.dataset.motionInitialized !== 'true') {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const revealTargets = Array.from(
     document.querySelectorAll<HTMLElement>(
-      '[data-motion-reveal], [data-motion-stagger], [data-lsg]',
+      '[data-motion-reveal], [data-motion-stagger], [data-lsg], [data-generations-chain]',
     ),
   );
   const stainedGlassRoots = Array.from(
@@ -16,6 +16,8 @@ if (documentRoot.dataset.motionInitialized !== 'true') {
   const revealTarget = (target: HTMLElement) => {
     if (target.hasAttribute('data-lsg')) {
       target.setAttribute('data-lsg-visible', '');
+    } else if (target.hasAttribute('data-generations-chain')) {
+      target.setAttribute('data-art-visible', '');
     } else {
       target.setAttribute('data-motion-visible', '');
     }
@@ -23,7 +25,12 @@ if (documentRoot.dataset.motionInitialized !== 'true') {
 
   const showEverything = () => {
     documentRoot.classList.remove('motion-enabled');
-    revealTargets.forEach(revealTarget);
+    revealTargets.forEach((target) => {
+      revealTarget(target);
+      if (target.hasAttribute('data-generations-chain')) {
+        target.removeAttribute('data-art-motion');
+      }
+    });
     stainedGlassRoots.forEach((root) => {
       root.removeAttribute('data-lsg-js');
       root.style.setProperty('--lsg-parallax-x', '0px');
@@ -120,7 +127,12 @@ if (documentRoot.dataset.motionInitialized !== 'true') {
         },
       );
 
-      revealTargets.forEach((target) => observer.observe(target));
+      revealTargets.forEach((target) => {
+        if (target.hasAttribute('data-generations-chain')) {
+          target.setAttribute('data-art-observed', '');
+        }
+        observer.observe(target);
+      });
       documentRoot.classList.add('motion-enabled');
       prepareStainedGlassParallax();
 
