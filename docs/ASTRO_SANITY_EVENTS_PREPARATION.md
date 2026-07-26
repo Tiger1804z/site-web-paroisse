@@ -23,6 +23,21 @@ une fois la chaîne intergénérationnelle. Un futur filtre interactif pourra
 employer un script ciblé ou un composant hydraté seulement si le besoin
 fonctionnel le justifie.
 
+Un second flux, volontairement séparé, traite les occurrences datées :
+
+```text
+src/data/parish-events.ts
+  → getParishEvents.ts
+  → statut temporel, visibilité, tri et sélection
+  ├─→ UpcomingEventsSection
+  ├─→ PastEventsSection
+  └─→ UpcomingActivitiesSection sur l’accueil
+```
+
+« Prochaines activités » est une vue condensée de `ParishEvent`, pas une
+nouvelle collection. Le frontmatter des deux pages passe un `now` au getter
+pendant le build. Le navigateur ne reçoit aucune logique de calendrier.
+
 ## Contrat interne
 
 `EventsPageData` est le contrat stable entre le contenu et la présentation.
@@ -134,13 +149,16 @@ personnages, les couleurs, l’animation, le CSS et le layout.
 
 ## Catégorie contre événement daté
 
-Les cinq objets du lot 1 décrivent des catégories éditoriales, pas des
-occurrences datées. Une étape future pourra introduire un type `event` avec
-date, heure, lieu, statut d’annulation et archive. Une catégorie pourra alors
-regrouper plusieurs événements sans dupliquer sa présentation.
+Les cinq objets du lot 1 décrivent des catégories éditoriales permanentes. Le
+type séparé `ParishEvent` décrit maintenant une occurrence datée avec sa
+visibilité, son image et ses informations pratiques. Une catégorie reste
+affichable même lorsque la liste des occurrences est vide.
 
-Cette distinction évite d’ajouter aujourd’hui des champs de calendrier qui ne
-sont ni utilisés ni confirmés.
+Le futur document Sanity `parishEvent`, ses réglages de page, sa normalisation
+et ses champs sont détaillés dans
+[`SANITY_CONTENT_MODEL.md`](./SANITY_CONTENT_MODEL.md). Sanity ne stockera pas
+`upcoming`, `ongoing` ou `past`; Astro dérivera ces états de `startAt`,
+`endAt` et de l’heure du build.
 
 ## Publication statique
 
@@ -158,3 +176,9 @@ publication Sanity
 
 Ce modèle reste rapide, résilient et adapté à un site paroissial. Aucun package
 Sanity, secret, webhook ou schéma n’est installé dans ce lot.
+
+Le passage du temps ne déclenche toutefois pas un déploiement à lui seul. En
+plus du webhook de publication, la production devra lancer un rebuild
+quotidien après minuit selon `America/Toronto`. Un événement terminé sera alors
+retiré de l’accueil et des événements à venir, puis ajouté aux archives si
+`showInArchive` est actif.

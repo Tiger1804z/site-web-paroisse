@@ -373,7 +373,7 @@ source locale; Astro conservera la grille alternée, les transitions, la ligne
 et les breakpoints. Voir
 [`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
 
-## Architecture Événements — lot 1
+## Architecture Événements — S1-T07 en cours
 
 La route `/evenements/` possède maintenant une première implémentation
 volontairement incomplète et `noindex`. Son contenu suit la frontière :
@@ -392,18 +392,35 @@ des œuvres SVG contrôlées par le code (`clothing-rack`, `community-meal` et
 `visualType`; le normalisateur le transformera en cette union. Le CMS ne
 stockera ni SVG, ni CSS, ni animation.
 
-Les catégories du lot 1 ne sont pas des événements datés. Les dates, archives,
-filtres et autres contenus de la page Figma seront intégrés dans les lots
-suivants. La chaîne intergénérationnelle réutilise l’`IntersectionObserver`
-global et n’ajoute ni listener `scroll`, ni boucle d’animation JavaScript. Voir
+Les catégories du lot 1 ne sont pas des événements datés. Un second contrat
+`ParishEvent` décrit maintenant les occurrences datées. Une source unique
+alimente les événements à venir, les archives et « Prochaines activités » sur
+l’accueil :
+
+```text
+src/data/parish-events.ts
+  → src/lib/content/getParishEvents.ts
+  → statut temporel, visibilité et tri
+  → composants Astro typés de /evenements/ et /
+  → HTML statique
+```
+
+Le frontmatter calcule les listes pendant le build. Les composants ne
+connaissent ni l’heure courante, ni la source locale, ni Sanity. Le statut
+temporel n’est jamais enregistré : il est dérivé des dates ISO avec
+`America/Toronto`. Un futur webhook et un rebuild quotidien permettront au
+HTML déployé de suivre le passage du temps.
+
+La chaîne intergénérationnelle réutilise l’`IntersectionObserver` global et
+n’ajoute ni listener `scroll`, ni boucle d’animation JavaScript. Voir
 [`EVENTS_VISUALS_BATCH_1.md`](./EVENTS_VISUALS_BATCH_1.md) et
-[`ASTRO_SANITY_EVENTS_PREPARATION.md`](./ASTRO_SANITY_EVENTS_PREPARATION.md).
+[`EVENTS_ARCHITECTURE.md`](./EVENTS_ARCHITECTURE.md).
 
 ## Limites actuelles
 
-- la route Événements expose seulement son premier lot visuel et reste
-  `noindex`; les autres routes publiques non migrées restent des placeholders
-  techniques;
+- la route Événements expose ses catégories et une première architecture
+  d’événements datés, mais reste `noindex` jusqu’à la migration Figma complète;
+  les autres routes publiques non migrées restent des placeholders techniques;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;

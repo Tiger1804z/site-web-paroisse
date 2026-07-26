@@ -6,9 +6,10 @@ Ce lot prépare la route `/evenements/` et les cinq premières catégories. Il
 ne constitue pas la migration complète de la page Figma et reste volontairement
 en `noindex` jusqu’à la fin de S1-T07.
 
-Les filtres, la vue liste, les événements datés, les archives, les états vides
-et les autres catégories de l’export Figma ne sont pas encore migrés. Aucun
-événement réel, horaire, artiste, partenaire ou calendrier n’est publié.
+Les filtres, la vue liste et les autres éléments de l’export Figma ne sont pas
+encore migrés. Une itération ultérieure de la même branche a ajouté un contrat
+séparé pour les événements datés réels et leurs archives; cette architecture
+est documentée dans [`EVENTS_ARCHITECTURE.md`](./EVENTS_ARCHITECTURE.md).
 
 ## Audit de la source Figma
 
@@ -113,7 +114,7 @@ Avant de retirer `noindex`, S1-T07 devra encore intégrer et valider :
 
 - les autres catégories et visuels fournis par le client;
 - le comportement final de navigation ou de filtrage;
-- les vrais états vides et les contenus datés;
+- la composition Figma finale des contenus datés et des états vides;
 - la section finale et les CTA;
 - le responsive complet contre la maquette;
 - la stratégie d’archives et de pages de détail;

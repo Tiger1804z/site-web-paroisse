@@ -1,0 +1,420 @@
+---
+import { Image } from 'astro:assets';
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import {
+  formatParishEventDate,
+  formatParishEventPrice,
+  formatParishEventTime,
+  getParishEventCategoryLabel,
+} from '@/lib/events/parish-events';
+import type { ParishEventWithTemporalStatus } from '@/types/parish-events';
+
+interface Props {
+  title: string;
+  events: readonly ParishEventWithTemporalStatus[];
+}
+
+const { title, events } = Astro.props;
+---
+
+<section
+  class="upcoming-events-section section-block"
+  aria-labelledby="upcoming-events-page-title"
+>
+  <Container>
+    <header class="upcoming-events-section__header" data-motion-reveal>
+      <Eyebrow>À l’agenda</Eyebrow>
+      <h2 id="upcoming-events-page-title" class="type-h2">{title}</h2>
+      <p>
+        Retrouvez ici les prochains rendez-vous dont les informations ont été
+        publiées par la paroisse.
+      </p>
+    </header>
+
+    <div class="upcoming-events-section__list">
+      {
+        events.map((event) => (
+          <article
+            id={event.slug}
+            class:list={[
+              'upcoming-event',
+              !event.coverImage && 'upcoming-event--without-image',
+              event.publicationStatus === 'cancelled' &&
+                'upcoming-event--cancelled',
+            ]}
+            data-motion-reveal
+          >
+            {event.coverImage && (
+              <div class="upcoming-event__media-column">
+                <figure class="upcoming-event__media">
+                  <Image
+                    src={event.coverImage.image}
+                    alt={event.coverImage.alt}
+                    widths={[560, 800, 1120]}
+                    sizes="(min-width: 64rem) 48vw, calc(100vw - 2.5rem)"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {event.coverImage.credit && (
+                    <figcaption>Photo : {event.coverImage.credit}</figcaption>
+                  )}
+                </figure>
+                {event.gallery && event.gallery.length > 0 && (
+                  <div
+                    class="upcoming-event__gallery"
+                    aria-label="Autres vues du lieu"
+                  >
+                    {event.gallery.map((galleryImage) => (
+                      <figure class="upcoming-event__gallery-item">
+                        <Image
+                          src={galleryImage.image}
+                          alt={galleryImage.alt}
+                          widths={[360, 560]}
+                          sizes="(min-width: 64rem) 24vw, calc(100vw - 2.5rem)"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        {galleryImage.credit && (
+                          <figcaption>Photo : {galleryImage.credit}</figcaption>
+                        )}
+                      </figure>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div class="upcoming-event__content">
+              <div class="upcoming-event__badges">
+                <span>{getParishEventCategoryLabel(event.category)}</span>
+                {event.temporalStatus === 'ongoing' && (
+                  <span class="upcoming-event__status">En cours</span>
+                )}
+                {event.publicationStatus === 'cancelled' && (
+                  <span class="upcoming-event__status">Annulé</span>
+                )}
+              </div>
+
+              <p class="upcoming-event__date">
+                <time datetime={event.startAt}>
+                  {formatParishEventDate(event.startAt)}
+                </time>
+              </p>
+              <h3 class="type-h3">{event.title}</h3>
+              <p class="upcoming-event__excerpt">{event.excerpt}</p>
+
+              <dl class="upcoming-event__details">
+                {event.departureAt && (
+                  <div>
+                    <dt>Départ</dt>
+                    <dd>
+                      <time datetime={event.departureAt}>
+                        {formatParishEventTime(event.departureAt)}
+                      </time>
+                    </dd>
+                  </div>
+                )}
+                {event.returnAt && (
+                  <div>
+                    <dt>Retour prévu</dt>
+                    <dd>
+                      <time datetime={event.returnAt}>
+                        {formatParishEventTime(event.returnAt)}
+                      </time>
+                    </dd>
+                  </div>
+                )}
+                {event.locationName && (
+                  <div>
+                    <dt>Destination</dt>
+                    <dd>{event.locationName}</dd>
+                  </div>
+                )}
+                {event.meetingPoint && (
+                  <div>
+                    <dt>Rassemblement</dt>
+                    <dd>{event.meetingPoint}</dd>
+                  </div>
+                )}
+                {event.price && (
+                  <div>
+                    <dt>Coût</dt>
+                    <dd>{formatParishEventPrice(event.price)}</dd>
+                  </div>
+                )}
+                {event.contact?.name && (
+                  <div>
+                    <dt>Personne responsable</dt>
+                    <dd>{event.contact.name}</dd>
+                  </div>
+                )}
+              </dl>
+
+              {event.capacityNotice && (
+                <p class="upcoming-event__notice">{event.capacityNotice}</p>
+              )}
+
+              {event.contact?.phone && event.contact.phoneHref && (
+                <p class="upcoming-event__phone">
+                  Téléphone :
+                  <a href={event.contact.phoneHref}>{event.contact.phone}</a>
+                </p>
+              )}
+
+              {event.cta && event.publicationStatus !== 'cancelled' && (
+                <Button href={event.cta.href} variant="primary">
+                  {event.cta.label}
+                </Button>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .upcoming-events-section {
+    overflow: clip;
+    background: var(--color-paper);
+  }
+
+  .upcoming-events-section__header {
+    display: grid;
+    max-width: 48rem;
+    gap: 0.9rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .upcoming-events-section__header h2,
+  .upcoming-events-section__header p {
+    margin: 0;
+  }
+
+  .upcoming-events-section__header p {
+    max-width: 40rem;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .upcoming-events-section__list {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .upcoming-event {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-ivory);
+    box-shadow: 0 1.5rem 4rem rgb(28 25 24 / 8%);
+  }
+
+  .upcoming-event__media {
+    position: relative;
+    min-height: 21rem;
+    margin: 0;
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+
+  .upcoming-event__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--duration-media) var(--ease-editorial);
+  }
+
+  .upcoming-event:hover .upcoming-event__media :global(img) {
+    scale: var(--motion-scale-hover);
+  }
+
+  .upcoming-event__media figcaption {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.65rem;
+    padding: 0.3rem 0.5rem;
+    background: rgb(28 25 24 / 74%);
+    color: var(--color-ivory);
+    font-size: 0.6875rem;
+  }
+
+  .upcoming-event__media-column {
+    min-width: 0;
+    background: var(--color-charcoal);
+  }
+
+  .upcoming-event__gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 2px;
+    padding-top: 2px;
+    background: var(--color-gold);
+  }
+
+  .upcoming-event__gallery-item {
+    position: relative;
+    height: 9rem;
+    margin: 0;
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+
+  .upcoming-event__gallery-item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .upcoming-event__gallery-item figcaption {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.45rem;
+    padding: 0.25rem 0.4rem;
+    background: rgb(28 25 24 / 76%);
+    color: var(--color-ivory);
+    font-size: 0.625rem;
+  }
+
+  .upcoming-event__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+  }
+
+  .upcoming-event__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    color: var(--color-burgundy);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .upcoming-event__status {
+    padding-left: 0.5rem;
+    border-left: 1px solid var(--color-gold);
+  }
+
+  .upcoming-event__date {
+    margin: 1.2rem 0 0;
+    color: var(--color-gold-dark);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+  }
+
+  .upcoming-event h3 {
+    max-width: 35rem;
+    margin: 0.55rem 0 0;
+    color: var(--color-charcoal);
+  }
+
+  .upcoming-event__excerpt {
+    max-width: 38rem;
+    margin: 1.1rem 0 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .upcoming-event__details {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+    margin: 1.75rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .upcoming-event__details div {
+    min-width: 0;
+  }
+
+  .upcoming-event__details dt {
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .upcoming-event__details dd {
+    margin: 0.35rem 0 0;
+    color: var(--color-charcoal);
+    line-height: 1.45;
+  }
+
+  .upcoming-event__notice {
+    margin: 1.5rem 0 0;
+    padding: 0.6rem 0.85rem;
+    border-left: 2px solid var(--color-gold);
+    background: var(--color-paper);
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .upcoming-event__phone {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+  }
+
+  .upcoming-event__phone a {
+    margin-left: 0.35rem;
+    color: var(--color-burgundy);
+    font-weight: 700;
+    text-underline-offset: 0.2em;
+  }
+
+  .upcoming-event :global(.ui-button) {
+    margin-top: 1.5rem;
+  }
+
+  .upcoming-event--cancelled {
+    border-color: color-mix(
+      in srgb,
+      var(--color-burgundy) 38%,
+      var(--color-border)
+    );
+  }
+
+  @media (min-width: 64rem) {
+    .upcoming-event {
+      grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
+    }
+
+    .upcoming-event__media {
+      min-height: 29rem;
+    }
+
+    .upcoming-event__media-column {
+      display: grid;
+      min-height: 38rem;
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .upcoming-event--without-image {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .upcoming-event--without-image .upcoming-event__content {
+      max-width: 58rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .upcoming-event__media {
+      min-height: 16rem;
+    }
+
+    .upcoming-event__details {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

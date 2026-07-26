@@ -12,11 +12,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "check": "astro check",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm build",
+    "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build",
     "astro": "astro"
   },
   "dependencies": {

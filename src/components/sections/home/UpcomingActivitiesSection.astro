@@ -1,0 +1,402 @@
+---
+import { Image } from 'astro:assets';
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+import {
+  formatParishEventDate,
+  formatParishEventTime,
+  getParishEventCategoryLabel,
+} from '@/lib/events/parish-events';
+import type { HomepageUpcomingEvents } from '@/types/parish-events';
+
+interface Props {
+  title: string;
+  events: HomepageUpcomingEvents;
+}
+
+const { title, events } = Astro.props;
+const { featured, secondary } = events;
+---
+
+{
+  featured && (
+    <section
+      class="upcoming-activities section-block"
+      aria-labelledby="upcoming-activities-title"
+    >
+      <Container>
+        <div class="upcoming-activities__heading" data-motion-reveal>
+          <div>
+            <Eyebrow>Vie communautaire</Eyebrow>
+            <h2 id="upcoming-activities-title" class="type-h2">
+              {title}
+            </h2>
+          </div>
+          <TextLink href="/evenements/">Voir tous les événements</TextLink>
+        </div>
+
+        <div
+          class:list={[
+            'upcoming-activities__grid',
+            secondary.length === 0 && 'upcoming-activities__grid--single',
+          ]}
+        >
+          <article
+            class:list={[
+              'featured-activity',
+              !featured.coverImage && 'featured-activity--without-image',
+            ]}
+            data-motion-reveal
+            data-motion-variant="image"
+          >
+            {featured.coverImage && (
+              <>
+                <Image
+                  src={featured.coverImage.image}
+                  alt={featured.coverImage.alt}
+                  widths={[640, 960, 1280]}
+                  sizes={
+                    secondary.length > 0
+                      ? '(min-width: 64rem) calc(100vw - 31rem), calc(100vw - 2.5rem)'
+                      : '(min-width: 64rem) calc(100vw - 8rem), calc(100vw - 2.5rem)'
+                  }
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="featured-activity__overlay" aria-hidden="true" />
+              </>
+            )}
+
+            <div class="featured-activity__content">
+              <p class="featured-activity__category">
+                {getParishEventCategoryLabel(featured.category)}
+                {featured.temporalStatus === 'ongoing' && (
+                  <span> · En cours</span>
+                )}
+              </p>
+              <h3>
+                <a href={`/evenements/#${featured.slug}`}>{featured.title}</a>
+              </h3>
+              <p class="featured-activity__description">{featured.excerpt}</p>
+              <p class="featured-activity__meta">
+                <time datetime={featured.startAt}>
+                  {formatParishEventDate(featured.startAt)}
+                </time>
+                {featured.departureAt && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span>
+                      Départ à{' '}
+                      <time datetime={featured.departureAt}>
+                        {formatParishEventTime(featured.departureAt)}
+                      </time>
+                    </span>
+                  </>
+                )}
+                {featured.capacityNotice && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span>{featured.capacityNotice}</span>
+                  </>
+                )}
+              </p>
+              {featured.cta && featured.publicationStatus !== 'cancelled' && (
+                <Button href={featured.cta.href} variant="dark">
+                  {featured.cta.label}
+                </Button>
+              )}
+              {featured.coverImage?.credit && (
+                <p class="featured-activity__credit">
+                  Photo : {featured.coverImage.credit}
+                </p>
+              )}
+            </div>
+          </article>
+
+          {secondary.length > 0 && (
+            <div class="secondary-activities" data-motion-stagger>
+              {secondary.map((event) => (
+                <a
+                  class="secondary-activity"
+                  href={`/evenements/#${event.slug}`}
+                  aria-label={`Consulter l’événement « ${event.title} »`}
+                  data-motion-item
+                >
+                  {event.coverImage && (
+                    <span class="secondary-activity__image">
+                      <Image
+                        src={event.coverImage.image}
+                        alt=""
+                        widths={[160]}
+                        sizes="80px"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  )}
+                  <span class="secondary-activity__copy">
+                    <span class="secondary-activity__category">
+                      {getParishEventCategoryLabel(event.category)}
+                    </span>
+                    <span class="secondary-activity__title">{event.title}</span>
+                    <span class="secondary-activity__meta">
+                      <time datetime={event.startAt}>
+                        {formatParishEventDate(event.startAt)}
+                      </time>
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+<style>
+  .upcoming-activities {
+    background: var(--color-ivory);
+  }
+
+  .upcoming-activities__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .upcoming-activities__heading h2 {
+    margin: 0.75rem 0 0;
+    color: var(--color-charcoal);
+  }
+
+  .upcoming-activities__heading :global(.ui-text-link) {
+    align-self: flex-start;
+  }
+
+  .upcoming-activities__grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .upcoming-activities__grid--single {
+    grid-template-columns: minmax(0, 52rem);
+  }
+
+  .featured-activity {
+    position: relative;
+    min-height: 35rem;
+    overflow: hidden;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .featured-activity > :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.68;
+    transition:
+      scale var(--duration-media) var(--ease-editorial),
+      opacity var(--duration-media) var(--ease-editorial);
+  }
+
+  .featured-activity:hover > :global(img) {
+    scale: var(--motion-scale-hover);
+    opacity: 0.78;
+  }
+
+  .featured-activity__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgb(28 25 24 / 98%),
+      rgb(28 25 24 / 42%),
+      rgb(28 25 24 / 6%)
+    );
+  }
+
+  .featured-activity__content {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: clamp(1.5rem, 5vw, 3rem);
+  }
+
+  .featured-activity--without-image {
+    min-height: 28rem;
+    background:
+      radial-gradient(
+        circle at 78% 20%,
+        rgb(184 147 75 / 18%),
+        transparent 32%
+      ),
+      var(--color-burgundy-dark);
+  }
+
+  .featured-activity__category,
+  .secondary-activity__category {
+    color: var(--color-gold);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .featured-activity__category {
+    margin: 0 0 0.5rem;
+  }
+
+  .featured-activity h3 {
+    max-width: 44rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 1.5rem + 1.5vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .featured-activity h3 a {
+    color: var(--color-ivory);
+    text-decoration: none;
+  }
+
+  .featured-activity h3 a::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+  }
+
+  .featured-activity__description,
+  .featured-activity__meta,
+  .featured-activity :global(.ui-button),
+  .featured-activity__credit {
+    position: relative;
+    z-index: 1;
+  }
+
+  .featured-activity__description {
+    max-width: 40rem;
+    margin: 0.65rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+    line-height: 1.6;
+  }
+
+  .featured-activity__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin: 1rem 0 1.25rem;
+    color: color-mix(in srgb, var(--color-ivory) 70%, transparent);
+    font-size: 0.875rem;
+  }
+
+  .featured-activity__credit {
+    margin: 1rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+    font-size: 0.6875rem;
+  }
+
+  .secondary-activities {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .secondary-activity {
+    display: flex;
+    min-height: 7rem;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--color-paper);
+    color: var(--color-charcoal);
+    text-decoration: none;
+    transition: background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .secondary-activity:hover {
+    background: color-mix(
+      in srgb,
+      var(--color-paper) 82%,
+      var(--color-surface)
+    );
+  }
+
+  .secondary-activity__image {
+    width: 5rem;
+    height: 5rem;
+    flex: 0 0 auto;
+    overflow: hidden;
+  }
+
+  .secondary-activity__image :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--duration-slow) var(--ease-editorial);
+  }
+
+  .secondary-activity:hover .secondary-activity__image :global(img) {
+    scale: var(--motion-scale-hover);
+  }
+
+  .secondary-activity__copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .secondary-activity__category {
+    letter-spacing: 0.15em;
+  }
+
+  .secondary-activity__title {
+    margin-top: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    line-height: 1.15;
+  }
+
+  .secondary-activity__meta {
+    margin-top: 0.35rem;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+
+  @media (min-width: 48rem) {
+    .upcoming-activities__heading {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .featured-activity {
+      min-height: 0;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .upcoming-activities__grid:not(.upcoming-activities__grid--single) {
+      grid-template-columns: minmax(0, 1fr) 21.25rem;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .featured-activity {
+      min-height: 38rem;
+    }
+  }
+</style>

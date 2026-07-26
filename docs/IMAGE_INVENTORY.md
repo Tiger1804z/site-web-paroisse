@@ -77,6 +77,25 @@ Elles ne documentent aucune date ou programmation actuelle.
 Astro génère les variantes responsives au build. Les PNG sources ne sont pas
 dupliqués en copies WebP dans le dépôt.
 
+## Photographies de pèlerinage — S1-T07
+
+Inspection effectuée le 26 juillet 2026. Les cinq sources sont des JPEG sRGB
+RGB sans transparence. Aucune interface, inscription parasite ou marque en
+filigrane n’est visible. Chaque copie de production conserve exactement le
+hash de sa source.
+
+| Fichier de production                | Source                                                                 |              Dimensions |            Poids | SHA-256                                                            | Contenu observé                                                                            | Crédit et droits                                                                                                     |
+| ------------------------------------ | ---------------------------------------------------------------------- | ----------------------: | ---------------: | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `notre-dame-du-cap-2026-cover.jpg`   | `vue-du-ciel-sanctuaire-notre-dame-du-cap-1.jpg`                       | 1800 × 1120 px, paysage |   279 075 octets | `c5c5a9bb6673b5c3d3067465621185ab8d5cd3f2354abe0769b8f66629ffbcbe` | Vue aérienne du sanctuaire Notre-Dame-du-Cap et du fleuve.                                 | Aucun auteur ou licence dans les métadonnées; publication à confirmer.                                               |
+| `notre-dame-du-cap-2026-02.jpg`      | `Madeline_Du_Cap.jpg`                                                  | 3533 × 2610 px, paysage | 2 399 773 octets | `af56c77a029fb858407ff81d07ae631927a873c79b5bad3ab8e6a0e9d129e40d` | Vue frontale de la façade du sanctuaire Notre-Dame-du-Cap.                                 | Métadonnées : Nikon D700, prise de vue du 2 juin 2011; aucun auteur ou licence exploitable, publication à confirmer. |
+| `sainte-anne-de-beaupre-2026-01.jpg` | `photo0jpg.jpg`                                                        |  1200 × 900 px, paysage |   250 170 octets | `8bbfbac94d59c9bd295f58ba5de1652a4ecf14b2a275f7593552f41c212e5e3c` | Vue extérieure de la basilique Sainte-Anne-de-Beaupré et de sa grande place.               | Aucun auteur ou licence dans les métadonnées; publication à confirmer.                                               |
+| `sainte-anne-de-beaupre-2026-02.jpg` | `Basilique_credit_croisieresAML-18.jpg`                                |  1020 × 680 px, paysage |   159 401 octets | `c6c144c3af52e5abd78c74ad252977bc0450a0aaf71a0f16835d57640a493a8b` | Façade de la basilique Sainte-Anne-de-Beaupré derrière un jardin et une fontaine.          | Crédit public « Croisières AML ». Un crédit ne constitue pas une licence; autorisation ou licence à confirmer.       |
+| `sainte-anne-de-beaupre-2026-03.jpg` | `Intérieur_de_la_Basilique_Sainte-Anne-de-Beaupré,_Quebéc,_Canada.jpg` | 960 × 1350 px, portrait |   482 694 octets | `bfe933787d06cf9bac9b882126d7f996c3eb2f2f0e8b868665bc52ebcfaa7da`  | Vue de la nef, des arches, de la voûte décorée et du sanctuaire de Sainte-Anne-de-Beaupré. | Métadonnées : auteur `Wilfredor`, mention « Creative Commons CC0 1.0 Universal Public Domain ».                      |
+
+`astro:assets` génère au build les largeurs et WebP nécessaires sans modifier
+ces JPEG dans le dépôt. Les vues additionnelles sont chargées paresseusement
+dans une mosaïque; aucune n’est préchargée.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.
