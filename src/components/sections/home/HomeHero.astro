@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import redAltarImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
 import floralAltarImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
 import violetAltarImage from '@/assets/images/paroisse/interieur-eglise-decor-violet-01.jpg';
+import AmbientHero from '@/components/motion/AmbientHero.astro';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 
@@ -56,6 +57,7 @@ const heroSlides = [
     }
   </div>
   <div class="home-hero__overlay" aria-hidden="true"></div>
+  <AmbientHero class="home-hero__ambient" particles={7} />
   <div class="home-hero__beams" aria-hidden="true">
     <span></span>
     <span></span>
@@ -232,7 +234,7 @@ const heroSlides = [
 
   .home-hero__slide {
     opacity: 0;
-    transition: opacity 1.4s var(--ease-editorial);
+    transition: opacity var(--motion-duration-slow) var(--ease-editorial);
   }
 
   .home-hero__slide[data-active='true'] {
@@ -248,7 +250,8 @@ const heroSlides = [
   }
 
   .home-hero__slide[data-active='true'] :global(img) {
-    animation: home-hero-zoom 8s linear both;
+    animation: home-hero-zoom var(--motion-duration-cinematic)
+      var(--motion-ease-cinematic) both;
   }
 
   @keyframes home-hero-zoom {
@@ -257,8 +260,12 @@ const heroSlides = [
     }
 
     to {
-      scale: 1.03;
+      scale: var(--motion-scale-cinematic);
     }
+  }
+
+  :global(.home-hero__ambient) {
+    z-index: 3;
   }
 
   .home-hero__overlay {
@@ -458,7 +465,7 @@ const heroSlides = [
     align-items: center;
     justify-content: center;
     color: color-mix(in srgb, var(--color-ivory) 60%, transparent);
-    animation: home-scroll-nudge 2s ease-in-out infinite;
+    animation: home-scroll-nudge 3.2s var(--motion-ease-standard) infinite;
   }
 
   .home-hero__indicators {
@@ -508,7 +515,7 @@ const heroSlides = [
     }
 
     50% {
-      transform: translateY(0.35rem);
+      transform: translateY(0.2rem);
     }
   }
 

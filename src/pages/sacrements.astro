@@ -1,4 +1,5 @@
 ---
+import MotionController from '@/components/motion/MotionController.astro';
 import GeneralProcess from '@/components/sections/sacraments/GeneralProcess.astro';
 import SacramentsExplorer from '@/components/sections/sacraments/SacramentsExplorer.astro';
 import SacramentsFaq from '@/components/sections/sacraments/SacramentsFaq.astro';
@@ -21,6 +22,7 @@ const sacramentsPageData = await getSacramentsPageData();
   <SacramentsExplorer items={sacramentsPageData.overview.items} />
   <GeneralProcess process={sacramentsPageData.generalProcess} />
   <SacramentsFaq faq={sacramentsPageData.faq} />
+  <MotionController />
 </BaseLayout>
 
 <style>

@@ -15,7 +15,7 @@ const { introduction } = Astro.props;
   aria-labelledby="about-introduction-title"
 >
   <Container size="reading">
-    <div class="about-introduction__content">
+    <div class="about-introduction__content" data-motion-reveal>
       {introduction.eyebrow && <Eyebrow>{introduction.eyebrow}</Eyebrow>}
       {
         introduction.accent && (

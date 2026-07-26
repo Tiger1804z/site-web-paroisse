@@ -54,7 +54,7 @@ const gallery: readonly GalleryItem[] = [
 ---
 
 <section class="home-gallery" aria-labelledby="home-gallery-title">
-  <Container class="home-gallery__heading">
+  <Container class="home-gallery__heading" data-motion-reveal>
     <div>
       <Eyebrow>Photographie</Eyebrow>
       <h2 id="home-gallery-title" class="type-h2">La paroisse en images</h2>
@@ -62,7 +62,7 @@ const gallery: readonly GalleryItem[] = [
     <TextLink href="/galerie">Voir toute la galerie</TextLink>
   </Container>
 
-  <div class="home-gallery__strip">
+  <div class="home-gallery__strip" data-motion-stagger>
     {
       gallery.map((item) => (
         <a
@@ -72,6 +72,7 @@ const gallery: readonly GalleryItem[] = [
           ]}
           href="/galerie"
           aria-label={`Voir la galerie : ${item.alt}`}
+          data-motion-item
         >
           <Image
             src={item.image}
@@ -161,7 +162,7 @@ const gallery: readonly GalleryItem[] = [
   }
 
   .home-gallery__item:hover :global(img) {
-    scale: 1.05;
+    scale: var(--motion-scale-hover);
   }
 
   @media (min-width: 48rem) {

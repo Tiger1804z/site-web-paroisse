@@ -1,0 +1,16 @@
+---
+interface Props {
+  class?: string;
+  variant?: 'fade-up' | 'fade' | 'image';
+}
+
+const { class: className, variant = 'fade-up' } = Astro.props;
+---
+
+<div
+  class:list={['motion-reveal', className]}
+  data-motion-reveal
+  data-motion-variant={variant}
+>
+  <slot />
+</div>

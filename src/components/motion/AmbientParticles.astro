@@ -1,0 +1,86 @@
+---
+interface Props {
+  count?: number;
+}
+
+const { count = 6 } = Astro.props;
+const particles = [
+  { x: 18, y: 22, size: 2, duration: 24, delay: -7 },
+  { x: 72, y: 18, size: 1, duration: 29, delay: -15 },
+  { x: 84, y: 54, size: 2, duration: 27, delay: -4 },
+  { x: 31, y: 68, size: 1, duration: 31, delay: -19 },
+  { x: 58, y: 76, size: 2, duration: 26, delay: -10 },
+  { x: 9, y: 47, size: 1, duration: 28, delay: -22 },
+  { x: 47, y: 31, size: 1, duration: 30, delay: -3 },
+  { x: 92, y: 82, size: 2, duration: 25, delay: -13 },
+] as const;
+const visibleParticles = particles.slice(0, Math.min(Math.max(count, 0), 8));
+---
+
+<span class="ambient-particles" aria-hidden="true">
+  {
+    visibleParticles.map((particle) => (
+      <span
+        style={`--particle-x:${particle.x}%;--particle-y:${particle.y}%;--particle-size:${particle.size}px;--particle-duration:${particle.duration}s;--particle-delay:${particle.delay}s`}
+      />
+    ))
+  }
+</span>
+
+<style>
+  .ambient-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ambient-particles > span {
+    position: absolute;
+    top: var(--particle-y);
+    left: var(--particle-x);
+    width: var(--particle-size);
+    height: var(--particle-size);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-gold) 82%, var(--color-ivory));
+    opacity: 0;
+    animation: ambient-particle-float var(--particle-duration)
+      var(--motion-ease-cinematic) var(--particle-delay) infinite;
+  }
+
+  @keyframes ambient-particle-float {
+    0%,
+    100% {
+      opacity: 0;
+      transform: translate3d(0, 0, 0);
+    }
+
+    18% {
+      opacity: 0.08;
+    }
+
+    58% {
+      opacity: var(--motion-particle-opacity);
+    }
+
+    86% {
+      opacity: 0.05;
+    }
+
+    100% {
+      transform: translate3d(0.35rem, -2.5rem, 0);
+    }
+  }
+
+  @media (max-width: 64rem) {
+    .ambient-particles > span:nth-child(n + 5) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 40rem), (prefers-reduced-motion: reduce) {
+    .ambient-particles {
+      display: none;
+    }
+  }
+</style>

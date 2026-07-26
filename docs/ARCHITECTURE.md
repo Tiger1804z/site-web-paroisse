@@ -337,6 +337,23 @@ décrits dans `SITEMAP.md`. Ils ne sont pas encore implémentés. La disponibili
 d’une salle restera vérifiée manuellement; un futur formulaire exprimera une
 demande, jamais une réservation confirmée.
 
+## Architecture du mouvement
+
+Les pages Astro restent statiques : les composants de mouvement génèrent du
+HTML, du SVG et du CSS au build. Seules les pages pilotes chargent
+`MotionController.astro`, qui importe le petit module
+`src/scripts/motion.ts`.
+
+Le module centralise `IntersectionObserver` pour éviter un listener scroll et
+des initialisations concurrentes. Les composants restent visibles sans
+JavaScript. Les effets continus sont exécutés en CSS; seule la parallaxe locale
+du vitrail utilise un `requestAnimationFrame` ponctuel.
+
+`LivingStainedGlass.astro` appartient au code de présentation et non au modèle
+de contenu. Sanity pourra modifier le texte voisin, mais ne pilotera pas les
+fragments SVG ou leurs animations. L’architecture et les contraintes sont
+documentées dans [`MOTION_SYSTEM.md`](./MOTION_SYSTEM.md).
+
 ## Limites actuelles
 
 - les routes publiques autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services restent des placeholders techniques;

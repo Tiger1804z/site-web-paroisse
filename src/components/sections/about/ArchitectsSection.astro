@@ -22,7 +22,7 @@ function getInitials(name: string): string {
 
 <section class="architects section-block" aria-labelledby="architects-title">
   <Container>
-    <header class="architects__header">
+    <header class="architects__header" data-motion-reveal>
       <Eyebrow>{architects.eyebrow}</Eyebrow>
       <h2 id="architects-title" class="architects__title type-h2">
         {architects.title}
@@ -30,10 +30,10 @@ function getInitials(name: string): string {
       <p>{architects.introduction}</p>
     </header>
 
-    <div class="architects__grid">
+    <div class="architects__grid" data-motion-stagger>
       {
         architects.profiles.map((profile) => (
-          <article class="architects__profile">
+          <article class="architects__profile" data-motion-item>
             <div class="architects__monogram" aria-hidden="true">
               <span>{getInitials(profile.name)}</span>
             </div>
@@ -52,7 +52,7 @@ function getInitials(name: string): string {
         ))
       }
 
-      <aside class="architects__validation">
+      <aside class="architects__validation" data-motion-item>
         <div class="architects__validation-icon" aria-hidden="true">
           <svg
             viewBox="0 0 24 24"

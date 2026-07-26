@@ -15,15 +15,15 @@ const { process } = Astro.props;
   process && process.steps.length > 0 && (
     <section class="general-process" aria-labelledby="general-process-title">
       <Container>
-        <header class="general-process__header">
+        <header class="general-process__header" data-motion-reveal>
           <Eyebrow>{process.eyebrow}</Eyebrow>
           <h2 id="general-process-title">{process.title}</h2>
           {process.introduction && <p>{process.introduction}</p>}
         </header>
 
-        <ol class="general-process__steps">
+        <ol class="general-process__steps" data-motion-stagger>
           {process.steps.map((step) => (
-            <li>
+            <li data-motion-item>
               <span class="general-process__number" aria-hidden="true">
                 {step.numberLabel}
               </span>
@@ -34,7 +34,7 @@ const { process } = Astro.props;
         </ol>
 
         {process.primaryCta && (
-          <div class="general-process__action">
+          <div class="general-process__action" data-motion-reveal>
             <Button href={process.primaryCta.href}>
               {process.primaryCta.label}
             </Button>

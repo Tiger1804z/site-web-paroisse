@@ -46,18 +46,19 @@ const groups = [
 
 <section class="parish-life section-block" aria-labelledby="parish-life-title">
   <Container>
-    <div class="parish-life__heading">
+    <div class="parish-life__heading" data-motion-reveal>
       <Eyebrow>Communauté</Eyebrow>
       <h2 id="parish-life-title" class="type-h2">Vivre la paroisse</h2>
     </div>
 
-    <div class="parish-life__grid">
+    <div class="parish-life__grid" data-motion-stagger>
       {
         groups.map((group) => (
           <a
             class="parish-group"
             href="/vie-paroissiale"
             aria-label={`Découvrir le groupe ${group.name}; photographie architecturale d’illustration`}
+            data-motion-item
           >
             <Image
               src={group.image}
@@ -77,7 +78,7 @@ const groups = [
       }
     </div>
 
-    <div class="parish-life__action">
+    <div class="parish-life__action" data-motion-reveal>
       <Button href="/vie-paroissiale">Découvrir nos groupes</Button>
     </div>
   </Container>
@@ -130,7 +131,7 @@ const groups = [
   }
 
   .parish-group:hover > :global(img) {
-    scale: 1.05;
+    scale: var(--motion-scale-hover);
     opacity: 0.9;
   }
 

@@ -231,3 +231,15 @@ client ni composant React n’est ajouté.
 - les polices distantes pourront être auto-hébergées après vérification des licences;
 - les recadrages sont réalisés par CSS et variantes Astro; les originaux ne sont ni retouchés ni recompressés;
 - les composants globaux continueront d’être confrontés à chaque contexte réel pendant les tickets de pages.
+
+## Mouvement premium — S1-T06.5
+
+Les tokens `--motion-*` centralisent les durées, courbes, distances, échelles
+et opacités décoratives. Les interactions restent rapides; les ambiances
+photographiques utilisent des cycles de 22 secondes. Les médias pilotes sont
+limités à `scale(1.02)` au survol et `scale(1.035)` dans un hero.
+
+Le mouvement est une amélioration progressive : le contenu est visible par
+défaut et `prefers-reduced-motion` supprime les effets décoratifs. Le détail des
+composants, de l’observateur partagé et du vitrail vivant est documenté dans
+[`MOTION_SYSTEM.md`](./MOTION_SYSTEM.md).

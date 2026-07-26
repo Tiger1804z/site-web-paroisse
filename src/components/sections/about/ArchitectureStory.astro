@@ -21,7 +21,12 @@ const imageStyle = [
 >
   <Container>
     <div class="architecture-story__layout">
-      <figure class="architecture-story__media" style={imageStyle}>
+      <figure
+        class="architecture-story__media"
+        style={imageStyle}
+        data-motion-reveal
+        data-motion-variant="image"
+      >
         <Image
           src={architecture.image.image}
           alt={architecture.image.alt}
@@ -37,7 +42,7 @@ const imageStyle = [
         }
       </figure>
 
-      <div class="architecture-story__content">
+      <div class="architecture-story__content" data-motion-reveal>
         <Eyebrow>{architecture.eyebrow}</Eyebrow>
         <h2 id="architecture-title" class="architecture-story__title type-h2">
           {architecture.title}

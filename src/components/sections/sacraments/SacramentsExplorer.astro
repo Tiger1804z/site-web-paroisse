@@ -17,6 +17,7 @@ const { items } = Astro.props;
       class="sacraments-explorer"
       aria-label="Sacrements et autres demandes"
       data-sacraments-tabs
+      data-motion-reveal
     >
       <Container>
         <div
@@ -249,11 +250,29 @@ const { items } = Astro.props;
     outline-offset: 0.5rem;
   }
 
+  .sacraments-explorer__panel:not([hidden]) {
+    animation: sacraments-panel-enter var(--motion-duration-normal)
+      var(--motion-ease-emphasized) both;
+  }
+
+  @keyframes sacraments-panel-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, var(--motion-distance-small), 0);
+    }
+  }
+
   .sacrament-feature {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 3rem;
     align-items: start;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sacraments-explorer__panel:not([hidden]) {
+      animation: none;
+    }
   }
 
   .sacrament-feature__content {

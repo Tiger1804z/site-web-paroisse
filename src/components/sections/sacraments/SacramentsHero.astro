@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import AmbientHero from '@/components/motion/AmbientHero.astro';
 import Container from '@/components/ui/Container.astro';
 import type { SacramentsHero as SacramentsHeroContent } from '@/types/sacraments';
 
@@ -30,6 +31,7 @@ const heroStyle = [
     fetchpriority="high"
   />
   <div class="sacraments-hero__overlay" aria-hidden="true"></div>
+  <AmbientHero class="sacraments-hero__ambient" particles={5} />
 
   <Container class="sacraments-hero__container">
     <div class="sacraments-hero__content">
@@ -65,6 +67,8 @@ const heroStyle = [
     height: 100%;
     object-fit: cover;
     object-position: var(--sacraments-hero-position-mobile);
+    animation: sacraments-hero-cinematic var(--motion-duration-cinematic)
+      var(--motion-ease-cinematic) infinite alternate;
   }
 
   .sacraments-hero__overlay {
@@ -78,7 +82,13 @@ const heroStyle = [
       color-mix(in srgb, var(--color-plum) 78%, transparent);
   }
 
+  :global(.sacraments-hero__ambient) {
+    z-index: 0;
+  }
+
   .sacraments-hero__container {
+    position: relative;
+    z-index: 1;
     display: flex;
     min-height: inherit;
     align-items: flex-end;
@@ -121,6 +131,24 @@ const heroStyle = [
   @media (max-height: 43.75rem) and (min-width: 48rem) {
     .sacraments-hero {
       height: auto;
+    }
+  }
+
+  @keyframes sacraments-hero-cinematic {
+    from {
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: scale(var(--motion-scale-cinematic))
+        translate3d(-0.2rem, -0.15rem, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sacraments-hero__image {
+      animation: none;
+      transform: none;
     }
   }
 </style>

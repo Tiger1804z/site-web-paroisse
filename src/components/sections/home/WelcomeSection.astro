@@ -1,8 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import mainImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
-import portraitImage from '@/assets/images/paroisse/interieur-eglise-decoration-01.webp';
-import floralImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
+import LivingStainedGlass from '@/components/motion/LivingStainedGlass.astro';
+import Reveal from '@/components/motion/Reveal.astro';
 import Container from '@/components/ui/Container.astro';
 import TextLink from '@/components/ui/TextLink.astro';
 ---
@@ -13,7 +11,7 @@ import TextLink from '@/components/ui/TextLink.astro';
 >
   <Container>
     <div class="welcome-section__grid">
-      <div class="welcome-section__copy">
+      <Reveal class="welcome-section__copy">
         <p class="type-script-accent welcome-section__script">Ensemble</p>
         <h2 id="bienvenue-title" class="type-h2" tabindex="-1">
           Une communauté<br />enracinée dans la foi
@@ -34,36 +32,15 @@ import TextLink from '@/components/ui/TextLink.astro';
         <TextLink href="/notre-paroisse">
           En savoir plus sur notre paroisse
         </TextLink>
-      </div>
+      </Reveal>
 
-      <div class="welcome-section__photos">
-        <div class="welcome-media welcome-media--wide">
-          <Image
-            src={mainImage}
-            alt="Vue intérieure de l’autel avec une décoration rouge"
-            widths={[480, 840]}
-            sizes="(min-width: 64rem) 26.25rem, calc(100vw - 2.5rem)"
-            loading="lazy"
-          />
-        </div>
-        <div class="welcome-media welcome-media--portrait">
-          <Image
-            src={portraitImage}
-            alt="Vue verticale de l’autel avec une décoration liturgique"
-            widths={[240, 420]}
-            sizes="(min-width: 64rem) 12.625rem, calc((100vw - 3.25rem) / 2)"
-            loading="lazy"
-          />
-        </div>
-        <div class="welcome-media welcome-media--portrait">
-          <Image
-            src={floralImage}
-            alt="Vue intérieure de l’autel entouré de fleurs blanches"
-            widths={[240, 420]}
-            sizes="(min-width: 64rem) 12.625rem, calc((100vw - 3.25rem) / 2)"
-            loading="lazy"
-          />
-        </div>
+      <div class="welcome-section__art">
+        <LivingStainedGlass
+          intensity={0.9}
+          speed={0.8}
+          parallax={4}
+          grain={true}
+        />
       </div>
     </div>
   </Container>
@@ -128,45 +105,19 @@ import TextLink from '@/components/ui/TextLink.astro';
     text-transform: uppercase;
   }
 
-  .welcome-section__photos {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-
-  .welcome-media {
-    overflow: hidden;
-    background: var(--color-paper);
-  }
-
-  .welcome-media--wide {
-    grid-column: 1 / -1;
-    aspect-ratio: 4 / 3;
-  }
-
-  .welcome-media--portrait {
-    aspect-ratio: 3 / 4;
-  }
-
-  .welcome-media :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: scale var(--duration-media) var(--ease-editorial);
-  }
-
-  .welcome-media:hover :global(img) {
-    scale: 1.05;
+  .welcome-section__art {
+    width: min(100%, 25rem);
+    margin-inline: auto;
   }
 
   @media (min-width: 64rem) {
     .welcome-section__grid {
-      grid-template-columns: minmax(0, 1fr) 26.25rem;
-      gap: 4rem;
+      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 25rem);
+      gap: clamp(4rem, 7vw, 7rem);
     }
 
-    .welcome-section__photos {
-      gap: 1rem;
+    .welcome-section__art {
+      width: 100%;
     }
   }
 </style>

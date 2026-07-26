@@ -61,11 +61,32 @@
     --overlay-hero-middle: rgb(28 25 24 / 45%);
     --overlay-hero-end: rgb(28 25 24 / 70%);
 
-    --duration-short: 200ms;
-    --duration-normal: 300ms;
-    --duration-menu: 400ms;
+    --motion-duration-fast: 220ms;
+    --motion-duration-normal: 400ms;
+    --motion-duration-reveal: 800ms;
+    --motion-duration-slow: 1400ms;
+    --motion-duration-cinematic: 22000ms;
+    --motion-ease-standard: cubic-bezier(0.2, 0.65, 0.3, 1);
+    --motion-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+    --motion-ease-cinematic: cubic-bezier(0.37, 0, 0.63, 1);
+    --motion-distance-small: 0.5rem;
+    --motion-distance-medium: 1.5rem;
+    --motion-scale-hover: 1.02;
+    --motion-scale-cinematic: 1.035;
+    --motion-light-opacity: 0.14;
+    --motion-particle-opacity: 0.12;
+    --motion-stagger-step: 80ms;
+    --motion-stagger-2: 160ms;
+    --motion-stagger-3: 240ms;
+    --motion-stagger-4: 320ms;
+    --motion-stagger-5: 400ms;
+
+    /* Alias conservés pour les composants livrés avant S1-T06.5. */
+    --duration-short: var(--motion-duration-fast);
+    --duration-normal: var(--motion-duration-normal);
+    --duration-menu: var(--motion-duration-normal);
     --duration-slow: 500ms;
-    --duration-media: 700ms;
+    --duration-media: var(--motion-duration-reveal);
   }
 
   html {
@@ -223,7 +244,7 @@
   }
 
   .group:hover .media-zoom {
-    scale: 1.05;
+    scale: var(--motion-scale-hover);
   }
 
   .decorative-beam {
@@ -394,14 +415,85 @@
     rotate: 45deg;
     border-top: 1px solid currentColor;
     border-right: 1px solid currentColor;
+    transition: translate var(--motion-duration-fast)
+      var(--motion-ease-standard);
   }
 
   .ui-text-link:hover .ui-text-link__rule {
     width: 3rem;
   }
 
+  .ui-text-link:hover .ui-text-link__arrow {
+    translate: 0.1875rem -50%;
+  }
+
   .ui-text-link--without-rule {
     text-decoration: underline;
+  }
+
+  /*
+   * Révélations progressives
+   *
+   * Les éléments sont visibles par défaut. La classe `motion-enabled` n'est
+   * ajoutée que lorsque le script a confirmé IntersectionObserver. Ainsi, une
+   * panne JavaScript ne peut pas laisser le contenu à opacity: 0.
+   */
+  .motion-enabled [data-motion-reveal],
+  .motion-enabled [data-motion-stagger] > [data-motion-item] {
+    transition:
+      opacity var(--motion-duration-reveal) var(--motion-ease-emphasized),
+      transform var(--motion-duration-reveal) var(--motion-ease-emphasized);
+  }
+
+  .motion-enabled [data-motion-reveal]:not([data-motion-visible]),
+  .motion-enabled
+    [data-motion-stagger]:not([data-motion-visible])
+    > [data-motion-item] {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance-medium), 0);
+    will-change: opacity, transform;
+  }
+
+  .motion-enabled
+    [data-motion-reveal][data-motion-variant='fade']:not(
+      [data-motion-visible]
+    ) {
+    transform: none;
+  }
+
+  .motion-enabled
+    [data-motion-reveal][data-motion-variant='image']:not(
+      [data-motion-visible]
+    ) {
+    transform: scale(0.985);
+  }
+
+  .motion-enabled [data-motion-reveal][data-motion-visible],
+  .motion-enabled
+    [data-motion-stagger][data-motion-visible]
+    > [data-motion-item] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .motion-enabled [data-motion-stagger] > [data-motion-item]:nth-child(2) {
+    transition-delay: var(--motion-stagger-step);
+  }
+
+  .motion-enabled [data-motion-stagger] > [data-motion-item]:nth-child(3) {
+    transition-delay: var(--motion-stagger-2);
+  }
+
+  .motion-enabled [data-motion-stagger] > [data-motion-item]:nth-child(4) {
+    transition-delay: var(--motion-stagger-3);
+  }
+
+  .motion-enabled [data-motion-stagger] > [data-motion-item]:nth-child(5) {
+    transition-delay: var(--motion-stagger-4);
+  }
+
+  .motion-enabled [data-motion-stagger] > [data-motion-item]:nth-child(n + 6) {
+    transition-delay: var(--motion-stagger-5);
   }
 
   .ui-eyebrow {
@@ -530,6 +622,12 @@
   }
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .ui-button:hover:not(.is-disabled) {
+    translate: 0 -1px;
+  }
+}
+
 @media (min-width: 64rem) {
   .layout-grid {
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -641,5 +739,11 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  [data-motion-reveal],
+  [data-motion-stagger] > [data-motion-item] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

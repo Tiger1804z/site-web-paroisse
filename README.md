@@ -10,6 +10,12 @@ Le logo officiel approuvé est préservé et intégré au header, au menu mobile
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
 [docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
 
+Un système de mouvement léger est appliqué aux pages pilotes Accueil, Notre
+paroisse et Sacrements. Il repose sur CSS, un seul `IntersectionObserver` et
+une amélioration progressive sans dépendance. Le vitrail vivant est intégré
+une seule fois à l’accueil. Les règles de performance et d’accessibilité sont
+documentées dans [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
+
 Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
@@ -107,11 +113,13 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 │   ├── assets/images/paroisse/
 │   ├── components/
 │   │   ├── layout/
+│   │   ├── motion/
 │   │   ├── sections/
 │   │   └── ui/
 │   ├── layouts/
 │   ├── lib/
 │   ├── pages/               # Routes Astro
+│   ├── scripts/             # JavaScript client natif et ciblé
 │   ├── styles/
 │   └── types/
 └── package.json

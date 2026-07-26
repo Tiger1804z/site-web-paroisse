@@ -24,7 +24,7 @@ const consecrationStyle = history.consecration
 <section class="parish-history section-block" aria-labelledby="history-title">
   <Container>
     <div class="parish-history__layout">
-      <div class="parish-history__content">
+      <div class="parish-history__content" data-motion-reveal>
         <Eyebrow>{history.eyebrow}</Eyebrow>
         <h2 id="history-title" class="parish-history__title type-h2">
           {history.title}
@@ -69,8 +69,12 @@ const consecrationStyle = history.consecration
         }
       </div>
 
-      <div class="parish-history__media">
-        <figure class="parish-history__figure" style={supportingStyle}>
+      <div class="parish-history__media" data-motion-stagger>
+        <figure
+          class="parish-history__figure"
+          style={supportingStyle}
+          data-motion-item
+        >
           <Image
             src={history.supportingImage.image}
             alt={history.supportingImage.alt}
@@ -91,6 +95,7 @@ const consecrationStyle = history.consecration
             <figure
               class="parish-history__figure parish-history__figure--consecration"
               style={consecrationStyle}
+              data-motion-item
             >
               <Image
                 src={history.consecration.image.image}
