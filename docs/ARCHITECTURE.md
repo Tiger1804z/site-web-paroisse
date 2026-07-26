@@ -61,6 +61,24 @@ Le contrat identifie aussi la future source de chaque information pratique.
 L’adresse et le téléphone relèveront de `siteSettings`; les étapes, la FAQ et
 les indications propres à la visite relèveront de `firstVisitPage`.
 
+`S1-T06` applique la même frontière à une page d’aperçu relationnelle :
+
+```text
+src/data/sacraments.ts
+    ↓
+src/lib/content/getSacramentsPageData.ts
+    ↓
+frontmatter de src/pages/sacrements.astro
+    ↓
+composants Astro typés avec SacramentsPageData
+    ↓
+HTML statique
+```
+
+Les slugs sont préparés dans le contrat, mais aucune route détaillée n’est
+générée. Un futur `src/pages/sacrements/[slug].astro` utilisera
+`getStaticPaths()` seulement après validation des contenus et du modèle CMS.
+
 ## Pourquoi Astro
 
 Le site paroissial sera principalement composé de contenu éditorial, d’horaires, d’événements et de renseignements pratiques. Astro produit du HTML statique par défaut, limite le JavaScript envoyé au navigateur et fournit un routage fondé sur les fichiers. Ce modèle favorise la performance, le référencement, la résilience et l’accessibilité.
@@ -90,6 +108,7 @@ Chaque fichier de `src/pages/` devient une route :
 - `src/pages/horaires.astro` → `/horaires/`;
 - `src/pages/notre-paroisse.astro` → `/notre-paroisse/`;
 - `src/pages/premiere-visite.astro` → `/premiere-visite/`;
+- `src/pages/sacrements.astro` → `/sacrements/`;
 - `src/pages/verification.astro` → `/verification`;
 - `src/pages/404.astro` → page d’erreur statique.
 - `src/pages/[slug].astro` génère les placeholders temporaires des destinations de navigation avec `getStaticPaths()`.
@@ -116,6 +135,8 @@ La route `/verification/` est interne, marquée `noindex` et absente de la navig
   indépendants de la source CMS.
 - `types/firstVisit.ts` : contrat du parcours, des informations pratiques, de
   la FAQ et de leur future responsabilité éditoriale.
+- `types/sacraments.ts` : contrat de la page d’aperçu, des slugs futurs, des
+  sacrements et des services à confirmer.
 
 ### Composants livrés par S1-T01
 
@@ -210,6 +231,19 @@ La page appelle uniquement `getFirstVisitPageData()`. Les composants ne
 connaissent ni la source locale, ni GROQ, ni les futurs documents
 `firstVisitPage` et `siteSettings`.
 
+### Composants livrés par S1-T06
+
+- `sections/sacraments/SacramentsHero.astro` : hero photographique prune;
+- `SacramentsNotice.astro` : prudence opérationnelle et CTA Contact;
+- `SacramentsExplorer.astro` : onglets accessibles Baptême, Mariage et Autres
+  demandes, sans React;
+- `GeneralProcess.astro` : démarche en cinq repères;
+- `SacramentsFaq.astro` : FAQ native `details/summary`.
+
+La page appelle uniquement `getSacramentsPageData()`. Les composants ignorent
+la source locale, GROQ et les futurs documents `sacramentsPage`, `sacrament` et
+`siteSettings`.
+
 ## Stratégie CSS et fidélité
 
 Les valeurs répétées et structurantes sont des tokens sémantiques dans `global.css`; les dimensions propres à un seul composant restent près de ce composant. Cette séparation évite à la fois les valeurs magiques dispersées et une couche de tokens artificielle.
@@ -268,6 +302,12 @@ La préparation de Première visite est détaillée dans
 Le normaliseur futur assemblera le document de page et les réglages globaux,
 puis retournera toujours `FirstVisitPageData`.
 
+La page Sacrements et services suit la même frontière, documentée dans
+[`ASTRO_SANITY_SACRAMENTS_PREPARATION.md`](./ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
+Le futur normaliseur résoudra les références `sacrament`, contrôlera les slugs
+et retournera `SacramentsPageData`. Les pages détaillées seront générées plus
+tard avec `getStaticPaths()`.
+
 ### Architecture du contenu
 
 Les sources sont hiérarchisées ainsi :
@@ -299,7 +339,7 @@ demande, jamais une réservation confirmée.
 
 ## Limites actuelles
 
-- les routes publiques autres que l’accueil, Horaires, Notre paroisse et Première visite restent des placeholders techniques;
+- les routes publiques autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services restent des placeholders techniques;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;

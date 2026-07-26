@@ -4,7 +4,7 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse et Première visite migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite et Sacrements et services migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -28,6 +28,12 @@ d’accessibilité restent explicitement à confirmer. La séparation entre le f
 document `firstVisitPage` et les réglages globaux `siteSettings` est expliquée
 dans
 [docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md](docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md).
+
+La route `/sacrements/` utilise `SacramentsPageData`. Les slugs préparent de
+futures pages détaillées, mais aucun lien ni fichier `[slug].astro` n’est créé
+tant que le contenu n’est pas validé. Le futur flux `sacramentsPage`,
+références, documents `sacrament` et `getStaticPaths()` est documenté dans
+[docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md](docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
 
 ## Stack
 
@@ -167,11 +173,11 @@ La CI l’exécute sur les pushes et pull requests visant `main` ou `staging`.
 
 Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Le prochain ticket recommandé est :
 
-`S1-T06 — Migrer la page Sacrements 1:1 depuis l’export Figma`
+`S1-T07 — Migrer la page Événements 1:1 depuis l’export Figma`
 
 ## Volontairement non implémenté
 
-- migration complète des pages autres que l’accueil, Horaires, Notre paroisse et Première visite;
+- migration complète des pages autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;
