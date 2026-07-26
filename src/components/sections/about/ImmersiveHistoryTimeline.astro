@@ -22,6 +22,30 @@ const imageKindLabels = {
   aria-labelledby="history-timeline-title"
   data-history-timeline
 >
+  <script is:inline>
+    (() => {
+      const timeline = document.currentScript?.closest(
+        '[data-history-timeline]',
+      );
+
+      if (
+        !(timeline instanceof HTMLElement) ||
+        typeof window.IntersectionObserver !== 'function' ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ) {
+        return;
+      }
+
+      timeline.setAttribute('data-history-motion', '');
+
+      window.setTimeout(() => {
+        if (!timeline.hasAttribute('data-history-initialized')) {
+          timeline.removeAttribute('data-history-motion');
+        }
+      }, 2000);
+    })();
+  </script>
+
   <Container>
     <header class="history-timeline__header">
       <Eyebrow tone="light">{history.eyebrow}</Eyebrow>
@@ -56,6 +80,12 @@ const imageKindLabels = {
               data-history-image-kind={entry.imageKind}
               data-history-editorial-status={entry.editorialStatus}
             >
+              <span
+                class="history-timeline__trigger"
+                data-history-trigger
+                aria-hidden="true"
+              />
+
               <div class="history-timeline__axis" aria-hidden="true">
                 <span class="history-timeline__marker">
                   {entry.stepNumber.toString().padStart(2, '0')}
@@ -63,38 +93,43 @@ const imageKindLabels = {
               </div>
 
               <div class="history-timeline__chapter-content">
-                <p class="history-timeline__period type-label">
-                  {entry.periodLabel}
-                </p>
-                {entry.imageKind === 'documentary-photo' && (
-                  <p class="history-timeline__document-label type-eyebrow">
-                    Repère documentaire
+                <div class="history-timeline__chapter-meta">
+                  <p class="history-timeline__period type-label">
+                    {entry.periodLabel}
                   </p>
-                )}
-                <h3
-                  id={`history-chapter-${entry.id}`}
-                  class="history-timeline__chapter-title type-h3"
-                >
-                  {entry.title}
-                </h3>
-                <p class="history-timeline__summary type-body">
-                  {entry.summary}
-                </p>
+                  {entry.imageKind === 'documentary-photo' && (
+                    <p class="history-timeline__document-label type-eyebrow">
+                      Repère documentaire
+                    </p>
+                  )}
+                </div>
 
-                {entry.body?.map((paragraph) => (
-                  <p class="history-timeline__body">{paragraph}</p>
-                ))}
-
-                <p class="history-timeline__source">
-                  <span>Source éditoriale</span>
-                  {entry.sourceLabel}
-                </p>
-
-                {entry.disclosure && (
-                  <p class="history-timeline__entry-disclosure">
-                    {entry.disclosure}
+                <div class="history-timeline__chapter-copy">
+                  <h3
+                    id={`history-chapter-${entry.id}`}
+                    class="history-timeline__chapter-title type-h3"
+                  >
+                    {entry.title}
+                  </h3>
+                  <p class="history-timeline__summary type-body">
+                    {entry.summary}
                   </p>
-                )}
+
+                  {entry.body?.map((paragraph) => (
+                    <p class="history-timeline__body">{paragraph}</p>
+                  ))}
+
+                  <p class="history-timeline__source">
+                    <span>Source éditoriale</span>
+                    {entry.sourceLabel}
+                  </p>
+
+                  {entry.disclosure && (
+                    <p class="history-timeline__entry-disclosure">
+                      {entry.disclosure}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <figure
@@ -238,12 +273,22 @@ const imageKindLabels = {
   }
 
   .history-timeline__chapter {
+    position: relative;
     display: grid;
     grid-template-columns: 2.5rem minmax(0, 1fr);
     grid-template-rows: auto auto;
     gap: 1.75rem 1.25rem;
     min-width: 0;
     padding-block: clamp(2.75rem, 8vw, 4.5rem);
+  }
+
+  .history-timeline__trigger {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
   }
 
   .history-timeline__axis {
@@ -287,19 +332,31 @@ const imageKindLabels = {
     transform: translateX(-50%) scaleY(1);
   }
 
-  .history-timeline__chapter[data-history-active]
+  .history-timeline__chapter[data-history-rail-target]:not([data-history-past])
+    .history-timeline__axis::after,
+  .history-timeline__chapter[data-history-active]:not([data-history-past])
     .history-timeline__axis::after {
     transform: translateX(-50%) scaleY(0.5);
   }
 
   .history-timeline__chapter-item:first-child
-    .history-timeline__chapter[data-history-active]
+    .history-timeline__chapter[data-history-rail-target]:not(
+      [data-history-past]
+    )
+    .history-timeline__axis::after,
+  .history-timeline__chapter-item:first-child
+    .history-timeline__chapter[data-history-active]:not([data-history-past])
     .history-timeline__axis::after {
     transform: translateX(-50%) scaleY(0);
   }
 
   .history-timeline__chapter-item:last-child
-    .history-timeline__chapter[data-history-active]
+    .history-timeline__chapter[data-history-rail-target]:not(
+      [data-history-past]
+    )
+    .history-timeline__axis::after,
+  .history-timeline__chapter-item:last-child
+    .history-timeline__chapter[data-history-active]:not([data-history-past])
     .history-timeline__axis::after {
     transform: translateX(-50%) scaleY(1);
   }
@@ -322,11 +379,30 @@ const imageKindLabels = {
     line-height: 1;
     letter-spacing: 0.08em;
     box-shadow: 0 0 0 0.45rem var(--color-charcoal);
+    opacity: 0.42;
     transform: translateX(-50%);
     transition:
+      opacity var(--motion-duration-normal) var(--motion-ease-standard),
       transform var(--motion-duration-normal) var(--motion-ease-emphasized),
       background-color var(--motion-duration-normal) var(--motion-ease-standard),
-      color var(--motion-duration-normal) var(--motion-ease-standard);
+      border-color var(--motion-duration-normal) var(--motion-ease-standard),
+      color var(--motion-duration-normal) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-normal) var(--motion-ease-standard);
+  }
+
+  .history-timeline__chapter[data-history-rail-target]
+    .history-timeline__marker {
+    border-color: color-mix(in srgb, var(--color-gold) 86%, transparent);
+    box-shadow:
+      0 0 0 0.45rem var(--color-charcoal),
+      0 0 1rem color-mix(in srgb, var(--color-gold) 24%, transparent);
+    opacity: 0.76;
+    transform: translateX(-50%) scale(1.06);
+  }
+
+  .history-timeline__chapter[data-history-active] .history-timeline__marker,
+  .history-timeline__chapter[data-history-past] .history-timeline__marker {
+    opacity: 1;
   }
 
   .history-timeline__chapter[data-history-active] .history-timeline__marker {
@@ -339,6 +415,20 @@ const imageKindLabels = {
     grid-column: 2;
     grid-row: 1;
     min-width: 0;
+  }
+
+  .history-timeline__chapter-meta {
+    transition:
+      opacity var(--motion-duration-reveal) var(--motion-ease-emphasized),
+      transform var(--motion-duration-reveal) var(--motion-ease-emphasized);
+    transition-delay: 0ms;
+  }
+
+  .history-timeline__chapter-copy {
+    transition:
+      opacity var(--motion-duration-slow) var(--motion-ease-cinematic),
+      transform var(--motion-duration-slow) var(--motion-ease-cinematic);
+    transition-delay: 150ms;
   }
 
   .history-timeline__period,
@@ -414,8 +504,40 @@ const imageKindLabels = {
     background: #171313;
     box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 24%);
     transition:
-      transform 900ms var(--motion-ease-emphasized),
+      opacity var(--motion-duration-slow) var(--motion-ease-cinematic),
+      transform var(--motion-duration-slow) var(--motion-ease-cinematic),
       border-color var(--motion-duration-normal) var(--motion-ease-standard);
+    transition-delay: 0ms;
+  }
+
+  .history-timeline[data-history-motion]
+    .history-timeline__chapter:not([data-history-activated])
+    .history-timeline__chapter-meta,
+  .history-timeline[data-history-motion]
+    .history-timeline__chapter:not([data-history-revealed])
+    .history-timeline__chapter-copy,
+  .history-timeline[data-history-motion]
+    .history-timeline__chapter:not([data-history-revealed])
+    .history-timeline__figure {
+    opacity: 0;
+  }
+
+  .history-timeline[data-history-motion]
+    .history-timeline__chapter:not([data-history-activated])
+    .history-timeline__chapter-meta {
+    transform: translate3d(0, 0.5rem, 0);
+  }
+
+  .history-timeline[data-history-motion]
+    .history-timeline__chapter:not([data-history-revealed])
+    .history-timeline__chapter-copy {
+    transform: translate3d(-0.875rem, 0, 0);
+  }
+
+  .history-timeline[data-history-motion]
+    .history-timeline__chapter:not([data-history-revealed])
+    .history-timeline__figure {
+    transform: translate3d(0.875rem, 0, 0) scale(0.985);
   }
 
   .history-timeline__figure--documentary-photo {
@@ -499,6 +621,10 @@ const imageKindLabels = {
       padding-block: 4rem;
     }
 
+    .history-timeline__trigger {
+      top: 50%;
+    }
+
     .history-timeline__axis {
       grid-column: 2;
       grid-row: 1;
@@ -526,6 +652,11 @@ const imageKindLabels = {
       transform: translate(-50%, -50%);
     }
 
+    .history-timeline__chapter[data-history-rail-target]
+      .history-timeline__marker {
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+
     .history-timeline__chapter[data-history-active] .history-timeline__marker {
       transform: translate(-50%, -50%) scale(1.16);
     }
@@ -539,6 +670,7 @@ const imageKindLabels = {
     .history-timeline__chapter-item:nth-child(odd) .history-timeline__figure {
       grid-column: 1;
       justify-self: end;
+      transition-delay: 0ms;
     }
 
     .history-timeline__chapter-item:nth-child(odd)
@@ -549,6 +681,7 @@ const imageKindLabels = {
     .history-timeline__chapter-item:nth-child(even) .history-timeline__figure {
       grid-column: 3;
       justify-self: start;
+      transition-delay: 0ms;
     }
 
     .history-timeline__chapter-item:nth-child(even)
@@ -556,37 +689,44 @@ const imageKindLabels = {
       grid-column: 1;
     }
 
-    .history-timeline[data-history-ready] .history-timeline__chapter {
-      opacity: 0.78;
-      transform: translate3d(0, var(--motion-distance-small), 0);
-      transition:
-        opacity var(--motion-duration-reveal) var(--motion-ease-emphasized),
-        transform var(--motion-duration-reveal) var(--motion-ease-emphasized);
-    }
-
-    .history-timeline[data-history-ready]
-      .history-timeline__chapter[data-history-active] {
-      opacity: 1;
-      transform: none;
-    }
-
-    .history-timeline[data-history-ready]
-      .history-timeline__chapter:not([data-history-active])
+    .history-timeline[data-history-motion]
+      .history-timeline__chapter-item:nth-child(odd)
+      .history-timeline__chapter:not([data-history-revealed])
       .history-timeline__figure {
-      transform: translate3d(0, 0.625rem, 0) scale(0.995);
+      transform: translate3d(-1.5rem, 0, 0) scale(0.985);
     }
 
-    .history-timeline[data-history-ready]
-      .history-timeline__chapter[data-history-active]
+    .history-timeline[data-history-motion]
+      .history-timeline__chapter-item:nth-child(odd)
+      .history-timeline__chapter:not([data-history-revealed])
+      .history-timeline__chapter-copy {
+      transform: translate3d(1.5rem, 0, 0);
+    }
+
+    .history-timeline[data-history-motion]
+      .history-timeline__chapter-item:nth-child(even)
+      .history-timeline__chapter:not([data-history-revealed])
+      .history-timeline__chapter-copy {
+      transform: translate3d(-1.5rem, 0, 0);
+    }
+
+    .history-timeline[data-history-motion]
+      .history-timeline__chapter-item:nth-child(even)
+      .history-timeline__chapter:not([data-history-revealed])
       .history-timeline__figure {
+      transform: translate3d(1.5rem, 0, 0) scale(0.985);
+    }
+
+    .history-timeline__chapter[data-history-active] .history-timeline__figure {
       border-color: color-mix(in srgb, var(--color-gold) 58%, transparent);
-      transform: none;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .history-timeline__axis::after,
     .history-timeline__marker,
+    .history-timeline__chapter-meta,
+    .history-timeline__chapter-copy,
     .history-timeline__figure,
     .history-timeline__chapter {
       opacity: 1 !important;

@@ -356,13 +356,16 @@ documentées dans [`MOTION_SYSTEM.md`](./MOTION_SYSTEM.md).
 
 La chronologie de Notre paroisse réutilise les tokens et les principes
 d’amélioration progressive, mais possède un initialiseur ciblé :
-`src/scripts/history-timeline.ts`. Ce second observateur ne duplique pas les
-révélations génériques; il maintient un chapitre actif et fait progresser les
-segments de l’axe. Il n’écoute jamais l’événement `scroll`.
+`src/scripts/history-timeline.ts`. Trois observateurs lisent le même
+déclencheur de chapitre : la ligne progresse à 78 % du viewport, le repère et
+la période s’activent à 70 %, puis l’image et le texte se révèlent à 62 %. Cette
+responsabilité spécialisée ne se superpose pas aux révélations génériques et
+n’écoute jamais l’événement `scroll`.
 
-Le rendu reste visible sans JavaScript. Le script ajoute seulement
-l’accentuation active après avoir confirmé `IntersectionObserver` et l’absence
-de préférence reduced motion. Toutes les images restent dans leur article.
+Le rendu reste visible sans JavaScript. Un marqueur inline pré-paint ne prépare
+l’état masqué que lorsque `IntersectionObserver` existe et que reduced motion
+n’est pas demandé. Un garde-fou retire ce marqueur si l’initialiseur ne prend
+pas le relais. Toutes les images restent dans leur article.
 
 Le contrat `HistoryTimelineContent` sépare les dates, textes, images, types de
 source et statuts éditoriaux du comportement visuel. Sanity pourra remplacer la

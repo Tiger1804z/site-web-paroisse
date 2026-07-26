@@ -250,8 +250,12 @@ composants, de l’observateur partagé et du vitrail vivant est documenté dans
 La section historique de Notre paroisse utilise un fond charbon et bourgogne,
 une ligne de progression en or vieilli et un cadre portrait respectant le ratio
 `1122 / 1402`. Chaque chapitre possède son image. Le chapitre actif reçoit
-seulement une variation douce d’opacité, une translation inférieure à 12 px et
-une très légère mise à l’échelle; aucune image ne devient invisible.
+un repère et une bordure accentués. La ligne commence à progresser à 78 % du
+viewport, le repère et la période s’activent à 70 %, puis l’image et le texte
+passent de 0 à 1 à 62 %. Leur translation horizontale reste limitée à 14–24 px
+et l’échelle de l’image à `0.985 → 1`. L’image utilise un fondu lent de
+1400 ms; le texte suit 150 ms plus tard. Le chapitre reste ensuite
+définitivement visible.
 
 Les illustrations artistiques conservent leur traitement cinématographique
 original. La photographie documentaire de 2018 emploie un cadre ivoire plus

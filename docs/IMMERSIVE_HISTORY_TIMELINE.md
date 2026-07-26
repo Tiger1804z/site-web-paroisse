@@ -89,25 +89,50 @@ verticale est aussi le rendu de base sans amélioration JavaScript.
 
 `src/scripts/history-timeline.ts` possède une responsabilité ciblée :
 
-1. trouver chaque chronologie et ses chapitres;
-2. observer une bande au centre du viewport;
-3. déterminer le chapitre dont le centre est le plus proche;
-4. appliquer `data-history-active` au chapitre courant;
-5. appliquer `data-history-past` aux segments déjà parcourus;
-6. revenir au rendu statique en cas d’erreur ou de capacité absente.
+1. trouver chaque chronologie, ses chapitres et leur déclencheur de 1 px;
+2. faire avancer la ligne lorsque ce déclencheur franchit 78 % du viewport;
+3. préaccentuer le prochain repère avec `data-history-rail-target`;
+4. activer le repère, le numéro et la période à 70 %;
+5. révéler définitivement l’image à 62 %, puis le texte avec 150 ms de retard;
+6. cesser d’observer la révélation d’un chapitre dès qu’elle est acquise;
+7. revenir au rendu statique en cas d’erreur ou de capacité absente.
 
-L’observateur reçoit des événements lorsque les chapitres entrent ou quittent
-la bande centrale. Il n’existe aucun listener `scroll` exécuté à chaque pixel,
-aucune boucle `requestAnimationFrame` et aucun calcul continu.
+Les trois ratios sont intentionnellement distincts :
+
+| Ancre        |  Ratio | Responsabilité                                                           |
+| ------------ | -----: | ------------------------------------------------------------------------ |
+| Ligne        | `0.78` | la ligne anticipe le chapitre et le prochain repère s’éclaire légèrement |
+| Repère actif | `0.70` | le numéro et la période deviennent visibles                              |
+| Révélation   | `0.62` | l’image commence son fondu, puis le texte suit                           |
+
+Sur desktop, le déclencheur est aligné sur le repère central du chapitre. Sur
+mobile, il reste au début de l’article. Chaque observateur utilise une zone qui
+va du haut du viewport jusqu’à son ratio, plutôt qu’une bande très étroite :
+un défilement rapide ne peut donc pas sauter le déclenchement.
+
+Les observateurs reçoivent des événements seulement aux franchissements de
+leurs zones. Il n’existe aucun listener `scroll` exécuté à chaque pixel, aucune
+boucle `requestAnimationFrame` et aucun calcul continu. Deux
+`requestAnimationFrame` ponctuels laissent le navigateur peindre l’état initial
+avant de commencer l’observation; ils ne constituent pas une boucle
+d’animation.
 
 ## Propriétés animées
 
 Les transitions utilisent principalement :
 
-- `opacity` pour renforcer doucement le chapitre actif sans cacher les autres;
-- `transform: translate3d()` pour une arrivée de 8 à 12 px;
-- `transform: scale()` limité à `0.995 → 1`;
+- `opacity` de `0` à `1` pour les métadonnées, l’image et le texte;
+- `transform: translate3d()` pour une arrivée horizontale de 14 px sur mobile
+  et 24 px sur desktop;
+- `transform: scale()` limité à `0.985 → 1` sur l’image;
 - `transform: scaleY()` sur chaque segment de progression.
+
+La période utilise le reveal éditorial de 800 ms au moment de l’activation.
+L’image et le texte utilisent ensuite la durée lente de 1400 ms et l’easing
+cinématographique; le texte commence 150 ms après l’image.
+`data-history-revealed` n’est jamais retiré : une fois révélé, un chapitre
+reste entièrement visible même lorsqu’un autre devient actif ou lorsque le
+visiteur remonte.
 
 La largeur, la hauteur, les marges, le padding, `top` et `left` ne sont pas
 animés. Les dimensions des images sont réservées par Astro, ce qui évite un
@@ -115,16 +140,21 @@ changement de mise en page pendant le chargement.
 
 ## Amélioration progressive
 
-Le HTML et les images sont visibles par défaut. Le script ajoute
-`data-history-ready` seulement après avoir vérifié :
+Le HTML et les images sont visibles par défaut. Un très petit script inline,
+placé au début de la section, ajoute synchroniquement `data-history-motion`
+avant que les chapitres soient peints, seulement après avoir vérifié :
 
-- la présence des chapitres;
-- la disponibilité d’`IntersectionObserver`;
+- que `IntersectionObserver` est réellement une fonction;
 - l’absence de préférence reduced motion.
 
-Si JavaScript est désactivé, si l’observateur manque ou si une erreur survient,
-l’attribut n’existe pas. Chaque article conserve son image et son contenu
-visibles. Aucun élément n’est laissé à `opacity: 0`.
+Ce marqueur autorise le CSS à préparer `opacity: 0`; le module initialise
+ensuite les observateurs et ajoute `data-history-initialized`. Un garde-fou
+retire le marqueur après deux secondes si l’initialisation n’a pas eu lieu.
+
+Si JavaScript est désactivé, si l’observateur manque, si reduced motion est
+actif ou si le module échoue, `data-history-motion` est absent ou retiré. Chaque
+article conserve alors son image et son contenu visibles. Aucun élément n’est
+laissé à `opacity: 0`.
 
 ## Reduced motion
 
@@ -158,10 +188,10 @@ le navigateur ne les télécharge pas tous, il choisit pour chaque image la
 variante adaptée au viewport et à la densité de l’écran. Les neuf balises
 restent différées sous le hero, sans `fetchpriority="high"` ni préchargement.
 
-Le contrôleur de chronologie compilé ajoute 1 238 octets de JavaScript minifié,
-soit 607 octets après gzip. Il n’exécute aucune boucle d’animation et ne
-télécharge aucune donnée; il met seulement à jour l’état actif à partir des
-notifications d’`IntersectionObserver`.
+Le contrôleur de chronologie compilé ajoute 2 082 octets de JavaScript minifié,
+soit 820 octets après gzip. Il n’exécute aucune boucle d’animation et ne
+télécharge aucune donnée; il met seulement à jour les trois états de
+progression à partir des notifications d’`IntersectionObserver`.
 
 ## Accessibilité et provenance
 
