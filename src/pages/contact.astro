@@ -1,0 +1,30 @@
+---
+import MotionController from '@/components/motion/MotionController.astro';
+import ContactHero from '@/components/sections/contact/ContactHero.astro';
+import ContactMain from '@/components/sections/contact/ContactMain.astro';
+import ContactMethods from '@/components/sections/contact/ContactMethods.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getContactPageData } from '@/lib/content/getContactPageData';
+
+const contactPageData = await getContactPageData();
+---
+
+<BaseLayout
+  title={contactPageData.seo.title}
+  description={contactPageData.seo.description}
+  noIndex={contactPageData.seo.noIndex}
+  pageClass="contact-page"
+  headerVariant="light"
+>
+  <ContactHero hero={contactPageData.hero} />
+  <ContactMethods
+    methods={contactPageData.methods}
+    fallback={contactPageData.methodsFallback}
+    officeHours={contactPageData.officeHours}
+  />
+  <ContactMain
+    location={contactPageData.location}
+    form={contactPageData.form}
+  />
+  <MotionController />
+</BaseLayout>
