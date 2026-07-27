@@ -1,6 +1,32 @@
 ---
+import churchImage from '@/assets/images/home/editorial/church-facade-editorial.jpg';
+import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
+import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+
+const serviceLinks = [
+  {
+    label: 'Mariage et baptême',
+    href: '/nos-services/#sacrements-et-initiation',
+  },
+  {
+    label: 'Communion, confirmation et catéchuménat',
+    href: '/nos-services/#sacrements-et-initiation',
+  },
+  {
+    label: 'Funérailles et certificats',
+    href: '/nos-services/#accompagnement-et-documents',
+  },
+  {
+    label: 'Messes, lampions et intentions',
+    href: '/nos-services/#priere-et-memoire',
+  },
+  {
+    label: 'Location de salle',
+    href: '/nos-services/#location-de-salle',
+  },
+] as const;
 ---
 
 <section
@@ -8,61 +34,58 @@ import Eyebrow from '@/components/ui/Eyebrow.astro';
   aria-labelledby="practical-services-title"
 >
   <Container>
-    <div class="practical-services__heading">
-      <Eyebrow>Services paroissiaux</Eyebrow>
-      <h2 id="practical-services-title" class="type-h2">À votre service</h2>
-    </div>
-
-    <div class="practical-services__grid">
-      <a class="service-panel service-panel--light" href="/friperie">
-        <span class="service-panel__motif" aria-hidden="true"></span>
-        <span class="service-panel__icon" aria-hidden="true">
-          <svg
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"
-              stroke-linecap="round"
-              stroke-linejoin="round"></path>
-          </svg>
-        </span>
-        <h3>La friperie</h3>
+    <div class="practical-services__layout">
+      <div class="practical-services__copy" data-motion-reveal>
+        <Eyebrow>Services paroissiaux</Eyebrow>
+        <h2 id="practical-services-title" class="type-h2">
+          Un accompagnement pour les moments qui comptent
+        </h2>
         <p>
-          Donnez une seconde vie aux objets et découvrez nos ventes spéciales.
+          Sacrements, démarches, intentions de messe et accueil des familles :
+          retrouvez les premiers repères avant de communiquer avec le
+          secrétariat.
         </p>
-        <span class="service-panel__link">
-          Découvrir la friperie
-          <span aria-hidden="true"></span>
-        </span>
-      </a>
 
-      <a class="service-panel service-panel--dark" href="/location-de-salle">
-        <span class="service-panel__motif" aria-hidden="true"></span>
-        <span class="service-panel__icon" aria-hidden="true">
-          <svg
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21"
-              stroke-linecap="round"
-              stroke-linejoin="round"></path>
-          </svg>
+        <ul class="practical-services__links">
+          {
+            serviceLinks.map((item) => (
+              <li>
+                <a href={item.href}>
+                  <span>{item.label}</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <Button href="/nos-services/">Explorer tous nos services</Button>
+      </div>
+
+      <div class="practical-services__visual" data-motion-reveal>
+        <EditorialImageFrame
+          image={churchImage}
+          alt="Détail architectural de la façade de Santa Maria del Fiore à Florence, utilisé comme illustration"
+          variant="arch"
+          objectPosition="49% center"
+          widths={[400, 600, 800, 1000]}
+          sizes="(min-width: 64rem) 34vw, 80vw"
+        />
+        <span class="practical-services__visual-note">
+          Accueil · célébration · accompagnement
         </span>
-        <h3>Location de salle</h3>
-        <p>Informez-vous sur la disponibilité et les modalités de location.</p>
-        <span class="service-panel__link">
-          Demander de l’information
-          <span aria-hidden="true"></span>
+      </div>
+
+      <a class="practical-services__thrift" href="/friperie/">
+        <span class="practical-services__thrift-index" aria-hidden="true">
+          Service communautaire
+        </span>
+        <span class="practical-services__thrift-title">La friperie</span>
+        <span class="practical-services__thrift-copy">
+          Un lieu de réemploi et d’entraide, présenté dans un espace dédié.
+        </span>
+        <span class="practical-services__thrift-link">
+          Découvrir la friperie <span aria-hidden="true">→</span>
         </span>
       </a>
     </div>
@@ -71,16 +94,17 @@ import Eyebrow from '@/components/ui/Eyebrow.astro';
 
 <style>
   .practical-services {
+    overflow: hidden;
     background: var(--color-ivory);
   }
 
-  .practical-services__heading {
-    margin-bottom: 3.5rem;
-    text-align: center;
+  .practical-services__layout {
+    display: grid;
+    gap: 2.5rem;
   }
 
-  .practical-services__heading :global(.ui-eyebrow) {
-    color: var(--color-wood);
+  .practical-services__copy {
+    max-width: 41rem;
   }
 
   .practical-services h2 {
@@ -88,129 +112,177 @@ import Eyebrow from '@/components/ui/Eyebrow.astro';
     color: var(--color-charcoal);
   }
 
-  .practical-services__grid {
-    display: grid;
-    gap: 1.5rem;
+  .practical-services__copy > p {
+    max-width: 37rem;
+    margin: 1.5rem 0 2rem;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.8;
   }
 
-  .service-panel {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding: 2rem;
-    color: inherit;
-    text-decoration: none;
-    transition: background-color var(--duration-short) var(--ease-editorial);
+  .practical-services__links {
+    margin: 0 0 2.5rem;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 32%, transparent);
+    list-style: none;
   }
 
-  .service-panel--light {
-    background: var(--color-paper);
+  .practical-services__links a {
+    display: flex;
+    min-height: 3.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 24%, transparent);
     color: var(--color-charcoal);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      color var(--duration-short) var(--ease-editorial),
+      padding-inline var(--duration-short) var(--ease-editorial);
   }
 
-  .service-panel--light:hover {
-    background: color-mix(
-      in srgb,
-      var(--color-paper) 82%,
-      var(--color-surface)
-    );
+  .practical-services__links a:hover {
+    padding-inline: 0.5rem;
+    color: var(--color-burgundy);
   }
 
-  .service-panel--dark {
-    background: var(--color-charcoal);
-    color: var(--color-ivory);
+  .practical-services__links a > span:last-child {
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
   }
 
-  .service-panel--dark:hover {
-    background: color-mix(
-      in srgb,
-      var(--color-charcoal) 92%,
-      var(--color-plum)
-    );
+  .practical-services__visual {
+    position: relative;
+    width: min(100%, 29rem);
+    margin-inline: auto;
   }
 
-  .service-panel__motif {
+  .practical-services__visual::after {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 8rem;
-    height: 8rem;
-    border-radius: 0 0 0 100%;
-    background: color-mix(in srgb, var(--color-gold) 6%, transparent);
+    z-index: -1;
+    inset: 2rem -1.5rem -1.5rem 2rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 40%, transparent);
+    content: '';
   }
 
-  .service-panel__icon {
+  .practical-services__visual-note {
+    display: block;
+    margin-top: 1rem;
+    color: var(--color-wood);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .practical-services__thrift {
     position: relative;
     display: flex;
-    width: 3rem;
-    height: 3rem;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    background: color-mix(in srgb, var(--color-gold) 20%, transparent);
+    min-height: 19rem;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    padding: 2rem;
+    background:
+      radial-gradient(
+        circle at 90% 10%,
+        color-mix(in srgb, var(--color-gold) 14%, transparent),
+        transparent 13rem
+      ),
+      var(--color-charcoal);
+    color: var(--color-ivory);
+    text-decoration: none;
+  }
+
+  .practical-services__thrift::before {
+    position: absolute;
+    top: -4rem;
+    right: -4rem;
+    width: 11rem;
+    height: 11rem;
+    border: 1px solid rgb(170 139 82 / 26%);
+    border-radius: 50%;
+    content: '';
+  }
+
+  .practical-services__thrift-index {
+    margin-bottom: auto;
     color: var(--color-gold);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
   }
 
-  .service-panel h3 {
-    position: relative;
-    margin: 0;
-    color: inherit;
+  .practical-services__thrift-title {
     font-family: var(--font-display);
-    font-size: 1.75rem;
+    font-size: clamp(2rem, 1.75rem + 1vw, 2.75rem);
     font-weight: 600;
-    line-height: 1.15;
+    line-height: 1.1;
   }
 
-  .service-panel > p {
-    position: relative;
-    max-width: 34rem;
-    margin: 1rem 0 2rem;
-    font-size: 1rem;
-    line-height: 1.75;
+  .practical-services__thrift-copy {
+    max-width: 27rem;
+    margin-top: 0.75rem;
+    color: color-mix(in srgb, var(--color-ivory) 70%, transparent);
+    line-height: 1.65;
   }
 
-  .service-panel--light > p {
-    color: var(--color-muted);
-  }
-
-  .service-panel--dark > p {
-    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
-  }
-
-  .service-panel__link {
-    position: relative;
-    display: inline-flex;
-    min-height: 3rem;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--color-burgundy);
+  .practical-services__thrift-link {
+    margin-top: 1.5rem;
+    color: var(--color-gold);
     font-size: 0.875rem;
     font-weight: 700;
-    letter-spacing: 0.025em;
   }
 
-  .service-panel--dark .service-panel__link {
-    color: var(--color-gold);
+  .practical-services__thrift-link > span {
+    display: inline-block;
+    margin-left: 0.35rem;
+    transition: translate var(--duration-short) var(--ease-editorial);
   }
 
-  .service-panel__link > span {
-    width: 2rem;
-    height: 1px;
-    background: currentColor;
-    transition: width var(--duration-short) var(--ease-editorial);
-  }
-
-  .service-panel:hover .service-panel__link > span {
-    width: 3rem;
+  .practical-services__thrift:hover .practical-services__thrift-link > span {
+    translate: 0.25rem;
   }
 
   @media (min-width: 48rem) {
-    .practical-services__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .practical-services__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.7fr);
+      align-items: center;
+      gap: 4rem;
     }
 
-    .service-panel {
+    .practical-services__thrift {
+      grid-column: 1 / -1;
+      min-height: 16rem;
       padding: 2.5rem;
+    }
+  }
+
+  @media (min-width: 75rem) {
+    .practical-services__layout {
+      grid-template-columns: minmax(25rem, 1.08fr) minmax(19rem, 0.76fr) minmax(
+          16rem,
+          0.58fr
+        );
+      gap: clamp(2.5rem, 4vw, 4.5rem);
+    }
+
+    .practical-services__thrift {
+      grid-column: auto;
+      min-height: 31rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .practical-services__links a,
+    .practical-services__thrift-link > span {
+      transition: none;
     }
   }
 </style>

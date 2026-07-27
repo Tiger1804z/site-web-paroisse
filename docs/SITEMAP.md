@@ -2,7 +2,8 @@
 
 ## Statut
 
-Proposition documentaire du 25 juillet 2026. Elle compare :
+Proposition documentaire initiale du 25 juillet 2026, actualisée le 27 juillet
+2026 pour la route canonique Nos services. Elle compare :
 
 - la navigation du site existant;
 - les pages prévues dans l’export Figma;
@@ -24,7 +25,7 @@ Accueil
 │   └── Galerie
 ├── Célébrer
 │   ├── Horaires
-│   ├── Sacrements et services
+│   ├── Nos services
 │   ├── Catéchèse
 │   └── Événements
 ├── Activités
@@ -35,8 +36,10 @@ Accueil
 └── Informations
     ├── Feuillets paroissiaux [différé, hors navigation publique]
     ├── Merci à nos annonceurs
-    ├── Location de salle
     └── Contact
+
+Nos services
+└── Location de salle [section intégrée]
 
 Pages de détail potentielles
 ├── Baptême
@@ -61,7 +64,8 @@ Pages de détail potentielles
 | Soutien à la communauté | `/soutien-communaute/`                   | Secondaire, à confirmer           | Ne justifie une page autonome que si l’offre dépasse la friperie.                                                          |
 | Galerie                 | `/galerie/`                              | Obligatoire                       | Besoin Figma; médias avec droits confirmés uniquement.                                                                     |
 | Horaires                | `/horaires/`                             | Obligatoire                       | Priorité éditoriale et prochaine migration S1-T03.                                                                         |
-| Sacrements et services  | `/sacrements/`                           | Obligatoire                       | Remplace la page héritée « Nos services » et oriente vers les démarches.                                                   |
+| Nos services            | `/nos-services/`                         | Obligatoire; canonique            | Regroupe sacrements, démarches, prière, mémoire, paiements et location de salle.                                           |
+| Ancien Sacrements       | `/sacrements/`                           | Alias `noindex`                   | Compatibilité statique vers `/nos-services/`; aucune seconde page indexable.                                               |
 | Catéchèse               | `/catechese/`                            | Obligatoire                       | Sépare le contenu durable des campagnes annuelles d’inscription.                                                           |
 | Événements              | `/evenements/`                           | Obligatoire                       | Liste actuelle et archives gérées par statut/date.                                                                         |
 | Groupes                 | `/vie-paroissiale/#groupes` initialement | Fusion recommandée                | Évite une page trop mince; détails futurs si du contenu confirmé existe.                                                   |
@@ -70,7 +74,8 @@ Pages de détail potentielles
 | Friperie                | `/friperie/`                             | Obligatoire                       | Mission durable et informations pratiques spécifiques.                                                                     |
 | Feuillets paroissiaux   | `/feuillets-paroissiaux/`                | Différé, décision requise         | Aucun PDF disponible; placeholder `noindex` hors navigation, révision le 10 août 2026 ou après le retour de la secrétaire. |
 | Merci à nos annonceurs  | `/annonceurs/`                           | Obligatoire dans le futur sitemap | Programme publicitaire du feuillet; statut actif de chaque partenariat à confirmer.                                        |
-| Location de salle       | `/location-de-salle/`                    | Obligatoire                       | Information et demande, jamais réservation instantanée.                                                                    |
+| Location de salle       | `/nos-services/#location-de-salle`       | Section canonique                 | Tarifs et disponibilités communiqués par le secrétariat; jamais de réservation instantanée.                                |
+| Ancienne location       | `/location-de-salle/`                    | Alias `noindex`                   | Compatibilité statique vers la section canonique.                                                                          |
 | Contact                 | `/contact/`                              | Obligatoire                       | Coordonnées validées, secrétariat et futurs motifs de contact.                                                             |
 
 Les accents sont évités dans les nouvelles URL. Les anciennes URL accentuées
@@ -82,14 +87,14 @@ devront recevoir des redirections lorsque le domaine sera migré.
 - Notre paroisse;
 - Première visite;
 - Horaires;
-- Sacrements et services;
+- Nos services;
 - Catéchèse;
 - Vie paroissiale;
 - Événements;
 - Feuillets paroissiaux — différé et hors navigation jusqu'à confirmation;
 - Friperie;
 - Merci à nos annonceurs;
-- Location de salle;
+- Location de salle, comme section de Nos services;
 - Galerie;
 - Contact.
 
@@ -148,16 +153,17 @@ promouvoir au premier niveau.
 
 ## Principes de navigation à valider
 
-1. Horaires reste accessible directement dans le header et sur mobile.
-2. Catéchèse doit être trouvable depuis Célébrer et Sacrements.
+1. Horaires reste accessible directement dans le header et sur mobile, sans
+   CTA redondant à droite du header.
+2. Catéchèse doit être trouvable depuis Nos services.
 3. Friperie peut apparaître dans Activités et être reliée depuis Soutien.
 4. Merci à nos annonceurs appartient à Informations, près des feuillets.
-5. Location de salle est une demande d’information, pas une action de
-   réservation.
+5. Location de salle est une section de Nos services et une demande
+   d’information, pas une action de réservation.
 6. Pèlerinages et Concerts peuvent être des vues éditoriales d’une même
    collection d’événements.
-7. Aucun changement de `src/lib/navigation.ts` ne sera effectué avant
-   validation de cette structure.
+7. `src/lib/navigation.ts` est la source canonique partagée du desktop, du
+   mobile et du footer.
 
 ## Modèles de contenu futurs
 

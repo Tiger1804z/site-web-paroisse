@@ -4,18 +4,33 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services, Vie paroissiale et Friperie migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07 et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout
+global, les pages Accueil, Horaires, Notre paroisse, Première visite, Nos
+services, Vie paroissiale et Friperie, ainsi que l’architecture Événements et
+l’audit documentaire du site existant. Il valide Astro, TypeScript strict,
+React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la
+préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
 [docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
 
 Un système de mouvement léger est appliqué aux pages pilotes Accueil, Notre
-paroisse et Sacrements. Il repose sur CSS, un observateur partagé pour les
-révélations et un observateur ciblé pour la chronologie, sans listener scroll
-continu ni dépendance. Le vitrail vivant est intégré une seule fois à
-l’accueil. Les règles de performance et d’accessibilité sont documentées dans
+paroisse et Nos services. Il repose sur CSS, un observateur partagé pour les
+révélations et un observateur ciblé pour la chronologie, sans boucle
+d’animation continue ni dépendance. S1-T11 ajoute à la section Histoire une
+ambiance progressive de « lumières de salle » : le décor s’assombrit, la
+timeline reste la scène lisible et le header conserve son propre niveau de
+lumière ambiante. Le hero de Notre paroisse n’est pas modifié. Le vitrail
+vivant est intégré une seule fois à l’accueil. Les règles de performance et
+d’accessibilité sont documentées dans
 [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
+
+Le même ticket affine discrètement la lisibilité globale : corps de texte
+légèrement plus généreux, métadonnées harmonisées, CTA de 52 px, navigation de
+15 px et header transparent plus stable. Le hero d’accueil emploie un
+traitement photographique commun, une cadence de 7,6 secondes, un fondu de
+1,25 seconde et une carte « Prochaines messes » bourgogne plutôt que blanche.
 
 Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
 
@@ -41,11 +56,14 @@ document `firstVisitPage` et les réglages globaux `siteSettings` est expliquée
 dans
 [docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md](docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md).
 
-La route `/sacrements/` utilise `SacramentsPageData`. Les slugs préparent de
-futures pages détaillées, mais aucun lien ni fichier `[slug].astro` n’est créé
-tant que le contenu n’est pas validé. Le futur flux `sacramentsPage`,
-références, documents `sacrament` et `getStaticPaths()` est documenté dans
-[docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md](docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
+La route canonique `/nos-services/` utilise `ServicesPageData`, une source
+locale et un getter. Elle regroupe les sacrements, démarches administratives,
+intentions, célébrations, moyens de paiement et location de salle. Les tarifs
+et dates publiés pour 2026 portent une date de révision et doivent être
+reconfirmés périodiquement. Son hero alterne les illustrations Baptême,
+Mariage et Première communion, avec une lentille révélant la prochaine image.
+`/sacrements/` et `/location-de-salle/` restent des alias statiques `noindex`
+vers la route canonique.
 
 La route `/vie-paroissiale/` utilise `ParishLifePageData`. Les quatre groupes
 de la maquette restent identifiés comme contenus à confirmer : aucune activité,
@@ -75,8 +93,8 @@ avec la secrétaire le 10 août 2026 ou après son retour.
 
 S1-T09 Contact reste volontairement en pause sur la branche séparée
 `feature/s1-t09-contact-page-1to1`, non fusionnée dans `staging`, à la porte de
-validation SMTP. S1-T10 ne modifie aucun fichier Contact, SMTP, API de courriel
-ou fonction serverless.
+validation SMTP. Ce raffinement ne modifie aucun fichier Contact, SMTP, API de
+courriel ou fonction serverless.
 
 ## Stack
 
@@ -187,8 +205,8 @@ médias. Les documents de référence sont :
 - [matrice de migration](docs/CONTENT_MIGRATION_MATRIX.md);
 - [questions de confirmation](docs/PARISH_CONTENT_CONFIRMATION.md).
 
-Le sitemap reste une proposition. Le header, le footer et
-`src/lib/navigation.ts` ne doivent pas être modifiés avant sa validation. Les
+Le sitemap reste une mémoire évolutive. Le header, le footer et les menus
+partagent `src/lib/navigation.ts`, qui constitue leur source canonique. Les
 horaires, tarifs, capacités, personnes, événements, inscriptions, annonceurs et
 coordonnées doivent être confirmés par la paroisse avant publication.
 
@@ -229,6 +247,13 @@ S1-T07 est fusionné : les catégories et les événements datés alimentent
 S1-T10 migre Friperie en page dédiée `noindex` et reporte Feuillets sans
 supprimer sa route. Le prochain travail sur Feuillets dépend de la décision et
 des documents réels, pas d'une priorité visuelle de la maquette.
+
+S1-T11 enrichit le rythme de l’accueil, transforme « Vivre la paroisse » en
+scène photographique, centre la galerie dans un carrousel manuel, maintient le
+header translucide et fait de `/nos-services/` la route canonique. Les choix
+éditoriaux et les données temporelles sont détaillés dans
+[docs/HOMEPAGE_EDITORIAL_RHYTHM.md](docs/HOMEPAGE_EDITORIAL_RHYTHM.md) et
+[docs/SERVICES_CONTENT_AUDIT.md](docs/SERVICES_CONTENT_AUDIT.md).
 
 ## Volontairement non implémenté
 

@@ -6,6 +6,7 @@ import MassSchedulePreview from '@/components/sections/home/MassSchedulePreview.
 import ParishBulletin from '@/components/sections/home/ParishBulletin.astro';
 import ParishLifePreview from '@/components/sections/home/ParishLifePreview.astro';
 import PracticalServices from '@/components/sections/home/PracticalServices.astro';
+import SpiritualInterlude from '@/components/sections/home/SpiritualInterlude.astro';
 import UpcomingActivitiesSection from '@/components/sections/home/UpcomingActivitiesSection.astro';
 import VisitSection from '@/components/sections/home/VisitSection.astro';
 import WelcomeSection from '@/components/sections/home/WelcomeSection.astro';
@@ -49,6 +50,7 @@ const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
   <ParishLifePreview />
   {showParishBulletin && <ParishBulletin />}
   <PracticalServices />
+  <SpiritualInterlude />
   <HomeGallery />
   <VisitSection />
   <MotionController />

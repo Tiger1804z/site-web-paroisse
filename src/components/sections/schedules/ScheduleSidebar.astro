@@ -75,7 +75,7 @@ const { content } = Astro.props;
   .schedule-sidebar__eyebrow {
     margin: 0 0 0.75rem;
     color: color-mix(in srgb, var(--color-gold) 82%, var(--color-ivory));
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -96,7 +96,7 @@ const { content } = Astro.props;
   .schedule-sidebar__period {
     margin: 0.5rem 0 1.25rem;
     color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
   }
 
   .schedule-sidebar__bulletin :global(.ui-button) {
@@ -106,14 +106,14 @@ const { content } = Astro.props;
   .schedule-sidebar__hours {
     margin: 0;
     color: var(--color-charcoal);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     font-weight: 600;
   }
 
   .schedule-sidebar__message {
     margin: 0.5rem 0 0.75rem;
     color: var(--color-muted);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
     line-height: 1.65;
   }
 

@@ -144,6 +144,80 @@ Ces images :
   [`THRIFT_STORE_PHOTO_SHOT_LIST.md`](./THRIFT_STORE_PHOTO_SHOT_LIST.md);
 - ne permettent pas de retirer `noindex` même en l'absence de filigrane.
 
+## Visuels éditoriaux Accueil et Nos services — S1-T11
+
+Import effectué le 27 juillet 2026 depuis les fichiers fournis par
+l’utilisateur. Les originaux dans `Downloads` n’ont pas été modifiés. Aucun des
+sept fichiers ne contient de watermark visible, de texte publicitaire ou de
+métadonnée EXIF/IPTC/XMP exploitable. Les inscriptions grecques de l’icône et
+le texte architectural du détail d’église font partie des œuvres photographiées
+et ne sont pas des filigranes.
+
+| Fichier de production               | Source fournie                                     | Format réel | Dimensions            |            Poids | Auteur identifié par le nom | Contenu et qualité                                                               | Licence et provenance                                                                                         | Usage                                                                                        |
+| ----------------------------------- | -------------------------------------------------- | ----------- | --------------------- | ---------------: | --------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `parish-life-marian-artwork.jpg`    | `charlvera-mary-8580421_1920.jpg`                  | JPEG RGB    | 1920 × 1920, carré    |   869 359 octets | CharlVera                   | Œuvre mariale bleue de style aquarelle numérique, nette, non documentaire.       | Utilisation libre déclarée par l’utilisateur; profil Pixabay retrouvé, mais page source exacte à archiver.    | Arrière-plan obligatoire de « Vivre la paroisse », sous overlay sombre.                      |
+| `mother-of-perpetual-help-icon.jpg` | `teotea-mother-of-perpetual-help-1060612_1920.jpg` | JPEG RGB    | 1519 × 1920, portrait | 1 639 871 octets | teotea                      | Reproduction détaillée de l’icône de Notre-Dame du Perpétuel Secours.            | Page Pixabay exacte retrouvée; Pixabay Content License. Attribution conservée dans la donnée et l’inventaire. | Chapitre Sacrements et initiation de Nos services.                                           |
+| `marian-stained-glass-ai.png`       | `popmelon-ai-generated-8393898_1920.png`           | PNG RGB     | 1920 × 1920, carré    | 5 942 478 octets | popmelon                    | Illustration générée par IA imitant un vitrail marial; très détaillée et propre. | Utilisation libre déclarée par l’utilisateur; auteur Pixabay plausible, page source exacte à confirmer.       | Inventoriée, non utilisée : concurrence visuelle avec le vitrail vivant et statut IA.        |
+| `church-facade-editorial.jpg`       | `tsn71-church-6972322_1920.jpg`                    | JPEG RGB    | 1920 × 1082, paysage  |   809 874 octets | TSN71                       | Détail architectural et mosaïque de Santa Maria del Fiore; bonne netteté.        | Série Pixabay et profil TSN71 retrouvés sous Pixabay Content License; URL exacte du fichier à archiver.       | Arche éditoriale de l’aperçu des services; alt indiquant Florence, jamais Saint-René-Goupil. |
+| `flight-into-egypt-painting.jpg`    | `robertcheaib-virgin-mary-1263016_1920.jpg`        | JPEG RGB    | 1635 × 1920, portrait |   722 285 octets | Robert Cheaib               | Photographie d’une peinture de la fuite en Égypte, chaude et bien définie.       | Utilisation libre déclarée par l’utilisateur; profil Pixabay retrouvé, page source exacte à confirmer.        | Inventoriée, non utilisée : aucun chapitre actuel ne justifie cette scène précise.           |
+| `marian-color-artwork.jpg`          | `jossy_justino-mary-5886426_1920.jpg`              | JPEG RGB    | 1494 × 1920, portrait |   856 738 octets | Jossy_Justino               | Illustration mariale colorée et stylisée, bonne définition, non documentaire.    | Profil Pixabay retrouvé et usage gratuit déclaré par l’auteur; page source exacte à confirmer.                | Inventoriée, non utilisée : palette trop vive pour les sections actuelles.                   |
+| `candles-prayer.jpg`                | `robertcheaib-candles-3786857_1920.jpg`            | JPEG RGB    | 1920 × 1280, paysage  |   216 484 octets | Robert Cheaib               | Lampions sur fond sombre, bonne lumière et profondeur, sans personne.            | Utilisation libre déclarée par l’utilisateur; profil Pixabay retrouvé, page source exacte à confirmer.        | Interlude spirituel de l’accueil et chapitre Prière et mémoire.                              |
+
+Empreintes SHA-256 :
+
+- `parish-life-marian-artwork.jpg` :
+  `2341c93a6080242c23e476fb8b66b95389072f6d6ea699cbd112db7015bc1369`;
+- `mother-of-perpetual-help-icon.jpg` :
+  `7d91066f7d5932bf08390ffaa5f11d7a81ae74fe43b07665a3ba131e8281e438`;
+- `marian-stained-glass-ai.png` :
+  `074e1d8a99594a432834f4382cbe148e17649975d4729d98a002e63f332a115a`;
+- `church-facade-editorial.jpg` :
+  `79ecfddd12a500ec88698c12f47161f152ee48d88bdc48e28d413ed655fea94f`;
+- `flight-into-egypt-painting.jpg` :
+  `8f1ae9cfe7eba0c248dc56a72dae0cc72d37dedde1f79a9f37de716dcca1b19c`;
+- `marian-color-artwork.jpg` :
+  `e74d075079b9e5d0b008eda8ff97c67f1cbb48ee1bca9de40f756d9f237040a8`;
+- `candles-prayer.jpg` :
+  `4eec84547a9127c1b37fa99f55f46ed296801e7c8b3b6856ad965429df5cf0a8`.
+
+La mention « libre d’utilisation » vient de l’utilisateur et, pour les pages
+exactes retrouvées, de Pixabay. Elle ne signifie pas « domaine public ».
+L’équipe doit archiver chaque URL et une preuve de licence avant le déploiement
+public. Les œuvres générées ou décoratives ne documentent ni les locaux, ni les
+statues, ni les événements de la paroisse.
+
+Astro génère des variantes WebP responsives. Les visuels sont chargés
+paresseusement sous la ligne de flottaison; les sources lourdes, dont le PNG IA
+de 5,94 Mo, ne sont pas envoyées directement aux visiteurs.
+
+### Hero rotatif de Nos services
+
+Trois images additionnelles fournies le même jour remplacent la photographie
+unique du hero. Elles sont des illustrations externes et ne montrent pas la
+Paroisse Saint-René-Goupil. Toutes contiennent des personnes; aucune identité
+n’est publiée et leur usage demeure conditionné au dossier de licence de la
+plateforme.
+
+| Fichier de production        | Source fournie                                | Format réel | Dimensions et orientation |          Poids | Auteur identifiable  | Contenu et qualité                                                                | Métadonnées, watermark et droits                                                                                                              | Usage                                                         |
+| ---------------------------- | --------------------------------------------- | ----------- | ------------------------- | -------------: | -------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `baptism-ceremony.jpg`       | `664072-baptism-577957_1920.jpg`              | JPEG RGB    | 1920 × 1272, paysage      | 584 819 octets | Identifiant `664072` | Geste de baptême en plan rapproché; bonne netteté et cadrage horizontal.          | Aucun EXIF/IPTC/XMP, watermark ou texte parasite. Pixabay déclaré par l’utilisateur; page et licence exactes à archiver avant publication.    | Première image et image prioritaire du hero Nos services.     |
+| `wedding-silhouette.jpg`     | `pexels-wedding-1850074_1920.jpg`             | JPEG RGB    | 1280 × 1920, portrait     | 296 629 octets | Pexels               | Couple marié en silhouette noir et blanc; bonne qualité, fort contraste vertical. | Aucun EXIF/IPTC/XMP, watermark ou texte parasite. Source Pixabay `wedding-couple-bride-marriage-1850074`, Pixabay Content License à archiver. | Deuxième image du hero; recadrage contrôlé et voile renforcé. |
+| `first-communion-candle.jpg` | `tobiaswahl-first-communion-4941732_1920.jpg` | JPEG RGB    | 1920 × 1280, paysage      | 457 885 octets | Tobias C. Wahl       | Enfant tenant un cierge de première communion; mise au point nette sur la flamme. | Aucun EXIF/IPTC/XMP, watermark ou texte parasite. Auteur et provenance Pixabay recoupés; preuve de licence de la page exacte à archiver.      | Troisième image du hero Nos services.                         |
+
+Empreintes SHA-256 :
+
+- `baptism-ceremony.jpg` :
+  `49ccf7ec99c85ed34134e09fffd9d0eaa50e4f66e717b6e434f737d88c48178f`;
+- `wedding-silhouette.jpg` :
+  `637b83cc73daae6aab5c6627e4f379820bcbea0eb9a7eed7af9e5060f1da5c76`;
+- `first-communion-candle.jpg` :
+  `f73c70c4a22e21a7ff2aaaaf26095553d342baa5a922a3511ff417d055f70915`.
+
+La première image est prioritaire; les deux autres sont transformées en
+variantes responsives par `astro:assets` et chargées en faible priorité. Les
+textes alternatifs les décrivent comme des images d’illustration. Leur présence
+ne constitue pas une preuve d’une célébration tenue dans la paroisse.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.

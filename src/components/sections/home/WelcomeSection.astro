@@ -49,7 +49,14 @@ import TextLink from '@/components/ui/TextLink.astro';
 <style>
   .welcome-section {
     overflow: hidden;
-    background: var(--color-ivory);
+    background:
+      radial-gradient(
+        circle at 84% 50%,
+        color-mix(in srgb, var(--color-burgundy) 6%, transparent),
+        transparent 31rem
+      ),
+      var(--color-ivory);
+    padding-block: clamp(5rem, 7vw, 6.75rem);
   }
 
   .welcome-section__grid {
@@ -59,7 +66,7 @@ import TextLink from '@/components/ui/TextLink.astro';
   }
 
   .welcome-section__copy {
-    max-width: 42.5rem;
+    max-width: 40.5rem;
   }
 
   .welcome-section__script {
@@ -73,8 +80,8 @@ import TextLink from '@/components/ui/TextLink.astro';
   }
 
   .welcome-section__introduction {
-    max-width: 36.25rem;
-    margin: 2rem 0;
+    max-width: 38rem;
+    margin: 2rem 0 2.25rem;
     color: var(--color-muted);
   }
 
@@ -89,7 +96,7 @@ import TextLink from '@/components/ui/TextLink.astro';
     margin: 0;
     color: color-mix(in srgb, var(--color-charcoal) 84%, transparent);
     font-family: var(--font-display);
-    font-size: 1.25rem;
+    font-size: 1.3125rem;
     font-style: italic;
     line-height: 1.55;
   }
@@ -98,7 +105,7 @@ import TextLink from '@/components/ui/TextLink.astro';
     display: block;
     margin-top: 0.75rem;
     color: var(--color-wood);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-style: normal;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -106,14 +113,31 @@ import TextLink from '@/components/ui/TextLink.astro';
   }
 
   .welcome-section__art {
-    width: min(100%, 25rem);
+    position: relative;
+    isolation: isolate;
+    width: min(100%, 30.5rem);
     margin-inline: auto;
+  }
+
+  .welcome-section__art::before {
+    position: absolute;
+    z-index: -1;
+    inset: 12% -12% 8%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-rose) 20%, transparent),
+      transparent 68%
+    );
+    content: '';
+    filter: blur(1.5rem);
+    pointer-events: none;
   }
 
   @media (min-width: 64rem) {
     .welcome-section__grid {
-      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 25rem);
-      gap: clamp(4rem, 7vw, 7rem);
+      grid-template-columns: minmax(0, 1fr) minmax(24rem, 30.5rem);
+      gap: clamp(3rem, 4.5vw, 5rem);
     }
 
     .welcome-section__art {

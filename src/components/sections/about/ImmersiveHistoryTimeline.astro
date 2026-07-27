@@ -17,6 +17,13 @@ const imageKindLabels = {
 } satisfies Record<HistoryImageKind, string>;
 ---
 
+<div
+  class="history-timeline__mood-veil"
+  data-history-mood-veil
+  aria-hidden="true"
+>
+</div>
+
 <section
   class="history-timeline section-block"
   aria-labelledby="history-timeline-title"
@@ -46,7 +53,7 @@ const imageKindLabels = {
     })();
   </script>
 
-  <Container>
+  <Container class="history-timeline__container">
     <header class="history-timeline__header">
       <Eyebrow tone="light">{history.eyebrow}</Eyebrow>
       <h2 id="history-timeline-title" class="history-timeline__title type-h2">
@@ -202,8 +209,13 @@ const imageKindLabels = {
     color: var(--color-ivory);
   }
 
+  .history-timeline[data-history-mood-active] {
+    z-index: 56;
+  }
+
   .history-timeline::before {
     position: absolute;
+    z-index: 0;
     inset: 0;
     background-image: linear-gradient(
       90deg,
@@ -213,6 +225,34 @@ const imageKindLabels = {
     );
     content: '';
     pointer-events: none;
+  }
+
+  .history-timeline__mood-veil {
+    --history-mood-intensity: 0;
+
+    position: fixed;
+    z-index: 55;
+    inset: 0;
+    background:
+      radial-gradient(
+        ellipse at 50% 46%,
+        rgb(12 8 9 / 12%) 12%,
+        rgb(8 6 7 / 48%) 68%,
+        rgb(4 3 3 / 88%) 100%
+      ),
+      linear-gradient(rgb(9 6 7 / 30%), rgb(9 6 7 / 48%));
+    opacity: calc(var(--history-mood-intensity) * 0.9);
+    pointer-events: none;
+    transition: opacity 140ms linear;
+  }
+
+  :global(.history-timeline__container) {
+    position: relative;
+    z-index: 1;
+  }
+
+  :global(html[data-history-house-lights]) .history-timeline__mood-veil {
+    will-change: opacity;
   }
 
   .history-timeline__header {
@@ -253,7 +293,7 @@ const imageKindLabels = {
 
   .history-timeline__disclosure p {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-ui);
     line-height: 1.65;
   }
 
@@ -374,7 +414,7 @@ const imageKindLabels = {
     border-radius: 50%;
     background: var(--color-charcoal);
     color: var(--color-gold);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0.08em;
@@ -463,7 +503,7 @@ const imageKindLabels = {
   .history-timeline__body {
     margin-top: 1rem;
     color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.75;
   }
 
@@ -472,13 +512,13 @@ const imageKindLabels = {
     gap: 0.2rem;
     margin-top: 1.5rem;
     color: color-mix(in srgb, var(--color-ivory) 56%, transparent);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
     line-height: 1.55;
   }
 
   .history-timeline__source span {
     color: var(--color-gold);
-    font-size: 0.625rem;
+    font-size: var(--font-size-micro);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -487,7 +527,7 @@ const imageKindLabels = {
   .history-timeline__entry-disclosure {
     margin-top: 0.75rem;
     color: color-mix(in srgb, var(--color-ivory) 58%, transparent);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-style: italic;
     line-height: 1.6;
   }
@@ -562,7 +602,7 @@ const imageKindLabels = {
   .history-timeline__figure figcaption {
     padding: 0.75rem 0.875rem;
     color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     line-height: 1.5;
   }
 
@@ -723,6 +763,10 @@ const imageKindLabels = {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .history-timeline__mood-veil {
+      display: none;
+    }
+
     .history-timeline__axis::after,
     .history-timeline__marker,
     .history-timeline__chapter-meta,

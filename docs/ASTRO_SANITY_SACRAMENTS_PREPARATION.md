@@ -1,5 +1,11 @@
 # Préparation Astro et Sanity — Sacrements et services
 
+> **Document historique S1-T06.** Depuis S1-T11, cette proposition est
+> remplacée par `ServicesPageData`, `src/data/services.ts`,
+> `getServicesPageData()` et la route canonique `/nos-services/`. Consulter
+> `SANITY_CONTENT_MODEL.md` et `SERVICES_CONTENT_AUDIT.md`. Aucun schéma Sanity
+> n’est installé.
+
 ## Objectif
 
 La route `/sacrements/` est une page d’aperçu statique. Elle utilise aujourd’hui
