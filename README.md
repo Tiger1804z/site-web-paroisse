@@ -4,7 +4,7 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite et Sacrements et services migrées depuis Figma, ainsi que l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services et Vie paroissiale migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07 et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -46,6 +46,12 @@ futures pages détaillées, mais aucun lien ni fichier `[slug].astro` n’est cr
 tant que le contenu n’est pas validé. Le futur flux `sacramentsPage`,
 références, documents `sacrament` et `getStaticPaths()` est documenté dans
 [docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md](docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
+
+La route `/vie-paroissiale/` utilise `ParishLifePageData`. Les quatre groupes
+de la maquette restent identifiés comme contenus à confirmer : aucune activité,
+fréquence, personne responsable ou coordonnée fictive n'est publiée. La source
+locale, le getter et les composants Astro préparent un futur document
+`parishLifePage` sans dépendre du CMS.
 
 ## Stack
 
@@ -185,17 +191,19 @@ La CI l’exécute sur les pushes et pull requests visant `main` ou `staging`.
 
 ## Prochaines étapes
 
-Le plan complet est documenté sans être exécuté dans [docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Le prochain ticket recommandé est :
+Le plan complet se trouve dans
+[docs/FIGMA_MIGRATION_PLAN.md](docs/FIGMA_MIGRATION_PLAN.md). Les routes
+restantes, les placeholders du menu Informations et leurs dépendances sont
+inventoriés dans
+[docs/REMAINING_ROUTES_AUDIT.md](docs/REMAINING_ROUTES_AUDIT.md).
 
-`S1-T07 — Migrer la page Événements 1:1 depuis l’export Figma`
-
-S1-T07 est en cours : le premier lot visuel prépare cinq catégories et
-l’architecture de contenu, mais la page reste incomplète et `noindex`. Voir
-[docs/EVENTS_VISUALS_BATCH_1.md](docs/EVENTS_VISUALS_BATCH_1.md).
+S1-T07 est fusionné : les catégories et les événements datés alimentent
+`/evenements/` et « Prochaines activités » depuis une source unique. La route
+Événements reste `noindex` jusqu'à sa validation éditoriale finale.
 
 ## Volontairement non implémenté
 
-- migration complète des pages autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services;
+- migration complète des routes encore listées dans `REMAINING_ROUTES_AUDIT.md`;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;

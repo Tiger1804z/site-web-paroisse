@@ -1,0 +1,24 @@
+---
+import MotionController from '@/components/motion/MotionController.astro';
+import ParishLifeFeatures from '@/components/sections/parish-life/ParishLifeFeatures.astro';
+import ParishLifeHero from '@/components/sections/parish-life/ParishLifeHero.astro';
+import ParishLifeIntroduction from '@/components/sections/parish-life/ParishLifeIntroduction.astro';
+import ParishLifeParticipation from '@/components/sections/parish-life/ParishLifeParticipation.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getParishLifePageData } from '@/lib/content/getParishLifePageData';
+
+const parishLifePageData = await getParishLifePageData();
+---
+
+<BaseLayout
+  title={parishLifePageData.seo.title}
+  description={parishLifePageData.seo.description}
+  pageClass="parish-life-page"
+  headerVariant="light"
+>
+  <ParishLifeHero hero={parishLifePageData.hero} />
+  <ParishLifeIntroduction introduction={parishLifePageData.introduction} />
+  <ParishLifeFeatures features={parishLifePageData.features} />
+  <ParishLifeParticipation participation={parishLifePageData.participation} />
+  <MotionController />
+</BaseLayout>

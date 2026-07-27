@@ -247,3 +247,21 @@ immédiatement visibles et stables.
 Le titre, le résumé et un éventuel CTA restent des contenus éditoriaux
 normalisables depuis Sanity. Les silhouettes, la palette, les timings et la
 composition SVG restent dans Astro.
+
+## Vie paroissiale — S1-T08
+
+La page réutilise uniquement le contrôleur générique. L'introduction, chacun
+des quatre articles complets et le CTA final portent `data-motion-reveal`.
+Observer l'article plutôt que son image et son texte séparément évite de
+laisser une moitié de chapitre masquée lors d'un défilement rapide.
+
+Chaque cible passe de `opacity: 0` à `1` et de
+`translate3d(0, 24px, 0)` à sa position finale. Le reveal est exécuté une seule
+fois, puis l'observation cesse. Le zoom photographique de `1.02` n'existe que
+sur un appareil avec survol et pointeur précis.
+
+Sans JavaScript, la classe `motion-enabled` n'est jamais ajoutée et tout le
+contenu est visible. Avec reduced motion, le contrôleur appelle son état final
+et les transitions décoratives sont ramenées à une durée négligeable par la
+stratégie globale. Aucun script, observer ou listener supplémentaire n'est
+créé pour cette page.

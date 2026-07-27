@@ -1,0 +1,89 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { ParishLifePageData } from '@/types/parishLife';
+
+interface Props {
+  introduction: ParishLifePageData['introduction'];
+}
+
+const { introduction } = Astro.props;
+---
+
+<section
+  class="parish-life-introduction"
+  aria-labelledby="parish-life-introduction-title"
+>
+  <Container size="narrow">
+    <div class="parish-life-introduction__content" data-motion-reveal>
+      <Eyebrow>{introduction.eyebrow}</Eyebrow>
+      <h2 id="parish-life-introduction-title">
+        {introduction.title}
+      </h2>
+      <div class="parish-life-introduction__paragraphs">
+        {introduction.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      {
+        introduction.confirmationNote && (
+          <p class="parish-life-introduction__note">
+            <span aria-hidden="true" />
+            {introduction.confirmationNote}
+          </p>
+        )
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .parish-life-introduction {
+    padding-block: 5rem;
+    background: var(--color-ivory);
+  }
+
+  .parish-life-introduction__content {
+    text-align: center;
+  }
+
+  .parish-life-introduction h2 {
+    margin: 1rem 0 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.25rem, calc(1.904rem + 1.44vw), 3rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .parish-life-introduction__paragraphs {
+    display: grid;
+    max-width: 43rem;
+    margin: 1.5rem auto 0;
+    gap: 0.75rem;
+    color: var(--color-muted);
+    font-size: clamp(1rem, calc(0.954rem + 0.19vw), 1.125rem);
+    line-height: 1.8;
+  }
+
+  .parish-life-introduction__paragraphs p {
+    margin: 0;
+  }
+
+  .parish-life-introduction__note {
+    display: inline-flex;
+    max-width: 38rem;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 1.75rem auto 0;
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    text-align: left;
+  }
+
+  .parish-life-introduction__note span {
+    width: 2rem;
+    height: 1px;
+    flex: 0 0 auto;
+    margin-top: 0.7rem;
+    background: var(--color-gold);
+  }
+</style>
