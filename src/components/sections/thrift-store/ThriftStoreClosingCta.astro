@@ -1,0 +1,112 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { ThriftStorePageData } from '@/types/thriftStore';
+
+interface Props {
+  closing: ThriftStorePageData['closing'];
+}
+
+const { closing } = Astro.props;
+---
+
+<section class="thrift-closing" aria-labelledby="thrift-closing-title">
+  <Container>
+    <div class="thrift-closing__grid">
+      <div>
+        <p class="thrift-closing__eyebrow">{closing.eyebrow}</p>
+        <h2 id="thrift-closing-title">{closing.title}</h2>
+        <p class="thrift-closing__description">{closing.description}</p>
+      </div>
+
+      <div class="thrift-closing__actions">
+        <Button href={closing.primaryCta.href} variant="primary">
+          {closing.primaryCta.label}
+        </Button>
+        <Button href={closing.secondaryCta.href} variant="dark">
+          {closing.secondaryCta.label}
+        </Button>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .thrift-closing {
+    padding-block: clamp(4rem, 7vw, 6rem);
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .thrift-closing__grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .thrift-closing__eyebrow {
+    margin: 0 0 0.75rem;
+    color: var(--color-gold);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .thrift-closing h2 {
+    max-width: 42rem;
+    margin: 0;
+    color: var(--color-ivory);
+    font-size: clamp(2.25rem, calc(1.9rem + 1.45vw), 3.25rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .thrift-closing__description {
+    max-width: 42rem;
+    margin: 1.25rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 66%, transparent);
+    line-height: 1.75;
+  }
+
+  .thrift-closing__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .thrift-closing__actions :global(.ui-button) {
+    width: 100%;
+  }
+
+  .thrift-closing__actions :global(.ui-button:first-child) {
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+  }
+
+  @media (min-width: 48rem) {
+    .thrift-closing__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .thrift-closing__actions :global(.ui-button) {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .thrift-closing__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, auto);
+      gap: 4rem;
+    }
+
+    .thrift-closing__actions {
+      flex-direction: column;
+    }
+
+    .thrift-closing__actions :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

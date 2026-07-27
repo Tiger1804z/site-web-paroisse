@@ -113,6 +113,37 @@ Les photographies montrent l'architecture et le décor intérieur; elles ne
 documentent pas les groupes eux-mêmes. Les textes alternatifs restent donc
 factuels et ne prétendent pas montrer une activité ou ses membres.
 
+## Prototypes Friperie — S1-T10
+
+Inspection effectuée le 27 juillet 2026. Les quatre copies de production sont
+binaires et leurs hashes correspondent aux fichiers entrants. Elles n'ont pas
+été retouchées. Aucun texte ni filigrane n'est visible dans les pixels, mais
+aucune licence de publication n'est confirmée.
+
+Statut commun :
+
+> PROTOTYPE TEMPORAIRE — DROITS À CONFIRMER
+
+| Fichier de production                  | Format réel          | Dimensions et orientation |          Poids | SHA-256                                                            | Contenu et qualité                                                                                | Métadonnées et provenance                                                                                                                                                                                                       | Usage S1-T10                               |
+| -------------------------------------- | -------------------- | ------------------------- | -------------: | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `leather-jacket-temporary.jpg`         | JPEG sRGB            | 580 × 387 px, paysage     |  39 024 octets | `6399e1705dd999373d464c20e6d6b7e3a15901bbe8a007aa50d11cef3ea98dc1` | Détail serré d'une veste en suède brun; netteté correcte, définition modeste pour un plein cadre. | Canon EOS 5D Mark III, prise de vue 14 juin 2019, Lightroom; le nom renvoie à Rifugio Leather. Un article Permanent Style sur Rifugio crédite Jamie Ferguson, mais la correspondance exacte et la licence ne sont pas prouvées. | Révélation 1 uniquement.                   |
+| `clothing-rack-primary-temporary.jpeg` | JPEG sRGB progressif | 2986 × 1994 px, paysage   | 663 312 octets | `654d24799c6df71406db69c3255c02f15e77fd7793c0294ffbdfb135309f8389` | Main prenant un vêtement brun sur un portant; bonne définition, arrière-plan doux, aucun visage.  | Aucune métadonnée EXIF/IPTC/XMP. Le nom `fast-fashion2.jpeg` est réutilisé sur des sites tiers, sans permettre d'identifier l'auteur ou la licence d'origine.                                                                   | Hero principal temporaire et révélation 2. |
+| `vintage-rack-temporary.jpg`           | JPEG sRGB            | 580 × 464 px, paysage     | 102 472 octets | `a8fddeee0f1b77e48f3d56489d2e6c5400bf4609b958c79288e212aec66c406f` | Portant dense de vestes vintage; bonne matière et couleurs, définition modeste.                   | Nikon D850, prise de vue 15 avril 2021; auteur et droits XMP/IPTC : `ALEX NATT`. Le fichier correspond au reportage Permanent Style « Hang-Up Vintage ». Aucune licence de réutilisation confirmée.                             | Révélation 3 uniquement.                   |
+| `blue-rack-temporary.webp`             | WebP sRGB            | 2121 × 1414 px, paysage   | 489 882 octets | `2591ce983775ecb800b6ae1c3550dfc829edbd61c49d22a26ae0d2d8596311cf` | Chemises bleues et claires sur cintres en bois; bonne définition et lumière vive.                 | Aucun auteur ou droit exploitable dans les métadonnées. Le nom identifie vraisemblablement l'actif iStock `688127540`; preuve d'achat et licence absentes.                                                                      | Révélation 4 uniquement.                   |
+
+Astro produit des variantes WebP responsives. L'image principale est la seule
+chargée en priorité; les révélations sont de faible priorité et décodées avant
+l'activation de la lentille.
+
+Ces images :
+
+- ne représentent pas la vraie friperie;
+- ne sont pas présentées comme des photographies de la paroisse;
+- maintiennent `/friperie/` en `noindex`;
+- devront toutes être remplacées par les photographies réelles planifiées dans
+  [`THRIFT_STORE_PHOTO_SHOT_LIST.md`](./THRIFT_STORE_PHOTO_SHOT_LIST.md);
+- ne permettent pas de retirer `noindex` même en l'absence de filigrane.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.

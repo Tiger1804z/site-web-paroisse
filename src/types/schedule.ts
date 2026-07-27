@@ -3,6 +3,7 @@ export type ScheduleNoticeSeverity = 'info' | 'important' | 'special';
 export interface ScheduleLink {
   readonly label: string;
   readonly href: string;
+  readonly active?: boolean;
 }
 
 export interface ScheduleHero {
@@ -64,6 +65,7 @@ export interface ScheduleSidebarContent {
     readonly title: string;
     readonly periodLabel: string;
     readonly link: ScheduleLink;
+    readonly active: boolean;
   };
   readonly office: {
     readonly eyebrow: string;
@@ -77,6 +79,7 @@ export interface ScheduleFaqItem {
   readonly id: string;
   readonly question: string;
   readonly answer: string;
+  readonly active: boolean;
 }
 
 export interface SchedulePageData {

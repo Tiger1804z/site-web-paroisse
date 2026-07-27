@@ -2,6 +2,7 @@
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import { isInformationRoutePublic } from '@/lib/navigation';
 
 interface ScheduleRow {
   day: string;
@@ -14,6 +15,9 @@ const schedule = [
   { day: 'Dimanche', note: 'Célébration', time: '[HEURE]' },
   { day: 'Dimanche', note: 'Célébration', time: '[HEURE]' },
 ] as const satisfies readonly ScheduleRow[];
+const showParishBulletinLink = isInformationRoutePublic(
+  '/feuillets-paroissiaux',
+);
 ---
 
 <section
@@ -32,9 +36,13 @@ const schedule = [
         </p>
         <div class="mass-schedule__actions">
           <Button href="/horaires">Voir tous les horaires</Button>
-          <Button href="/feuillets-paroissiaux" variant="dark">
-            Consulter les feuillets
-          </Button>
+          {
+            showParishBulletinLink && (
+              <Button href="/feuillets-paroissiaux" variant="dark">
+                Consulter les feuillets
+              </Button>
+            )
+          }
         </div>
       </div>
 

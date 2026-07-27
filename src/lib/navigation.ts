@@ -19,6 +19,10 @@ export interface NavigationItem {
   href: SitePath;
 }
 
+export interface NavigationRouteDefinition extends NavigationItem {
+  active: boolean;
+}
+
 export const primaryNavigation = [
   { label: 'Accueil', href: '/' },
   { label: 'Notre paroisse', href: '/notre-paroisse' },
@@ -28,13 +32,28 @@ export const primaryNavigation = [
   { label: 'Événements', href: '/evenements' },
 ] as const satisfies readonly NavigationItem[];
 
-export const informationNavigation = [
-  { label: 'Feuillets paroissiaux', href: '/feuillets-paroissiaux' },
-  { label: 'Friperie', href: '/friperie' },
-  { label: 'Location de salle', href: '/location-de-salle' },
-  { label: 'Galerie', href: '/galerie' },
-  { label: 'Contact', href: '/contact' },
-] as const satisfies readonly NavigationItem[];
+export const informationRouteDefinitions = [
+  {
+    label: 'Feuillets paroissiaux',
+    href: '/feuillets-paroissiaux',
+    active: false,
+  },
+  { label: 'Friperie', href: '/friperie', active: true },
+  { label: 'Location de salle', href: '/location-de-salle', active: true },
+  { label: 'Galerie', href: '/galerie', active: true },
+  { label: 'Contact', href: '/contact', active: true },
+] as const satisfies readonly NavigationRouteDefinition[];
+
+export const informationNavigation = informationRouteDefinitions.filter(
+  ({ active }) => active,
+);
+
+export function isInformationRoutePublic(href: SitePath): boolean {
+  return (
+    informationRouteDefinitions.find((item) => item.href === href)?.active ??
+    false
+  );
+}
 
 export const firstVisitNavigation = {
   label: 'Première visite',

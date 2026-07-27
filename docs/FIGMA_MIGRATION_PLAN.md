@@ -16,9 +16,9 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 12. **Soutien à la communauté** — confirmer l’étendue des services et décider entre page autonome ou fusion avec Friperie.
 13. ✅ **Événements — S1-T07 fusionné** : catégories permanentes, événements datés, archives et source unique partagée avec l'accueil. La route reste `noindex` jusqu'à sa validation éditoriale finale.
 14. **Pèlerinages** — présenter le programme confirmé et traiter chaque sortie comme un contenu daté.
-15. **Feuillets** — préparer l’archive et les documents.
+15. ⏸️ **Feuillets — bloqué / différé dans S1-T10** : aucun PDF réel; route placeholder `noindex` conservée, navigation publique masquée et décision à revoir avec la secrétaire le 10 août 2026 ou après son retour.
 16. **Merci à nos annonceurs** — créer la page, le CTA « Devenir annonceur » et la future collection, sans reprendre de logo non autorisé.
-17. **Friperie** — migrer la mission, la présentation et les consignes de dons confirmées.
+17. ✅ **Friperie — migrée dans S1-T10, encore `noindex`** : composition Figma, hero à lentille demandé, données typées, visuels temporaires inventoriés, placeholders photo, portant réutilisé et champs opérationnels non confirmés masqués.
 18. **Location de salle** — migrer l’information et le processus de demande sans réservation instantanée.
 19. **Galerie** — migrer la grille et définir une lightbox accessible.
 20. **Contact** — migrer coordonnées, carte et structure de formulaire.

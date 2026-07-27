@@ -12,6 +12,7 @@ interface Props {
   headerVariant?: 'light' | 'transparent';
   footerVariant?: 'default' | 'compact';
   noIndex?: boolean;
+  canonicalPath?: string;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   headerVariant = 'light',
   footerVariant = 'default',
   noIndex = false,
+  canonicalPath,
 } = Astro.props;
 const documentTitle =
   title === SITE_NAME
@@ -41,6 +43,7 @@ const documentTitle =
     />
     <meta name="description" content={description} />
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    {canonicalPath && <link rel="canonical" href={canonicalPath} />}
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />

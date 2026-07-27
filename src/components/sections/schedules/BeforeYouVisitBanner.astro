@@ -48,9 +48,13 @@ const { content, lastUpdatedLabel } = Astro.props;
         <Button href={content.contactLink.href} variant="secondary">
           {content.contactLink.label}
         </Button>
-        <TextLink href={content.bulletinLink.href} showRule={false}>
-          {content.bulletinLink.label}
-        </TextLink>
+        {
+          content.bulletinLink.active !== false && (
+            <TextLink href={content.bulletinLink.href} showRule={false}>
+              {content.bulletinLink.label}
+            </TextLink>
+          )
+        }
       </div>
     </div>
   </Container>

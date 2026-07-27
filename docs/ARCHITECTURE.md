@@ -109,6 +109,7 @@ Chaque fichier de `src/pages/` devient une route :
 - `src/pages/notre-paroisse.astro` → `/notre-paroisse/`;
 - `src/pages/premiere-visite.astro` → `/premiere-visite/`;
 - `src/pages/sacrements.astro` → `/sacrements/`;
+- `src/pages/friperie.astro` → `/friperie/`;
 - `src/pages/verification.astro` → `/verification`;
 - `src/pages/404.astro` → page d’erreur statique.
 - `src/pages/[slug].astro` génère les placeholders temporaires des destinations de navigation avec `getStaticPaths()`.
@@ -263,7 +264,7 @@ Le script du header est inclus par Astro et initialisé une fois par instance. I
 
 Le balisage et les liens restent utilisables sans routeur client. Aucun état global React n’est réintroduit.
 
-Sur l’accueil, deux scripts natifs et locaux suffisent : l’annonce peut être masquée, et le hero change de photographie avec un temporisateur remis à zéro après une action manuelle. La préférence de réduction des mouvements désactive rotation et zoom. Aucun état applicatif partagé n’est introduit.
+Sur l’accueil, deux scripts natifs et locaux suffisent : l’annonce peut être masquée, et le hero change de photographie avec un temporisateur remis à zéro après une action manuelle. Le hero branche aussi le contrôleur visuel partagé `src/scripts/organic-hero-lens.ts`; sa lentille révèle toujours la prochaine photographie de la boucle. La préférence de réduction des mouvements désactive rotation, zoom et lentille. Aucun état applicatif partagé n’est introduit.
 
 ## Migration progressive
 
@@ -444,11 +445,63 @@ activité actuelle reste à confirmer. Le statut et les formulations prudentes
 sont conservés dans la source de contenu; les fréquences, responsables et
 coordonnées fictives de la maquette ne sont pas repris.
 
+## Architecture Friperie et report des Feuillets — S1-T10
+
+La route `/friperie/` remplace son entrée dans le placeholder dynamique. Elle
+reste statique, en Astro et `noindex` :
+
+```text
+src/data/thriftStore.ts
+  → src/lib/content/getThriftStorePageData.ts
+  → frontmatter de src/pages/friperie.astro
+  → composants Astro typés avec ThriftStorePageData
+  → HTML statique
+```
+
+Le contrat distingue les images confirmées, temporaires, placeholders et aux
+droits non vérifiés. Les horaires, l'emplacement, les conditions de don et les
+coordonnées responsables portent `confirmed: false`; les composants ne les
+affichent pas. Le getter filtre et ordonne les sections actives pendant le
+build. Aucun composant n'importe directement les données métier.
+
+Le hero est le seul composant doté d'un script propre à la page. Il utilise une
+image principale et quatre couches optimisées par `astro:assets`, un masque
+SVG organique et le contrôleur partagé `src/scripts/organic-hero-lens.ts`. Ce
+contrôleur maintient un seul rAF par instance et sert aussi le hero d'accueil,
+sans coupler les données des deux pages. Il n'ajoute ni React, ni Canvas, ni
+WebGL, ni dépendance. `AnimatedClothingRack` est réutilisé sans copier son SVG,
+son CSS ou sa logique.
+
+Les cadres de galerie sont des placeholders graphiques; ils ne simulent pas un
+local photographique. La substitution des images se fait dans
+`src/data/thriftStore.ts`. Le futur CMS pourra remplacer la source du getter,
+mais ne pilotera pas la lentille, le SVG, les animations ou le responsive.
+
+La source canonique des destinations d'information reste
+`src/lib/navigation.ts`. `informationRouteDefinitions` conserve la définition
+de Feuillets avec `active: false`; la liste filtrée alimente le desktop, le
+mobile et le footer. L'accueil et Horaires interrogent le même état avant de
+rendre leurs CTA, ce qui évite une seconde liste de navigation.
+
+`/feuillets-paroissiaux/` reste générée par `src/pages/[slug].astro`, répond
+comme placeholder complet et porte `noindex`. Aucun PDF n'est disponible.
+L'archive est bloquée et différée jusqu'à confirmation avec la secrétaire le
+10 août 2026 ou après son retour : décision de publier, vrais PDF, dates,
+droits, politique d'archives et responsabilité des mises à jour.
+
+S1-T09 Contact n'appartient pas à cette branche. Sur `staging`, `/contact/`
+reste le placeholder `noindex`; le travail Contact, SMTP, API de courriel et
+fonction serverless demeure en pause sur
+`feature/s1-t09-contact-page-1to1`.
+
 ## Limites actuelles
 
 - la route Événements expose ses catégories et une première architecture
   d’événements datés, mais reste `noindex` jusqu’à la migration Figma complète;
-  les autres routes publiques non migrées restent des placeholders techniques;
+  Friperie est migrée mais reste `noindex` jusqu'au remplacement des photos et
+  à la confirmation de ses informations pratiques; les autres routes publiques
+  non migrées restent des placeholders techniques;
+- Feuillets est un placeholder différé, non promu dans la navigation publique;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;

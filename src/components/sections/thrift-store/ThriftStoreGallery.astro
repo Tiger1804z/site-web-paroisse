@@ -1,0 +1,95 @@
+---
+import Container from '@/components/ui/Container.astro';
+import ThriftStorePhotoPlaceholder from './ThriftStorePhotoPlaceholder.astro';
+import type { ThriftStorePageData } from '@/types/thriftStore';
+
+interface Props {
+  gallery: ThriftStorePageData['gallery'];
+}
+
+const { gallery } = Astro.props;
+---
+
+<section class="thrift-gallery" aria-labelledby="thrift-gallery-title">
+  <Container>
+    <div class="thrift-gallery__heading">
+      <p>{gallery.eyebrow}</p>
+      <h2 id="thrift-gallery-title">{gallery.title}</h2>
+      <div>{gallery.introduction}</div>
+    </div>
+
+    <div class="thrift-gallery__grid">
+      {
+        gallery.placeholders.map((placeholder, index) => (
+          <ThriftStorePhotoPlaceholder
+            placeholder={placeholder}
+            variant={index}
+          />
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .thrift-gallery {
+    padding-block: clamp(4rem, 8vw, 7rem);
+    background: var(--color-ivory);
+  }
+
+  .thrift-gallery__heading {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .thrift-gallery__heading > p {
+    margin: 0;
+    color: var(--color-gold);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .thrift-gallery h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.5rem, calc(2.1rem + 1.65vw), 3.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .thrift-gallery__heading > div {
+    max-width: 45rem;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .thrift-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.75rem, 2vw, 1rem);
+  }
+
+  @media (min-width: 48rem) {
+    .thrift-gallery__heading {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+      align-items: end;
+    }
+
+    .thrift-gallery__heading > p,
+    .thrift-gallery h2 {
+      grid-column: 1;
+    }
+
+    .thrift-gallery__heading > div {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+
+    .thrift-gallery__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

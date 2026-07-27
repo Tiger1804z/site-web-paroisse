@@ -1,0 +1,189 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import ThriftStorePhotoPlaceholder from './ThriftStorePhotoPlaceholder.astro';
+import type { ThriftStorePageData } from '@/types/thriftStore';
+
+interface Props {
+  introduction: ThriftStorePageData['introduction'];
+  practicalInformation: ThriftStorePageData['practicalInformation'];
+}
+
+const { introduction, practicalInformation } = Astro.props;
+const hasConfirmedPracticalInformation =
+  practicalInformation.hours.confirmed ||
+  practicalInformation.location.confirmed;
+---
+
+<section
+  class="thrift-introduction"
+  aria-labelledby="thrift-introduction-title"
+>
+  <Container>
+    <div class="thrift-introduction__grid">
+      <figure class="thrift-introduction__visual">
+        <ThriftStorePhotoPlaceholder
+          placeholder={introduction.photoPlaceholder}
+        />
+        <figcaption>
+          Cadre réservé à une photographie réelle de la friperie.
+        </figcaption>
+      </figure>
+
+      <div class="thrift-introduction__content">
+        <p class="thrift-introduction__eyebrow">{introduction.eyebrow}</p>
+        <h2 id="thrift-introduction-title">{introduction.title}</h2>
+        <div class="thrift-introduction__paragraphs">
+          {introduction.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+
+        <aside class="thrift-introduction__notice" aria-label="À noter">
+          <p>
+            <strong>À noter :</strong>
+            {introduction.priceNotice}
+          </p>
+        </aside>
+
+        {
+          hasConfirmedPracticalInformation && (
+            <dl class="thrift-introduction__facts">
+              {practicalInformation.hours.confirmed && (
+                <div>
+                  <dt>Horaires</dt>
+                  <dd>{practicalInformation.hours.value}</dd>
+                </div>
+              )}
+              {practicalInformation.location.confirmed && (
+                <div>
+                  <dt>Emplacement</dt>
+                  <dd>{practicalInformation.location.value}</dd>
+                </div>
+              )}
+            </dl>
+          )
+        }
+
+        <Button href={practicalInformation.contactCta.href} variant="secondary">
+          {practicalInformation.contactCta.label}
+          <span aria-hidden="true">→</span>
+        </Button>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .thrift-introduction {
+    padding-block: clamp(4rem, 8vw, 7rem);
+    background: var(--color-ivory);
+  }
+
+  .thrift-introduction__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .thrift-introduction__visual {
+    margin: 0;
+  }
+
+  .thrift-introduction__visual figcaption {
+    margin-top: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
+
+  .thrift-introduction__eyebrow {
+    margin: 0 0 0.75rem;
+    color: var(--color-gold);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .thrift-introduction h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.5rem, calc(2.05rem + 1.85vw), 3.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .thrift-introduction__paragraphs {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .thrift-introduction__paragraphs p {
+    max-width: 38rem;
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .thrift-introduction__notice {
+    margin-block: 1.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: color-mix(in srgb, var(--color-gold) 10%, transparent);
+  }
+
+  .thrift-introduction__notice p {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .thrift-introduction__notice strong {
+    margin-right: 0.35rem;
+  }
+
+  .thrift-introduction__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 0 1.75rem;
+  }
+
+  .thrift-introduction__facts div {
+    padding: 1rem;
+    background: var(--color-paper);
+  }
+
+  .thrift-introduction__facts dt {
+    color: var(--color-gold);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .thrift-introduction__facts dd {
+    margin: 0.35rem 0 0;
+    color: var(--color-charcoal);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 64rem) {
+    .thrift-introduction__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .thrift-introduction__facts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .thrift-introduction__content :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

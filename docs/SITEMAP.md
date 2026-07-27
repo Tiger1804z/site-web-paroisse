@@ -33,7 +33,7 @@ Accueil
 │   ├── Concerts et activités
 │   └── Friperie
 └── Informations
-    ├── Feuillets paroissiaux
+    ├── Feuillets paroissiaux [différé, hors navigation publique]
     ├── Merci à nos annonceurs
     ├── Location de salle
     └── Contact
@@ -52,26 +52,26 @@ Pages de détail potentielles
 
 ## Routes candidates
 
-| Page                    | Route candidate                          | Statut recommandé                 | Justification                                                                       |
-| ----------------------- | ---------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- |
-| Accueil                 | `/`                                      | Obligatoire; migrée               | Page Figma déjà livrée dans S1-T02.                                                 |
-| Notre paroisse          | `/notre-paroisse/`                       | Obligatoire                       | Reçoit l’histoire et l’architecture actuellement placées sur l’ancien accueil.      |
-| Première visite         | `/premiere-visite/`                      | Obligatoire                       | Besoin Figma; rassure et centralise arrivée, entrée, accessibilité et déroulement.  |
-| Vie paroissiale         | `/vie-paroissiale/`                      | Obligatoire                       | Présentation des groupes et de l’engagement.                                        |
-| Soutien à la communauté | `/soutien-communaute/`                   | Secondaire, à confirmer           | Ne justifie une page autonome que si l’offre dépasse la friperie.                   |
-| Galerie                 | `/galerie/`                              | Obligatoire                       | Besoin Figma; médias avec droits confirmés uniquement.                              |
-| Horaires                | `/horaires/`                             | Obligatoire                       | Priorité éditoriale et prochaine migration S1-T03.                                  |
-| Sacrements et services  | `/sacrements/`                           | Obligatoire                       | Remplace la page héritée « Nos services » et oriente vers les démarches.            |
-| Catéchèse               | `/catechese/`                            | Obligatoire                       | Sépare le contenu durable des campagnes annuelles d’inscription.                    |
-| Événements              | `/evenements/`                           | Obligatoire                       | Liste actuelle et archives gérées par statut/date.                                  |
-| Groupes                 | `/vie-paroissiale/#groupes` initialement | Fusion recommandée                | Évite une page trop mince; détails futurs si du contenu confirmé existe.            |
-| Pèlerinages             | `/pelerinages/`                          | Secondaire                        | Programme distinct du site ancien, mais toutes les sorties sont volatiles.          |
-| Concerts et activités   | `/evenements/?type=concert` initialement | Fusion recommandée                | Une catégorie d’événement évite une liste statique dupliquée.                       |
-| Friperie                | `/friperie/`                             | Obligatoire                       | Mission durable et informations pratiques spécifiques.                              |
-| Feuillets paroissiaux   | `/feuillets-paroissiaux/`                | Obligatoire                       | Besoin Figma et futur contenu documentaire, absent du site ancien.                  |
-| Merci à nos annonceurs  | `/annonceurs/`                           | Obligatoire dans le futur sitemap | Programme publicitaire du feuillet; statut actif de chaque partenariat à confirmer. |
-| Location de salle       | `/location-de-salle/`                    | Obligatoire                       | Information et demande, jamais réservation instantanée.                             |
-| Contact                 | `/contact/`                              | Obligatoire                       | Coordonnées validées, secrétariat et futurs motifs de contact.                      |
+| Page                    | Route candidate                          | Statut recommandé                 | Justification                                                                                                              |
+| ----------------------- | ---------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Accueil                 | `/`                                      | Obligatoire; migrée               | Page Figma déjà livrée dans S1-T02.                                                                                        |
+| Notre paroisse          | `/notre-paroisse/`                       | Obligatoire                       | Reçoit l’histoire et l’architecture actuellement placées sur l’ancien accueil.                                             |
+| Première visite         | `/premiere-visite/`                      | Obligatoire                       | Besoin Figma; rassure et centralise arrivée, entrée, accessibilité et déroulement.                                         |
+| Vie paroissiale         | `/vie-paroissiale/`                      | Obligatoire                       | Présentation des groupes et de l’engagement.                                                                               |
+| Soutien à la communauté | `/soutien-communaute/`                   | Secondaire, à confirmer           | Ne justifie une page autonome que si l’offre dépasse la friperie.                                                          |
+| Galerie                 | `/galerie/`                              | Obligatoire                       | Besoin Figma; médias avec droits confirmés uniquement.                                                                     |
+| Horaires                | `/horaires/`                             | Obligatoire                       | Priorité éditoriale et prochaine migration S1-T03.                                                                         |
+| Sacrements et services  | `/sacrements/`                           | Obligatoire                       | Remplace la page héritée « Nos services » et oriente vers les démarches.                                                   |
+| Catéchèse               | `/catechese/`                            | Obligatoire                       | Sépare le contenu durable des campagnes annuelles d’inscription.                                                           |
+| Événements              | `/evenements/`                           | Obligatoire                       | Liste actuelle et archives gérées par statut/date.                                                                         |
+| Groupes                 | `/vie-paroissiale/#groupes` initialement | Fusion recommandée                | Évite une page trop mince; détails futurs si du contenu confirmé existe.                                                   |
+| Pèlerinages             | `/pelerinages/`                          | Secondaire                        | Programme distinct du site ancien, mais toutes les sorties sont volatiles.                                                 |
+| Concerts et activités   | `/evenements/?type=concert` initialement | Fusion recommandée                | Une catégorie d’événement évite une liste statique dupliquée.                                                              |
+| Friperie                | `/friperie/`                             | Obligatoire                       | Mission durable et informations pratiques spécifiques.                                                                     |
+| Feuillets paroissiaux   | `/feuillets-paroissiaux/`                | Différé, décision requise         | Aucun PDF disponible; placeholder `noindex` hors navigation, révision le 10 août 2026 ou après le retour de la secrétaire. |
+| Merci à nos annonceurs  | `/annonceurs/`                           | Obligatoire dans le futur sitemap | Programme publicitaire du feuillet; statut actif de chaque partenariat à confirmer.                                        |
+| Location de salle       | `/location-de-salle/`                    | Obligatoire                       | Information et demande, jamais réservation instantanée.                                                                    |
+| Contact                 | `/contact/`                              | Obligatoire                       | Coordonnées validées, secrétariat et futurs motifs de contact.                                                             |
 
 Les accents sont évités dans les nouvelles URL. Les anciennes URL accentuées
 devront recevoir des redirections lorsque le domaine sera migré.
@@ -86,7 +86,7 @@ devront recevoir des redirections lorsque le domaine sera migré.
 - Catéchèse;
 - Vie paroissiale;
 - Événements;
-- Feuillets paroissiaux;
+- Feuillets paroissiaux — différé et hors navigation jusqu'à confirmation;
 - Friperie;
 - Merci à nos annonceurs;
 - Location de salle;
