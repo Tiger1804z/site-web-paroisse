@@ -1,15 +1,28 @@
 ---
+import MotionController from '@/components/motion/MotionController.astro';
 import HomeGallery from '@/components/sections/home/HomeGallery.astro';
 import HomeHero from '@/components/sections/home/HomeHero.astro';
-import ImportantNotice from '@/components/sections/home/ImportantNotice.astro';
 import MassSchedulePreview from '@/components/sections/home/MassSchedulePreview.astro';
 import ParishBulletin from '@/components/sections/home/ParishBulletin.astro';
 import ParishLifePreview from '@/components/sections/home/ParishLifePreview.astro';
 import PracticalServices from '@/components/sections/home/PracticalServices.astro';
-import UpcomingEvents from '@/components/sections/home/UpcomingEvents.astro';
+import UpcomingActivitiesSection from '@/components/sections/home/UpcomingActivitiesSection.astro';
 import VisitSection from '@/components/sections/home/VisitSection.astro';
 import WelcomeSection from '@/components/sections/home/WelcomeSection.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  getHomepageEventsSettings,
+  getHomepageParishEvents,
+} from '@/lib/content/getParishEvents';
+
+const buildTime = new Date();
+const homepageEventsSettings = await getHomepageEventsSettings();
+const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
+  ? await getHomepageParishEvents(
+      buildTime,
+      homepageEventsSettings.homepageUpcomingLimit,
+    )
+  : { secondary: [] };
 ---
 
 <BaseLayout
@@ -20,13 +33,21 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   headerVariant="transparent"
 >
   <HomeHero />
-  <ImportantNotice />
   <WelcomeSection />
   <MassSchedulePreview />
-  <UpcomingEvents />
+  {
+    homepageEventsSettings.showHomepageUpcomingSection &&
+      homepageEvents.featured && (
+        <UpcomingActivitiesSection
+          title={homepageEventsSettings.homepageUpcomingTitle}
+          events={homepageEvents}
+        />
+      )
+  }
   <ParishLifePreview />
   <ParishBulletin />
   <PracticalServices />
   <HomeGallery />
   <VisitSection />
+  <MotionController />
 </BaseLayout>

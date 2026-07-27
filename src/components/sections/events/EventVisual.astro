@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import AnimatedClothingRack from '@/components/illustrations/events/AnimatedClothingRack.astro';
+import AnimatedCommunityMeal from '@/components/illustrations/events/AnimatedCommunityMeal.astro';
+import AnimatedGenerationsChain from '@/components/illustrations/events/AnimatedGenerationsChain.astro';
+import type { EventVisual as EventVisualData } from '@/types/events';
+
+interface Props {
+  visual: EventVisualData;
+  featured?: boolean;
+}
+
+const { visual, featured = false } = Astro.props;
+const visualStyle =
+  visual.kind === 'image'
+    ? `--event-image-position: ${visual.position ?? 'center'}`
+    : undefined;
+---
+
+<div class="event-visual" style={visualStyle}>
+  {
+    visual.kind === 'image' ? (
+      <Image
+        class="event-visual__image"
+        src={visual.image}
+        alt={visual.imageAlt}
+        widths={[480, 720, 960, 1280]}
+        sizes={
+          featured
+            ? '(min-width: 64rem) 55vw, 100vw'
+            : '(min-width: 64rem) 48vw, 100vw'
+        }
+        loading="lazy"
+        decoding="async"
+      />
+    ) : visual.kind === 'clothing-rack' ? (
+      <AnimatedClothingRack accessibleLabel={visual.accessibleLabel} />
+    ) : visual.kind === 'community-meal' ? (
+      <AnimatedCommunityMeal accessibleLabel={visual.accessibleLabel} />
+    ) : (
+      <AnimatedGenerationsChain />
+    )
+  }
+</div>
+
+<style>
+  .event-visual {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+
+  .event-visual__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--event-image-position);
+    transition:
+      scale var(--motion-duration-reveal) var(--motion-ease-standard),
+      opacity var(--motion-duration-normal) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :global(.event-category:hover) .event-visual__image {
+      scale: var(--motion-scale-hover);
+      opacity: 0.94;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .event-visual__image {
+      transition: none;
+    }
+  }
+</style>

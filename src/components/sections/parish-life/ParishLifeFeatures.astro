@@ -1,0 +1,35 @@
+---
+import Container from '@/components/ui/Container.astro';
+import ParishLifeFeature from './ParishLifeFeature.astro';
+import type { ParishLifeFeature as ParishLifeFeatureData } from '@/types/parishLife';
+
+interface Props {
+  features: readonly ParishLifeFeatureData[];
+}
+
+const { features } = Astro.props;
+---
+
+<section class="parish-life-features" aria-label="Façons de vivre la paroisse">
+  <Container>
+    <div class="parish-life-features__list">
+      {
+        features.map((feature, index) => (
+          <ParishLifeFeature feature={feature} index={index} />
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .parish-life-features {
+    padding-block: var(--space-section);
+    background: var(--color-paper);
+  }
+
+  .parish-life-features__list {
+    display: grid;
+    gap: 4rem;
+  }
+</style>

@@ -205,8 +205,8 @@ ni le fichier local ni le futur fournisseur CMS.
 - `sections/about/AboutHero.astro` : hero photographique avec recadrages
   distincts et header transparent;
 - `AboutIntroduction.astro` : introduction centrée et accent manuscrit;
-- `ParishHistory.astro` : repères historiques sémantiques, diptyque et
-  consécration facultative;
+- `ImmersiveHistoryTimeline.astro` : neuf repères historiques sémantiques,
+  compositions alternées, illustrations artistiques et interlude documentaire;
 - `AboutPrinciples.astro` : trois panneaux sombres fidèles à la composition
   Figma, sans mission officielle inventée;
 - `ArchitectureStory.astro` : image asymétrique, récit et caractéristiques;
@@ -337,9 +337,118 @@ décrits dans `SITEMAP.md`. Ils ne sont pas encore implémentés. La disponibili
 d’une salle restera vérifiée manuellement; un futur formulaire exprimera une
 demande, jamais une réservation confirmée.
 
+## Architecture du mouvement
+
+Les pages Astro restent statiques : les composants de mouvement génèrent du
+HTML, du SVG et du CSS au build. Seules les pages pilotes chargent
+`MotionController.astro`, qui importe le petit module
+`src/scripts/motion.ts`.
+
+Le module centralise `IntersectionObserver` pour éviter un listener scroll et
+des initialisations concurrentes. Les composants restent visibles sans
+JavaScript. Les effets continus sont exécutés en CSS; seule la parallaxe locale
+du vitrail utilise un `requestAnimationFrame` ponctuel.
+
+`LivingStainedGlass.astro` appartient au code de présentation et non au modèle
+de contenu. Sanity pourra modifier le texte voisin, mais ne pilotera pas les
+fragments SVG ou leurs animations. L’architecture et les contraintes sont
+documentées dans [`MOTION_SYSTEM.md`](./MOTION_SYSTEM.md).
+
+La chronologie de Notre paroisse réutilise les tokens et les principes
+d’amélioration progressive, mais possède un initialiseur ciblé :
+`src/scripts/history-timeline.ts`. Trois observateurs lisent le même
+déclencheur de chapitre : la ligne progresse à 78 % du viewport, le repère et
+la période s’activent à 70 %, puis l’image et le texte se révèlent à 62 %. Cette
+responsabilité spécialisée ne se superpose pas aux révélations génériques et
+n’écoute jamais l’événement `scroll`.
+
+Le rendu reste visible sans JavaScript. Un marqueur inline pré-paint ne prépare
+l’état masqué que lorsque `IntersectionObserver` existe et que reduced motion
+n’est pas demandé. Un garde-fou retire ce marqueur si l’initialiseur ne prend
+pas le relais. Toutes les images restent dans leur article.
+
+Le contrat `HistoryTimelineContent` sépare les dates, textes, images, types de
+source et statuts éditoriaux du comportement visuel. Sanity pourra remplacer la
+source locale; Astro conservera la grille alternée, les transitions, la ligne
+et les breakpoints. Voir
+[`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
+
+## Architecture Événements — S1-T07 en cours
+
+La route `/evenements/` possède maintenant une première implémentation
+volontairement incomplète et `noindex`. Son contenu suit la frontière :
+
+```text
+src/data/events.ts
+  → src/lib/content/getEventsPageData.ts
+  → frontmatter Astro
+  → composants de sections typés
+  → HTML statique
+```
+
+`EventVisual` est une union discriminée qui accepte une image Astro ou l’une
+des œuvres SVG contrôlées par le code (`clothing-rack`, `community-meal` et
+`generations-chain`). Sanity pourra plus tard fournir un
+`visualType`; le normalisateur le transformera en cette union. Le CMS ne
+stockera ni SVG, ni CSS, ni animation.
+
+Les catégories du lot 1 ne sont pas des événements datés. Un second contrat
+`ParishEvent` décrit maintenant les occurrences datées. Une source unique
+alimente les événements à venir, les archives et « Prochaines activités » sur
+l’accueil :
+
+```text
+src/data/parish-events.ts
+  → src/lib/content/getParishEvents.ts
+  → statut temporel, visibilité et tri
+  → composants Astro typés de /evenements/ et /
+  → HTML statique
+```
+
+Le frontmatter calcule les listes pendant le build. Les composants ne
+connaissent ni l’heure courante, ni la source locale, ni Sanity. Le statut
+temporel n’est jamais enregistré : il est dérivé des dates ISO avec
+`America/Toronto`. Un futur webhook et un rebuild quotidien permettront au
+HTML déployé de suivre le passage du temps.
+
+La chaîne intergénérationnelle réutilise l’`IntersectionObserver` global et
+n’ajoute ni listener `scroll`, ni boucle d’animation JavaScript. Voir
+[`EVENTS_VISUALS_BATCH_1.md`](./EVENTS_VISUALS_BATCH_1.md) et
+[`EVENTS_ARCHITECTURE.md`](./EVENTS_ARCHITECTURE.md).
+
+## Architecture Vie paroissiale — S1-T08
+
+La page suit la même frontière de contenu que les migrations précédentes :
+
+```text
+src/data/parishLife.ts
+  → src/lib/content/getParishLifePageData.ts
+  → frontmatter de src/pages/vie-paroissiale.astro
+  → composants Astro typés
+  → HTML statique
+```
+
+`ParishLifeFeature` représente un groupe ou une porte d'entrée éditoriale
+durable. Il ne représente jamais une occurrence de calendrier. `ParishEvent`
+reste le seul contrat des événements datés et n'est ni importé ni recopié par
+la page Vie paroissiale.
+
+Le getter filtre les chapitres actifs et applique leur ordre pendant le build.
+Les composants reçoivent uniquement `ParishLifePageData`; ils ne connaissent
+ni le fichier local, ni GROQ, ni Sanity. Le futur branchement remplacera la
+source du getter par une requête et une normalisation sans modifier le
+frontmatter ou la composition visuelle.
+
+Les quatre groupes viennent de Figma et de l'inventaire interne, mais leur
+activité actuelle reste à confirmer. Le statut et les formulations prudentes
+sont conservés dans la source de contenu; les fréquences, responsables et
+coordonnées fictives de la maquette ne sont pas repris.
+
 ## Limites actuelles
 
-- les routes publiques autres que l’accueil, Horaires, Notre paroisse, Première visite et Sacrements et services restent des placeholders techniques;
+- la route Événements expose ses catégories et une première architecture
+  d’événements datés, mais reste `noindex` jusqu’à la migration Figma complète;
+  les autres routes publiques non migrées restent des placeholders techniques;
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;

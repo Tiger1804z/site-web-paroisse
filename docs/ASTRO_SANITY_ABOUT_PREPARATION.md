@@ -51,7 +51,7 @@ Le template situé sous le frontmatter compose ensuite les sections :
 ```astro
 <BaseLayout title={aboutPageData.seo.title}>
   <AboutHero hero={aboutPageData.hero} />
-  <ParishHistory history={aboutPageData.history} />
+  <ImmersiveHistoryTimeline history={aboutPageData.history} />
 </BaseLayout>
 ```
 
@@ -235,9 +235,12 @@ conserver le statut des droits.
 | `hero`                    | `object`                       | Contenu du hero               |
 | `hero.image`              | `imageWithAlt`                 | Asset, alt, crop et hotspot   |
 | `introduction.paragraphs` | `array` ou Portable Text       | Message éditorial             |
-| `history.entries`         | `array` d’objets               | Repères ordonnés              |
-| `TimelineEntry.status`    | `string` restreint             | Statut de validation          |
-| `history.consecration`    | objet facultatif               | Repère issu de la plaque      |
+| `history.entries`         | `array` d’objets               | Neuf repères ordonnés         |
+| `periodLabel`             | `string`                       | Période affichée              |
+| `imageKind`               | `string` restreint             | Illustration ou photographie  |
+| `embeddedText`            | `boolean`                      | Texte présent dans les pixels |
+| `sourceLabel`             | `string`                       | Provenance éditoriale         |
+| `editorialStatus`         | `string` restreint             | Statut de validation          |
 | `principles.items`        | `array` d’objets               | Trois panneaux éditoriaux     |
 | `architecture.features`   | `array` d’objets               | Caractéristiques              |
 | `architects.profiles`     | `array` d’objets ou références | Personnes et rôles            |
@@ -278,17 +281,69 @@ plus rapidement, mais il ajouterait un serveur, du cache, des modes de panne et
 des coûts d’exploitation. Rien dans cette page ne justifie actuellement cette
 complexité.
 
+## Chronologie historique immersive
+
+La chronologie est propre à la page Notre paroisse. Son modèle Sanity potentiel
+peut donc rester un tableau d’objets intégrés dans `aboutPage` :
+
+```text
+aboutPage
+  historyTimeline[]
+    periodLabel
+    title
+    summary
+    body
+    image
+    imageAlt
+    imageKind
+    embeddedText
+    sourceLabel
+    editorialStatus
+    disclosure
+    active
+    order
+```
+
+Sanity pourra ajouter, masquer et réordonner une étape, corriger une date,
+remplacer une image et faire évoluer son texte alternatif. Une normalisation
+filtrera les éléments inactifs et produira toujours le même
+`HistoryTimelineContent`.
+
+Le CMS ne contrôlera pas la grille alternée, la ligne de progression, les
+transitions, la palette, les breakpoints ou les règles reduced motion. Ces
+décisions restent dans `ImmersiveHistoryTimeline.astro` et
+`history-timeline.ts`.
+
+Les événements ne deviendraient des documents autonomes référencés que s’ils
+devaient être réutilisés ailleurs. Pour un récit propre à une seule page, les
+objets intégrés sont plus simples à éditer.
+
+## Limitation des illustrations avec texte intégré
+
+Les huit illustrations actuelles contiennent leurs titres et paragraphes dans
+les pixels. Sanity pourra remplacer l’asset et modifier les champs HTML
+associés, mais il ne pourra pas corriger le texte déjà peint dans l’image.
+
+Le contrat conserve donc :
+
+- le contenu sémantique séparé;
+- `embeddedText`, afin de signaler cette contrainte;
+- `imageKind`, pour distinguer une illustration d’un document;
+- la source et le statut éditorial.
+
+La recommandation avant production finale est de régénérer les huit
+illustrations sans texte. Elles pourront alors être substituées sans modifier
+la page ou le composant.
+
 ## Statuts historiques
 
-Le contrat conserve les statuts :
+Le contrat spécialisé conserve :
 
-- `probably-stable`;
-- `legacy-source`;
-- `photo-source`;
-- `to-confirm`;
-- `temporary`.
+- `accepted-source` : récit accepté comme source éditoriale principale;
+- `to-confirm` : formulation ou transcription à valider;
+- `volatile` : contenu actuel susceptible d’évoluer.
 
-Ils empêchent une future migration CMS de transformer silencieusement une note
-de travail en fait confirmé. Avant le lancement public, la paroisse devra
-valider les dates, les architectes, la consécration, les transformations, les
-droits photographiques et toute formulation patrimoniale.
+Ces statuts empêchent une future migration CMS de transformer silencieusement
+une note de travail en fait confirmé. Avant le lancement public, la paroisse
+devra encore valider les droits des images, la transcription de la plaque et
+toute formulation pouvant évoquer un statut patrimonial officiel.

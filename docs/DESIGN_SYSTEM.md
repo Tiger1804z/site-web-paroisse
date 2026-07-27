@@ -226,8 +226,60 @@ client ni composant React n’est ajouté.
 
 ## Limites actuelles
 
-- seules les pages Accueil et Horaires sont considérées comme migrées;
+- les pages Accueil, Horaires, Notre paroisse, Première visite et Sacrements et
+  services sont considérées comme migrées;
 - l’adresse, le téléphone, le courriel, les horaires, les dates et les réseaux sociaux restent temporaires;
 - les polices distantes pourront être auto-hébergées après vérification des licences;
 - les recadrages sont réalisés par CSS et variantes Astro; les originaux ne sont ni retouchés ni recompressés;
 - les composants globaux continueront d’être confrontés à chaque contexte réel pendant les tickets de pages.
+
+## Mouvement premium — S1-T06.5
+
+Les tokens `--motion-*` centralisent les durées, courbes, distances, échelles
+et opacités décoratives. Les interactions restent rapides; les ambiances
+photographiques utilisent des cycles de 22 secondes. Les médias pilotes sont
+limités à `scale(1.02)` au survol et `scale(1.035)` dans un hero.
+
+Le mouvement est une amélioration progressive : le contenu est visible par
+défaut et `prefers-reduced-motion` supprime les effets décoratifs. Le détail des
+composants, de l’observateur partagé et du vitrail vivant est documenté dans
+[`MOTION_SYSTEM.md`](./MOTION_SYSTEM.md).
+
+## Chronologie immersive — S1-T06.6
+
+La section historique de Notre paroisse utilise un fond charbon et bourgogne,
+une ligne de progression en or vieilli et un cadre portrait respectant le ratio
+`1122 / 1402`. Chaque chapitre possède son image. Le chapitre actif reçoit
+un repère et une bordure accentués. La ligne commence à progresser à 78 % du
+viewport, le repère et la période s’activent à 70 %, puis l’image et le texte
+passent de 0 à 1 à 62 %. Leur translation horizontale reste limitée à 14–24 px
+et l’échelle de l’image à `0.985 → 1`. L’image utilise un fondu lent de
+1400 ms; le texte suit 150 ms plus tard. Le chapitre reste ensuite
+définitivement visible.
+
+Les illustrations artistiques conservent leur traitement cinématographique
+original. La photographie documentaire de 2018 emploie un cadre ivoire plus
+sobre et une étiquette textuelle afin que la différence ne dépende pas
+uniquement de la couleur.
+
+Sur grand écran, les compositions alternent image à gauche puis à droite autour
+d’un axe central. Sur tablette, mobile, reduced motion ou sans JavaScript,
+chaque image reste dans le flux de son chapitre. Le texte HTML est toujours
+prioritaire sur le texte intégré aux pixels.
+
+La chronologie réutilise les tokens `--motion-*`; elle n’ajoute ni nouvelle
+palette ni bibliothèque. Les règles détaillées sont documentées dans
+[`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
+
+## Illustrations éditoriales — Événements
+
+Les illustrations SVG de la friperie, du repas partagé et de la chaîne
+intergénérationnelle emploient la palette existante, des formes éditoriales
+simples et une amplitude de mouvement faible. Elles évitent de présenter de
+faux locaux ou de fausses activités comme des photographies documentaires.
+
+Le mouvement reste décoratif, limité à `transform` et `opacity`, sans
+JavaScript frame par frame. `prefers-reduced-motion` immobilise l’œuvre. Le
+portant et le repas reçoivent leur libellé accessible par props; la chaîne est
+décorative parce que son sens est déjà exprimé par le HTML adjacent. Aucun SVG
+ne contient de programmation paroissiale ni de texte.

@@ -1,0 +1,256 @@
+---
+interface Props {
+  accessibleLabel: string;
+}
+
+const { accessibleLabel } = Astro.props;
+---
+
+<svg
+  class="community-meal"
+  viewBox="0 0 720 560"
+  role="img"
+  aria-label={accessibleLabel}
+>
+  <rect class="community-meal__background" width="720" height="560" rx="2"
+  ></rect>
+  <circle class="community-meal__light" cx="360" cy="246" r="184"></circle>
+  <path
+    class="community-meal__arch"
+    d="M128 432V202C128 106 228 48 360 48s232 58 232 154v230"></path>
+  <ellipse class="community-meal__table" cx="360" cy="420" rx="250" ry="72"
+  ></ellipse>
+  <ellipse class="community-meal__table-edge" cx="360" cy="426" rx="226" ry="52"
+  ></ellipse>
+
+  <g class="community-meal__place-setting">
+    <ellipse class="community-meal__plate" cx="360" cy="387" rx="94" ry="32"
+    ></ellipse>
+    <ellipse
+      class="community-meal__plate-line"
+      cx="360"
+      cy="387"
+      rx="70"
+      ry="21"></ellipse>
+    <path
+      class="community-meal__bread"
+      d="M318 384c8-35 30-51 52-47 20 3 34 24 35 48z"></path>
+    <path
+      class="community-meal__bread-line"
+      d="M343 345l-8 31M369 341l-7 37M391 351l-6 28"></path>
+  </g>
+
+  <g class="community-meal__cup">
+    <ellipse class="community-meal__saucer" cx="221" cy="410" rx="77" ry="18"
+    ></ellipse>
+    <path
+      class="community-meal__cup-body"
+      d="M169 329h91l-8 62c-2 15-14 24-29 24h-17c-16 0-28-10-30-25z"></path>
+    <path
+      class="community-meal__cup-handle"
+      d="M258 343c38-7 46 15 38 33-6 14-21 19-42 13"></path>
+    <ellipse class="community-meal__coffee" cx="214" cy="329" rx="45" ry="10"
+    ></ellipse>
+  </g>
+
+  <g class="community-meal__steam" aria-hidden="true">
+    <path
+      class="community-meal__steam-line community-meal__steam-line--one"
+      d="M190 300c-17-25 20-35 3-62"></path>
+    <path
+      class="community-meal__steam-line community-meal__steam-line--two"
+      d="M218 302c-16-28 18-39 2-70"></path>
+    <path
+      class="community-meal__steam-line community-meal__steam-line--three"
+      d="M245 300c-14-24 17-35 3-61"></path>
+  </g>
+
+  <g class="community-meal__shared-dish">
+    <ellipse class="community-meal__dish" cx="505" cy="394" rx="71" ry="27"
+    ></ellipse>
+    <circle
+      class="community-meal__fruit community-meal__fruit--burgundy"
+      cx="477"
+      cy="375"
+      r="20"></circle>
+    <circle
+      class="community-meal__fruit community-meal__fruit--gold"
+      cx="512"
+      cy="369"
+      r="22"></circle>
+    <circle
+      class="community-meal__fruit community-meal__fruit--ivory"
+      cx="537"
+      cy="386"
+      r="17"></circle>
+    <path
+      class="community-meal__leaf"
+      d="M510 348c13-19 28-18 34-15-8 14-19 19-34 15z"></path>
+  </g>
+
+  <g class="community-meal__spark" aria-hidden="true">
+    <circle cx="138" cy="256" r="3"></circle>
+    <circle cx="576" cy="278" r="4"></circle>
+    <path d="M131 282h15M568 250h17"></path>
+  </g>
+</svg>
+
+<style>
+  .community-meal {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .community-meal__background {
+    fill: var(--color-burgundy-dark);
+  }
+
+  .community-meal__light {
+    fill: color-mix(in srgb, var(--color-gold) 8%, transparent);
+    animation: meal-light 11s var(--motion-ease-cinematic) infinite alternate;
+  }
+
+  .community-meal__arch {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-gold) 34%, transparent);
+    stroke-width: 1.5;
+  }
+
+  .community-meal__table {
+    fill: color-mix(in srgb, var(--color-wood) 78%, var(--color-charcoal));
+  }
+
+  .community-meal__table-edge {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-gold) 42%, transparent);
+    stroke-width: 1.5;
+  }
+
+  .community-meal__plate,
+  .community-meal__saucer,
+  .community-meal__dish {
+    fill: color-mix(in srgb, var(--color-ivory) 88%, var(--color-paper));
+    stroke: color-mix(in srgb, var(--color-gold) 55%, transparent);
+    stroke-width: 2;
+  }
+
+  .community-meal__plate-line {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-gold) 32%, transparent);
+    stroke-width: 1.5;
+  }
+
+  .community-meal__bread {
+    fill: color-mix(in srgb, var(--color-gold) 78%, var(--color-brick));
+  }
+
+  .community-meal__bread-line,
+  .community-meal__leaf {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-charcoal) 55%, transparent);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .community-meal__cup-body {
+    fill: var(--color-ivory);
+    stroke: color-mix(in srgb, var(--color-gold) 55%, transparent);
+    stroke-width: 2;
+  }
+
+  .community-meal__cup-handle {
+    fill: none;
+    stroke: var(--color-ivory);
+    stroke-width: 15;
+    stroke-linecap: round;
+  }
+
+  .community-meal__coffee {
+    fill: color-mix(in srgb, var(--color-charcoal) 88%, var(--color-wood));
+  }
+
+  .community-meal__steam-line {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-ivory) 70%, transparent);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: steam-rise 6.5s var(--motion-ease-cinematic) infinite;
+  }
+
+  .community-meal__steam-line--two {
+    animation-delay: -2.2s;
+  }
+
+  .community-meal__steam-line--three {
+    animation-delay: -4.4s;
+  }
+
+  .community-meal__fruit--burgundy {
+    fill: var(--color-burgundy);
+  }
+
+  .community-meal__fruit--gold {
+    fill: var(--color-gold);
+  }
+
+  .community-meal__fruit--ivory {
+    fill: var(--color-ivory);
+  }
+
+  .community-meal__leaf {
+    fill: color-mix(in srgb, var(--color-gold) 58%, var(--color-charcoal));
+    stroke: none;
+  }
+
+  .community-meal__spark {
+    fill: var(--color-gold);
+    stroke: color-mix(in srgb, var(--color-gold) 48%, transparent);
+    stroke-width: 1;
+    opacity: 0.55;
+  }
+
+  @keyframes steam-rise {
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: translate3d(0, 0.3rem, 0) scaleY(0.96);
+    }
+
+    45% {
+      opacity: 0.75;
+    }
+
+    70% {
+      opacity: 0.35;
+      transform: translate3d(0.1rem, -0.45rem, 0) scaleY(1.03);
+    }
+  }
+
+  @keyframes meal-light {
+    from {
+      opacity: 0.55;
+      transform: translate3d(-0.25rem, 0.15rem, 0) scale(0.98);
+    }
+
+    to {
+      opacity: 0.9;
+      transform: translate3d(0.3rem, -0.2rem, 0) scale(1.02);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .community-meal__light,
+    .community-meal__steam-line {
+      animation: none;
+      transform: none;
+    }
+
+    .community-meal__steam-line {
+      opacity: 0.6;
+    }
+  }
+</style>

@@ -35,31 +35,39 @@ export interface AboutIntroduction {
   readonly status: AboutContentStatus;
 }
 
-export interface TimelineEntry {
+export type HistoryImageKind =
+  'ai-illustration' | 'documentary-photo' | 'current-photo';
+
+export type HistoryEditorialStatus =
+  'accepted-source' | 'to-confirm' | 'volatile';
+
+export interface HistoryTimelineEntry {
   readonly id: string;
-  readonly dateLabel: string;
+  readonly stepNumber: number;
+  readonly periodLabel: string;
   readonly title: string;
-  readonly description: string;
-  readonly status: AboutContentStatus;
+  readonly summary: string;
+  readonly body?: readonly string[];
+  readonly image: ImageMetadata;
+  readonly imageAlt: string;
+  readonly imageKind: HistoryImageKind;
+  readonly embeddedText: boolean;
+  readonly sourceLabel: string;
+  readonly editorialStatus: HistoryEditorialStatus;
+  readonly disclosure?: string;
 }
 
-export interface ConsecrationContent {
-  readonly eyebrow: string;
-  readonly title: string;
-  readonly dateLabel: string;
-  readonly description: string;
-  readonly sourceNote: string;
-  readonly status: AboutContentStatus;
-  readonly image: AboutImage;
-}
-
-export interface AboutHistory {
+export interface HistoryTimelineContent {
   readonly eyebrow: string;
   readonly title: string;
   readonly introduction: string;
-  readonly entries: readonly TimelineEntry[];
-  readonly supportingImage: AboutImage;
-  readonly consecration?: ConsecrationContent;
+  readonly illustrationDisclosure: string;
+  readonly entries: readonly HistoryTimelineEntry[];
+  readonly epilogue?: {
+    readonly eyebrow?: string;
+    readonly title: string;
+    readonly paragraphs: readonly string[];
+  };
 }
 
 export type AboutPrincipleSymbol = 'book' | 'people' | 'heart';
@@ -128,7 +136,7 @@ export interface AboutPageData {
   };
   readonly hero: AboutHero;
   readonly introduction: AboutIntroduction;
-  readonly history: AboutHistory;
+  readonly history: HistoryTimelineContent;
   readonly principles: AboutPrinciples;
   readonly architecture: AboutArchitecture;
   readonly architects?: AboutArchitects;

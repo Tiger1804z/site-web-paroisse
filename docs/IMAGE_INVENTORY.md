@@ -37,6 +37,82 @@ Import effectué le 25 juillet 2026 depuis le dossier local `incoming-images/`. 
 | `outside4.webp` | `eglise-exterieur-allee-01.webp`          | WebP   | 763 × 1020 px  | 0,16 Mio (168 364 octets) | Portrait    | `e84ae4df14481f03e5640128d91ee1da83df95e57b710a591451ca04ab522c5c` | Vue extérieure avec allée, garde-corps et structures portant des cloches.                   | Oui, personnes éloignées au fond de l’allée        | Autorisation de publication à confirmer; personnes visibles — consentement à confirmer. | Contact, itinéraire, première visite ou galerie.         | Ne pas publier avant confirmation des droits et du consentement des personnes visibles. |
 | `outside5.webp` | `eglise-exterieur-jardin-01.webp`         | WebP   | 763 × 1020 px  | 0,19 Mio (195 312 octets) | Portrait    | `019c28f83e8715389c6835118ea74c759914c7aa694dc25f75f50647c806f641` | Vue extérieure avec pelouse, végétation, bâtiment et structures portant des cloches.        | Non                                                | Autorisation de publication à confirmer.                                                | Notre paroisse, contact, galerie ou contenu éditorial.   | Date de prise de vue inconnue.                                                          |
 
+## Illustrations de la chronologie — S1-T06.6
+
+Import effectué le 26 juillet 2026 depuis les fichiers fournis localement par
+le client. Les copies de production sont binaires et leurs empreintes
+correspondent aux sources. Malgré l’attente initiale RGBA, les huit fichiers
+sont des PNG sRGB à trois canaux, sans transparence.
+
+Tous contiennent du texte intégré dans les pixels et des éléments générés. Ils
+ne sont ni des photographies d’archives, ni des reproductions officielles, ni
+des preuves historiques.
+
+| Fichier de production                   | Chapitre        | Format  | Dimensions  |            Poids | SHA-256                                                            | Type et précaution                                                                   |
+| --------------------------------------- | --------------- | ------- | ----------- | ---------------: | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `01-avant-1959.png`                     | Avant 1959      | PNG RGB | 1122 × 1402 | 2 814 420 octets | `75d61c03f343985e806a80af369a62927a566bc18fb88b3b132ae4991d7c32f8` | Illustration artistique d’un quartier; ni photographie aérienne ni plan authentique. |
+| `02-fondation-1959.png`                 | 23 février 1959 | PNG RGB | 1122 × 1402 | 2 680 762 octets | `452e7b74f5f7530d244a4a8eb826c3b644d386ea643b30b6f0002c091f084219` | Portrait et décret générés; aucun des deux n’est documentaire.                       |
+| `03-achat-terrain-1960.png`             | 1960            | PNG RGB | 1122 × 1402 | 2 932 608 octets | `59ea0660c635364a55f78a78fd54e39d7915fe4dd001111f3cfb8444e01e32e8` | Plan de terrain stylisé; ne constitue pas un plan cadastral.                         |
+| `04-paroisse-sans-eglise-1959-1963.png` | 1959–1963       | PNG RGB | 1122 × 1402 | 2 189 470 octets | `e77b96b934b65fb4fc1a8ac1df2c1faa438650301b0479268f6216bb126d2206` | Personnes et lieux reconstitués artistiquement.                                      |
+| `05-construction-eglise-1963-1964.png`  | 1963–1964       | PNG RGB | 1122 × 1402 | 2 779 410 octets | `1303bbd7415f0b35e9e974c4381c2f05baa9aadd2304d922147ddc72c08ad13b` | Chantier et portraits d’architectes non documentaires.                               |
+| `06-architecture-1964.png`              | 1964            | PNG RGB | 1122 × 1402 | 2 506 417 octets | `3384ed8abaa7a244dd2685ed83b5a28573f00dd9807dccb2d5264237b861b4a3` | Interprétation artistique de l’intérieur et de ses matériaux.                        |
+| `07-evolution-vers-1990.png`            | Vers 1990       | PNG RGB | 1122 × 1402 | 2 759 441 octets | `6a63ef56d9340db262b2c6cb178a35a863ae354bf020556116c336f338f014a8` | Collage généré imitant des photographies; non documentaire.                          |
+| `08-patrimoine-vivant-aujourdhui.png`   | Aujourd’hui     | PNG RGB | 1122 × 1402 | 2 669 299 octets | `1f9c751ecab77828fd3afce27e941c95945f31082fc25c27d08a08c1f28a308c` | Rassemblement généré; ne documente aucun événement ou programme actuel.              |
+
+Poids total des huit sources : 21 331 827 octets, soit 20,34 Mio. Astro produit
+des variantes WebP adaptées au build; aucune seconde copie source optimisée
+n’est conservée dans le dépôt.
+
+## Visuels Événements — S1-T07, lot 1
+
+Import effectué le 26 juillet 2026 depuis les fichiers fournis localement par
+le client. Les copies de production conservent les empreintes des sources.
+Elles ne documentent aucune date ou programmation actuelle.
+
+| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                              |
+| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ----------------------------------------------------------------------- |
+| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Visuel fourni; ne confirme ni lieu, ni artiste, ni événement réel.      |
+| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Visuel fourni; ne confirme ni célébration, ni date, ni décor permanent. |
+
+Astro génère les variantes responsives au build. Les PNG sources ne sont pas
+dupliqués en copies WebP dans le dépôt.
+
+## Photographies de pèlerinage — S1-T07
+
+Inspection effectuée le 26 juillet 2026. Les cinq sources sont des JPEG sRGB
+RGB sans transparence. Aucune interface, inscription parasite ou marque en
+filigrane n’est visible. Chaque copie de production conserve exactement le
+hash de sa source.
+
+| Fichier de production                | Source                                                                 |              Dimensions |            Poids | SHA-256                                                            | Contenu observé                                                                            | Crédit et droits                                                                                                     |
+| ------------------------------------ | ---------------------------------------------------------------------- | ----------------------: | ---------------: | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `notre-dame-du-cap-2026-cover.jpg`   | `vue-du-ciel-sanctuaire-notre-dame-du-cap-1.jpg`                       | 1800 × 1120 px, paysage |   279 075 octets | `c5c5a9bb6673b5c3d3067465621185ab8d5cd3f2354abe0769b8f66629ffbcbe` | Vue aérienne du sanctuaire Notre-Dame-du-Cap et du fleuve.                                 | Aucun auteur ou licence dans les métadonnées; publication à confirmer.                                               |
+| `notre-dame-du-cap-2026-02.jpg`      | `Madeline_Du_Cap.jpg`                                                  | 3533 × 2610 px, paysage | 2 399 773 octets | `af56c77a029fb858407ff81d07ae631927a873c79b5bad3ab8e6a0e9d129e40d` | Vue frontale de la façade du sanctuaire Notre-Dame-du-Cap.                                 | Métadonnées : Nikon D700, prise de vue du 2 juin 2011; aucun auteur ou licence exploitable, publication à confirmer. |
+| `sainte-anne-de-beaupre-2026-01.jpg` | `photo0jpg.jpg`                                                        |  1200 × 900 px, paysage |   250 170 octets | `8bbfbac94d59c9bd295f58ba5de1652a4ecf14b2a275f7593552f41c212e5e3c` | Vue extérieure de la basilique Sainte-Anne-de-Beaupré et de sa grande place.               | Aucun auteur ou licence dans les métadonnées; publication à confirmer.                                               |
+| `sainte-anne-de-beaupre-2026-02.jpg` | `Basilique_credit_croisieresAML-18.jpg`                                |  1020 × 680 px, paysage |   159 401 octets | `c6c144c3af52e5abd78c74ad252977bc0450a0aaf71a0f16835d57640a493a8b` | Façade de la basilique Sainte-Anne-de-Beaupré derrière un jardin et une fontaine.          | Crédit public « Croisières AML ». Un crédit ne constitue pas une licence; autorisation ou licence à confirmer.       |
+| `sainte-anne-de-beaupre-2026-03.jpg` | `Intérieur_de_la_Basilique_Sainte-Anne-de-Beaupré,_Quebéc,_Canada.jpg` | 960 × 1350 px, portrait |   482 694 octets | `bfe933787d06cf9bac9b882126d7f996c3eb2f2f0e8b868665bc52ebcfaa7da`  | Vue de la nef, des arches, de la voûte décorée et du sanctuaire de Sainte-Anne-de-Beaupré. | Métadonnées : auteur `Wilfredor`, mention « Creative Commons CC0 1.0 Universal Public Domain ».                      |
+
+`astro:assets` génère au build les largeurs et WebP nécessaires sans modifier
+ces JPEG dans le dépôt. Les vues additionnelles sont chargées paresseusement
+dans une mosaïque; aucune n’est préchargée.
+
+## Réutilisation Vie paroissiale — S1-T08
+
+Aucun nouvel original n'est importé. La page réutilise cinq JPEG déjà
+inventoriés et dont les hashes correspondent aux sources Figma :
+
+| Fichier                                | Usage S1-T08                | Chargement            |
+| -------------------------------------- | --------------------------- | --------------------- |
+| `autel-decor-rouge-01.jpg`             | Hero                        | eager, haute priorité |
+| `autel-eclairage-rose-01.jpg`          | Groupe Jeunes               | lazy                  |
+| `interieur-eglise-decor-violet-01.jpg` | Groupe Chorale              | lazy                  |
+| `autel-fleurs-blanches-01.jpg`         | Dames et Fils de Notre-Dame | lazy                  |
+| `autel-decor-violet-01.jpg`            | Marguilliers                | lazy                  |
+
+Les photographies montrent l'architecture et le décor intérieur; elles ne
+documentent pas les groupes eux-mêmes. Les textes alternatifs restent donc
+factuels et ne prétendent pas montrer une activité ou ses membres.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.

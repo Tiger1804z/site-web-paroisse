@@ -1,0 +1,31 @@
+---
+import AmbientLight from '@/components/motion/AmbientLight.astro';
+import AmbientParticles from '@/components/motion/AmbientParticles.astro';
+
+interface Props {
+  class?: string;
+  light?: boolean;
+  particles?: number;
+}
+
+const { class: className, light = true, particles = 0 } = Astro.props;
+---
+
+<div
+  class:list={['ambient-hero', className]}
+  data-motion-ambient
+  aria-hidden="true"
+>
+  {light && <AmbientLight />}
+  {particles > 0 && <AmbientParticles count={particles} />}
+</div>
+
+<style>
+  .ambient-hero {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    contain: paint;
+  }
+</style>

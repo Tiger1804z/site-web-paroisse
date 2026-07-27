@@ -1,11 +1,12 @@
 ---
+import MotionController from '@/components/motion/MotionController.astro';
 import AboutClosing from '@/components/sections/about/AboutClosing.astro';
 import AboutHero from '@/components/sections/about/AboutHero.astro';
 import AboutIntroduction from '@/components/sections/about/AboutIntroduction.astro';
 import AboutPrinciples from '@/components/sections/about/AboutPrinciples.astro';
 import ArchitectsSection from '@/components/sections/about/ArchitectsSection.astro';
 import ArchitectureStory from '@/components/sections/about/ArchitectureStory.astro';
-import ParishHistory from '@/components/sections/about/ParishHistory.astro';
+import ImmersiveHistoryTimeline from '@/components/sections/about/ImmersiveHistoryTimeline.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getAboutPageData } from '@/lib/content/getAboutPageData';
 
@@ -20,7 +21,7 @@ const aboutPageData = await getAboutPageData();
 >
   <AboutHero hero={aboutPageData.hero} />
   <AboutIntroduction introduction={aboutPageData.introduction} />
-  <ParishHistory history={aboutPageData.history} />
+  <ImmersiveHistoryTimeline history={aboutPageData.history} />
   <AboutPrinciples principles={aboutPageData.principles} />
   <ArchitectureStory architecture={aboutPageData.architecture} />
   {
@@ -29,4 +30,5 @@ const aboutPageData = await getAboutPageData();
     )
   }
   <AboutClosing closing={aboutPageData.closing} />
+  <MotionController />
 </BaseLayout>

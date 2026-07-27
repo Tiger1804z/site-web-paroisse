@@ -1,0 +1,70 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { ParishLifePageData } from '@/types/parishLife';
+
+interface Props {
+  participation: ParishLifePageData['participation'];
+}
+
+const { participation } = Astro.props;
+---
+
+<section
+  class="parish-life-participation"
+  aria-labelledby="parish-life-participation-title"
+>
+  <Container size="narrow">
+    <div class="parish-life-participation__content" data-motion-reveal>
+      {
+        participation.accent && (
+          <p class="parish-life-participation__accent type-script-accent">
+            {participation.accent}
+          </p>
+        )
+      }
+      <h2 id="parish-life-participation-title">{participation.title}</h2>
+      <p>{participation.description}</p>
+      <Button href={participation.cta.href} variant="light">
+        {participation.cta.label}
+      </Button>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .parish-life-participation {
+    padding-block: 5rem;
+    background: var(--color-burgundy);
+    color: var(--color-ivory);
+  }
+
+  .parish-life-participation__content {
+    text-align: center;
+  }
+
+  .parish-life-participation__accent {
+    margin: 0 0 0.75rem;
+    color: var(--color-gold);
+  }
+
+  .parish-life-participation h2 {
+    margin: 0;
+    color: var(--color-ivory);
+    font-size: clamp(2.25rem, calc(1.904rem + 1.44vw), 3rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .parish-life-participation p:not(.parish-life-participation__accent) {
+    max-width: 32rem;
+    margin: 1.5rem auto 0;
+    color: color-mix(in srgb, var(--color-ivory) 64%, transparent);
+    font-size: clamp(1rem, calc(0.954rem + 0.19vw), 1.125rem);
+    line-height: 1.75;
+  }
+
+  .parish-life-participation :global(.ui-button) {
+    margin-top: 2.5rem;
+  }
+</style>
