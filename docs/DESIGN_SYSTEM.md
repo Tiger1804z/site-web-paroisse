@@ -72,7 +72,7 @@ Les tailles fluides utilisent `clamp()` uniquement entre les extrêmes observés
 | Gouttière de grille         | 12 px mobile, 24 px dès 768 px.                                   |
 | Espacement de section       | 96 px mobile, 140 px dès 768 px.                                  |
 | Header                      | 64 px mobile, 80 px dès 768 px.                                   |
-| Navigation desktop complète | dès 1312 px; menu mobile en dessous pour éviter tout débordement. |
+| Navigation desktop complète | dès 1280 px; menu mobile en dessous pour éviter tout débordement. |
 
 Les composants `Container` et les classes `.site-container`, `.section-block` et `.layout-grid` portent ces règles. Les espacements singuliers du prototype restent locaux lorsqu’ils ne forment pas une échelle réutilisable.
 
@@ -116,16 +116,22 @@ les CTA en blocs massifs.
 
 ## Header et navigation
 
-Le header est `fixed`, conformément au code Figma, même si son état persistant est appelé « sticky » dans le ticket. Sur un hero, il commence transparent puis devient ivoire à plus de 60 px de défilement avec bordure, léger flou et ombre. Sur une page claire, cet état est actif dès le chargement.
+Le header est `fixed`, conformément au code Figma, même si son état persistant
+est appelé « sticky » dans le ticket. Il reste translucide en tout temps. Au
+sommet, un voile discret laisse lire le hero; après 60 px, une teinte
+charbon-bourgogne et un blur plus fort renforcent la lisibilité sans produire
+de barre blanche opaque.
 
 La navigation desktop conserve la typographie Manrope, portée à 15 px, les
 espacements du prototype, le filet doré de la route active, le menu
-« Informations » et le CTA « Voir les horaires ». Toutes les destinations sont
-de vraies routes Astro. Sur un hero transparent, un voile gradué, un flou de
-5 px et une ombre de texte très discrète stabilisent la lecture sans créer une
-barre opaque.
+« Informations » et « Première visite ». Le CTA redondant « Voir les horaires »
+est supprimé du header; Horaires reste un lien principal. Toutes les
+destinations sont de vraies routes Astro. Sur un hero transparent, un voile
+gradué, un flou discret et une ombre de texte stabilisent la lecture.
 
-Sous 1312 px, le menu mobile remplace la navigation complète. Il reprend le panneau bourgogne, les liens Cormorant de 24 px, les séparateurs, les coordonnées temporaires et l’action rapide Horaires.
+Sous 1280 px, le menu mobile remplace la navigation complète. Il reprend le
+panneau bourgogne, les liens Cormorant de 24 px, les séparateurs et les
+coordonnées temporaires. Horaires demeure dans la liste de navigation.
 
 ## Menu mobile accessible
 
@@ -135,7 +141,8 @@ Le JavaScript natif gère seulement l’état indispensable :
 - focus initial dans le panneau et retour au déclencheur;
 - fermeture avec Échap ou au clic sur un lien;
 - piège de focus avec Tab et Maj+Tab;
-- header déclaré modal pendant l’ouverture; logo, Horaires, Fermer et liens inclus dans la boucle de focus;
+- header déclaré modal pendant l’ouverture; logo, Fermer et liens inclus dans
+  la boucle de focus;
 - contenu principal, footer et actions rapides rendus `inert` pendant l’ouverture;
 - verrouillage du défilement de l’arrière-plan;
 - défilement interne si la hauteur d’écran est réduite.
@@ -146,7 +153,8 @@ React n’apporte aucun bénéfice à cette interaction isolée et n’est donc 
 
 Le footer conserve la composition éditoriale sombre observée : identité plus large, phrase d’accueil manuscrite, coordonnées, secrétariat, navigation, informations pratiques et bande légale. Les contenus inconnus demeurent des placeholders explicites. Les liens téléphoniques, courriel et sociaux ne sont pas inventés.
 
-Sous 1312 px, une barre d’actions rapides de 48 px minimum reste disponible au bas de l’écran. Elle tient compte de la zone sûre des appareils mobiles.
+Sous 1280 px, une barre d’actions rapides de 48 px minimum reste disponible au
+bas de l’écran. Elle tient compte de la zone sûre des appareils mobiles.
 
 ## Corrections d’accessibilité qui diffèrent légèrement de Figma
 
@@ -157,7 +165,8 @@ Sous 1312 px, une barre d’actions rapides de 48 px minimum reste disponible au
 5. Un lien d’évitement, `aria-current` et des noms explicites de navigation sont ajoutés.
 6. Le menu mobile possède une gestion complète du clavier et du focus.
 7. Le nom temporaire de la paroisse peut revenir à la ligne sur petit écran au lieu d’être tronqué.
-8. Le header a une largeur dédiée afin que l’identité, les sept entrées et les deux CTA ne débordent pas à 1280 px.
+8. Le header a une largeur dédiée afin que l’identité et les huit entrées ne
+   débordent pas à 1280 px.
 9. Un voile charbon de 10 % et un texte ivoire plein assurent le contraste AA de la navigation sur les zones claires du hero.
 
 Ces corrections ne modifient ni la composition éditoriale, ni la hiérarchie, ni les proportions principales.

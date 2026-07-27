@@ -10,7 +10,10 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 6. ✅ **Horaires — complété dans S1-T03** : composition Figma, données locales typées, avis et périodes en placeholders, FAQ native et couche d’accès prête pour une future source Sanity.
 7. ✅ **Notre paroisse — complété dans S1-T04** : composition narrative Figma, photographies locales, source typée `AboutPageData` et couche d’accès prête pour une future source Sanity. Les faits historiques restent à confirmer éditorialement.
 8. ✅ **Première visite — complété dans S1-T05** : parcours Figma, informations pratiques en placeholders, FAQ native, source typée `FirstVisitPageData` et séparation préparée entre `firstVisitPage` et `siteSettings`.
-9. ✅ **Sacrements et services — complété dans S1-T06** : onglets Figma, photographies locales, source typée `SacramentsPageData`, contenu opérationnel prudent et préparation documentée des futurs documents, slugs et routes statiques de détail. Aucune page de détail n’est encore créée.
+9. ✅ **Nos services — élargi dans S1-T11** : route canonique
+   `/nos-services/`, source typée `ServicesPageData`, sacrements, démarches,
+   intentions, données 2026 révisables, paiements et location de salle. Les
+   anciennes routes Sacrements et Location demeurent des alias `noindex`.
 10. **Catéchèse** — créer la page durable et prévoir les campagnes d’inscription comme contenus volatils.
 11. ✅ **Vie paroissiale — complété dans S1-T08** : composition alternée Figma, quatre groupes explicitement à confirmer, source typée `ParishLifePageData`, vraies routes et préparation `parishLifePage`.
 12. **Soutien à la communauté** — confirmer l’étendue des services et décider entre page autonome ou fusion avec Friperie.
@@ -19,7 +22,9 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 15. ⏸️ **Feuillets — bloqué / différé dans S1-T10** : aucun PDF réel; route placeholder `noindex` conservée, navigation publique masquée et décision à revoir avec la secrétaire le 10 août 2026 ou après son retour.
 16. **Merci à nos annonceurs** — créer la page, le CTA « Devenir annonceur » et la future collection, sans reprendre de logo non autorisé.
 17. ✅ **Friperie — migrée dans S1-T10, encore `noindex`** : composition Figma, hero à lentille demandé, données typées, visuels temporaires inventoriés, placeholders photo, portant réutilisé et champs opérationnels non confirmés masqués.
-18. **Location de salle** — migrer l’information et le processus de demande sans réservation instantanée.
+18. ✅ **Location de salle — intégrée dans S1-T11** : section prudente de Nos
+    services, CTA téléphonique, aucune capacité ou disponibilité inventée et
+    aucune réservation instantanée.
 19. **Galerie** — migrer la grille et définir une lightbox accessible.
 20. **Contact** — migrer coordonnées, carte et structure de formulaire.
 21. **Responsive** — valider toutes les routes et tous les recadrages.

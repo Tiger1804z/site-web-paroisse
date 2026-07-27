@@ -8,9 +8,10 @@ aucune interaction. Les effets sont plus lents que les interactions de
 l’utilisateur : un bouton répond en quelques centaines de millisecondes,
 tandis qu’une lumière de hero évolue sur plusieurs dizaines de secondes.
 
-S1-T06.5 applique ce système uniquement à l’Accueil, Notre paroisse et
-Sacrements et services. Horaires, Première visite, les FAQ et les futurs
-formulaires restent volontairement sobres.
+Le système partagé est utilisé uniquement là où un mouvement soutient une
+intention éditoriale : Accueil, Notre paroisse et Nos services. Horaires,
+Première visite, les FAQ et les futurs formulaires restent volontairement
+sobres.
 
 ## Tokens
 
@@ -87,6 +88,7 @@ Avec `prefers-reduced-motion: reduce` :
 - la lumière et les particules ambiantes disparaissent;
 - le hero de l’accueil reste sur sa première image;
 - le vitrail reste complet et statique, sans poussière, grain ni parallaxe;
+- la liste « Vivre la paroisse » est immédiatement visible, sans translation;
 - les changements d’état fonctionnels, le focus et la navigation restent
   disponibles.
 
@@ -112,6 +114,50 @@ Il n’existe :
 `will-change` est limité à l’état court précédant un reveal. Le contrôleur
 cesse d’observer chaque cible révélée. Les héros n’animent qu’une photographie
 utile; sur l’accueil, seule la diapositive active reçoit le zoom principal.
+
+## Révélation de « Vivre la paroisse »
+
+La section photographique réutilise `MotionController.astro` et le même
+`IntersectionObserver`. Le titre apparaît d’abord, puis les quatre lignes de
+groupes de haut en bas. Chaque ligne utilise une transition de 480 ms, un
+décalage vertical de 14 px et un stagger de 80 ms. Une fois révélée, elle reste
+visible.
+
+L’image de fond, l’overlay et les séparateurs ne sont pas animés. Il n’existe
+ni lentille, ni carrousel, ni parallaxe dans cette section. Le HTML est visible
+par défaut; JavaScript ne fait que choisir le moment de la transition.
+
+## Header translucide
+
+Le passage de l’état supérieur à l’état défilé anime seulement les couleurs,
+la bordure et l’ombre. Le header conserve une surface translucide aux deux
+états; le blur augmente après défilement sans animer la géométrie. Un fallback
+CSS plus opaque garantit la lisibilité si `backdrop-filter` n’est pas pris en
+charge. `prefers-reduced-motion` supprime la transition, sans modifier le
+contraste ni le fonctionnement du menu.
+
+## Hero de Nos services
+
+Le hero réutilise le contrôleur de lentille organique de l’accueil. La
+photographie principale change toutes les 7,6 secondes avec un fondu de 1,25
+seconde et un zoom maximal de 1,022. La lentille révèle toujours l’image
+suivante; elle ne crée ni trail ni copie persistante. Le `requestAnimationFrame`
+n’existe que pendant un déplacement ou la fermeture de la lentille, puis
+s’arrête.
+
+Le contrôleur prépare les images de révélation après le premier rendu, se
+désactive sur pointer coarse, nettoie ses observateurs à la sortie de page et
+réagit à l’onglet masqué. Avec reduced motion, la première photographie reste
+statique et la lentille, les indicateurs et le zoom sont absents.
+
+## Galerie centrée de l’accueil
+
+La galerie n’utilise aucun autoplay. Les flèches, les touches gauche/droite ou
+un geste tactile modifient un index et laissent CSS interpoler `transform` et
+`opacity` sur 520 ms. Une image domine au centre, deux voisines sont
+intermédiaires et deux images plus petites ferment la composition. Sans
+JavaScript, la liste reste une bande horizontale défilable; avec reduced
+motion, le changement est instantané.
 
 ## Le vitrail vivant de la communauté
 

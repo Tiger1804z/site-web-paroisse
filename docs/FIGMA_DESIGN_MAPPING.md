@@ -49,9 +49,9 @@ Les chemins de ce document sont relatifs à `reference/figma-make-export/`.
 | Navigation desktop       | `src/App.tsx:109-160`                             | 14 px medium; gap 4 px; padding 12 × 8 px; rayon 2 px                   | navigation principale Astro                  | Vrais liens et `aria-current`, sans faux routage React.                                      |
 | Indicateur actif         | `src/App.tsx:126-128`                             | filet doré 1 px, retrait horizontal 12 px                               | pseudo-élément du lien actif                 | Ne dépend pas uniquement de la couleur.                                                      |
 | Dropdown Informations    | `src/App.tsx:131-159`                             | 208 px; fond ivoire; bordure or 20 %; shadow-lg; items 16 × 12 px       | disclosure natif dans `Header.astro`         | Escape, clavier et clic extérieur ajoutés.                                                   |
-| CTA header               | `src/App.tsx:163-177`                             | texte Première visite + bouton bourgogne 20 × 10 px                     | `TextLink.astro`, `Button.astro`             | Zone tactile portée à 48 px sans changer l’encombrement visuel du libellé.                   |
-| Breakpoint de navigation | `src/App.tsx:109`, brief §8                       | `lg` = 1024 px dans l’export                                            | media query `82rem` = 1312 px                | Divergence responsive nécessaire : le contenu reste trop serré jusqu’à 1280 px.              |
-| Contrôles mobiles        | `src/App.tsx:180-201`                             | CTA Horaires 12 px; hamburger 20 × 16 px; animation 300 ms              | `Button.astro`, `IconButton.astro`           | Cibles portées à 48 × 48 px.                                                                 |
+| CTA header               | `src/App.tsx:163-177`                             | texte Première visite + bouton Horaires                                 | lien Première visite uniquement              | S1-T11 supprime le bouton Horaires redondant; Horaires reste dans la navigation.             |
+| Breakpoint de navigation | `src/App.tsx:109`, brief §8                       | `lg` = 1024 px dans l’export                                            | media query `80rem` = 1280 px                | La suppression du CTA libère l’espace nécessaire à 1280 px.                                  |
+| Contrôles mobiles        | `src/App.tsx:180-201`                             | CTA Horaires 12 px; hamburger 20 × 16 px; animation 300 ms              | logo et `IconButton.astro`                   | Le CTA est retiré du header mobile; Horaires demeure dans le panneau.                        |
 | Panneau mobile           | `src/App.tsx:211-217`                             | plein écran bourgogne; translation depuis la droite; 400 ms ease-in-out | panneau natif du `Header.astro`              | Aspect conservé; ajout de `inert`, scroll interne et gestion du focus.                       |
 | Liens mobiles            | `src/App.tsx:218-235`                             | Cormorant 24 px; padding vertical 16 px; séparateur ivoire 10 %         | navigation mobile                            | Douze liens dans le même ordre que l’export.                                                 |
 | Coordonnées mobiles      | `src/App.tsx:237-256`                             | adresse, téléphone, Facebook, YouTube; icônes 20 px                     | bloc inférieur du panneau                    | Les valeurs inconnues restent des placeholders non cliquables.                               |
@@ -82,13 +82,14 @@ Les chemins de ce document sont relatifs à `reference/figma-make-export/`.
 | 360, 390 et 430 px | Header 64 px, menu mobile, gutter 20 px, footer une colonne, actions rapides.                    |
 | 768 px             | Header 80 px, menu mobile, gutter 40 px, footer deux colonnes.                                   |
 | 1024 px            | Grilles de contenu desktop lorsque pertinent, mais navigation mobile pour éviter le débordement. |
-| 1280 px            | Menu mobile conservé; aucune collision entre identité, navigation et CTA.                        |
+| 1280 px            | Header desktop complet; aucune collision entre identité et navigation.                           |
 | 1440 px            | Header desktop, footer quatre colonnes, gutter 80 px, conteneur maximal 1280 px.                 |
 
 ## Divergences volontaires et corrections
 
 1. La palette premium documentée remplace les valeurs beige originales sans modifier leurs rôles.
-2. Le header desktop commence à 1312 px plutôt qu’à 1024 px pour empêcher le débordement et l’écrasement constatés.
+2. Le header desktop commence à 1280 px plutôt qu’à 1024 px pour empêcher le
+   débordement, seuil rendu possible par la suppression du CTA Horaires.
 3. Le doré n’est pas utilisé comme petit texte sur ivoire lorsqu’il échoue au contraste AA; un texte bourgogne ou charbon conserve la hiérarchie, avec le doré en filet ou motif.
 4. Les textes du footer passent d’une opacité ivoire de 30 % à au moins 60 % lorsqu’ils transmettent une information.
 5. Les contrôles principaux atteignent 48 × 48 px.

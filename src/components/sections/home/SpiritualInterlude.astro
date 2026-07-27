@@ -1,0 +1,89 @@
+---
+import candlesImage from '@/assets/images/home/editorial/candles-prayer.jpg';
+import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import TextLink from '@/components/ui/TextLink.astro';
+import Container from '@/components/ui/Container.astro';
+---
+
+<section
+  class="spiritual-interlude"
+  aria-labelledby="spiritual-interlude-title"
+>
+  <Container>
+    <div class="spiritual-interlude__layout">
+      <EditorialImageFrame
+        class="spiritual-interlude__image"
+        image={candlesImage}
+        alt="Lampions allumés dans un espace sombre; photographie d’illustration ne montrant pas la paroisse"
+        variant="organic"
+        objectPosition="center 54%"
+        widths={[480, 720, 960, 1280]}
+        sizes="(min-width: 64rem) 48vw, 100vw"
+      />
+
+      <div class="spiritual-interlude__copy" data-motion-reveal>
+        <Eyebrow tone="light">Prière et recueillement</Eyebrow>
+        <h2 id="spiritual-interlude-title" class="type-h2">
+          Une lumière pour accompagner la prière
+        </h2>
+        <p>
+          Les lampions, les intentions et les messes commémoratives font partie
+          des demandes qui peuvent être adressées au secrétariat. Les modalités
+          et tarifs applicables sont regroupés dans Nos services.
+        </p>
+        <TextLink href="/nos-services/#lampions" tone="light">
+          Découvrir les services de prière
+        </TextLink>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .spiritual-interlude {
+    overflow: hidden;
+    padding-block: clamp(5rem, 8vw, 7.5rem);
+    background:
+      radial-gradient(
+        circle at 16% 48%,
+        color-mix(in srgb, var(--color-gold) 10%, transparent),
+        transparent 32rem
+      ),
+      var(--color-burgundy-dark);
+    color: var(--color-ivory);
+  }
+
+  .spiritual-interlude__layout {
+    display: grid;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .spiritual-interlude__image {
+    width: min(100%, 43rem);
+  }
+
+  .spiritual-interlude__copy {
+    max-width: 35rem;
+  }
+
+  .spiritual-interlude h2 {
+    margin: 0.75rem 0 0;
+    color: var(--color-ivory);
+  }
+
+  .spiritual-interlude p {
+    margin: 1.5rem 0 2.25rem;
+    color: color-mix(in srgb, var(--color-ivory) 74%, transparent);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  @media (min-width: 64rem) {
+    .spiritual-interlude__layout {
+      grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
+      gap: clamp(4rem, 7vw, 7rem);
+    }
+  }
+</style>

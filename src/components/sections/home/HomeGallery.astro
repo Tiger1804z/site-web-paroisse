@@ -53,7 +53,11 @@ const gallery: readonly GalleryItem[] = [
 ];
 ---
 
-<section class="home-gallery" aria-labelledby="home-gallery-title">
+<section
+  id="galerie-accueil"
+  class="home-gallery"
+  aria-labelledby="home-gallery-title"
+>
   <Container class="home-gallery__heading" data-motion-reveal>
     <div>
       <Eyebrow>Photographie</Eyebrow>
@@ -62,35 +66,178 @@ const gallery: readonly GalleryItem[] = [
     <TextLink href="/galerie">Voir toute la galerie</TextLink>
   </Container>
 
-  <div class="home-gallery__strip" data-motion-stagger>
-    {
-      gallery.map((item) => (
-        <a
-          class:list={[
-            'home-gallery__item',
-            `home-gallery__item--${item.aspect}`,
-          ]}
-          href="/galerie"
-          aria-label={`Voir la galerie : ${item.alt}`}
-          data-motion-item
-        >
-          <Image
-            src={item.image}
-            alt={item.alt}
-            widths={[256, 288, 576]}
-            sizes="(min-width: 48rem) 18rem, 16rem"
-            loading="lazy"
-            style={
-              item.objectPosition
-                ? `object-position: ${item.objectPosition}`
-                : undefined
-            }
-          />
-        </a>
-      ))
-    }
+  <div
+    class="home-gallery__carousel"
+    data-home-gallery
+    role="region"
+    aria-roledescription="carrousel"
+    aria-label="Photographies de la paroisse"
+  >
+    <button
+      class="home-gallery__control home-gallery__control--previous"
+      type="button"
+      aria-label="Afficher la photographie précédente"
+      data-home-gallery-previous
+      hidden
+    >
+      <svg
+        viewBox="0 0 32 32"
+        width="32"
+        height="32"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m20 6-10 10 10 10"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </button>
+
+    <div class="home-gallery__stage" aria-live="polite">
+      {
+        gallery.map((item, index) => (
+          <a
+            class:list={[
+              'home-gallery__item',
+              `home-gallery__item--${item.aspect}`,
+            ]}
+            href="/galerie"
+            aria-label={`Voir la galerie : ${item.alt}`}
+            aria-current={index === 0 ? 'true' : undefined}
+            data-home-gallery-item
+            data-gallery-position={index === 0 ? '0' : undefined}
+          >
+            <Image
+              src={item.image}
+              alt={item.alt}
+              widths={[320, 480, 640, 800]}
+              sizes="(min-width: 64rem) 26rem, 78vw"
+              loading="lazy"
+              quality={76}
+              style={
+                item.objectPosition
+                  ? `object-position: ${item.objectPosition}`
+                  : undefined
+              }
+            />
+          </a>
+        ))
+      }
+    </div>
+
+    <button
+      class="home-gallery__control home-gallery__control--next"
+      type="button"
+      aria-label="Afficher la photographie suivante"
+      data-home-gallery-next
+      hidden
+    >
+      <svg
+        viewBox="0 0 32 32"
+        width="32"
+        height="32"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m12 6 10 10-10 10"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </button>
   </div>
 </section>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>('[data-home-gallery]')
+    .forEach((carousel) => {
+      if (carousel.dataset.initialized === 'true') return;
+      carousel.dataset.initialized = 'true';
+
+      const items = Array.from(
+        carousel.querySelectorAll<HTMLAnchorElement>(
+          '[data-home-gallery-item]',
+        ),
+      );
+      const previous = carousel.querySelector<HTMLButtonElement>(
+        '[data-home-gallery-previous]',
+      );
+      const next = carousel.querySelector<HTMLButtonElement>(
+        '[data-home-gallery-next]',
+      );
+      if (!previous || !next || items.length === 0) return;
+
+      let activeIndex = 0;
+      let pointerStartX: number | undefined;
+
+      const update = () => {
+        const half = Math.floor(items.length / 2);
+        items.forEach((item, index) => {
+          let position =
+            ((index - activeIndex + items.length + half) % items.length) - half;
+          if (items.length % 2 === 0 && position === -half) {
+            position = -3;
+          }
+          item.dataset.galleryPosition =
+            position >= -2 && position <= 2 ? String(position) : 'hidden';
+          const isCurrent = position === 0;
+          item.toggleAttribute('aria-current', isCurrent);
+          item.setAttribute('aria-hidden', String(!isCurrent));
+          item.tabIndex = isCurrent ? 0 : -1;
+        });
+      };
+
+      const move = (direction: -1 | 1) => {
+        activeIndex = (activeIndex + direction + items.length) % items.length;
+        update();
+      };
+
+      previous.hidden = false;
+      next.hidden = false;
+      previous.addEventListener('click', () => move(-1));
+      next.addEventListener('click', () => move(1));
+      carousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          move(-1);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          move(1);
+        }
+      });
+      carousel.addEventListener(
+        'pointerdown',
+        (event) => {
+          if (event.pointerType === 'mouse') return;
+          pointerStartX = event.clientX;
+        },
+        { passive: true },
+      );
+      carousel.addEventListener(
+        'pointerup',
+        (event) => {
+          if (pointerStartX === undefined || event.pointerType === 'mouse') {
+            return;
+          }
+          const distance = event.clientX - pointerStartX;
+          pointerStartX = undefined;
+          if (Math.abs(distance) < 42) return;
+          move(distance > 0 ? -1 : 1);
+        },
+        { passive: true },
+      );
+
+      carousel.dataset.ready = 'true';
+      update();
+    });
+</script>
 
 <style>
   .home-gallery {
@@ -120,7 +267,19 @@ const gallery: readonly GalleryItem[] = [
     align-self: flex-start;
   }
 
-  .home-gallery__strip {
+  .home-gallery__carousel {
+    position: relative;
+    min-height: clamp(21rem, 34vw, 31rem);
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .home-gallery__carousel:focus-visible {
+    outline: 2px solid var(--color-burgundy);
+    outline-offset: -0.25rem;
+  }
+
+  .home-gallery__stage {
     display: flex;
     gap: 0.75rem;
     overflow-x: auto;
@@ -129,13 +288,13 @@ const gallery: readonly GalleryItem[] = [
     scrollbar-width: none;
   }
 
-  .home-gallery__strip::after {
+  .home-gallery__stage::after {
     width: max(0.5rem, calc((100vw - var(--layout-max)) / 2));
     flex: 0 0 auto;
     content: '';
   }
 
-  .home-gallery__strip::-webkit-scrollbar {
+  .home-gallery__stage::-webkit-scrollbar {
     display: none;
   }
 
@@ -165,6 +324,115 @@ const gallery: readonly GalleryItem[] = [
     scale: var(--motion-scale-hover);
   }
 
+  .home-gallery__control {
+    position: absolute;
+    z-index: 8;
+    top: 50%;
+    display: grid;
+    width: clamp(3rem, 4vw, 4rem);
+    height: clamp(3rem, 4vw, 4rem);
+    translate: 0 -50%;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--color-charcoal) 28%, transparent);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-paper) 84%, transparent);
+    color: var(--color-burgundy-dark);
+    box-shadow: 0 0.75rem 2rem rgb(28 25 24 / 9%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition:
+      border-color var(--duration-short) var(--ease-editorial),
+      background-color var(--duration-short) var(--ease-editorial),
+      color var(--duration-short) var(--ease-editorial);
+  }
+
+  .home-gallery__control:hover {
+    border-color: var(--color-burgundy);
+    background: var(--color-burgundy);
+    color: var(--color-ivory);
+  }
+
+  .home-gallery__control--previous {
+    left: max(0.75rem, calc((100vw - var(--layout-max)) / 2));
+  }
+
+  .home-gallery__control--next {
+    right: max(0.75rem, calc((100vw - var(--layout-max)) / 2));
+  }
+
+  .home-gallery__carousel[data-ready='true'] .home-gallery__stage {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .home-gallery__carousel[data-ready='true'] .home-gallery__stage::after {
+    display: none;
+  }
+
+  .home-gallery__carousel[data-ready='true'] .home-gallery__item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(18rem, 27vw, 26rem);
+    aspect-ratio: 4 / 3;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.55);
+    pointer-events: none;
+    transition:
+      transform 520ms var(--motion-ease-emphasized),
+      opacity 420ms var(--motion-ease-standard),
+      filter 420ms var(--motion-ease-standard);
+  }
+
+  .home-gallery__carousel[data-ready='true']
+    .home-gallery__item[data-gallery-position='0'] {
+    z-index: 5;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+  }
+
+  .home-gallery__carousel[data-ready='true']
+    .home-gallery__item[data-gallery-position='-1'] {
+    z-index: 4;
+    opacity: 0.94;
+    transform: translate(calc(-50% - clamp(13rem, 21vw, 19rem)), -50%)
+      scale(0.8);
+  }
+
+  .home-gallery__carousel[data-ready='true']
+    .home-gallery__item[data-gallery-position='1'] {
+    z-index: 4;
+    opacity: 0.94;
+    transform: translate(calc(-50% + clamp(13rem, 21vw, 19rem)), -50%)
+      scale(0.8);
+  }
+
+  .home-gallery__carousel[data-ready='true']
+    .home-gallery__item[data-gallery-position='-2'] {
+    z-index: 3;
+    opacity: 0.78;
+    transform: translate(calc(-50% - clamp(24rem, 38vw, 34rem)), -50%)
+      scale(0.61);
+  }
+
+  .home-gallery__carousel[data-ready='true']
+    .home-gallery__item[data-gallery-position='2'] {
+    z-index: 3;
+    opacity: 0.78;
+    transform: translate(calc(-50% + clamp(24rem, 38vw, 34rem)), -50%)
+      scale(0.61);
+  }
+
+  .home-gallery__carousel[data-ready='true']
+    .home-gallery__item[data-gallery-position='hidden'] {
+    visibility: hidden;
+  }
+
   @media (min-width: 48rem) {
     .home-gallery__heading {
       flex-direction: row;
@@ -172,14 +440,61 @@ const gallery: readonly GalleryItem[] = [
       justify-content: space-between;
     }
 
-    .home-gallery__item {
-      width: 18rem;
+    .home-gallery__carousel[data-ready='true'] .home-gallery__item {
+      width: clamp(20rem, 27vw, 26rem);
     }
   }
 
-  @media (min-width: 80rem) {
-    .home-gallery__strip {
-      padding-left: max(var(--gutter-page), calc((100vw - 80rem) / 2 + 5rem));
+  @media (max-width: 47.99rem) {
+    .home-gallery {
+      padding-block: 4rem;
+    }
+
+    .home-gallery__carousel {
+      min-height: 23rem;
+    }
+
+    .home-gallery__carousel[data-ready='true'] .home-gallery__item {
+      width: min(78vw, 20rem);
+    }
+
+    .home-gallery__carousel[data-ready='true']
+      .home-gallery__item[data-gallery-position='-1'] {
+      transform: translate(calc(-50% - 62vw), -50%) scale(0.72);
+    }
+
+    .home-gallery__carousel[data-ready='true']
+      .home-gallery__item[data-gallery-position='1'] {
+      transform: translate(calc(-50% + 62vw), -50%) scale(0.72);
+    }
+
+    .home-gallery__carousel[data-ready='true']
+      .home-gallery__item[data-gallery-position='-2'],
+    .home-gallery__carousel[data-ready='true']
+      .home-gallery__item[data-gallery-position='2'] {
+      visibility: hidden;
+    }
+
+    .home-gallery__control {
+      top: auto;
+      bottom: 0.5rem;
+      translate: 0;
+    }
+
+    .home-gallery__control--previous {
+      left: calc(50% - 4rem);
+    }
+
+    .home-gallery__control--next {
+      right: calc(50% - 4rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-gallery__carousel[data-ready='true'] .home-gallery__item,
+    .home-gallery__item :global(img),
+    .home-gallery__control {
+      transition: none;
     }
   }
 </style>

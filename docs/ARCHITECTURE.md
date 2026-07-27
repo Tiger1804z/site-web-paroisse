@@ -61,23 +61,24 @@ Le contrat identifie aussi la future source de chaque information pratique.
 L’adresse et le téléphone relèveront de `siteSettings`; les étapes, la FAQ et
 les indications propres à la visite relèveront de `firstVisitPage`.
 
-`S1-T06` applique la même frontière à une page d’aperçu relationnelle :
+`S1-T06` appliquait cette frontière à l’ancien aperçu Sacrements. S1-T11
+élargit le contrat à la page canonique Nos services :
 
 ```text
-src/data/sacraments.ts
+src/data/services.ts
     ↓
-src/lib/content/getSacramentsPageData.ts
+src/lib/content/getServicesPageData.ts
     ↓
-frontmatter de src/pages/sacrements.astro
+frontmatter de src/pages/nos-services.astro
     ↓
-composants Astro typés avec SacramentsPageData
+composants Astro typés avec ServicesPageData
     ↓
 HTML statique
 ```
 
-Les slugs sont préparés dans le contrat, mais aucune route détaillée n’est
-générée. Un futur `src/pages/sacrements/[slug].astro` utilisera
-`getStaticPaths()` seulement après validation des contenus et du modèle CMS.
+La route historique `/sacrements/` est maintenant un alias statique `noindex`
+avec canonical et redirection HTML vers `/nos-services/`. Aucune route
+détaillée n’est générée avant validation des contenus et du modèle CMS.
 
 ## Pourquoi Astro
 
@@ -108,7 +109,11 @@ Chaque fichier de `src/pages/` devient une route :
 - `src/pages/horaires.astro` → `/horaires/`;
 - `src/pages/notre-paroisse.astro` → `/notre-paroisse/`;
 - `src/pages/premiere-visite.astro` → `/premiere-visite/`;
-- `src/pages/sacrements.astro` → `/sacrements/`;
+- `src/pages/nos-services.astro` → `/nos-services/`;
+- `src/pages/sacrements.astro` → alias statique `noindex` vers
+  `/nos-services/`;
+- `src/pages/location-de-salle.astro` → alias statique `noindex` vers
+  `/nos-services/#location-de-salle`;
 - `src/pages/friperie.astro` → `/friperie/`;
 - `src/pages/verification.astro` → `/verification`;
 - `src/pages/404.astro` → page d’erreur statique.
@@ -232,30 +237,31 @@ La page appelle uniquement `getFirstVisitPageData()`. Les composants ne
 connaissent ni la source locale, ni GROQ, ni les futurs documents
 `firstVisitPage` et `siteSettings`.
 
-### Composants livrés par S1-T06
+### Composants Nos services — S1-T11
 
-- `sections/sacraments/SacramentsHero.astro` : hero photographique prune;
-- `SacramentsNotice.astro` : prudence opérationnelle et CTA Contact;
-- `SacramentsExplorer.astro` : onglets accessibles Baptême, Mariage et Autres
-  demandes, sans React;
-- `GeneralProcess.astro` : démarche en cinq repères;
-- `SacramentsFaq.astro` : FAQ native `details/summary`.
+- `sections/services/ServicesHero.astro` : hero Astro à trois photographies,
+  fondu lent, sélection manuelle et lentille organique;
+- `ServicesDirectory.astro` : avis temporel et sommaire d’ancres;
+- `ServicesChapters.astro` : chapitres éditoriaux alternés et informations
+  typées;
+- `ServicesClosing.astro` : modes de paiement révisables et CTA téléphonique.
 
-La page appelle uniquement `getSacramentsPageData()`. Les composants ignorent
-la source locale, GROQ et les futurs documents `sacramentsPage`, `sacrament` et
+La page appelle uniquement `getServicesPageData()`. Les composants ignorent la
+source locale, GROQ et les futurs documents `servicesPage`, `parishService` et
 `siteSettings`.
 
 ## Stratégie CSS et fidélité
 
 Les valeurs répétées et structurantes sont des tokens sémantiques dans `global.css`; les dimensions propres à un seul composant restent près de ce composant. Cette séparation évite à la fois les valeurs magiques dispersées et une couche de tokens artificielle.
 
-Le CSS reprend les valeurs observables de Figma : conteneur de 1280 px, gutters 20/40/80 px, sections 96/140 px, header 64/80 px, rayons de 2 px et transitions sobres. La palette premium documentée remplace seule les couleurs beige originales. La navigation desktop commence à 1312 px, car le seuil `lg` de l’export provoquait un débordement mesurable et 1280 px restait trop serré avec tous les liens et CTA.
+Le CSS reprend les valeurs observables de Figma : conteneur de 1280 px, gutters 20/40/80 px, sections 96/140 px, header 64/80 px, rayons de 2 px et transitions sobres. La palette premium documentée remplace seule les couleurs beige originales. Depuis la suppression du CTA redondant « Voir les horaires », la navigation desktop commence à 1280 px; à 1024 px et en dessous, le menu mobile évite tout débordement.
 
 ## Interactivité globale
 
 Le script du header est inclus par Astro et initialisé une fois par instance. Il gère :
 
-1. le passage de transparent à clair après 60 px;
+1. le passage d’un voile translucide léger à un voile translucide
+   charbon-bourgogne plus soutenu après 60 px;
 2. l’ouverture et la fermeture du menu mobile;
 3. Échap, le piège de focus, le retour du focus et l’isolation `inert` du contenu;
 4. le verrouillage du défilement d’arrière-plan;
@@ -264,7 +270,17 @@ Le script du header est inclus par Astro et initialisé une fois par instance. I
 
 Le balisage et les liens restent utilisables sans routeur client. Aucun état global React n’est réintroduit.
 
-Sur l’accueil, deux scripts natifs et locaux suffisent : l’annonce peut être masquée, et le hero change de photographie avec un temporisateur remis à zéro après une action manuelle. Le hero branche aussi le contrôleur visuel partagé `src/scripts/organic-hero-lens.ts`; sa lentille révèle toujours la prochaine photographie de la boucle. S1-T11 conserve cette architecture et ne modifie que le traitement visuel commun des trois images, la cadence à 7,6 secondes, le fondu à 1,25 seconde, le zoom limité à 1,022 et la surface bourgogne de la carte d’horaires. La préférence de réduction des mouvements désactive rotation, zoom et lentille. Aucun état applicatif partagé n’est introduit.
+Sur l’accueil, les scripts natifs restent locaux : l’annonce peut être masquée,
+le hero tourne lentement et sa lentille révèle la prochaine photographie. Le
+carrousel de galerie centre cinq profondeurs et répond aux flèches, au clavier
+et au geste tactile, sans lecture automatique. Sans JavaScript, il redevient une
+bande horizontale native.
+
+Le hero de Nos services réutilise `src/scripts/organic-hero-lens.ts`, la
+cadence de 7,6 secondes, le fondu de 1,25 seconde et le zoom limité à 1,022.
+La lentille révèle la prochaine des trois images. La préférence de réduction
+des mouvements désactive rotation, zoom et lentille. Aucun état applicatif
+partagé n’est introduit.
 
 ## Migration progressive
 
@@ -303,11 +319,11 @@ La préparation de Première visite est détaillée dans
 Le normaliseur futur assemblera le document de page et les réglages globaux,
 puis retournera toujours `FirstVisitPageData`.
 
-La page Sacrements et services suit la même frontière, documentée dans
-[`ASTRO_SANITY_SACRAMENTS_PREPARATION.md`](./ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
-Le futur normaliseur résoudra les références `sacrament`, contrôlera les slugs
-et retournera `SacramentsPageData`. Les pages détaillées seront générées plus
-tard avec `getStaticPaths()`.
+La page Nos services suit désormais la frontière
+`services.ts → getServicesPageData() → ServicesPageData`. Le futur normaliseur
+résoudra les services, catégories, procédures, tarifs, années d’application,
+images et CTA. Les pages détaillées ne seront générées que si de vrais contenus
+les justifient.
 
 ### Architecture du contenu
 

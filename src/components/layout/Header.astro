@@ -3,7 +3,6 @@ import {
   firstVisitNavigation,
   informationNavigation,
   primaryNavigation,
-  scheduleNavigation,
 } from '@/lib/navigation';
 import BrandLogo from '@/components/ui/BrandLogo.astro';
 import { SITE_NAME } from '@/lib/site';
@@ -106,21 +105,9 @@ const informationIsActive = informationNavigation.some(
         >
           {firstVisitNavigation.label}
         </a>
-        <a
-          class="site-header__schedule-button"
-          href={scheduleNavigation.href}
-          aria-current={scheduleNavigation.href === currentPath
-            ? 'page'
-            : undefined}
-        >
-          {scheduleNavigation.label}
-        </a>
       </div>
 
       <div class="site-header__mobile-actions">
-        <a class="site-header__mobile-schedule" href={scheduleNavigation.href}>
-          Horaires
-        </a>
         <button
           class="site-header__menu-button"
           type="button"
@@ -254,7 +241,7 @@ const informationIsActive = informationNavigation.some(
       const informationMenu = header.querySelector<HTMLDetailsElement>(
         '[data-information-menu]',
       );
-      const desktopNavigationMedia = window.matchMedia('(min-width: 82rem)');
+      const desktopNavigationMedia = window.matchMedia('(min-width: 80rem)');
       const backgroundRegions = document.querySelectorAll<HTMLElement>(
         'main, footer, [data-mobile-quick-actions]',
       );
@@ -334,7 +321,6 @@ const informationIsActive = informationNavigation.some(
           ).filter((element) => !element.hasAttribute('disabled'));
           const focusable = [
             header.querySelector<HTMLElement>('.site-identity'),
-            header.querySelector<HTMLElement>('.site-header__mobile-schedule'),
             toggle,
             ...panelFocusable,
           ].filter(
@@ -419,17 +405,18 @@ const informationIsActive = informationNavigation.some(
 
   .site-header[data-variant='light'],
   .site-header[data-scrolled='true'] {
+    color: var(--color-ivory);
     border-bottom: 1px solid
-      color-mix(in srgb, var(--color-gold) 20%, transparent);
-    background: color-mix(in srgb, var(--color-ivory) 97%, transparent);
-    box-shadow: var(--shadow-header);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+      color-mix(in srgb, var(--color-gold) 28%, transparent);
+    background: rgb(38 29 31 / 78%);
+    box-shadow: 0 0.5rem 1.75rem rgb(28 25 24 / 12%);
+    -webkit-backdrop-filter: blur(18px) saturate(118%);
+    backdrop-filter: blur(18px) saturate(118%);
   }
 
   .site-header[data-variant='transparent'][data-scrolled='false'] {
     color: var(--color-ivory);
-    background: transparent;
+    background: rgb(28 25 24 / 18%);
   }
 
   .site-header::before {
@@ -517,33 +504,6 @@ const informationIsActive = informationNavigation.some(
     gap: 0.5rem;
   }
 
-  .site-header__mobile-schedule,
-  .site-header__schedule-button {
-    display: inline-flex;
-    min-height: 3.125rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-subtle);
-    background: var(--color-burgundy);
-    color: var(--color-ivory);
-    font-size: var(--font-size-meta);
-    font-weight: 600;
-    letter-spacing: 0.025em;
-    text-decoration: none;
-    transition:
-      background-color var(--duration-short) var(--ease-editorial),
-      color var(--duration-short) var(--ease-editorial);
-  }
-
-  .site-header__mobile-schedule {
-    padding-inline: 0.875rem;
-  }
-
-  .site-header__mobile-schedule:hover,
-  .site-header__schedule-button:hover {
-    background: var(--color-burgundy-dark);
-  }
-
   .site-header__menu-button {
     display: inline-flex;
     width: 3rem;
@@ -587,11 +547,6 @@ const informationIsActive = informationNavigation.some(
 
   .site-header[data-menu-open='true'] .site-identity {
     filter: drop-shadow(0 1px 5px rgb(28 25 24 / 35%));
-  }
-
-  .site-header[data-menu-open='true'] .site-header__mobile-schedule {
-    background: var(--color-ivory);
-    color: var(--color-burgundy);
   }
 
   .site-header[data-menu-open='true']
@@ -711,7 +666,7 @@ const informationIsActive = informationNavigation.some(
     }
   }
 
-  @media (min-width: 82rem) {
+  @media (min-width: 80rem) {
     .site-header__desktop-nav,
     .site-header__desktop-actions {
       display: flex;
@@ -752,7 +707,7 @@ const informationIsActive = informationNavigation.some(
     .site-header[data-scrolled='true'] .site-header__nav-link:hover,
     .site-header[data-variant='light'] .site-header__first-visit:hover,
     .site-header[data-scrolled='true'] .site-header__first-visit:hover {
-      color: var(--color-burgundy);
+      color: var(--color-gold);
     }
 
     .site-header[data-variant='transparent'][data-scrolled='false']
@@ -797,9 +752,9 @@ const informationIsActive = informationNavigation.some(
       transition: color var(--duration-short) var(--ease-editorial);
     }
 
-    .site-header__schedule-button {
-      padding-inline: 1.375rem;
-      font-size: var(--font-size-ui);
+    .site-header[data-variant='light'] .site-header__first-visit,
+    .site-header[data-scrolled='true'] .site-header__first-visit {
+      color: var(--color-ivory);
     }
 
     .information-menu {
@@ -853,6 +808,25 @@ const informationIsActive = informationNavigation.some(
     .information-menu__link[aria-current='page'] {
       background: var(--color-paper);
       color: var(--color-burgundy);
+    }
+  }
+
+  @supports not (
+    (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+  ) {
+    .site-header[data-variant='light'],
+    .site-header[data-scrolled='true'] {
+      background: rgb(38 29 31 / 94%);
+    }
+
+    .site-header[data-variant='transparent'][data-scrolled='false'] {
+      background: rgb(28 25 24 / 68%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
     }
   }
 </style>

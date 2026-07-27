@@ -96,10 +96,20 @@ Les réglages de la page d’accueil pourront contenir :
 - `showHomepageUpcomingSection`;
 - `homepageUpcomingTitle`, par défaut « Prochaines activités »;
 - `homepageUpcomingLimit`, par défaut `4`.
+- ordre et activation des grandes sections;
+- titres, descriptions et CTA éditoriaux;
+- images, textes alternatifs, crédits et positions de recadrage;
+- une variante de cadre choisie dans la liste contrôlée `arch`, `landscape`,
+  `organic`, `oval` ou `portrait-offset`;
+- groupes mis en avant dans « Vivre la paroisse ».
 
 L’accueil référence la même collection `parishEvent`; il ne possède pas de
 copies d’événements. Un responsable saisit donc un événement une seule fois,
 active les drapeaux nécessaires, puis publie.
+
+Sanity ne pourra pas injecter de CSS, de `clip-path`, de SVG ou de JavaScript.
+Le carrousel photographique, le vitrail, les lentilles et les transitions
+restent dans le code.
 
 ## Requête et normalisation futures
 
@@ -148,6 +158,36 @@ Sanity thriftStorePage
 Sanity ne contrôlera pas le masque, le suivi du pointeur, le JavaScript, les
 timings, le SVG `AnimatedClothingRack`, les couleurs, les breakpoints ou les
 tokens de mouvement.
+
+## `servicesPage`
+
+Le futur document canonique pourra contenir :
+
+- hero, introduction, images, textes alternatifs et crédits;
+- catégories et services avec activation et ordre;
+- résumés, procédures et CTA;
+- détails structurés avec statut de confirmation;
+- tarif, année d’application, période, date de révision et exigence de révision
+  périodique;
+- moyens de paiement;
+- section Location de salle et règles confirmées.
+
+Une célébration spéciale datée reste un `parishEvent`; elle n’est pas dupliquée
+dans `servicesPage`. La disponibilité d’une salle n’est jamais calculée par le
+CMS et aucune réservation automatique n’est créée.
+
+```text
+Sanity servicesPage + parishService + siteSettings
+  → GROQ
+  → normalisation et contrôle des dates
+  → ServicesPageData
+  → composants Astro existants
+  → HTML statique
+```
+
+Sanity ne contrôle ni la lentille du hero, ni sa rotation, ni les formes CSS,
+ni la navigation, ni les redirections. Les valeurs temporelles non révisées
+peuvent être masquées par le normalisateur.
 
 ## Publication et rebuild
 

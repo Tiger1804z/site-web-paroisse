@@ -3,6 +3,7 @@ export type SitePath =
   | '/notre-paroisse'
   | '/horaires'
   | '/vie-paroissiale'
+  | '/nos-services'
   | '/sacrements'
   | '/evenements'
   | '/feuillets-paroissiaux'
@@ -28,7 +29,7 @@ export const primaryNavigation = [
   { label: 'Notre paroisse', href: '/notre-paroisse' },
   { label: 'Horaires', href: '/horaires' },
   { label: 'Vie paroissiale', href: '/vie-paroissiale' },
-  { label: 'Sacrements', href: '/sacrements' },
+  { label: 'Nos services', href: '/nos-services' },
   { label: 'Événements', href: '/evenements' },
 ] as const satisfies readonly NavigationItem[];
 
@@ -39,7 +40,7 @@ export const informationRouteDefinitions = [
     active: false,
   },
   { label: 'Friperie', href: '/friperie', active: true },
-  { label: 'Location de salle', href: '/location-de-salle', active: true },
+  { label: 'Location de salle', href: '/location-de-salle', active: false },
   { label: 'Galerie', href: '/galerie', active: true },
   { label: 'Contact', href: '/contact', active: true },
 ] as const satisfies readonly NavigationRouteDefinition[];

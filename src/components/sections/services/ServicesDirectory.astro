@@ -1,0 +1,155 @@
+---
+import Container from '@/components/ui/Container.astro';
+import type { ServicesPageData } from '@/types/services';
+
+interface Props {
+  notice: ServicesPageData['notice'];
+  chapters: ServicesPageData['chapters'];
+}
+
+const { notice, chapters } = Astro.props;
+const orderedChapters = [...chapters].sort((a, b) => a.order - b.order);
+---
+
+<section class="services-directory" aria-labelledby="services-directory-title">
+  <Container>
+    <div class="services-directory__layout">
+      <div class="services-directory__notice" data-motion-reveal>
+        <p class="services-directory__label">À savoir</p>
+        <h2 id="services-directory-title">{notice.title}</h2>
+        <p>{notice.message}</p>
+        <span>{notice.reviewDate}</span>
+      </div>
+
+      <nav
+        class="services-directory__nav"
+        aria-label="Sommaire de nos services"
+      >
+        <p>Parcourir la page</p>
+        <ol>
+          {
+            orderedChapters.map((chapter, index) => (
+              <li>
+                <a href={`#${chapter.id}`}>
+                  <span aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <strong>{chapter.title}</strong>
+                  <span aria-hidden="true">↓</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .services-directory {
+    padding-block: clamp(4rem, 7vw, 6.5rem);
+    background: var(--color-paper);
+  }
+
+  .services-directory__layout {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .services-directory__notice {
+    max-width: 42rem;
+  }
+
+  .services-directory__label,
+  .services-directory__nav > p {
+    margin: 0 0 0.75rem;
+    color: var(--color-wood);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .services-directory h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.65rem + 1.5vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .services-directory__notice > p:not(.services-directory__label) {
+    margin: 1.25rem 0 1rem;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .services-directory__notice > span {
+    color: var(--color-wood);
+    font-size: var(--font-size-meta);
+    font-weight: 600;
+  }
+
+  .services-directory__nav ol {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 38%, transparent);
+    list-style: none;
+  }
+
+  .services-directory__nav a {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 4.5rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 30%, transparent);
+    color: var(--color-charcoal);
+    text-decoration: none;
+    transition:
+      color var(--duration-short) var(--ease-editorial),
+      padding-inline var(--duration-short) var(--ease-editorial);
+  }
+
+  .services-directory__nav a:hover {
+    padding-inline: 0.5rem;
+    color: var(--color-burgundy);
+  }
+
+  .services-directory__nav a > span {
+    color: var(--color-gold);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .services-directory__nav a > span:last-child {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+  }
+
+  .services-directory__nav strong {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 64rem) {
+    .services-directory__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(23rem, 0.8fr);
+      align-items: start;
+      gap: clamp(4rem, 8vw, 8rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .services-directory__nav a {
+      transition: none;
+    }
+  }
+</style>
