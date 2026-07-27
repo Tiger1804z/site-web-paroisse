@@ -160,8 +160,13 @@ La route `/verification/` est interne, marquée `noindex` et absente de la navig
 - `ImportantNotice.astro` et `WelcomeSection.astro` : annonce locale et composition éditoriale;
 - `MassSchedulePreview.astro` et `UpcomingEvents.astro` : aperçus statiques avec placeholders;
 - `ParishLifePreview.astro` et `ParishBulletin.astro` : mosaïque illustrative et feuillet sans faux téléchargement;
-- `PracticalServices.astro`, `HomeGallery.astro` et `VisitSection.astro` : services, bande photographique et coordonnées temporaires;
-- `lib/site.ts` : identité confirmée partagée entre le layout, le header et le footer.
+- `PracticalServices.astro`, `HomeGallery.astro` et `VisitSection.astro` :
+  services, carrousel photographique partagé et coordonnées confirmées;
+- `data/siteSettings.ts` + `getSiteSettings()` : identité, adresse, téléphone,
+  carte et itinéraire normalisés pour l’accueil, Contact, le footer et Nos
+  services;
+- `lib/site.ts` : compatibilité des constantes d’identité existantes, dérivées
+  de `siteSettingsData`.
 
 Les photographies passent par `astro:assets`. `sharp` génère les variantes responsives durant le build; les fichiers source ne sont pas modifiés.
 
@@ -514,10 +519,51 @@ L'archive est bloquée et différée jusqu'à confirmation avec la secrétaire l
 10 août 2026 ou après son retour : décision de publier, vrais PDF, dates,
 droits, politique d'archives et responsabilité des mises à jour.
 
-S1-T09 Contact n'appartient pas à cette branche. Sur `staging`, `/contact/`
-reste le placeholder `noindex`; le travail Contact, SMTP, API de courriel et
-fonction serverless demeure en pause sur
-`feature/s1-t09-contact-page-1to1`.
+## Architecture Contact et coordonnées partagées — S1-T12
+
+Le frontend du commit S1-T09 est restauré sélectivement :
+
+```text
+siteSettingsData
+  → getSiteSettings()
+  → accueil / Contact / Footer / Nos services
+
+contactPageData
+  → getContactPageData()
+  → ContactHero / ContactMethods / ContactLocation / ContactForm
+```
+
+`PublicContactDetails` distingue l’adresse, le téléphone, le courriel
+facultatif, la carte et l’itinéraire. `getSiteSettings()` supprime le courriel
+tant qu’il n’est pas confirmé. Aucun consommateur ne duplique donc
+manuellement l’adresse ou le numéro.
+
+`ContactForm.astro` réalise seulement la validation navigateur. Le submit est
+neutralisé par `preventDefault()`; il n’existe ni `fetch`, action réseau,
+endpoint, faux succès, secret, adaptateur ou fonction serverless. La page reste
+`noindex` jusqu’à la validation du système d’envoi et des textes juridiques.
+
+## Mini-galerie de l’accueil — S1-T12
+
+```text
+galleryItems
+  → getPublishedGalleryItems()
+  → selectHomepageGalleryItems(limit: 6)
+  → HomeGallery
+```
+
+`GalleryItem` encode catégorie, statut, droit d’usage, alt, ordre, crédit,
+source, caractère documentaire, présence de personnes, consentement et
+visibilité sur l’accueil. Le filtre public exclut les brouillons, droits en
+attente, alt vides, images IA et portraits sans consentement.
+
+`HomeGallery.astro` centre cinq profondeurs, synchronise le titre et la
+description avec l’image active, puis ouvre l’image dans une lightbox
+`<dialog>` native. Les liens pointent directement vers les variantes
+optimisées : sans JavaScript, la bande reste parcourable et chaque image peut
+être ouverte. La route `/galerie/` demeure un placeholder `noindex`, inactif
+dans la navigation; aucune page Galerie publique n’est maintenue pour
+l’instant.
 
 ## Limites actuelles
 
@@ -527,9 +573,11 @@ fonction serverless demeure en pause sur
   à la confirmation de ses informations pratiques; les autres routes publiques
   non migrées restent des placeholders techniques;
 - Feuillets est un placeholder différé, non promu dans la navigation publique;
-- l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
+- l’identité, l’adresse et le téléphone sont confirmés; le courriel public, les
+  heures du secrétariat, plusieurs horaires et contenus éditoriaux ne le sont
+  pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;
-- aucun CMS, formulaire, backend ou déploiement n’est configuré;
+- aucun CMS, formulaire connecté, backend ou déploiement n’est configuré;
 - `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.

@@ -41,7 +41,7 @@ export const informationRouteDefinitions = [
   },
   { label: 'Friperie', href: '/friperie', active: true },
   { label: 'Location de salle', href: '/location-de-salle', active: false },
-  { label: 'Galerie', href: '/galerie', active: true },
+  { label: 'Galerie', href: '/galerie', active: false },
   { label: 'Contact', href: '/contact', active: true },
 ] as const satisfies readonly NavigationRouteDefinition[];
 

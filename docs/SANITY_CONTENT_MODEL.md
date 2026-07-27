@@ -189,6 +189,61 @@ Sanity ne contrôle ni la lentille du hero, ni sa rotation, ni les formes CSS,
 ni la navigation, ni les redirections. Les valeurs temporelles non révisées
 peuvent être masquées par le normalisateur.
 
+## `siteSettings`
+
+Le document global futur administrera :
+
+- nom public de la paroisse;
+- rue, ville, province, code postal et pays;
+- téléphone public et formats d’affichage;
+- courriel public avec état de confirmation;
+- heures du secrétariat;
+- lien d’itinéraire, latitude et longitude;
+- informations confirmées de stationnement et d’accessibilité;
+- réseaux sociaux publiables.
+
+```text
+Sanity siteSettings
+  → GROQ
+  → normalisation
+  → PublicContactDetails
+  → accueil / Contact / Footer / Nos services
+```
+
+Une valeur non confirmée est supprimée par la normalisation. `siteSettings` ne
+contiendra jamais de mot de passe SMTP, destinataire privé, clé API, secret,
+code serveur ou logique d’envoi.
+
+## `galleryItem` pour l’aperçu de l’accueil
+
+La page Galerie complète est différée. Une future collection `galleryItem`
+pourra d’abord administrer la sélection photographique de l’accueil.
+
+Chaque `galleryItem` pourra contenir :
+
+- image et texte alternatif obligatoire;
+- titre, description, catégorie et ordre;
+- statut de publication et état des droits;
+- mise en vedette et visibilité sur l’accueil;
+- crédit, source et date de capture facultative;
+- caractère documentaire ou artistique;
+- présence de personnes et consentement confirmé;
+- variante de composition dans une liste contrôlée.
+
+```text
+Sanity galleryItem
+  → GROQ
+  → normalisation droits / alt / consentement
+  → GalleryItem[]
+  → sélection de l’accueil
+```
+
+Le CMS ne pourra pas publier une image sans alt, aux droits en attente, ou
+montrant une personne sans consentement. Il ne pourra pas injecter de CSS,
+HTML arbitraire, JavaScript, `clip-path`, ni retirer automatiquement un crédit.
+Le carrousel, ses transitions et sa lightbox restent dans le code Astro. Un
+futur `galleryPage` ne sera préparé que si la route autonome est reprise.
+
 ## Publication et rebuild
 
 Une publication déclenchera plus tard un webhook de déploiement. Un rebuild

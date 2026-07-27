@@ -3,6 +3,7 @@ import iconImage from '@/assets/images/home/editorial/mother-of-perpetual-help-i
 import baptismImage from '@/assets/images/services/baptism-ceremony.jpg';
 import communionImage from '@/assets/images/services/first-communion-candle.jpg';
 import weddingImage from '@/assets/images/services/wedding-silhouette.jpg';
+import { siteSettingsData } from '@/data/siteSettings';
 import { SITE_NAME } from '@/lib/site';
 import type {
   ParishServiceDetail,
@@ -41,7 +42,7 @@ const detail = (
 
 const phoneCta = {
   label: 'Téléphoner au secrétariat',
-  href: 'tel:+15147221161',
+  href: siteSettingsData.phone.href,
 } as const;
 
 export const servicesPageData = {
@@ -357,5 +358,6 @@ export const servicesPageData = {
     description:
       'Pour faire confirmer un tarif, un document, une date ou une disponibilité, téléphonez directement au secrétariat.',
     primary: phoneCta,
+    phone: siteSettingsData.phone,
   },
 } as const satisfies ServicesPageData;

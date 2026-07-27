@@ -93,5 +93,9 @@ export interface ServicesPageData {
     readonly title: string;
     readonly description: string;
     readonly primary: ServicesCallToAction;
+    readonly phone: {
+      readonly display: string;
+      readonly href: `tel:${string}`;
+    };
   };
 }

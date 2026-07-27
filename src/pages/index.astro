@@ -16,6 +16,8 @@ import {
   getHomepageEventsSettings,
   getHomepageParishEvents,
 } from '@/lib/content/getParishEvents';
+import { getHomepageGalleryItems } from '@/lib/content/getHomepageGalleryItems';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
 
 const buildTime = new Date();
 const homepageEventsSettings = await getHomepageEventsSettings();
@@ -26,6 +28,8 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
     )
   : { secondary: [] };
 const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
+const siteSettings = await getSiteSettings();
+const homepageGalleryItems = await getHomepageGalleryItems(6);
 ---
 
 <BaseLayout
@@ -51,7 +55,7 @@ const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
   {showParishBulletin && <ParishBulletin />}
   <PracticalServices />
   <SpiritualInterlude />
-  <HomeGallery />
-  <VisitSection />
+  <HomeGallery items={homepageGalleryItems} />
+  <VisitSection contact={siteSettings} />
   <MotionController />
 </BaseLayout>

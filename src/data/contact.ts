@@ -1,5 +1,5 @@
 import type { ContactPageData } from '@/types/contact';
-import { SITE_ADDRESS, SITE_PHONE } from '@/lib/site';
+import { siteSettingsData } from '@/data/siteSettings';
 
 export const contactPageData: ContactPageData = {
   seo: {
@@ -19,7 +19,7 @@ export const contactPageData: ContactPageData = {
       id: 'address',
       kind: 'address',
       label: 'Adresse',
-      value: SITE_ADDRESS.formatted,
+      value: siteSettingsData.address.formatted,
       href: '#nous-trouver',
       note: 'Emplacement confirmé par la paroisse.',
       active: true,
@@ -30,8 +30,8 @@ export const contactPageData: ContactPageData = {
       id: 'phone',
       kind: 'phone',
       label: 'Téléphone',
-      value: SITE_PHONE.display,
-      href: SITE_PHONE.href,
+      value: siteSettingsData.phone.display,
+      href: siteSettingsData.phone.href,
       note: 'Touchez le numéro pour appeler.',
       active: true,
       order: 2,
@@ -47,13 +47,12 @@ export const contactPageData: ContactPageData = {
     title: 'Nous trouver',
     description:
       'L’église est située à Montréal. Les renseignements détaillés sur le stationnement et l’accessibilité restent à confirmer.',
-    address: SITE_ADDRESS.formatted,
-    mapEmbedUrl:
-      'https://www.openstreetmap.org/export/embed.html?bbox=-73.6177965%2C45.5744702%2C-73.6057965%2C45.5824702&layer=mapnik&marker=45.5784702%2C-73.6117965',
-    mapTitle: 'Carte indiquant l’emplacement de la Paroisse Saint-René-Goupil',
+    address: siteSettingsData.address.formatted,
+    mapEmbedUrl: siteSettingsData.map.embedUrl,
+    mapTitle: siteSettingsData.map.title,
     directionsCta: {
       label: 'Obtenir l’itinéraire',
-      href: 'https://www.google.com/maps/dir/?api=1&destination=45.57847023192667%2C-73.61179654539147',
+      href: siteSettingsData.directionsUrl,
     },
     accessNotes: [],
     status: 'confirmed',

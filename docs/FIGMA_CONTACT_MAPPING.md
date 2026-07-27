@@ -2,12 +2,11 @@
 
 ## Statut de migration
 
-La composition visuelle et le frontend sont terminés sur
-`feature/s1-t09-contact-page-1to1`. L’envoi réel est volontairement absent :
-S1-T09 est en pause à la porte de validation du système d’envoi. La page ne
-sera considérée entièrement terminée qu’après validation de l’hébergement, du
-destinataire, de la confidentialité, de la validation serveur et de
-l’anti-spam.
+La composition visuelle et le frontend, préparés initialement sur
+`feature/s1-t09-contact-page-1to1`, sont intégrés sélectivement par S1-T12.
+L’envoi réel est volontairement absent : la page ne sera considérée
+entièrement terminée qu’après validation de l’hébergement, du destinataire, de
+la confidentialité, de la validation serveur et de l’anti-spam.
 
 ## Source et routage
 
@@ -54,8 +53,10 @@ de fréquence ou le contrôle de l’origine.
 L’adresse `4251 Rue Parc René-Goupil, Montréal, Québec H1Z 1X8`, les
 coordonnées `45.57847023192667, -73.61179654539147` et le numéro
 `+1 514 722-1161` ont été confirmés directement par la paroisse pendant
-S1-T09. Ils sont centralisés dans `src/lib/site.ts`, puis réutilisés par la
-page Contact et le footer.
+S1-T09. Ils sont centralisés dans `src/data/siteSettings.ts`, normalisés par
+`getSiteSettings()`, puis réutilisés par la page Contact, l’accueil, le footer
+et Nos services. `src/lib/site.ts` ne conserve que des constantes de
+compatibilité dérivées de cette source.
 
 Le courriel et les heures de secrétariat observés dans l’ancien contenu exigent
 toujours une confirmation. Ils restent dans l’audit éditorial, pas dans le HTML

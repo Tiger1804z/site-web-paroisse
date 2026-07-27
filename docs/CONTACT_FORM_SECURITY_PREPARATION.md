@@ -143,8 +143,8 @@ fréquence ou le code d’envoi.
 
 Instruction de reprise :
 
-« Reprendre S1-T09 à la porte de validation SMTP sur
-feature/s1-t09-contact-page-1to1. »
+« Reprendre S1-T09 à la porte de validation du système d’envoi, depuis l’état
+frontend intégré par S1-T12. »
 
 Avant toute implémentation, confirmer l’hébergeur, l’adresse destinataire,
 l’adresse ou le domaine expéditeur, le fournisseur actuel, la politique de

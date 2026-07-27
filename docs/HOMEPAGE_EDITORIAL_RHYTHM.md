@@ -65,6 +65,8 @@ ne sont pas disponibles.
 - la galerie utilise une composition manuelle en cinq profondeurs : l’image
   courante domine au centre, les voisines diminuent vers les côtés et les
   flèches ou gestes tactiles déplacent la sélection. Elle ne défile pas seule;
+  un cadre fin, une légende synchronisée et une lightbox accessible renforcent
+  l’image active sans créer une page Galerie séparée;
 - les autres nouveaux blocs utilisent seulement les révélations secondaires
   déjà prévues par le système.
 
