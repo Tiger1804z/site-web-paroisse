@@ -154,10 +154,15 @@ statique et la lentille, les indicateurs et le zoom sont absents.
 
 La galerie n’utilise aucun autoplay. Les flèches, les touches gauche/droite ou
 un geste tactile modifient un index et laissent CSS interpoler `transform` et
-`opacity` sur 520 ms. Une image domine au centre, deux voisines sont
-intermédiaires et deux images plus petites ferment la composition. Sans
-JavaScript, la liste reste une bande horizontale défilable; avec reduced
-motion, le changement est instantané.
+`opacity` sur 760 ms, avec saturation et luminosité atténuées sur les plans
+secondaires. Une image domine au centre, deux voisines sont intermédiaires et
+deux images plus petites ferment la composition. Sa légende se croise
+brièvement sur 260 ms et reste synchronisée avec l’index.
+
+La lightbox `<dialog>` n’ajoute aucun zoom de scène : elle ouvre une variante
+WebP optimisée, répond aux flèches et à Échap, puis restitue le focus. Sans
+JavaScript, la liste reste une bande horizontale défilable et les images sont
+des liens directs; avec reduced motion, les changements sont instantanés.
 
 ## Le vitrail vivant de la communauté
 

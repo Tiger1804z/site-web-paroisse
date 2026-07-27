@@ -1,6 +1,6 @@
 # Audit des routes restantes
 
-Audit initial réalisé pendant S1-T08 et actualisé dans S1-T11 à partir de :
+Audit initial réalisé pendant S1-T08 et actualisé dans S1-T12 à partir de :
 
 - `reference/figma-make-export/src/App.tsx`;
 - tous les fichiers `reference/figma-make-export/src/pages/*.tsx`;
@@ -14,7 +14,7 @@ Audit initial réalisé pendant S1-T08 et actualisé dans S1-T11 à partir de :
 
 | Libellé visible              | Route attendue                   | Fichier Figma                  | Route Astro actuelle                      | État                  | Priorité recommandée                 | Dépendances ou contenu manquant                                                                                                                                        |
 | ---------------------------- | -------------------------------- | ------------------------------ | ----------------------------------------- | --------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Accueil                      | `/`                              | `Home.tsx`                     | `src/pages/index.astro`                   | terminé               | —                                    | Les coordonnées et horaires définitifs restent à confirmer.                                                                                                            |
+| Accueil                      | `/`                              | `Home.tsx`                     | `src/pages/index.astro`                   | terminé               | —                                    | Adresse et téléphone confirmés; courriel public et heures du secrétariat restent masqués.                                                                              |
 | Notre paroisse               | `/notre-paroisse/`               | `NotreParoisse.tsx`            | `src/pages/notre-paroisse.astro`          | terminé               | —                                    | Validation éditoriale finale des faits historiques.                                                                                                                    |
 | Horaires                     | `/horaires/`                     | `Horaires.tsx`                 | `src/pages/horaires.astro`                | terminé               | —                                    | Remplacement futur des placeholders par des horaires confirmés.                                                                                                        |
 | Première visite              | `/premiere-visite/`              | `PremiereVisite.tsx`           | `src/pages/premiere-visite.astro`         | terminé               | —                                    | Coordonnées, stationnement et accessibilité à confirmer.                                                                                                               |
@@ -25,8 +25,8 @@ Audit initial réalisé pendant S1-T08 et actualisé dans S1-T11 à partir de :
 | Feuillets paroissiaux        | `/feuillets-paroissiaux/`        | `Feuillets.tsx`                | placeholder dans `src/pages/[slug].astro` | bloqué / différé      | Révision le 10 août 2026 ou après    | Aucun PDF disponible. Confirmer la volonté de publier, les fichiers, dates, droits, politique d'archives et responsable des mises à jour avec la secrétaire.           |
 | Friperie                     | `/friperie/`                     | `Friperie.tsx`                 | `src/pages/friperie.astro`                | migré, `noindex`      | Validation éditoriale et photos      | Remplacer les prototypes, confirmer leurs droits temporaires, les horaires, les dons, l'accès et les coordonnées avant de retirer `noindex`.                           |
 | Location de salle            | `/location-de-salle/`            | `LocationSalle.tsx`            | `src/pages/location-de-salle.astro`       | alias `noindex`       | Intégrée à Nos services              | Redirection statique vers `/nos-services/#location-de-salle`; tarifs et disponibilités sont communiqués manuellement par le secrétariat.                               |
-| Galerie                      | `/galerie/`                      | `Galerie.tsx`                  | placeholder dans `src/pages/[slug].astro` | placeholder           | Moyenne                              | Sélection d'images autorisées, crédits, consentements et lightbox accessible.                                                                                          |
-| Contact                      | `/contact/`                      | `Contact.tsx`                  | placeholder dans `src/pages/[slug].astro` | en pause hors S1-T10  | Bloquée à la validation SMTP         | S1-T09 est conservé sur `feature/s1-t09-contact-page-1to1`, non fusionné dans `staging`; aucune implémentation Contact, SMTP, courriel ou serverless dans S1-T10.      |
+| Galerie                      | `/galerie/`                      | `Galerie.tsx`                  | placeholder dans `src/pages/[slug].astro` | différée / `noindex`  | À réévaluer selon le besoin          | L’utilisateur conserve uniquement la mini-galerie de l’accueil; aucune page autonome ni promotion dans la navigation pour l’instant.                                   |
+| Contact                      | `/contact/`                      | `Contact.tsx`                  | `src/pages/contact.astro`                 | frontend terminé      | Bloquée à la validation d’envoi      | Adresse, téléphone et carte confirmés; validation locale seulement. Aucun endpoint, SMTP, API, secret ou faux succès.                                                  |
 | Politique de confidentialité | `/politique-de-confidentialite/` | aucun                          | placeholder dans `src/pages/[slug].astro` | placeholder           | Haute avant formulaire ou analytique | Texte juridique approuvé et inventaire des traitements de données.                                                                                                     |
 | Mentions légales             | `/mentions-legales/`             | aucun                          | placeholder dans `src/pages/[slug].astro` | placeholder           | Moyenne                              | Propriétaire du site, responsable de publication et mentions approuvées.                                                                                               |
 | Page introuvable             | toute route inconnue             | aucune page Figma              | `src/pages/404.astro`                     | terminé techniquement | —                                    | Revue finale du contenu lors du déploiement.                                                                                                                           |
@@ -38,11 +38,8 @@ contenu à migrer.
 ## Pages restantes du menu « Informations »
 
 Le menu desktop, le menu mobile et le footer utilisent la même liste filtrée
-`informationNavigation`. Après S1-T11, deux destinations publiques restent
-des placeholders :
-
-1. Contact — `/contact/`;
-2. Galerie — `/galerie/`.
+`informationNavigation`. Contact est maintenant une page dédiée; aucune
+destination active du menu Informations ne mène vers un placeholder.
 
 Friperie répond maintenant par une page dédiée, mais reste `noindex`.
 Location de salle fait partie de `/nos-services/` et son ancienne route reste
@@ -52,8 +49,14 @@ Feuillets est conservé comme définition inactive et comme placeholder
 Feuillets de l'accueil, du CTA Horaires de l'accueil et des promotions de la
 page Horaires.
 
-Contact est volontairement en pause sur sa branche distincte, à la porte de
-validation SMTP. S1-T11 ne modifie ni cette branche ni son implémentation.
+Galerie est également conservée comme définition inactive et comme placeholder
+`noindex`. La mini-galerie de l’accueil reste autonome et ne pointe pas vers
+cette route.
+
+Le frontend Contact de S1-T09 est intégré par S1-T12. La route demeure
+`noindex` et le formulaire n’envoie rien : le choix du système d’envoi, la
+validation serveur, la confidentialité et la gestion des secrets restent une
+porte de livraison distincte.
 
 ## Décision Feuillets — bloqué / différé
 
@@ -88,11 +91,15 @@ Date de révision : **10 août 2026 ou après le retour de la secrétaire**.
   `/nos-services/`, avec redirection HTML vers l’ancre de la section.
 - La sortie Astro statique ne produit pas de statut HTTP 301; l’hébergement
   pourra remplacer ces compatibilités par des redirections permanentes.
-- Toutes les destinations de navigation répondent grâce aux pages migrées ou
-  aux placeholders statiques.
+- Toutes les destinations actives de navigation répondent par des pages
+  dédiées.
 - Les placeholders restent `noindex`.
 - Friperie reste aussi `noindex` pendant sa phase de photographies et de
   confirmation.
 - Feuillets répond encore en placeholder, mais aucun lien public ne le promeut.
+- Contact répond par son frontend complet `noindex`, sans envoi.
+- Galerie répond encore en placeholder, mais aucun lien public ne la promeut.
+- La mini-galerie de l’accueil exclut les images aux droits ou consentements en
+  attente.
 - Aucun bouton Figma servant de routeur React n'est conservé.
 - Aucun lien public ne doit utiliser `href="#"`.

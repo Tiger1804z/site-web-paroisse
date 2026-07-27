@@ -6,10 +6,10 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 Le dépôt contient la fondation technique, le système de design, le layout
 global, les pages Accueil, Horaires, Notre paroisse, Première visite, Nos
-services, Vie paroissiale et Friperie, ainsi que l’architecture Événements et
-l’audit documentaire du site existant. Il valide Astro, TypeScript strict,
-React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la
-préservation de l’export Figma Make.
+services, Vie paroissiale, Friperie et Contact, ainsi que
+l’architecture Événements et l’audit documentaire du site existant. Il valide
+Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité
+automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -32,7 +32,10 @@ légèrement plus généreux, métadonnées harmonisées, CTA de 52 px, navigati
 traitement photographique commun, une cadence de 7,6 secondes, un fondu de
 1,25 seconde et une carte « Prochaines messes » bourgogne plutôt que blanche.
 
-Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
+Les autres pages complètes, le CMS, les formulaires connectés et le déploiement
+ne sont pas encore implémentés. L’adresse et le téléphone publics sont
+confirmés et partagés; les horaires, dates, courriel public et autres
+informations opérationnelles demeurent masqués ou à confirmer.
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
 de contenu local typé et sa future connexion à Sanity sont expliqués dans
@@ -49,11 +52,11 @@ récit demeure entièrement disponible en HTML, y compris sans JavaScript. Son
 architecture est décrite dans
 [docs/IMMERSIVE_HISTORY_TIMELINE.md](docs/IMMERSIVE_HISTORY_TIMELINE.md).
 
-La route `/premiere-visite/` utilise une source locale
-`FirstVisitPageData`. Les coordonnées, le stationnement et les détails
-d’accessibilité restent explicitement à confirmer. La séparation entre le futur
-document `firstVisitPage` et les réglages globaux `siteSettings` est expliquée
-dans
+La route `/premiere-visite/` utilise une source locale `FirstVisitPageData`.
+L’adresse et le téléphone sont confirmés globalement; le stationnement et les
+détails d’accessibilité restent explicitement à confirmer. La séparation entre
+le futur document `firstVisitPage` et les réglages globaux `siteSettings` est
+expliquée dans
 [docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md](docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md).
 
 La route canonique `/nos-services/` utilise `ServicesPageData`, une source
@@ -85,16 +88,30 @@ Le même contrôleur de lentille organique est branché au hero d'accueil. Il y
 révèle toujours la prochaine photographie de la boucle sans modifier le
 contenu, les CTA ou le comportement statique sur tactile et reduced motion.
 
+La page Galerie complète est différée à la demande de l’utilisateur :
+`/galerie/` reste un placeholder `noindex` absent des menus. L’accueil conserve
+une sélection de six photographies réelles sans personnes reconnaissables,
+issue de `GalleryItem`. Son carrousel centré possède un cadre éditorial, une
+légende qui suit l’image active et une lightbox `<dialog>` accessible. Les
+images IA, prototypes Friperie et illustrations externes en sont exclus.
+
+La route `/contact/` restaure le frontend S1-T09 : adresse, téléphone, carte
+OpenStreetMap et formulaire avec validation locale et honeypot. Le submit est
+neutralisé, aucun faux succès n’existe et aucune donnée n’est transmise.
+L’adresse, le téléphone, la carte et l’itinéraire proviennent de
+`src/data/siteSettings.ts` et alimentent aussi l’accueil, le footer et Nos
+services. Le courriel public et les heures du secrétariat restent masqués.
+
 Feuillets paroissiaux est bloqué et différé : aucun PDF réel n'est disponible.
 La route placeholder `/feuillets-paroissiaux/` reste `noindex`, mais sa
 promotion est masquée du desktop, du mobile, du footer, de l'accueil et
 d'Horaires depuis la source canonique de navigation. La décision sera revue
 avec la secrétaire le 10 août 2026 ou après son retour.
 
-S1-T09 Contact reste volontairement en pause sur la branche séparée
-`feature/s1-t09-contact-page-1to1`, non fusionnée dans `staging`, à la porte de
-validation SMTP. Ce raffinement ne modifie aucun fichier Contact, SMTP, API de
-courriel ou fonction serverless.
+Le frontend S1-T09 est intégré par S1-T12, mais sa porte de livraison demeure
+inchangée : le système d’envoi réel doit encore être choisi et validé. Aucun
+endpoint, SMTP, fournisseur transactionnel, secret ou fonction serverless
+n’est ajouté.
 
 ## Stack
 

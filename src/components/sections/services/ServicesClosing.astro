@@ -33,8 +33,8 @@ const { paymentMethods, finalCta } = Astro.props;
         <Button href={finalCta.primary.href} variant="light">
           {finalCta.primary.label}
         </Button>
-        <a class="services-closing__phone" href="tel:+15147221161">
-          514 722-1161
+        <a class="services-closing__phone" href={finalCta.phone.href}>
+          {finalCta.phone.display}
         </a>
       </div>
     </div>

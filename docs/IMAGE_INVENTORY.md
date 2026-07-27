@@ -218,6 +218,23 @@ variantes responsives par `astro:assets` et chargées en faible priorité. Les
 textes alternatifs les décrivent comme des images d’illustration. Leur présence
 ne constitue pas une preuve d’une célébration tenue dans la paroisse.
 
+### Mini-galerie de l’accueil — S1-T12
+
+La sélection publique se limite actuellement à six photographies réelles du
+projet : `autel-decor-rouge-01.jpg`,
+`eglise-exterieur-clochers-01.webp`, `croix-verre-entree-01.webp`,
+`autel-fleurs-blanches-01.jpg`,
+`interieur-eglise-decoration-01.webp` et
+`eglise-exterieur-identification-01.webp`. Aucune ne montre une personne
+reconnaissable. La source `src/data/gallery.ts` porte pour chacune un titre,
+une description factuelle, un alt, une provenance et un état de publication.
+
+Les mêmes fichiers alimentent le carrousel et sa lightbox; `astro:assets`
+produit les variantes responsives et WebP plein écran sans modifier les
+originaux. Les images IA, externes, temporaires de Friperie et les vues avec
+personnes sont exclues. La page Galerie autonome est différée et la route
+technique reste un placeholder `noindex`.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.
