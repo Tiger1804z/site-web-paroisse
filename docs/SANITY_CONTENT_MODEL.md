@@ -3,6 +3,40 @@
 Sanity n’est pas installé. Ce document décrit la frontière future afin que les
 contrats Astro actuels restent stables.
 
+## `parishLifePage`
+
+Le futur document de page pourra contenir :
+
+- `hero` avec eyebrow, titre, introduction, image et texte alternatif;
+- `introduction` et note éditoriale de confirmation;
+- `features[]` avec identifiant, titre, résumé, points clés, CTA, statut,
+  activation et ordre;
+- `participation` avec accent, titre, description et CTA;
+- images, positions de recadrage et crédits.
+
+Une entrée de `features[]` peut rester un objet intégré, car elle appartient à
+la composition de cette page. Un groupe devrait devenir un document Sanity
+référencé uniquement s'il doit être réutilisé ailleurs, posséder une page
+détaillée ou être relié à des responsables et activités validés.
+
+Sanity contrôlera le contenu, l'ordre et l'activation. Le code Astro conservera
+la grille alternée, les breakpoints, la palette, les reveals, les composants,
+les règles d'accessibilité et la validation du contrat.
+
+```text
+Sanity parishLifePage
+  → GROQ
+  → normalisation
+  → ParishLifePageData
+  → composants Astro existants
+  → HTML statique
+```
+
+`ParishLifeFeature` reste distinct de `ParishEvent`. Une activité datée est
+saisie une seule fois comme `parishEvent`; la page Vie paroissiale pourra plus
+tard recevoir une sélection déjà filtrée si sa maquette évolue, sans dupliquer
+les documents.
+
 ## `eventsPage`
 
 Ce document de page pourra contenir le hero, l’introduction et l’ordre des

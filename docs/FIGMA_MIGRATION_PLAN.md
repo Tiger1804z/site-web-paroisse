@@ -12,9 +12,9 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 8. ✅ **Première visite — complété dans S1-T05** : parcours Figma, informations pratiques en placeholders, FAQ native, source typée `FirstVisitPageData` et séparation préparée entre `firstVisitPage` et `siteSettings`.
 9. ✅ **Sacrements et services — complété dans S1-T06** : onglets Figma, photographies locales, source typée `SacramentsPageData`, contenu opérationnel prudent et préparation documentée des futurs documents, slugs et routes statiques de détail. Aucune page de détail n’est encore créée.
 10. **Catéchèse** — créer la page durable et prévoir les campagnes d’inscription comme contenus volatils.
-11. **Vie paroissiale** — migrer les groupes et appels à participation.
+11. ✅ **Vie paroissiale — complété dans S1-T08** : composition alternée Figma, quatre groupes explicitement à confirmer, source typée `ParishLifePageData`, vraies routes et préparation `parishLifePage`.
 12. **Soutien à la communauté** — confirmer l’étendue des services et décider entre page autonome ou fusion avec Friperie.
-13. **Événements** — préparer liste, filtres, archives et futures pages de détail.
+13. ✅ **Événements — S1-T07 fusionné** : catégories permanentes, événements datés, archives et source unique partagée avec l'accueil. La route reste `noindex` jusqu'à sa validation éditoriale finale.
 14. **Pèlerinages** — présenter le programme confirmé et traiter chaque sortie comme un contenu daté.
 15. **Feuillets** — préparer l’archive et les documents.
 16. **Merci à nos annonceurs** — créer la page, le CTA « Devenir annonceur » et la future collection, sans reprendre de logo non autorisé.
@@ -28,4 +28,5 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 24. **Formulaires** — concevoir validation, backend, consentement et courriels.
 25. **Déploiement** — choisir l’hébergeur, le domaine, la CI/CD et l’observabilité.
 
-Prochain ticket recommandé : `S1-T07 — Migrer la page Événements 1:1 depuis l’export Figma`.
+Les routes restantes et leur priorité sont inventoriées dans
+[`REMAINING_ROUTES_AUDIT.md`](./REMAINING_ROUTES_AUDIT.md).

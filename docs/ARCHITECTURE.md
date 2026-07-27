@@ -416,6 +416,34 @@ n’ajoute ni listener `scroll`, ni boucle d’animation JavaScript. Voir
 [`EVENTS_VISUALS_BATCH_1.md`](./EVENTS_VISUALS_BATCH_1.md) et
 [`EVENTS_ARCHITECTURE.md`](./EVENTS_ARCHITECTURE.md).
 
+## Architecture Vie paroissiale — S1-T08
+
+La page suit la même frontière de contenu que les migrations précédentes :
+
+```text
+src/data/parishLife.ts
+  → src/lib/content/getParishLifePageData.ts
+  → frontmatter de src/pages/vie-paroissiale.astro
+  → composants Astro typés
+  → HTML statique
+```
+
+`ParishLifeFeature` représente un groupe ou une porte d'entrée éditoriale
+durable. Il ne représente jamais une occurrence de calendrier. `ParishEvent`
+reste le seul contrat des événements datés et n'est ni importé ni recopié par
+la page Vie paroissiale.
+
+Le getter filtre les chapitres actifs et applique leur ordre pendant le build.
+Les composants reçoivent uniquement `ParishLifePageData`; ils ne connaissent
+ni le fichier local, ni GROQ, ni Sanity. Le futur branchement remplacera la
+source du getter par une requête et une normalisation sans modifier le
+frontmatter ou la composition visuelle.
+
+Les quatre groupes viennent de Figma et de l'inventaire interne, mais leur
+activité actuelle reste à confirmer. Le statut et les formulations prudentes
+sont conservés dans la source de contenu; les fréquences, responsables et
+coordonnées fictives de la maquette ne sont pas repris.
+
 ## Limites actuelles
 
 - la route Événements expose ses catégories et une première architecture

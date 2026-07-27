@@ -96,6 +96,23 @@ hash de sa source.
 ces JPEG dans le dépôt. Les vues additionnelles sont chargées paresseusement
 dans une mosaïque; aucune n’est préchargée.
 
+## Réutilisation Vie paroissiale — S1-T08
+
+Aucun nouvel original n'est importé. La page réutilise cinq JPEG déjà
+inventoriés et dont les hashes correspondent aux sources Figma :
+
+| Fichier                                | Usage S1-T08                | Chargement            |
+| -------------------------------------- | --------------------------- | --------------------- |
+| `autel-decor-rouge-01.jpg`             | Hero                        | eager, haute priorité |
+| `autel-eclairage-rose-01.jpg`          | Groupe Jeunes               | lazy                  |
+| `interieur-eglise-decor-violet-01.jpg` | Groupe Chorale              | lazy                  |
+| `autel-fleurs-blanches-01.jpg`         | Dames et Fils de Notre-Dame | lazy                  |
+| `autel-decor-violet-01.jpg`            | Marguilliers                | lazy                  |
+
+Les photographies montrent l'architecture et le décor intérieur; elles ne
+documentent pas les groupes eux-mêmes. Les textes alternatifs restent donc
+factuels et ne prétendent pas montrer une activité ou ses membres.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.
