@@ -265,3 +265,55 @@ contenu est visible. Avec reduced motion, le contrôleur appelle son état final
 et les transitions décoratives sont ramenées à une durée négligeable par la
 stratégie globale. Aucun script, observer ou listener supplémentaire n'est
 créé pour cette page.
+
+## Lentilles organiques des héros — S1-T10
+
+`src/scripts/organic-hero-lens.ts` centralise l'amélioration progressive
+inspirée du principe visuel du hero Patreon. Une seule ouverture masquée révèle
+une couche photographique plein cadre derrière l'image principale. Friperie et
+le hero d'accueil utilisent le même contrôleur; les autres héros restent hors
+du périmètre de S1-T10.
+
+La vidéo de référence fournie le 27 juillet 2026 précise le mouvement : la
+fenêtre n'est pas un disque fixe. Elle naît au début du geste, gonfle avec
+l'énergie du pointeur, s'étire légèrement dans sa direction, accuse un retard
+court, puis se résorbe lorsque le mouvement cesse. Le diamètre maximal reste
+`clamp(150px, 15vw, 250px)`.
+
+Un listener `pointermove` passif, attaché uniquement au hero, mesure la
+distance, la vitesse et la direction. Une seule boucle `requestAnimationFrame`
+interpole la position à `0.13`, la croissance à `0.17` et le retrait à
+`0.105`. Douze points, deux harmoniques discrètes et des courbes quadratiques
+produisent le tracé SVG organique. La forme se referme après 105 ms sans
+mouvement réel; elle ne demeure donc pas comme une vignette flottante.
+
+Sur Friperie, les quatre révélations avancent dans un ordre fixe après 180 px
+de distance cumulée et au moins 560 ms de mouvement. Sur l'accueil, la lentille
+révèle toujours la prochaine image de la boucle : 1 révèle 2, 2 révèle 3 et 3
+révèle 1, y compris après une sélection manuelle. L'opacité des révélations se
+croise sur 360 ms. L'ouverture SVG continue de suivre le pointeur pendant le
+fondu : ni le hero complet ni son texte ne disparaissent.
+
+Le script :
+
+- conserve les images en faible priorité dans le HTML, puis les promeut vers
+  `eager` et les décode pendant un temps d'inactivité ou au premier geste;
+- refuse d'afficher la lentille tant que les quatre images ne sont pas prêtes;
+- recalcule la géométrie avec `ResizeObserver`;
+- laisse la forme se résorber à `pointerleave`, mais l'annule immédiatement
+  lorsque l'onglet est caché;
+- nettoie listeners, observer, idle callback et frame à `pagehide` ou
+  `astro:before-swap`.
+
+Le hero coupe naturellement la forme à ses bords avec `overflow: hidden` :
+elle peut atteindre un coin comme dans la référence sans provoquer de
+débordement horizontal. La couche révélée reste sous le texte HTML, mais
+au-dessus du voile sombre afin de garder ses couleurs perceptibles.
+
+La lentille n'existe que pour `(hover: hover)`, `(pointer: fine)` et
+`prefers-reduced-motion: no-preference`. Sur mobile, tablette tactile, reduced
+motion et sans JavaScript, le hero reste une image statique complète. Le texte
+HTML, la navigation et les CTA ne dépendent jamais de l'effet.
+
+Cette interaction est du code de présentation. Un futur CMS ne contrôlera ni
+le masque, ni les seuils, ni le rAF, ni la séquence.

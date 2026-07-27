@@ -1,0 +1,130 @@
+---
+import type { ThriftStorePhotoPlaceholder as PlaceholderData } from '@/types/thriftStore';
+
+interface Props {
+  placeholder: PlaceholderData;
+  variant?: number;
+}
+
+const { placeholder, variant = 0 } = Astro.props;
+---
+
+<div
+  class="photo-placeholder"
+  data-ratio={placeholder.ratio}
+  data-variant={String((variant % 4) + 1)}
+  aria-hidden="true"
+>
+  <div class="photo-placeholder__weave"></div>
+  <div class="photo-placeholder__frame">
+    <svg viewBox="0 0 48 48" width="32" height="32" fill="none">
+      <path d="M7 12h34v25H7z" stroke="currentColor" stroke-width="1.25"></path>
+      <path
+        d="m8 32 9-9 7 7 5-5 11 11"
+        stroke="currentColor"
+        stroke-width="1.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+      <circle cx="31.5" cy="19" r="3" stroke="currentColor" stroke-width="1.25"
+      ></circle>
+    </svg>
+    <span>{placeholder.subject}</span>
+    <small>Photographie réelle prévue</small>
+  </div>
+</div>
+
+<style>
+  .photo-placeholder {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-paper) 88%, var(--color-rose)),
+      var(--color-paper)
+    );
+    color: color-mix(in srgb, var(--color-charcoal) 55%, transparent);
+  }
+
+  .photo-placeholder[data-ratio='4:3'] {
+    aspect-ratio: 4 / 3;
+  }
+
+  .photo-placeholder[data-ratio='1:1'] {
+    aspect-ratio: 1;
+  }
+
+  .photo-placeholder[data-ratio='3:4'] {
+    aspect-ratio: 3 / 4;
+  }
+
+  .photo-placeholder[data-ratio='16:9'] {
+    aspect-ratio: 16 / 9;
+  }
+
+  .photo-placeholder__weave {
+    position: absolute;
+    z-index: -1;
+    inset: -20%;
+    opacity: 0.42;
+    background:
+      repeating-linear-gradient(
+        8deg,
+        transparent 0 0.7rem,
+        color-mix(in srgb, var(--color-gold) 13%, transparent) 0.7rem 0.75rem
+      ),
+      repeating-linear-gradient(
+        98deg,
+        transparent 0 1rem,
+        color-mix(in srgb, var(--color-burgundy) 8%, transparent) 1rem 1.05rem
+      );
+    rotate: -4deg;
+  }
+
+  .photo-placeholder[data-variant='2'] .photo-placeholder__weave {
+    rotate: 7deg;
+  }
+
+  .photo-placeholder[data-variant='3'] .photo-placeholder__weave {
+    scale: 1.12;
+    rotate: -9deg;
+  }
+
+  .photo-placeholder[data-variant='4'] .photo-placeholder__weave {
+    scale: 0.92;
+    rotate: 12deg;
+  }
+
+  .photo-placeholder__frame {
+    position: absolute;
+    inset: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: color-mix(in srgb, var(--color-ivory) 42%, transparent);
+    text-align: center;
+  }
+
+  .photo-placeholder__frame svg {
+    margin-bottom: 0.75rem;
+    color: var(--color-gold);
+  }
+
+  .photo-placeholder__frame span {
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-weight: 600;
+  }
+
+  .photo-placeholder__frame small {
+    margin-top: 0.35rem;
+    color: var(--color-muted);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+</style>

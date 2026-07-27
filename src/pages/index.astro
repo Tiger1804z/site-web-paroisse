@@ -10,6 +10,7 @@ import UpcomingActivitiesSection from '@/components/sections/home/UpcomingActivi
 import VisitSection from '@/components/sections/home/VisitSection.astro';
 import WelcomeSection from '@/components/sections/home/WelcomeSection.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isInformationRoutePublic } from '@/lib/navigation';
 import {
   getHomepageEventsSettings,
   getHomepageParishEvents,
@@ -23,6 +24,7 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
       homepageEventsSettings.homepageUpcomingLimit,
     )
   : { secondary: [] };
+const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
 ---
 
 <BaseLayout
@@ -45,7 +47,7 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
       )
   }
   <ParishLifePreview />
-  <ParishBulletin />
+  {showParishBulletin && <ParishBulletin />}
   <PracticalServices />
   <HomeGallery />
   <VisitSection />

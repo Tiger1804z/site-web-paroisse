@@ -1,0 +1,89 @@
+---
+import AnimatedClothingRack from '@/components/illustrations/events/AnimatedClothingRack.astro';
+import Container from '@/components/ui/Container.astro';
+import type { ThriftStoreSection } from '@/types/thriftStore';
+
+interface Props {
+  section: ThriftStoreSection;
+}
+
+const { section } = Astro.props;
+---
+
+<section
+  id={section.id}
+  class="thrift-reuse"
+  aria-labelledby={`${section.id}-title`}
+>
+  <Container>
+    <div class="thrift-reuse__grid">
+      <div class="thrift-reuse__content">
+        <p class="thrift-reuse__eyebrow">{section.eyebrow}</p>
+        <h2 id={`${section.id}-title`}>{section.title}</h2>
+        <p>{section.description}</p>
+      </div>
+
+      {
+        section.visualKind === 'clothing-rack' && (
+          <div class="thrift-reuse__visual">
+            <AnimatedClothingRack accessibleLabel="Illustration animée d’un portant présentant plusieurs vêtements destinés à une seconde vie" />
+          </div>
+        )
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .thrift-reuse {
+    padding-block: clamp(4rem, 8vw, 7rem);
+    background: var(--color-paper);
+  }
+
+  .thrift-reuse__grid {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .thrift-reuse__content {
+    max-width: 36rem;
+  }
+
+  .thrift-reuse__eyebrow {
+    margin: 0 0 0.75rem;
+    color: var(--color-gold);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .thrift-reuse h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.5rem, calc(2.04rem + 1.9vw), 3.75rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .thrift-reuse__content > p:last-child {
+    margin: 1.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .thrift-reuse__visual {
+    aspect-ratio: 720 / 560;
+    min-width: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-elevated);
+  }
+
+  @media (min-width: 64rem) {
+    .thrift-reuse__grid {
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    }
+  }
+</style>

@@ -30,9 +30,16 @@ const heroSlides = [
     label: 'Autel entouré de fleurs blanches',
   },
 ] as const;
+
+const lensClipId = 'home-hero-organic-lens-clip';
 ---
 
-<section class="home-hero" aria-labelledby="home-hero-title" data-home-hero>
+<section
+  class="home-hero"
+  aria-labelledby="home-hero-title"
+  data-home-hero
+  data-lens-active="false"
+>
   <div class="home-hero__media">
     {
       heroSlides.map((slide, index) => (
@@ -56,7 +63,66 @@ const heroSlides = [
       ))
     }
   </div>
+
+  <svg
+    class="home-hero__lens-definition"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      <clipPath id={lensClipId} clipPathUnits="userSpaceOnUse">
+        <path data-organic-lens-clip-path></path>
+      </clipPath>
+    </defs>
+  </svg>
+
   <div class="home-hero__overlay" aria-hidden="true"></div>
+
+  <div
+    class="home-hero__reveals"
+    aria-hidden="true"
+    style={`clip-path: url(#${lensClipId}); -webkit-clip-path: url(#${lensClipId});`}
+  >
+    {
+      heroSlides.map((slide, index) => (
+        <div
+          class="home-hero__reveal"
+          data-organic-lens-layer
+          data-active={index === 1 ? 'true' : 'false'}
+          style={`--hero-position-desktop: ${slide.desktopPosition}; --hero-position-mobile: ${slide.mobilePosition};`}
+        >
+          <Image
+            src={slide.image}
+            alt=""
+            widths={[640, 960, 1360, 1920]}
+            sizes="100vw"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+            data-organic-lens-image
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <svg
+    class="home-hero__lens-outline"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path class="home-hero__lens-outline-path" data-organic-lens-outline-path
+    ></path>
+  </svg>
+  <span
+    class="home-hero__lens-metric"
+    data-organic-lens-metric
+    aria-hidden="true"></span>
+
   <AmbientHero class="home-hero__ambient" particles={7} />
   <div class="home-hero__beams" aria-hidden="true">
     <span></span>
@@ -152,6 +218,8 @@ const heroSlides = [
 </section>
 
 <script>
+  import { initializeOrganicHeroLens } from '@/scripts/organic-hero-lens';
+
   document.querySelectorAll<HTMLElement>('[data-home-hero]').forEach((hero) => {
     if (hero.dataset.initialized === 'true') return;
     hero.dataset.initialized = 'true';
@@ -163,6 +231,10 @@ const heroSlides = [
       hero.querySelectorAll<HTMLButtonElement>('[data-home-hero-indicator]'),
     );
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const lensController = initializeOrganicHeroLens(hero, {
+      cycleOnMovement: false,
+      initialImageIndex: 1,
+    });
     let activeIndex = 0;
     let rotationTimer: number | undefined;
 
@@ -186,6 +258,7 @@ const heroSlides = [
           String(indicatorIndex === index),
         );
       });
+      lensController?.setActiveImage((index + 1) % slides.length);
     };
 
     const startRotation = () => {
@@ -219,9 +292,13 @@ const heroSlides = [
 
 <style>
   .home-hero {
+    --lens-size: clamp(9.375rem, 15vw, 15.625rem);
+
     position: relative;
+    isolation: isolate;
     min-height: 100svh;
     overflow: hidden;
+    contain: paint;
     background: var(--color-charcoal);
     color: var(--color-ivory);
   }
@@ -252,6 +329,78 @@ const heroSlides = [
   .home-hero__slide[data-active='true'] :global(img) {
     animation: home-hero-zoom var(--motion-duration-cinematic)
       var(--motion-ease-cinematic) both;
+  }
+
+  .home-hero__lens-definition,
+  .home-hero__reveals,
+  .home-hero__reveal,
+  .home-hero__lens-outline {
+    position: absolute;
+    inset: 0;
+  }
+
+  .home-hero__lens-definition {
+    z-index: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .home-hero__reveals {
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms var(--motion-ease-standard);
+    will-change: opacity;
+  }
+
+  .home-hero[data-lens-active='true'] .home-hero__reveals {
+    opacity: 1;
+  }
+
+  .home-hero__reveal {
+    opacity: 0;
+    transition: opacity 360ms var(--motion-ease-standard);
+  }
+
+  .home-hero__reveal[data-active='true'] {
+    opacity: 1;
+  }
+
+  .home-hero__reveal :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--hero-position-mobile);
+  }
+
+  .home-hero__lens-outline {
+    z-index: 3;
+    display: none;
+    opacity: 0;
+    overflow: visible;
+    pointer-events: none;
+    transition: opacity 160ms var(--motion-ease-standard);
+  }
+
+  .home-hero__lens-outline-path {
+    fill: none;
+    stroke: rgb(245 243 238 / 24%);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0.85rem 1.25rem rgb(28 25 24 / 16%));
+  }
+
+  .home-hero[data-lens-active='true'] .home-hero__lens-outline {
+    opacity: 1;
+  }
+
+  .home-hero__lens-metric {
+    position: absolute;
+    width: var(--lens-size);
+    height: 1px;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   @keyframes home-hero-zoom {
@@ -520,7 +669,8 @@ const heroSlides = [
   }
 
   @media (min-width: 48rem) {
-    .home-hero__slide :global(img) {
+    .home-hero__slide :global(img),
+    .home-hero__reveal :global(img) {
       object-position: var(--hero-position-desktop);
     }
 
@@ -541,7 +691,21 @@ const heroSlides = [
     }
   }
 
+  @media (hover: hover) and (pointer: fine) {
+    .home-hero__lens-outline {
+      display: block;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .home-hero__lens-definition,
+    .home-hero__reveals,
+    .home-hero__lens-outline,
+    .home-hero__lens-metric {
+      display: none;
+      transition: none;
+    }
+
     .home-hero__slide {
       display: none;
       transition: none;

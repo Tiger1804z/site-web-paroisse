@@ -118,6 +118,37 @@ couche d’image choisie, validera le fuseau, convertira les CTA et supprimera
 les entrées invalides. Les composants ne connaîtront ni GROQ, ni le client
 Sanity, ni la réponse brute.
 
+## `thriftStorePage`
+
+Le futur document de page pourra contenir :
+
+- hero, eyebrow, titre et introduction;
+- image principale, quatre images de révélation, textes alternatifs, crédits,
+  droits et notes de remplacement;
+- sections avec identifiant, titre, texte, activation et ordre;
+- galerie et sujets photographiques;
+- horaires, emplacement, note de prix et modalités de dons;
+- CTA de contact;
+- note sur les ventes spéciales.
+
+Les champs pratiques devront conserver un statut de confirmation. Une valeur
+non confirmée n'est pas normalisée en contenu public. Les ventes spéciales
+possédant une date restent des documents `parishEvent` et ne sont pas intégrées
+dans `thriftStorePage`.
+
+```text
+Sanity thriftStorePage
+  → GROQ
+  → normalisation
+  → ThriftStorePageData
+  → composants Astro existants
+  → HTML statique
+```
+
+Sanity ne contrôlera pas le masque, le suivi du pointeur, le JavaScript, les
+timings, le SVG `AnimatedClothingRack`, les couleurs, les breakpoints ou les
+tokens de mouvement.
+
 ## Publication et rebuild
 
 Une publication déclenchera plus tard un webhook de déploiement. Un rebuild

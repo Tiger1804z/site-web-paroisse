@@ -10,18 +10,28 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<aside class="schedule-sidebar" aria-label="Informations pratiques">
-  <section
-    class="schedule-sidebar__bulletin"
-    aria-labelledby="schedule-bulletin-title"
-  >
-    <p class="schedule-sidebar__eyebrow">{content.bulletin.eyebrow}</p>
-    <h2 id="schedule-bulletin-title">{content.bulletin.title}</h2>
-    <p class="schedule-sidebar__period">{content.bulletin.periodLabel}</p>
-    <Button href={content.bulletin.link.href} variant="light">
-      {content.bulletin.link.label}
-    </Button>
-  </section>
+<aside
+  class:list={[
+    'schedule-sidebar',
+    !content.bulletin.active && 'schedule-sidebar--single',
+  ]}
+  aria-label="Informations pratiques"
+>
+  {
+    content.bulletin.active && (
+      <section
+        class="schedule-sidebar__bulletin"
+        aria-labelledby="schedule-bulletin-title"
+      >
+        <p class="schedule-sidebar__eyebrow">{content.bulletin.eyebrow}</p>
+        <h2 id="schedule-bulletin-title">{content.bulletin.title}</h2>
+        <p class="schedule-sidebar__period">{content.bulletin.periodLabel}</p>
+        <Button href={content.bulletin.link.href} variant="light">
+          {content.bulletin.link.label}
+        </Button>
+      </section>
+    )
+  }
 
   <section
     class="schedule-sidebar__office"
@@ -110,6 +120,10 @@ const { content } = Astro.props;
   @media (min-width: 40rem) and (max-width: 63.999rem) {
     .schedule-sidebar {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .schedule-sidebar--single {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

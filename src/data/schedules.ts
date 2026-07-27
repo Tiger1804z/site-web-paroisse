@@ -93,6 +93,7 @@ export const schedulePageData = {
     bulletinLink: {
       label: 'Consulter le feuillet paroissial',
       href: '/feuillets-paroissiaux/',
+      active: false,
     },
   },
   sidebar: {
@@ -104,6 +105,7 @@ export const schedulePageData = {
         label: 'Consulter les feuillets',
         href: '/feuillets-paroissiaux/',
       },
+      active: false,
     },
     office: {
       eyebrow: 'Secrétariat',
@@ -122,24 +124,28 @@ export const schedulePageData = {
       question: 'Les horaires changent-ils pendant l’été?',
       answer:
         'Un horaire saisonnier peut être appliqué. Les périodes et les heures doivent être confirmées par la paroisse et seront publiées sur cette page.',
+      active: true,
     },
     {
       id: 'celebrations-speciales',
       question: 'Où sont annoncées les célébrations spéciales?',
       answer:
         'Les changements confirmés seront annoncés sur cette page et pourront aussi apparaître dans le feuillet paroissial.',
+      active: true,
     },
     {
       id: 'confirmer-heure',
       question: 'Comment confirmer une heure avant de me déplacer?',
       answer:
         'Consultez la date de dernière mise à jour ou communiquez avec le secrétariat à partir de la page Contact.',
+      active: true,
     },
     {
       id: 'consulter-feuillet',
       question: 'Où puis-je consulter le feuillet paroissial?',
       answer:
         'Les feuillets confirmés seront regroupés dans la section Feuillets paroissiaux.',
+      active: false,
     },
   ],
 } as const satisfies SchedulePageData;

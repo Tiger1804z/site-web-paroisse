@@ -4,7 +4,7 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services et Vie paroissiale migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07 et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services, Vie paroissiale et Friperie migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07 et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -52,6 +52,31 @@ de la maquette restent identifiés comme contenus à confirmer : aucune activit�
 fréquence, personne responsable ou coordonnée fictive n'est publiée. La source
 locale, le getter et les composants Astro préparent un futur document
 `parishLifePage` sans dépendre du CMS.
+
+La route `/friperie/` utilise `ThriftStorePageData`, une source locale et un
+getter. Son hero Astro possède une lentille progressive en JavaScript natif et
+réutilise `AnimatedClothingRack`; aucun React ou package n'est ajouté. Les
+quatre visuels sont des prototypes temporaires aux droits non confirmés et les
+six cadres de galerie attendent de vraies photographies prises à l'église. La
+page reste `noindex` tant que les images, horaires, conditions de dons et
+coordonnées responsables ne sont pas validés. Voir
+[docs/FIGMA_THRIFT_STORE_MAPPING.md](docs/FIGMA_THRIFT_STORE_MAPPING.md) et
+[docs/THRIFT_STORE_PHOTO_SHOT_LIST.md](docs/THRIFT_STORE_PHOTO_SHOT_LIST.md).
+
+Le même contrôleur de lentille organique est branché au hero d'accueil. Il y
+révèle toujours la prochaine photographie de la boucle sans modifier le
+contenu, les CTA ou le comportement statique sur tactile et reduced motion.
+
+Feuillets paroissiaux est bloqué et différé : aucun PDF réel n'est disponible.
+La route placeholder `/feuillets-paroissiaux/` reste `noindex`, mais sa
+promotion est masquée du desktop, du mobile, du footer, de l'accueil et
+d'Horaires depuis la source canonique de navigation. La décision sera revue
+avec la secrétaire le 10 août 2026 ou après son retour.
+
+S1-T09 Contact reste volontairement en pause sur la branche séparée
+`feature/s1-t09-contact-page-1to1`, non fusionnée dans `staging`, à la porte de
+validation SMTP. S1-T10 ne modifie aucun fichier Contact, SMTP, API de courriel
+ou fonction serverless.
 
 ## Stack
 
@@ -201,9 +226,14 @@ S1-T07 est fusionné : les catégories et les événements datés alimentent
 `/evenements/` et « Prochaines activités » depuis une source unique. La route
 Événements reste `noindex` jusqu'à sa validation éditoriale finale.
 
+S1-T10 migre Friperie en page dédiée `noindex` et reporte Feuillets sans
+supprimer sa route. Le prochain travail sur Feuillets dépend de la décision et
+des documents réels, pas d'une priorité visuelle de la maquette.
+
 ## Volontairement non implémenté
 
-- migration complète des routes encore listées dans `REMAINING_ROUTES_AUDIT.md`;
+- migration complète des routes encore listées comme placeholders dans
+  `REMAINING_ROUTES_AUDIT.md`;
 - contenu définitif;
 - CMS;
 - formulaires backend et courriels;
