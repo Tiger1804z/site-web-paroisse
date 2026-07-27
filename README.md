@@ -4,7 +4,7 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services et Vie paroissiale migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07 et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services et Vie paroissiale migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07, la préparation frontend de Contact et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
@@ -17,7 +17,14 @@ continu ni dépendance. Le vitrail vivant est intégré une seule fois à
 l’accueil. Les règles de performance et d’accessibilité sont documentées dans
 [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
 
-Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
+Les autres pages complètes, le CMS, l’envoi du formulaire Contact et le
+déploiement ne sont pas encore implémentés. La page Contact vérifie seulement
+ses champs dans le navigateur et reste `noindex`; elle ne possède aucun
+endpoint, secret ou faux état de succès. L’adresse et la géolocalisation de
+l’église ainsi que le téléphone ont été confirmés pendant S1-T09 et sont
+centralisés dans `src/lib/site.ts`; courriel et heures du secrétariat restent à
+confirmer. Le point de reprise exact de la porte d’envoi est consigné dans
+[docs/PROJECT_CURRENT_STATE.md](docs/PROJECT_CURRENT_STATE.md).
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
 de contenu local typé et sa future connexion à Sanity sont expliqués dans
@@ -200,6 +207,11 @@ inventoriés dans
 S1-T07 est fusionné : les catégories et les événements datés alimentent
 `/evenements/` et « Prochaines activités » depuis une source unique. La route
 Événements reste `noindex` jusqu'à sa validation éditoriale finale.
+
+S1-T09 est volontairement en pause après sa migration frontend. La branche
+`feature/s1-t09-contact-page-1to1` doit reprendre à la porte de validation
+SMTP : aucun fournisseur, endpoint ou secret ne doit être ajouté avant la
+confirmation explicite de l’architecture d’envoi.
 
 ## Volontairement non implémenté
 

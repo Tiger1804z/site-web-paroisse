@@ -1,0 +1,41 @@
+---
+import ContactForm from './ContactForm.astro';
+import ContactLocation from './ContactLocation.astro';
+import Container from '@/components/ui/Container.astro';
+import type { ContactPageData } from '@/types/contact';
+
+interface Props {
+  location: ContactPageData['location'];
+  form: ContactPageData['form'];
+}
+
+const { location, form } = Astro.props;
+---
+
+<div class="contact-main">
+  <Container>
+    <div class="contact-main__grid">
+      <ContactLocation location={location} />
+      <ContactForm form={form} />
+    </div>
+  </Container>
+</div>
+
+<style>
+  .contact-main {
+    padding-block: 0 6rem;
+    background: var(--color-ivory);
+  }
+
+  .contact-main__grid {
+    display: grid;
+    gap: 4rem;
+  }
+
+  @media (min-width: 64rem) {
+    .contact-main__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3rem;
+    }
+  }
+</style>

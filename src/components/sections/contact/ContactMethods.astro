@@ -1,0 +1,257 @@
+---
+import Container from '@/components/ui/Container.astro';
+import type { ContactMethodKind, ContactPageData } from '@/types/contact';
+
+interface Props {
+  methods: ContactPageData['methods'];
+  fallback: ContactPageData['methodsFallback'];
+  officeHours?: ContactPageData['officeHours'];
+}
+
+const { methods, fallback, officeHours } = Astro.props;
+const iconPaths: Record<ContactMethodKind, readonly string[]> = {
+  address: [
+    'M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+    'M19.5 10.5C19.5 17.642 12 21.75 12 21.75S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z',
+  ],
+  phone: [
+    'M2.25 6.75c0 8.284 6.716 15 15 15h2.25A2.25 2.25 0 0 0 21.75 19.5v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106a1.125 1.125 0 0 0-1.173.417l-.97 1.293a1.125 1.125 0 0 1-1.21.38 12.035 12.035 0 0 1-7.143-7.143 1.125 1.125 0 0 1 .38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102A1.125 1.125 0 0 0 5.872 2.25H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z',
+  ],
+  email: [
+    'M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75',
+    'm2.25.243 8.57 5.276a2.25 2.25 0 0 0 2.36 0l8.57-5.276',
+  ],
+  social: [
+    'M6.75 3h10.5A3.75 3.75 0 0 1 21 6.75v10.5A3.75 3.75 0 0 1 17.25 21H6.75A3.75 3.75 0 0 1 3 17.25V6.75A3.75 3.75 0 0 1 6.75 3Z',
+  ],
+};
+---
+
+<section class="contact-methods" aria-label="Coordonnées de la paroisse">
+  <Container>
+    {
+      methods.length > 0 ? (
+        <div class="contact-methods__grid" data-motion-reveal>
+          {methods.map((method) => (
+            <article class="contact-method">
+              <div class="contact-method__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  {iconPaths[method.kind].map((path) => (
+                    <path
+                      d={path}
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  ))}
+                </svg>
+              </div>
+              <p class="contact-method__label">{method.label}</p>
+              {method.href ? (
+                <a class="contact-method__value" href={method.href}>
+                  {method.value}
+                </a>
+              ) : (
+                <p class="contact-method__value">{method.value}</p>
+              )}
+              {method.note && <p class="contact-method__note">{method.note}</p>}
+            </article>
+          ))}
+          {methods.length < 4 && (
+            <aside class="contact-methods__fallback">
+              <div class="contact-methods__fallback-icon" aria-hidden="true">
+                <span />
+              </div>
+              <div>
+                <h2>{fallback.title}</h2>
+                <p>{fallback.description}</p>
+              </div>
+            </aside>
+          )}
+        </div>
+      ) : (
+        <div class="contact-methods__fallback" data-motion-reveal>
+          <div class="contact-methods__fallback-icon" aria-hidden="true">
+            <span />
+          </div>
+          <div>
+            <h2>{fallback.title}</h2>
+            <p>{fallback.description}</p>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      officeHours && (
+        <div class="contact-office" data-motion-reveal>
+          <h2>{officeHours.title}</h2>
+          <div class="contact-office__grid">
+            <div>
+              {officeHours.schedule.map((line) => (
+                <p>{line}</p>
+              ))}
+            </div>
+            {officeHours.note && <p>{officeHours.note}</p>}
+          </div>
+        </div>
+      )
+    }
+  </Container>
+</section>
+
+<style>
+  .contact-methods {
+    padding-block: 4rem;
+    background: var(--color-ivory);
+  }
+
+  .contact-methods__grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .contact-method {
+    padding: 1.5rem;
+    background: var(--color-paper);
+    transition: background-color var(--motion-duration-fast)
+      var(--motion-ease-standard);
+  }
+
+  .contact-method__icon,
+  .contact-methods__fallback-icon {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    margin-bottom: 1rem;
+    background: color-mix(in srgb, var(--color-burgundy) 10%, transparent);
+    color: var(--color-burgundy);
+  }
+
+  .contact-method__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .contact-method__label {
+    margin: 0 0 0.5rem;
+    color: var(--color-gold);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .contact-method__value {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  a.contact-method__value {
+    font-weight: 600;
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--color-gold) 55%,
+      transparent
+    );
+  }
+
+  .contact-method__note {
+    margin: 0.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+  }
+
+  .contact-methods__fallback {
+    display: grid;
+    max-width: 58rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 2rem);
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+  }
+
+  .contact-methods__grid .contact-methods__fallback {
+    max-width: none;
+  }
+
+  .contact-methods__fallback-icon {
+    margin: 0;
+  }
+
+  .contact-methods__fallback-icon span {
+    width: 1rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .contact-methods__fallback h2,
+  .contact-office h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .contact-methods__fallback p {
+    max-width: 42rem;
+    margin: 0.75rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+
+  .contact-office {
+    margin-top: 4rem;
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+  }
+
+  .contact-office__grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  .contact-office__grid p {
+    margin: 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .contact-method:hover {
+      background: color-mix(in srgb, var(--color-paper) 72%, white);
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .contact-office__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .contact-methods__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .contact-methods__fallback {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .contact-methods__fallback {
+      align-items: center;
+    }
+  }
+</style>

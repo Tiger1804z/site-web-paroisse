@@ -3,6 +3,49 @@
 Sanity n’est pas installé. Ce document décrit la frontière future afin que les
 contrats Astro actuels restent stables.
 
+## `contactPage`
+
+Le document Contact pourra contenir :
+
+- le hero, son titre et son introduction;
+- les titres et textes d’accompagnement;
+- les méthodes de contact à afficher;
+- les libellés et options du formulaire;
+- la mention de confidentialité;
+- l’activation et l’ordre des blocs;
+- l’adresse publique et les indications d’accès confirmées;
+- les coordonnées géographiques et le fournisseur cartographique retenu;
+- le lien d’itinéraire éventuel.
+
+Les coordonnées globales et les heures du secrétariat devraient idéalement
+provenir de `siteSettings`, puis être normalisées avec `contactPage` vers
+`ContactPageData`. Cela évite de recopier une adresse ou un téléphone dans le
+footer, l’accueil et Contact.
+
+L’adresse confirmée est temporairement centralisée dans `src/lib/site.ts`.
+Lors du branchement au CMS, elle migrera vers `siteSettings`; le composant de
+carte continuera de recevoir une URL normalisée et du contenu typé sans
+connaître GROQ.
+
+```text
+Sanity contactPage + siteSettings
+  → GROQ
+  → normalisation et filtrage des données confirmées
+  → ContactPageData
+  → composants Astro existants
+  → HTML statique
+```
+
+Sanity ne contiendra jamais une clé API, un mot de passe SMTP, une adresse
+destinataire privée, un secret anti-spam ou la logique serveur. Ces éléments
+appartiendront uniquement aux variables d’environnement et au code de la
+plateforme d’hébergement.
+
+Cette préparation éditoriale est indépendante de la porte d’envoi S1-T09 :
+installer Sanity ou publier `contactPage` ne rendrait pas le formulaire
+opérationnel. La décision sur l’hébergement, l’endpoint et le fournisseur
+demeure explicitement en attente.
+
 ## `parishLifePage`
 
 Le futur document de page pourra contenir :

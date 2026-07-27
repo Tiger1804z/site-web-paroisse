@@ -265,3 +265,14 @@ contenu est visible. Avec reduced motion, le contrôleur appelle son état final
 et les transitions décoratives sont ramenées à une durée négligeable par la
 stratégie globale. Aucun script, observer ou listener supplémentaire n'est
 créé pour cette page.
+
+## Contact — S1-T09
+
+La page Contact réutilise le contrôleur générique pour le bloc de coordonnées,
+la localisation et le formulaire. Les champs, erreurs, notes de
+confidentialité et états de validation ne sont jamais masqués ou retardés par
+le mouvement.
+
+Sans JavaScript, le formulaire complet et son avis d’indisponibilité restent
+visibles. Avec reduced motion, les grands blocs utilisent immédiatement leur
+état final. Aucun observer ou script d’animation propre à Contact n’est ajouté.

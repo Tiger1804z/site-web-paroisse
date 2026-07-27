@@ -21,7 +21,10 @@ Ce plan suit l’avancement par lots. Une étape n’est marquée complétée qu
 17. **Friperie** — migrer la mission, la présentation et les consignes de dons confirmées.
 18. **Location de salle** — migrer l’information et le processus de demande sans réservation instantanée.
 19. **Galerie** — migrer la grille et définir une lightbox accessible.
-20. **Contact** — migrer coordonnées, carte et structure de formulaire.
+20. **Contact — frontend préparé dans S1-T09** : composition Figma, contrat
+    `ContactPageData`, adresse et téléphone confirmés, autres coordonnées
+    filtrées, carte localisée, formulaire local accessible et porte obligatoire
+    avant tout endpoint ou envoi.
 21. **Responsive** — valider toutes les routes et tous les recadrages.
 22. **Accessibilité** — audit clavier, lecteurs d’écran, contrastes et contenus.
 23. **CMS** — sélectionner et intégrer la source éditoriale pour horaires, événements, inscriptions, pèlerinages, feuillets et annonceurs.

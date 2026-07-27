@@ -1,0 +1,347 @@
+---
+import ContactFormField from './ContactFormField.astro';
+import type { ContactPageData } from '@/types/contact';
+
+interface Props {
+  form: ContactPageData['form'];
+}
+
+const { form } = Astro.props;
+const reasonField = form.fields.find(({ name }) => name === 'reason');
+const fullNameField = form.fields.find(({ name }) => name === 'fullName');
+const emailField = form.fields.find(({ name }) => name === 'email');
+const phoneField = form.fields.find(({ name }) => name === 'phone');
+const messageField = form.fields.find(({ name }) => name === 'message');
+const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
+---
+
+<section
+  class="contact-form-section"
+  aria-labelledby="contact-form-title"
+  data-motion-reveal
+>
+  <h2 id="contact-form-title">{form.title}</h2>
+  <p class="contact-form-section__introduction">{form.introduction}</p>
+
+  <div
+    id="contact-form-unavailable"
+    class="contact-form-section__notice"
+    role="note"
+  >
+    <span aria-hidden="true"></span>
+    <p>{form.unavailableNotice}</p>
+  </div>
+
+  <form
+    class="contact-form"
+    data-contact-form
+    aria-describedby="contact-form-unavailable contact-form-privacy"
+    novalidate
+  >
+    <div
+      class="contact-form__error-summary"
+      data-contact-error-summary
+      role="alert"
+      tabindex="-1"
+      hidden
+    >
+    </div>
+
+    {reasonField && <ContactFormField field={reasonField} />}
+    {fullNameField && <ContactFormField field={fullNameField} />}
+
+    <div class="contact-form__split">
+      {emailField && <ContactFormField field={emailField} />}
+      {phoneField && <ContactFormField field={phoneField} />}
+    </div>
+
+    {messageField && <ContactFormField field={messageField} />}
+    {consentField && <ContactFormField field={consentField} />}
+
+    <div class="contact-form__honeypot" aria-hidden="true">
+      <label for="contact-website">Laissez ce champ vide</label>
+      <input
+        id="contact-website"
+        name="website"
+        type="text"
+        tabindex="-1"
+        autocomplete="off"
+        data-contact-honeypot
+      />
+    </div>
+
+    <p id="contact-form-privacy" class="contact-form__privacy">
+      {form.privacyNotice}
+      <a href={form.privacyPolicyHref}>Consulter la page de confidentialité</a>.
+    </p>
+
+    <button class="contact-form__button" type="button" data-contact-validate>
+      {form.validationButtonLabel}
+    </button>
+
+    <p
+      class="contact-form__local-status"
+      data-contact-local-status
+      role="status"
+      tabindex="-1"
+      hidden
+    >
+      {form.locallyValidNotice}
+    </p>
+
+    <noscript>
+      <p class="contact-form__noscript">
+        La vérification locale nécessite JavaScript. L’envoi en ligne demeure
+        désactivé et aucun renseignement ne sera transmis.
+      </p>
+    </noscript>
+  </form>
+</section>
+
+<script>
+  type ContactControl =
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+  const getValidationMessage = (control: ContactControl): string => {
+    const requiredMessage = control.dataset.requiredMessage;
+    const invalidMessage = control.dataset.invalidMessage;
+    const { validity } = control;
+
+    if (validity.valueMissing) {
+      return requiredMessage ?? 'Veuillez remplir ce champ.';
+    }
+
+    if (validity.typeMismatch || validity.patternMismatch) {
+      return invalidMessage ?? 'Veuillez vérifier le format de ce champ.';
+    }
+
+    if (validity.tooShort && 'minLength' in control) {
+      return `Veuillez entrer au moins ${control.minLength} caractères.`;
+    }
+
+    if (validity.tooLong && 'maxLength' in control) {
+      return `Veuillez utiliser au maximum ${control.maxLength} caractères.`;
+    }
+
+    return '';
+  };
+
+  const validateControl = (control: ContactControl): boolean => {
+    const wrapper = control.closest<HTMLElement>(
+      '[data-contact-field-wrapper]',
+    );
+    const error = wrapper?.querySelector<HTMLElement>(
+      '[data-contact-field-error]',
+    );
+    const message = getValidationMessage(control);
+    const isValid = message.length === 0;
+
+    control.setAttribute('aria-invalid', String(!isValid));
+    if (error) {
+      error.textContent = message;
+      error.hidden = isValid;
+    }
+
+    return isValid;
+  };
+
+  document
+    .querySelectorAll<HTMLFormElement>('[data-contact-form]')
+    .forEach((contactForm) => {
+      const controls = Array.from(
+        contactForm.querySelectorAll<ContactControl>('[data-contact-field]'),
+      );
+      const validateButton = contactForm.querySelector<HTMLButtonElement>(
+        '[data-contact-validate]',
+      );
+      const errorSummary = contactForm.querySelector<HTMLElement>(
+        '[data-contact-error-summary]',
+      );
+      const localStatus = contactForm.querySelector<HTMLElement>(
+        '[data-contact-local-status]',
+      );
+      const honeypot = contactForm.querySelector<HTMLInputElement>(
+        '[data-contact-honeypot]',
+      );
+
+      const clearLocalStatus = () => {
+        if (localStatus) {
+          localStatus.hidden = true;
+        }
+      };
+
+      controls.forEach((control) => {
+        control.addEventListener('blur', () => {
+          if (control.value.length > 0 || control.required) {
+            validateControl(control);
+          }
+        });
+
+        control.addEventListener('input', () => {
+          clearLocalStatus();
+          if (control.getAttribute('aria-invalid') === 'true') {
+            validateControl(control);
+          }
+        });
+
+        control.addEventListener('change', () => {
+          clearLocalStatus();
+          if (control.getAttribute('aria-invalid') === 'true') {
+            validateControl(control);
+          }
+        });
+      });
+
+      contactForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+      });
+
+      validateButton?.addEventListener('click', () => {
+        clearLocalStatus();
+
+        if (honeypot?.value) {
+          return;
+        }
+
+        const invalidControls = controls.filter(
+          (control) => !validateControl(control),
+        );
+
+        if (invalidControls.length > 0) {
+          if (errorSummary) {
+            errorSummary.textContent =
+              invalidControls.length === 1
+                ? 'Un champ doit être corrigé.'
+                : `${invalidControls.length} champs doivent être corrigés.`;
+            errorSummary.hidden = false;
+          }
+          invalidControls[0]?.focus();
+          return;
+        }
+
+        if (errorSummary) {
+          errorSummary.hidden = true;
+          errorSummary.textContent = '';
+        }
+
+        if (localStatus) {
+          localStatus.hidden = false;
+          localStatus.focus();
+        }
+      });
+    });
+</script>
+
+<style>
+  .contact-form-section h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .contact-form-section__introduction {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+
+  .contact-form-section__notice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.65;
+  }
+
+  .contact-form-section__notice span {
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.35rem;
+    border-radius: 50%;
+    background: var(--color-gold);
+  }
+
+  .contact-form-section__notice p {
+    margin: 0;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .contact-form__split {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .contact-form__error-summary,
+  .contact-form__local-status,
+  .contact-form__noscript {
+    margin: 0;
+    padding: 0.875rem 1rem;
+    border-left: 3px solid var(--color-burgundy);
+    background: var(--color-paper);
+    color: var(--color-burgundy);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .contact-form__privacy {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.7;
+  }
+
+  .contact-form__privacy a {
+    color: var(--color-burgundy);
+    font-weight: 600;
+  }
+
+  .contact-form__button {
+    width: 100%;
+    min-height: 3rem;
+    border: 1px solid var(--color-burgundy);
+    border-radius: 0;
+    background: var(--color-burgundy);
+    color: var(--color-ivory);
+    padding: 0.875rem 1.25rem;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration-fast) var(--motion-ease-standard),
+      border-color var(--motion-duration-fast) var(--motion-ease-standard);
+  }
+
+  .contact-form__button:hover {
+    border-color: var(--color-burgundy-dark);
+    background: var(--color-burgundy-dark);
+  }
+
+  .contact-form__honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 40rem) {
+    .contact-form__split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

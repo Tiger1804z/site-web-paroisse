@@ -6,6 +6,15 @@ Merci d’indiquer la réponse actuelle, la personne qui l’a validée et la da
 validation. Lorsqu’une information change selon la saison, préciser aussi la
 date à laquelle elle devra être révisée.
 
+## Confirmations reçues pendant S1-T09
+
+- Adresse publique confirmée le 26 juillet 2026 par le commanditaire :
+  4251 Rue Parc René-Goupil, Montréal, Québec H1Z 1X8.
+- Emplacement confirmé : `45.57847023192667, -73.61179654539147`.
+- Téléphone principal confirmé : `+1 514 722-1161`.
+- Le courriel, les heures du secrétariat, le stationnement et les détails
+  d’accessibilité restent à confirmer.
+
 ## Coordonnées
 
 1. L’adresse publique est-elle toujours le 4251, rue Parc René-Goupil,

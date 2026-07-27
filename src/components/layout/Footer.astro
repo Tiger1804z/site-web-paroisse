@@ -6,7 +6,7 @@ import {
   scheduleNavigation,
 } from '@/lib/navigation';
 import BrandLogo from '@/components/ui/BrandLogo.astro';
-import { SITE_NAME } from '@/lib/site';
+import { SITE_ADDRESS, SITE_NAME, SITE_PHONE } from '@/lib/site';
 
 interface Props {
   variant?: 'default' | 'compact';
@@ -69,13 +69,9 @@ const currentYear = new Date().getFullYear();
       <div class="site-footer__contact">
         <p class="site-footer__heading">Coordonnées</p>
         <address>
-          <p>[ADRESSE]</p>
-          <p>[TÉLÉPHONE]</p>
-          <p>[COURRIEL]</p>
-          <div class="site-footer__office">
-            <p class="site-footer__office-label">Secrétariat</p>
-            <p>[HEURES DU SECRÉTARIAT]</p>
-          </div>
+          <p>{SITE_ADDRESS.formatted}</p>
+          <a href={SITE_PHONE.href}>{SITE_PHONE.display}</a>
+          <a href="/contact/">Voir la carte et les coordonnées</a>
         </address>
       </div>
     </div>
@@ -94,8 +90,6 @@ const currentYear = new Date().getFullYear();
             </>
           ))
         }
-        <span aria-hidden="true">·</span>
-        <span>Conception : [NOM DU RESPONSABLE]</span>
       </div>
     </div>
   </div>
@@ -123,7 +117,7 @@ const currentYear = new Date().getFullYear();
     </svg>
     <span>Horaires</span>
   </a>
-  <a href="/contact" aria-label="Consulter les coordonnées pour appeler">
+  <a href={SITE_PHONE.href} aria-label={`Appeler au ${SITE_PHONE.display}`}>
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
@@ -140,7 +134,10 @@ const currentYear = new Date().getFullYear();
     </svg>
     <span>Appeler</span>
   </a>
-  <a href="/contact" aria-label="Consulter l’adresse et l’itinéraire">
+  <a
+    href="/contact/#nous-trouver"
+    aria-label="Consulter l’adresse et l’itinéraire"
+  >
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
@@ -249,6 +246,17 @@ const currentYear = new Date().getFullYear();
     font-size: 0.875rem;
     font-style: normal;
     line-height: 1.6;
+  }
+
+  .site-footer__contact address a {
+    color: var(--color-ivory);
+    font-weight: 600;
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--color-gold) 70%,
+      transparent
+    );
+    text-underline-offset: 0.25em;
   }
 
   .site-footer__contact p {

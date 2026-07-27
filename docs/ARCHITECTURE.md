@@ -444,6 +444,47 @@ activité actuelle reste à confirmer. Le statut et les formulations prudentes
 sont conservés dans la source de contenu; les fréquences, responsables et
 coordonnées fictives de la maquette ne sont pas repris.
 
+## Architecture Contact — S1-T09 avant la porte d’envoi
+
+La route Contact remplace son placeholder par une page statique typée :
+
+```text
+src/data/contact.ts
+  → src/lib/content/getContactPageData.ts
+  → frontmatter de src/pages/contact.astro
+  → composants Astro typés
+  → HTML statique
+  → validation locale facultative
+```
+
+Le getter ne transmet aux composants que les coordonnées `active` et
+`confirmed`. L’adresse, sa géolocalisation et le téléphone, confirmés pendant
+S1-T09, sont centralisés dans `src/lib/site.ts` pour alimenter Contact et le
+footer. Les autres valeurs observées dans l’ancien contenu ne sont pas rendues
+tant que la paroisse ne les a pas validées.
+
+`ContactLocation.astro` rend une iframe OpenStreetMap chargée paresseusement,
+mais conserve l’adresse en HTML et un lien d’itinéraire indépendant. La carte
+n’est pas requise pour comprendre ou utiliser l’emplacement; son recours à un
+tiers est documenté pour la future politique de confidentialité.
+
+Le formulaire n’a pas d’action réseau. Son bouton de type `button` déclenche
+un petit script de validation locale; aucun `fetch`, endpoint, SDK, secret ou
+état de succès n’existe. La validation serveur, l’anti-spam réel et l’envoi
+feront l’objet d’une décision séparée après la porte obligatoire.
+
+Le dépôt demeure en `output: 'static'`, sans adapter ou plateforme de
+déploiement configurée. Une future fonction serverless peut être ajoutée sans
+transformer les composants en application React, mais son emplacement exact
+dépendra de l’hébergeur retenu. Voir
+[`CONTACT_FORM_SECURITY_PREPARATION.md`](./CONTACT_FORM_SECURITY_PREPARATION.md).
+
+S1-T09 est figé à cette frontière sur
+`feature/s1-t09-contact-page-1to1`. Le handoff canonique se trouve dans
+[`PROJECT_CURRENT_STATE.md`](./PROJECT_CURRENT_STATE.md). Aucun fournisseur,
+endpoint ou secret ne doit être ajouté avant une validation explicite de
+l’architecture d’envoi.
+
 ## Limites actuelles
 
 - la route Événements expose ses catégories et une première architecture
@@ -452,6 +493,7 @@ coordonnées fictives de la maquette ne sont pas repris.
 - l’identité « Paroisse Saint-René-Goupil » est confirmée, mais les coordonnées, horaires et contenus éditoriaux définitifs ne le sont pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;
-- aucun CMS, formulaire, backend ou déploiement n’est configuré;
+- aucun CMS, backend d’envoi ou déploiement n’est configuré; la page Contact
+  possède uniquement son formulaire frontend non opérationnel;
 - `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.
