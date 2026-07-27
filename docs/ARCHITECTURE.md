@@ -264,7 +264,7 @@ Le script du header est inclus par Astro et initialisé une fois par instance. I
 
 Le balisage et les liens restent utilisables sans routeur client. Aucun état global React n’est réintroduit.
 
-Sur l’accueil, deux scripts natifs et locaux suffisent : l’annonce peut être masquée, et le hero change de photographie avec un temporisateur remis à zéro après une action manuelle. Le hero branche aussi le contrôleur visuel partagé `src/scripts/organic-hero-lens.ts`; sa lentille révèle toujours la prochaine photographie de la boucle. La préférence de réduction des mouvements désactive rotation, zoom et lentille. Aucun état applicatif partagé n’est introduit.
+Sur l’accueil, deux scripts natifs et locaux suffisent : l’annonce peut être masquée, et le hero change de photographie avec un temporisateur remis à zéro après une action manuelle. Le hero branche aussi le contrôleur visuel partagé `src/scripts/organic-hero-lens.ts`; sa lentille révèle toujours la prochaine photographie de la boucle. S1-T11 conserve cette architecture et ne modifie que le traitement visuel commun des trois images, la cadence à 7,6 secondes, le fondu à 1,25 seconde, le zoom limité à 1,022 et la surface bourgogne de la carte d’horaires. La préférence de réduction des mouvements désactive rotation, zoom et lentille. Aucun état applicatif partagé n’est introduit.
 
 ## Migration progressive
 
@@ -360,13 +360,22 @@ d’amélioration progressive, mais possède un initialiseur ciblé :
 `src/scripts/history-timeline.ts`. Trois observateurs lisent le même
 déclencheur de chapitre : la ligne progresse à 78 % du viewport, le repère et
 la période s’activent à 70 %, puis l’image et le texte se révèlent à 62 %. Cette
-responsabilité spécialisée ne se superpose pas aux révélations génériques et
-n’écoute jamais l’événement `scroll`.
+responsabilité spécialisée ne se superpose pas aux révélations génériques.
+
+S1-T11 complète cet initialiseur avec un contrôleur d’ambiance lié à la
+progression globale de la section. Un listener `scroll` passif et un listener
+`resize` demandent au plus une mise à jour `requestAnimationFrame`; aucune
+boucle continue n’est créée. Le voile fixe, la chronologie et le header
+occupent trois plans distincts (`55`, `56`, `60`) : le décor s’assombrit, le
+récit reste la scène lisible et aucun contenu de chapitre ne peut recouvrir la
+navigation. Le header reçoit sa propre valeur de luminosité ambiante. Le hero
+de Notre paroisse n’est pas concerné.
 
 Le rendu reste visible sans JavaScript. Un marqueur inline pré-paint ne prépare
 l’état masqué que lorsque `IntersectionObserver` existe et que reduced motion
 n’est pas demandé. Un garde-fou retire ce marqueur si l’initialiseur ne prend
-pas le relais. Toutes les images restent dans leur article.
+pas le relais. Le voile vaut alors zéro; reduced motion le retire entièrement.
+Toutes les images restent dans leur article.
 
 Le contrat `HistoryTimelineContent` sépare les dates, textes, images, types de
 source et statuts éditoriaux du comportement visuel. Sanity pourra remplacer la

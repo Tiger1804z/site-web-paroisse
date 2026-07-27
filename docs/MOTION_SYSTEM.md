@@ -195,9 +195,24 @@ Le script n’utilise pas le reveal générique et les chapitres n’emploient p
 Trois observateurs spécialisés lisent le même déclencheur de 1 px : la ligne à
 78 % du viewport, le repère actif et la période à 70 %, puis la révélation
 irréversible à 62 %. La ligne guide ainsi le regard avant l’apparition du
-contenu. Il n’existe aucun listener `scroll` ni animation JavaScript continue.
-Deux frames ponctuelles garantissent que l’état initial a été peint avant
-l’observation.
+contenu. Deux frames ponctuelles garantissent que l’état initial a été peint
+avant l’observation.
+
+S1-T11 ajoute une ambiance « salle de théâtre » strictement limitée à cette
+section. Un voile fixe assombrit progressivement ce qui entoure la chronologie
+pendant que la section elle-même reste au-dessus, comme une scène éclairée. Le
+header demeure au premier plan et sa luminosité descend séparément jusqu’à
+56 %, ce qui empêche les chapitres de traverser visuellement la navigation.
+L’intensité monte avec un `smoothstep` entre 92 % et 34 % du viewport, reste
+stable pendant les chapitres, puis redescend entre 82 % et 22 % à l’approche de
+l’épilogue.
+
+Ce contrôleur d’ambiance possède un listener `scroll` passif et un listener
+`resize`. Ils ne font aucun travail directement : ils regroupent les mises à
+jour dans un unique `requestAnimationFrame` ponctuel et ne maintiennent aucune
+boucle continue. Les listeners et la frame éventuelle sont nettoyés à
+`pagehide` et `astro:before-swap`; un passage de l’onglet en arrière-plan remet
+l’ambiance à zéro.
 
 À partir de 1024 px, chaque article alterne son image et son texte autour d’un
 axe central. Il n’existe aucun panneau partagé : les neuf images restent dans
@@ -208,8 +223,9 @@ Les transitions utilisent `opacity` de 0 à 1, `translate3d`, une échelle
 lente de 1400 ms; le texte commence 150 ms après l’image. Le marqueur inline
 pré-paint n’est ajouté que lorsque JavaScript, `IntersectionObserver` et la
 préférence de mouvement le permettent. Reduced motion conserve la structure,
-mais retire l’accentuation active et toutes les transitions. Le détail se
-trouve dans
+mais retire l’accentuation active, le voile d’ambiance et toutes les
+transitions. Sans JavaScript, le voile reste transparent et tout le récit reste
+visible. Le détail se trouve dans
 [`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
 
 ## Règles d’utilisation

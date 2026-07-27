@@ -99,11 +99,31 @@ Les composants `Container` et les classes `.site-container`, `.section-block` et
 
 Les états `hover`, `focus-visible`, `active` et `disabled` sont définis globalement. Aucune bibliothèque UI ou d’icônes n’est utilisée.
 
+## Raffinement de lisibilité — S1-T11
+
+La taille de base varie désormais discrètement de 16 à 17 px sur grand écran.
+Les textes fonctionnels récurrents emploient trois repères cohérents : 15 px
+pour l’interface et les paragraphes compacts, 13 px pour les dates, heures et
+métadonnées, puis 12 px seulement pour les mentions réellement secondaires.
+Les eyebrows décoratifs restent volontairement petits afin de ne pas donner au
+site une densité de produit logiciel.
+
+Les boutons principaux et secondaires ont une hauteur minimale de 52 px et un
+padding horizontal de 26 px. Le primaire reçoit une profondeur bourgogne
+retenue; le secondaire conserve une surface claire et une bordure plus
+présente. Cette hiérarchie améliore le repérage des actions sans transformer
+les CTA en blocs massifs.
+
 ## Header et navigation
 
 Le header est `fixed`, conformément au code Figma, même si son état persistant est appelé « sticky » dans le ticket. Sur un hero, il commence transparent puis devient ivoire à plus de 60 px de défilement avec bordure, léger flou et ombre. Sur une page claire, cet état est actif dès le chargement.
 
-La navigation desktop conserve la typographie Manrope de 14 px, les espacements du prototype, le filet doré de la route active, le menu « Informations » et le CTA « Voir les horaires ». Toutes les destinations sont de vraies routes Astro.
+La navigation desktop conserve la typographie Manrope, portée à 15 px, les
+espacements du prototype, le filet doré de la route active, le menu
+« Informations » et le CTA « Voir les horaires ». Toutes les destinations sont
+de vraies routes Astro. Sur un hero transparent, un voile gradué, un flou de
+5 px et une ombre de texte très discrète stabilisent la lecture sans créer une
+barre opaque.
 
 Sous 1312 px, le menu mobile remplace la navigation complète. Il reprend le panneau bourgogne, les liens Cormorant de 24 px, les séparateurs, les coordonnées temporaires et l’action rapide Horaires.
 
@@ -152,15 +172,22 @@ Aucune image ne doit être mise en ligne avant confirmation des droits du photog
 
 ### Mouvement du hero de l’accueil
 
-- rotation de trois images toutes les 8 secondes;
-- fondu croisé de 1,4 seconde, sans déplacement horizontal;
-- zoom cinématographique limité à `scale(1.03)`;
+- rotation de trois images toutes les 7,6 secondes;
+- fondu croisé de 1,25 seconde, sans déplacement horizontal;
+- zoom cinématographique limité à `scale(1.022)`;
 - indicateurs accessibles de 48 px et cadence réinitialisée après une sélection;
 - texte, actions, carte d’horaires et header fixes;
 - recadrages distincts sur mobile et desktop pour préserver l’axe architectural;
 - avec `prefers-reduced-motion`, première image fixe, sans zoom ni rotation.
 
-Cette rotation est une divergence demandée par rapport au hero statique du prototype; la composition du contenu demeure inchangée.
+Les trois photographies reçoivent un même traitement modéré de luminosité,
+contraste, saturation et chaleur, ainsi qu’un voile directionnel commun. La
+carte « Prochaines messes » utilise maintenant une surface bourgogne profonde,
+du texte ivoire et des accents or : elle demeure rapidement consultable, mais
+ne concurrence plus le titre comme un panneau blanc.
+
+Cette rotation et ce raffinement sont des divergences demandées par rapport au
+hero statique du prototype; la composition du contenu demeure inchangée.
 
 ## Validation de S1-T01
 
@@ -270,6 +297,12 @@ prioritaire sur le texte intégré aux pixels.
 La chronologie réutilise les tokens `--motion-*`; elle n’ajoute ni nouvelle
 palette ni bibliothèque. Les règles détaillées sont documentées dans
 [`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
+
+S1-T11 lui ajoute un effet de « lumières de salle » : le décor extérieur et le
+header s’assombrissent progressivement tandis que la chronologie demeure
+lisible au-dessus du voile, comme la scène. Le hero de Notre paroisse reste
+inchangé. Les trois plans visuels sont explicitement ordonnés afin qu’un
+chapitre ne puisse jamais passer par-dessus la navigation fixe.
 
 ## Illustrations éditoriales — Événements
 

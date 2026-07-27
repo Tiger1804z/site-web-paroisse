@@ -12,10 +12,20 @@ footer et aux favicons. Ses variantes et restrictions sont documentées dans
 
 Un système de mouvement léger est appliqué aux pages pilotes Accueil, Notre
 paroisse et Sacrements. Il repose sur CSS, un observateur partagé pour les
-révélations et un observateur ciblé pour la chronologie, sans listener scroll
-continu ni dépendance. Le vitrail vivant est intégré une seule fois à
-l’accueil. Les règles de performance et d’accessibilité sont documentées dans
+révélations et un observateur ciblé pour la chronologie, sans boucle
+d’animation continue ni dépendance. S1-T11 ajoute à la section Histoire une
+ambiance progressive de « lumières de salle » : le décor s’assombrit, la
+timeline reste la scène lisible et le header conserve son propre niveau de
+lumière ambiante. Le hero de Notre paroisse n’est pas modifié. Le vitrail
+vivant est intégré une seule fois à l’accueil. Les règles de performance et
+d’accessibilité sont documentées dans
 [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
+
+Le même ticket affine discrètement la lisibilité globale : corps de texte
+légèrement plus généreux, métadonnées harmonisées, CTA de 52 px, navigation de
+15 px et header transparent plus stable. Le hero d’accueil emploie un
+traitement photographique commun, une cadence de 7,6 secondes, un fondu de
+1,25 seconde et une carte « Prochaines messes » bourgogne plutôt que blanche.
 
 Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
 

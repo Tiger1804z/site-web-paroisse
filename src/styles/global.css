@@ -55,6 +55,9 @@
     --header-height: 4rem;
     --space-section: 6rem;
     --space-content: clamp(2rem, 1.25rem + 2vw, 4rem);
+    --font-size-ui: 0.9375rem;
+    --font-size-meta: 0.8125rem;
+    --font-size-micro: 0.75rem;
 
     --border-thin: 1px;
     --overlay-hero-start: rgb(28 25 24 / 65%);
@@ -103,7 +106,7 @@
     overflow-x: clip;
     background: var(--color-background);
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: clamp(1rem, calc(0.98rem + 0.08vw), 1.0625rem);
     line-height: 1.7;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -274,15 +277,15 @@
 
   .ui-button {
     display: inline-flex;
-    min-height: 3rem;
+    min-height: 3.25rem;
     align-items: center;
     justify-content: center;
     gap: 0.625rem;
     border: 1px solid transparent;
     border-radius: var(--radius-subtle);
-    padding: 0.75rem 1.5rem;
+    padding: 0.875rem 1.625rem;
     font-family: var(--font-body);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     font-weight: 700;
     line-height: 1.25;
     letter-spacing: 0.025em;
@@ -291,6 +294,7 @@
     cursor: pointer;
     transition:
       translate var(--duration-short) var(--ease-editorial),
+      box-shadow var(--duration-short) var(--ease-editorial),
       color var(--duration-short) var(--ease-editorial),
       border-color var(--duration-short) var(--ease-editorial),
       background-color var(--duration-short) var(--ease-editorial);
@@ -303,15 +307,19 @@
   .ui-button--primary {
     background: var(--color-burgundy);
     color: var(--color-ivory);
+    box-shadow: 0 0.65rem 1.5rem
+      color-mix(in srgb, var(--color-burgundy) 18%, transparent);
   }
 
   .ui-button--primary:hover {
     background: var(--color-burgundy-dark);
+    box-shadow: 0 0.8rem 1.75rem
+      color-mix(in srgb, var(--color-burgundy-dark) 24%, transparent);
   }
 
   .ui-button--secondary {
-    border-color: color-mix(in srgb, var(--color-burgundy) 40%, transparent);
-    background: transparent;
+    border-color: color-mix(in srgb, var(--color-burgundy) 48%, transparent);
+    background: color-mix(in srgb, var(--color-surface) 28%, transparent);
     color: var(--color-burgundy);
   }
 
@@ -324,6 +332,7 @@
   .ui-button--light {
     background: var(--color-ivory);
     color: var(--color-burgundy);
+    box-shadow: 0 0.65rem 1.5rem rgb(28 25 24 / 16%);
   }
 
   .ui-button--light:hover {
@@ -342,7 +351,7 @@
   }
 
   .ui-button--text {
-    min-height: 3rem;
+    min-height: 3.25rem;
     padding-inline: 0;
     background: transparent;
     color: var(--color-burgundy);
@@ -354,7 +363,7 @@
   }
 
   .ui-button--icon {
-    width: 3rem;
+    width: 3.25rem;
     padding: 0;
     border-color: var(--color-border);
     background: transparent;
@@ -381,7 +390,7 @@
     align-items: center;
     gap: 0.75rem;
     color: var(--color-burgundy);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     font-weight: 700;
     letter-spacing: 0.025em;
     text-decoration: none;
@@ -568,8 +577,8 @@
 
   .ui-icon-button {
     display: inline-flex;
-    width: 3rem;
-    height: 3rem;
+    width: 3.25rem;
+    height: 3.25rem;
     align-items: center;
     justify-content: center;
     border: 1px solid transparent;
@@ -690,12 +699,12 @@
   }
 
   .type-body-small {
-    font-size: 0.875rem;
-    line-height: 1.65;
+    font-size: var(--font-size-ui);
+    line-height: 1.7;
   }
 
   .type-eyebrow {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: 0.2em;
@@ -703,7 +712,7 @@
   }
 
   .type-label {
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: 0.04em;
