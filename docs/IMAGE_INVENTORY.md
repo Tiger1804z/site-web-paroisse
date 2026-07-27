@@ -242,3 +242,26 @@ technique reste un placeholder `noindex`.
 - L’absence de personne visible ne constitue pas une autorisation de publication.
 - Ne pas déduire une date liturgique ou un événement précis des noms historiques.
 - Documenter toute future compression, conversion ou variante; ne jamais remplacer les sources.
+
+## Visuels historiques des annonceurs — S1-T13
+
+Les quatre fichiers servis par l’ancienne page ont été téléchargés dans un
+dossier temporaire, inspectés, puis supprimés. Aucun n’a été ajouté aux assets
+de production.
+
+| Visuel                | Format et dimensions |          Poids | Personne            | Contenu intégré                                        | Provenance et droits                                                      | Usage                                                                      |
+| --------------------- | -------------------- | -------------: | ------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Bandeau « Publicité » | JPEG, 1250 × 350 px  |  23 737 octets | Non                 | Mot « PUBLICITÉ » et composition colorée               | Google Sites; auteur et licence absents                                   | Exclu; le hero utilise une photographie réelle déjà approuvée pour le site |
+| Frantz Benjamin       | JPEG, 1050 × 736 px  | 141 799 octets | Oui, reconnaissable | Portrait, fonction, coordonnées et logo institutionnel | Google Sites; Picasa dans les métadonnées, droits et consentement absents | Exclu                                                                      |
+| Josué Corvil          | PNG, 570 × 320 px    | 119 782 octets | Oui, reconnaissable | Portrait, fonction, coordonnées et signature Montréal  | Google Sites; aucun crédit exploitable, droits et consentement absents    | Exclu                                                                      |
+| Patricia Lattanzio    | JPEG, 816 × 458 px   |  56 531 octets | Oui, reconnaissable | Portrait, fonction et coordonnées                      | Google Sites; aucun crédit exploitable, droits et consentement absents    | Exclu                                                                      |
+
+L’absence de filigrane visible ne vaut pas permission. Aucun hotlink Google
+Sites, faux logo ou logo généré n’est utilisé. Un logo officiel doit être
+demandé à chaque annonceur confirmé. L’audit détaillé se trouve dans
+[`ADVERTISERS_CONTENT_AUDIT.md`](./ADVERTISERS_CONTENT_AUDIT.md).
+
+Le hero de `/nos-annonceurs/` réutilise
+`eglise-exterieur-clochers-01.webp`, photographie documentaire de la paroisse
+déjà marquée `approved-for-site` dans la source de la mini-galerie. Aucun
+portrait n’y apparaît.

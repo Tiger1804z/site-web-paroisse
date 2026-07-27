@@ -581,3 +581,40 @@ l’instant.
 - aucun CMS, formulaire connecté, backend ou déploiement n’est configuré;
 - `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.
+
+## Architecture Nos annonceurs — S1-T13
+
+La route canonique `/nos-annonceurs/` suit le même découplage que les autres
+pages éditoriales :
+
+```text
+advertisersData + advertisersPageSource
+  → selectAdvertisers()
+  → getAdvertisersPageData()
+  → AdvertisersPageData
+  → composants Astro
+  → HTML statique
+```
+
+`Advertiser` encode le statut éditorial, l’ordre, les coordonnées facultatives,
+les médias et les notes de confirmation. Le sélecteur public ne rend que les
+entrées `active`; `inactive`, `draft` et `confirmation-required` sont exclues.
+L’option de prévisualisation des entrées à confirmer est explicite et n’est pas
+utilisée par la route publique.
+
+La page reste utile lorsque la collection filtrée est vide : l’introduction,
+la transparence éditoriale et « Devenir annonceur » demeurent, tandis que la
+liste est entièrement masquée. Les composants reçoivent leurs données par
+props et ne connaissent ni Sanity, ni la source métier.
+
+Le téléphone du secrétariat vient de `siteSettingsData`. Les liens commerciaux
+futurs portent `rel="sponsored noopener noreferrer"`; les liens internes ne le
+portent pas. Aucun formulaire, endpoint ou envoi n’est associé à cette page.
+
+`/merci-a-nos-annonceurs/` est un alias statique `noindex`, canonical vers
+`/nos-annonceurs/`, avec redirection HTML. L’URL Google Sites accentuée devra
+être redirigée au niveau du domaine ou de l’hébergement lors du déploiement.
+
+Le hero réutilise une photographie réelle de l’église approuvée pour le site.
+Son seul mouvement est un zoom CSS très lent, désactivé avec
+`prefers-reduced-motion`; le contenu reste complet sans JavaScript.

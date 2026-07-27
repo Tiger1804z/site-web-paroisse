@@ -10,6 +10,8 @@ export type SitePath =
   | '/friperie'
   | '/location-de-salle'
   | '/galerie'
+  | '/nos-annonceurs'
+  | '/merci-a-nos-annonceurs'
   | '/contact'
   | '/premiere-visite'
   | '/politique-de-confidentialite'
@@ -42,6 +44,7 @@ export const informationRouteDefinitions = [
   { label: 'Friperie', href: '/friperie', active: true },
   { label: 'Location de salle', href: '/location-de-salle', active: false },
   { label: 'Galerie', href: '/galerie', active: false },
+  { label: 'Nos annonceurs', href: '/nos-annonceurs', active: true },
   { label: 'Contact', href: '/contact', active: true },
 ] as const satisfies readonly NavigationRouteDefinition[];
 

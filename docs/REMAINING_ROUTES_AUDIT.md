@@ -1,6 +1,6 @@
 # Audit des routes restantes
 
-Audit initial réalisé pendant S1-T08 et actualisé dans S1-T12 à partir de :
+Audit initial réalisé pendant S1-T08 et actualisé dans S1-T13 à partir de :
 
 - `reference/figma-make-export/src/App.tsx`;
 - tous les fichiers `reference/figma-make-export/src/pages/*.tsx`;
@@ -27,6 +27,8 @@ Audit initial réalisé pendant S1-T08 et actualisé dans S1-T12 à partir de :
 | Location de salle            | `/location-de-salle/`            | `LocationSalle.tsx`            | `src/pages/location-de-salle.astro`       | alias `noindex`       | Intégrée à Nos services              | Redirection statique vers `/nos-services/#location-de-salle`; tarifs et disponibilités sont communiqués manuellement par le secrétariat.                               |
 | Galerie                      | `/galerie/`                      | `Galerie.tsx`                  | placeholder dans `src/pages/[slug].astro` | différée / `noindex`  | À réévaluer selon le besoin          | L’utilisateur conserve uniquement la mini-galerie de l’accueil; aucune page autonome ni promotion dans la navigation pour l’instant.                                   |
 | Contact                      | `/contact/`                      | `Contact.tsx`                  | `src/pages/contact.astro`                 | frontend terminé      | Bloquée à la validation d’envoi      | Adresse, téléphone et carte confirmés; validation locale seulement. Aucun endpoint, SMTP, API, secret ou faux succès.                                                  |
+| Nos annonceurs               | `/nos-annonceurs/`               | ancien site seulement          | `src/pages/nos-annonceurs.astro`          | complet, `noindex`    | Révision le 10 août 2026 ou après    | Quatre placements historiques à confirmer; aucun portrait ni annonceur n’est publié avant validation des ententes, coordonnées, logos, textes et droits.               |
+| Ancien Merci aux annonceurs  | `/merci-a-nos-annonceurs/`       | ancien site seulement          | `src/pages/merci-a-nos-annonceurs.astro`  | alias `noindex`       | Compatibilité historique             | Canonical et redirection HTML vers `/nos-annonceurs/`; la variante accentuée du domaine historique exigera une règle d’hébergement.                                    |
 | Politique de confidentialité | `/politique-de-confidentialite/` | aucun                          | placeholder dans `src/pages/[slug].astro` | placeholder           | Haute avant formulaire ou analytique | Texte juridique approuvé et inventaire des traitements de données.                                                                                                     |
 | Mentions légales             | `/mentions-legales/`             | aucun                          | placeholder dans `src/pages/[slug].astro` | placeholder           | Moyenne                              | Propriétaire du site, responsable de publication et mentions approuvées.                                                                                               |
 | Page introuvable             | toute route inconnue             | aucune page Figma              | `src/pages/404.astro`                     | terminé techniquement | —                                    | Revue finale du contenu lors du déploiement.                                                                                                                           |
@@ -38,8 +40,9 @@ contenu à migrer.
 ## Pages restantes du menu « Informations »
 
 Le menu desktop, le menu mobile et le footer utilisent la même liste filtrée
-`informationNavigation`. Contact est maintenant une page dédiée; aucune
-destination active du menu Informations ne mène vers un placeholder.
+`informationNavigation`. Contact et Nos annonceurs sont maintenant des pages
+dédiées; aucune destination active du menu Informations ne mène vers un
+placeholder.
 
 Friperie répond maintenant par une page dédiée, mais reste `noindex`.
 Location de salle fait partie de `/nos-services/` et son ancienne route reste
@@ -57,6 +60,12 @@ Le frontend Contact de S1-T09 est intégré par S1-T12. La route demeure
 `noindex` et le formulaire n’envoie rien : le choix du système d’envoi, la
 validation serveur, la confidentialité et la gestion des secrets restent une
 porte de livraison distincte.
+
+Nos annonceurs est actif dans la navigation, mais demeure `noindex`. La page
+reste utile sans collection active; sa source conserve quatre placements
+historiques avec le statut `confirmation-required`, tous exclus du rendu
+public. La confirmation est prévue avec la secrétaire le 10 août 2026 ou après
+son retour.
 
 ## Décision Feuillets — bloqué / différé
 
@@ -89,6 +98,9 @@ Date de révision : **10 août 2026 ou après le retour de la secrétaire**.
   `/nos-services/`, avec redirection HTML vers la page canonique.
 - `/location-de-salle/` est un alias statique `noindex`, canonical
   `/nos-services/`, avec redirection HTML vers l’ancre de la section.
+- `/merci-a-nos-annonceurs/` est un alias statique `noindex`, canonical
+  `/nos-annonceurs/`, avec redirection HTML. La variante accentuée de l’ancien
+  domaine exigera une redirection à l’hébergement.
 - La sortie Astro statique ne produit pas de statut HTTP 301; l’hébergement
   pourra remplacer ces compatibilités par des redirections permanentes.
 - Toutes les destinations actives de navigation répondent par des pages

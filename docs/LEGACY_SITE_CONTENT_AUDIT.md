@@ -267,6 +267,14 @@ Les principales faiblesses sont :
   porter le statut « partenariat actif à confirmer » jusqu’à validation. Aucun
   logo ni texte promotionnel du site ancien n’est importé.
 
+Mise à jour S1-T13 : l’inspection visuelle des images révèle aussi trois
+placements d’élus — Frantz Benjamin, Josué Corvil et Patricia Lattanzio — en
+plus de la fiche texte Buffet Marina. Les fonctions et coordonnées sont
+intégrées dans les images et peuvent être périmées. Les portraits, logos
+institutionnels, droits et consentements ne sont pas documentés; aucun de ces
+visuels n’est importé. Voir
+[`ADVERTISERS_CONTENT_AUDIT.md`](./ADVERTISERS_CONTENT_AUDIT.md).
+
 ## Contenus recherchés mais non trouvés comme pages distinctes
 
 - feuillets paroissiaux ou archives PDF;

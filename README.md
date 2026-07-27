@@ -102,6 +102,16 @@ L’adresse, le téléphone, la carte et l’itinéraire proviennent de
 `src/data/siteSettings.ts` et alimentent aussi l’accueil, le footer et Nos
 services. Le courriel public et les heures du secrétariat restent masqués.
 
+La route `/nos-annonceurs/` utilise une source locale typée, un filtre de
+publication et des composants Astro dédiés. Les quatre placements trouvés sur
+l’ancien site sont `confirmation-required` et ne sont pas affichés tant que la
+secrétaire n’a pas confirmé les ententes, coordonnées, textes, logos et droits.
+La page reste néanmoins complète grâce à son introduction et au bloc « Devenir
+annonceur », qui réutilise le téléphone global. Elle demeure `noindex`.
+`/merci-a-nos-annonceurs/` conserve la compatibilité historique comme alias
+statique. Voir
+[docs/ADVERTISERS_CONTENT_AUDIT.md](docs/ADVERTISERS_CONTENT_AUDIT.md).
+
 Feuillets paroissiaux est bloqué et différé : aucun PDF réel n'est disponible.
 La route placeholder `/feuillets-paroissiaux/` reste `noindex`, mais sa
 promotion est masquée du desktop, du mobile, du footer, de l'accueil et

@@ -1,6 +1,6 @@
 # État actuel du projet
 
-Dernière mise à jour : 27 juillet 2026 — S1-T12.
+Dernière mise à jour : 27 juillet 2026 — S1-T13.
 
 ## Pages principales
 
@@ -15,6 +15,8 @@ Dernière mise à jour : 27 juillet 2026 — S1-T12.
 - `/evenements/` : architecture événementielle locale;
 - `/friperie/` : page complète `noindex`, photographies temporaires;
 - `/contact/` : frontend complet `noindex`, validation locale seulement;
+- `/nos-annonceurs/` : page complète `noindex`, aucun annonceur historique
+  publié avant confirmation;
 - `/galerie/` : placeholder `noindex`, volontairement absent de la navigation.
 
 ## Contact et coordonnées publiques
@@ -78,6 +80,25 @@ salle y restent inactifs; Location de salle demeure intégrée à Nos services.
 Le header reste translucide au sommet et après défilement, avec fallback
 lisible lorsque `backdrop-filter` n’est pas pris en charge.
 
+## Nos annonceurs
+
+La nouvelle route `/nos-annonceurs/` est active dans la source canonique de
+navigation. L’ancienne route locale `/merci-a-nos-annonceurs/` est un alias
+`noindex` avec canonical et redirection HTML.
+
+L’audit historique a relevé Buffet Marina ainsi que trois placements composés
+des portraits et coordonnées de Frantz Benjamin, Josué Corvil et Patricia
+Lattanzio. Les quatre entrées sont conservées comme
+`confirmation-required`; aucune n’est rendue par le getter public. Les images
+Google Sites n’ont pas été importées, car les droits et les consentements ne
+sont pas documentés.
+
+La page affiche une introduction et le bloc « Devenir annonceur » même sans
+annonceur actif. Le téléphone du secrétariat vient de `siteSettings`; aucun
+tarif, espace disponible ou formulaire publicitaire n’est inventé. La liste,
+les ententes, les coordonnées et les logos doivent être revus avec la
+secrétaire le 10 août 2026 ou après son retour avant de retirer `noindex`.
+
 ## Contenus en attente
 
 - choix, sécurité et activation du système d’envoi Contact;
@@ -86,6 +107,7 @@ lisible lorsque `backdrop-filter` n’est pas pris en charge.
 - horaires, procédures pastorales et données temporelles à réviser;
 - décision future sur l’utilité d’une page Galerie complète et enrichissement
   des crédits photographiques;
+- confirmation des annonceurs, ententes, coordonnées, logos et droits;
 - remplacement des prototypes Friperie.
 
 ## Architecture
