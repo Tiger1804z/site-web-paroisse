@@ -7,7 +7,9 @@ contrats Astro actuels restent stables.
 
 Le futur document de page pourra contenir :
 
-- `hero` avec eyebrow, titre, introduction, image et texte alternatif;
+- `hero` avec eyebrow, titre, introduction et `images[]`;
+- pour chaque image du hero : média, libellé, texte alternatif, position de
+  recadrage, crédit, caractère documentaire et statut de génération;
 - `introduction` et note éditoriale de confirmation;
 - `features[]` avec identifiant, titre, résumé, points clés, CTA, statut,
   activation et ordre;
@@ -20,8 +22,10 @@ référencé uniquement s'il doit être réutilisé ailleurs, posséder une page
 détaillée ou être relié à des responsables et activités validés.
 
 Sanity contrôlera le contenu, l'ordre et l'activation. Le code Astro conservera
-la grille alternée, les breakpoints, la palette, les reveals, les composants,
-les règles d'accessibilité et la validation du contrat.
+la grille alternée, les breakpoints, la palette, les reveals, la rotation et la
+lentille du hero, les composants, les règles d'accessibilité et la validation
+du contrat. Le CMS ne pourra pas injecter une durée, un masque, du CSS ou du
+JavaScript.
 
 ```text
 Sanity parishLifePage

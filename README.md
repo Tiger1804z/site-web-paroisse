@@ -21,7 +21,8 @@ révélations et un observateur ciblé pour la chronologie, sans boucle
 d’animation continue ni dépendance. S1-T11 ajoute à la section Histoire une
 ambiance progressive de « lumières de salle » : le décor s’assombrit, la
 timeline reste la scène lisible et le header conserve son propre niveau de
-lumière ambiante. Le hero de Notre paroisse n’est pas modifié. Le vitrail
+lumière ambiante. Le hero de Notre paroisse reste une scène statique sans
+lentille, avec le traitement cinématographique de Nos services. Le vitrail
 vivant est intégré une seule fois à l’accueil. Les règles de performance et
 d’accessibilité sont documentées dans
 [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
@@ -72,7 +73,9 @@ La route `/vie-paroissiale/` utilise `ParishLifePageData`. Les quatre groupes
 de la maquette restent identifiés comme contenus à confirmer : aucune activité,
 fréquence, personne responsable ou coordonnée fictive n'est publiée. La source
 locale, le getter et les composants Astro préparent un futur document
-`parishLifePage` sans dépendre du CMS.
+`parishLifePage` sans dépendre du CMS. Son hero plein cadre alterne trois
+illustrations éditoriales non documentaires avec une lentille révélant la
+suivante, sans zoom animé ni second plan.
 
 La route `/friperie/` utilise `ThriftStorePageData`, une source locale et un
 getter. Son hero Astro possède une lentille progressive en JavaScript natif et

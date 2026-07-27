@@ -17,6 +17,17 @@ export interface ParishLifeImageVisual {
   readonly credit?: string;
 }
 
+export interface ParishLifeHeroImage {
+  readonly image: ImageMetadata;
+  readonly alt: string;
+  readonly label: string;
+  readonly desktopPosition?: string;
+  readonly mobilePosition?: string;
+  readonly documentary: false;
+  readonly generationStatus: 'ai-generated' | 'unconfirmed';
+  readonly credit: string;
+}
+
 export interface ParishLifeFeature {
   readonly id: string;
   readonly eyebrow: string;
@@ -39,7 +50,7 @@ export interface ParishLifePageData {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly image: ParishLifeImageVisual;
+    readonly images: readonly ParishLifeHeroImage[];
   };
   readonly introduction: {
     readonly eyebrow: string;

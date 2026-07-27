@@ -390,7 +390,8 @@ boucle continue n’est créée. Le voile fixe, la chronologie et le header
 occupent trois plans distincts (`55`, `56`, `60`) : le décor s’assombrit, le
 récit reste la scène lisible et aucun contenu de chapitre ne peut recouvrir la
 navigation. Le header reçoit sa propre valeur de luminosité ambiante. Le hero
-de Notre paroisse n’est pas concerné.
+reste indépendant de ce contrôleur : il utilise seulement une photographie,
+un voile CSS et un zoom cinématographique supprimé avec reduced motion.
 
 Le rendu reste visible sans JavaScript. Un marqueur inline pré-paint ne prépare
 l’état masqué que lorsque `IntersectionObserver` existe et que reduced motion
@@ -474,6 +475,14 @@ Les quatre groupes viennent de Figma et de l'inventaire interne, mais leur
 activité actuelle reste à confirmer. Le statut et les formulations prudentes
 sont conservés dans la source de contenu; les fréquences, responsables et
 coordonnées fictives de la maquette ne sont pas repris.
+
+Le contrat du hero expose une liste typée de trois `ParishLifeHeroImage`.
+Chaque entrée conserve l’image, son libellé, un alt honnête, son caractère non
+documentaire, son statut de génération et son crédit. Le composant Astro
+produit les variantes avec `astro:assets`; le script local gère la boucle et
+délègue la lentille au contrôleur organique partagé. Une seule copie plein
+cadre est affichée; les points focaux typés contrôlent le recadrage des formats
+carré et portrait.
 
 ## Architecture Friperie et report des Feuillets — S1-T10
 

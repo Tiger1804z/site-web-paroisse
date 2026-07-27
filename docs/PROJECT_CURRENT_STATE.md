@@ -7,9 +7,11 @@ Dernière mise à jour : 27 juillet 2026 — S1-T13.
 - `/` : accueil enrichi, hero interactif, vitrail vivant, événements, scène
   « Vivre la paroisse », services, interlude spirituel, carrousel Galerie et
   coordonnées confirmées;
-- `/notre-paroisse/` : page complète avec timeline immersive; hero inchangé;
+- `/notre-paroisse/` : page complète avec timeline immersive et hero
+  cinématographique statique, sans lentille;
 - `/horaires/` : structure complète avec données non confirmées;
-- `/vie-paroissiale/` : page complète, groupes à confirmer;
+- `/vie-paroissiale/` : page complète, hero illustré rotatif avec lentille,
+  groupes à confirmer;
 - `/nos-services/` : page canonique complète, hero rotatif avec lentille et
   données 2026 révisables;
 - `/evenements/` : architecture événementielle locale;

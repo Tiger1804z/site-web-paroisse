@@ -235,6 +235,39 @@ originaux. Les images IA, externes, temporaires de Friperie et les vues avec
 personnes sont exclues. La page Galerie autonome est différée et la route
 technique reste un placeholder `noindex`.
 
+## Hero illustré de Vie paroissiale — ajout S1-T13
+
+Inspection effectuée le 27 juillet 2026 à partir des trois fichiers fournis
+par l’utilisateur. Les originaux de `Downloads` n’ont pas été modifiés. Aucun
+filigrane, texte parasite ou champ EXIF/IPTC/XMP exploitable n’a été relevé.
+Ces images sont éditoriales et ne documentent ni un événement, ni des
+paroissiens, ni les locaux de Saint-René-Goupil.
+
+| Fichier de production                        | Source fournie                              | Format réel | Dimensions et orientation |            Poids | Auteur identifiable | Contenu et qualité                                                                                  | Statut et usage                                                                                                       |
+| -------------------------------------------- | ------------------------------------------- | ----------- | ------------------------- | ---------------: | ------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `tylijura-church-gathering-illustration.jpg` | `tylijura-church-10169468_1920.jpg`         | JPEG RGB    | 1920 × 1920, carré        | 1 206 514 octets | Tylijura            | Illustration stylisée de personnes rassemblées à l’entrée d’une église; bonne définition.           | Première image du hero. Nature IA non confirmée; illustration non documentaire, source et licence exactes à archiver. |
+| `alanajordan-worship-ai.jpg`                 | `alanajordan-ai-generated-8928626_1920.jpg` | JPEG RGB    | 1156 × 1920, portrait     |   551 888 octets | Alanajordan         | Illustration monochrome d’une femme chantant ou priant entourée d’une communauté; bonne définition. | Deuxième image. Générée par IA selon le nom du fichier; personnages fictifs, source et licence exactes à archiver.    |
+| `tylijura-children-workshop-ai.png`          | `tylijura-ai-generated-9618451_1920.png`    | PNG RGB     | 1920 × 1280, paysage      | 3 636 289 octets | Tylijura            | Illustration colorée d’enfants dans un atelier créatif; définition élevée.                          | Troisième image. Générée par IA selon le nom du fichier; personnages fictifs, source et licence exactes à archiver.   |
+
+Empreintes SHA-256 :
+
+- `tylijura-church-gathering-illustration.jpg` :
+  `92e83730d943b9dbe6d118553f84256957a1f8edd96beccd41fdec8fcd17dbd2`;
+- `alanajordan-worship-ai.jpg` :
+  `712c3a59cbd6c101aa1aa03f3433450dfad44848a36fad4df4e6d618c3b23554`;
+- `tylijura-children-workshop-ai.png` :
+  `6373c34bd4254cda55269490885817603516f2e2736d7096365ab68438dfa1f5`.
+
+Le hero conserve une seule copie plein cadre de chaque illustration. Le format
+horizontal impose un recadrage contrôlé des sources carrée et portrait, sans
+déformation, second plan ou zoom animé. Les variantes responsives produites
+par `astro:assets` empêchent l’envoi direct du PNG original de 3,64 Mo aux
+visiteurs.
+
+La déclaration de disponibilité vient de l’utilisateur. Elle ne constitue pas
+une preuve de licence archivée. Les URL sources et les conditions applicables
+doivent être conservées avant la livraison publique.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.
