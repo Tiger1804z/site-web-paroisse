@@ -1,5 +1,5 @@
 import churchExteriorImage from '@/assets/images/paroisse/eglise-exterieur-clochers-01.webp';
-import { siteSettingsData } from '@/data/siteSettings';
+import type { PublicContactDetails } from '@/types/siteSettings';
 import type { Advertiser, AdvertisersPageData } from '@/types/advertisers';
 
 export const advertisersData = [
@@ -99,51 +99,55 @@ export const advertisersData = [
   },
 ] as const satisfies readonly Advertiser[];
 
-export const advertisersPageSource = {
-  seo: {
-    title: 'Nos annonceurs',
-    description:
-      'Découvrez comment les contributions publicitaires peuvent soutenir les communications et la mission de la Paroisse Saint-René-Goupil.',
-    canonicalPath: '/nos-annonceurs/',
-    noIndex: true,
-  },
-  hero: {
-    eyebrow: 'Soutenir notre mission',
-    title: 'Nos annonceurs',
-    introduction:
-      'Un espace de reconnaissance pour les commerces, organisations et personnes dont la contribution publicitaire soutient les communications de la paroisse.',
-    image: churchExteriorImage,
-    imageAlt:
-      'Vue extérieure de la Paroisse Saint-René-Goupil et de ses clochers',
-    objectPosition: 'center 42%',
-  },
-  introduction: {
-    eyebrow: 'Reconnaissance',
-    title: 'Des présences qui contribuent à la vie paroissiale',
-    paragraphs: [
-      'La publicité diffusée dans les communications paroissiales peut procurer un soutien financier à la mission de la paroisse tout en donnant une visibilité locale aux annonceurs.',
-      'La liste publique est volontairement préparée avec soin : une entreprise ou une personne n’y apparaît qu’après confirmation de son entente, de ses coordonnées et des droits liés à ses visuels.',
-    ],
-    disclosure:
-      'Une présence sur cette page constitue un placement publicitaire; elle ne représente pas une recommandation ni une garantie des services offerts.',
-  },
-  advertisers: advertisersData,
-  solicitation: {
-    eyebrow: 'Devenir annonceur',
-    title: 'Soutenir la paroisse par une présence publicitaire',
-    description:
-      'Un espace publicitaire peut être offert dans le feuillet paroissial ou dans d’autres communications, selon les supports, disponibilités et modalités confirmés par le secrétariat.',
-    details: [
-      'Les formats, périodes et conditions sont communiqués directement par la paroisse.',
-      'Aucun tarif ni espace disponible n’est annoncé en temps réel sur le site.',
-    ],
-    phone: siteSettingsData.phone,
-    phoneLabel: 'Téléphoner au secrétariat',
-    contactLabel: 'Voir nos coordonnées',
-    contactHref: '/contact/',
-  },
-  settings: {
-    showAdvertisers: true,
-    showSolicitation: true,
-  },
-} as const satisfies AdvertisersPageData;
+export function buildAdvertisersPageSource(
+  siteSettings: PublicContactDetails,
+): AdvertisersPageData {
+  return {
+    seo: {
+      title: 'Nos annonceurs',
+      description:
+        'Découvrez comment les contributions publicitaires peuvent soutenir les communications et la mission de la Paroisse Saint-René-Goupil.',
+      canonicalPath: '/nos-annonceurs/',
+      noIndex: true,
+    },
+    hero: {
+      eyebrow: 'Soutenir notre mission',
+      title: 'Nos annonceurs',
+      introduction:
+        'Un espace de reconnaissance pour les commerces, organisations et personnes dont la contribution publicitaire soutient les communications de la paroisse.',
+      image: churchExteriorImage,
+      imageAlt:
+        'Vue extérieure de la Paroisse Saint-René-Goupil et de ses clochers',
+      objectPosition: 'center 42%',
+    },
+    introduction: {
+      eyebrow: 'Reconnaissance',
+      title: 'Des présences qui contribuent à la vie paroissiale',
+      paragraphs: [
+        'La publicité diffusée dans les communications paroissiales peut procurer un soutien financier à la mission de la paroisse tout en donnant une visibilité locale aux annonceurs.',
+        'La liste publique est volontairement préparée avec soin : une entreprise ou une personne n’y apparaît qu’après confirmation de son entente, de ses coordonnées et des droits liés à ses visuels.',
+      ],
+      disclosure:
+        'Une présence sur cette page constitue un placement publicitaire; elle ne représente pas une recommandation ni une garantie des services offerts.',
+    },
+    advertisers: advertisersData,
+    solicitation: {
+      eyebrow: 'Devenir annonceur',
+      title: 'Soutenir la paroisse par une présence publicitaire',
+      description:
+        'Un espace publicitaire peut être offert dans le feuillet paroissial ou dans d’autres communications, selon les supports, disponibilités et modalités confirmés par le secrétariat.',
+      details: [
+        'Les formats, périodes et conditions sont communiqués directement par la paroisse.',
+        'Aucun tarif ni espace disponible n’est annoncé en temps réel sur le site.',
+      ],
+      phone: siteSettings.phone,
+      phoneLabel: 'Téléphoner au secrétariat',
+      contactLabel: 'Voir nos coordonnées',
+      contactHref: '/contact/',
+    },
+    settings: {
+      showAdvertisers: true,
+      showSolicitation: true,
+    },
+  } as const satisfies AdvertisersPageData;
+}

@@ -92,7 +92,8 @@ test('le téléphone du secrétariat provient des réglages globaux', () => {
 
   assert.equal(siteSettingsData.phone.display, '514 722-1161');
   assert.equal(siteSettingsData.phone.href, 'tel:+15147221161');
-  assert.match(dataSource, /phone:\s*siteSettingsData\.phone/);
+  assert.match(dataSource, /siteSettings:\s*PublicContactDetails/);
+  assert.match(dataSource, /phone:\s*siteSettings\.phone/);
 });
 
 test('les liens commerciaux sont explicitement commandités', () => {

@@ -1,18 +1,20 @@
-import { advertisersPageSource } from '@/data/advertisers';
+import { buildAdvertisersPageSource } from '@/data/advertisers';
 import { selectAdvertisers } from '@/lib/advertisers/advertisers';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import type { AdvertisersPageData } from '@/types/advertisers';
 
 export async function getAdvertisersPageData(): Promise<AdvertisersPageData> {
-  const advertisers = selectAdvertisers(advertisersPageSource.advertisers);
+  const siteSettings = await getSiteSettings();
+  const source = buildAdvertisersPageSource(siteSettings);
+  const advertisers = selectAdvertisers(source.advertisers);
 
   return {
-    ...advertisersPageSource,
+    ...source,
     advertisers,
     settings: {
-      ...advertisersPageSource.settings,
+      ...source.settings,
       showAdvertisers:
-        advertisersPageSource.settings.showAdvertisers &&
-        advertisers.length > 0,
+        source.settings.showAdvertisers && advertisers.length > 0,
     },
   };
 }
