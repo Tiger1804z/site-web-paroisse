@@ -7,6 +7,7 @@ export default [
   {
     ignores: [
       '.astro/**',
+      '**/.sanity/**',
       'dist/**',
       'node_modules/**',
       'reference/**',
@@ -20,5 +21,13 @@ export default [
   {
     files: ['**/*.{jsx,tsx}'],
     ...reactHooks.configs.flat['recommended-latest'],
+  },
+  {
+    files: ['**/*.config.{js,mjs,ts}'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+      },
+    },
   },
 ];
