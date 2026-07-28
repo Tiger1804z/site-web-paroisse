@@ -20,6 +20,8 @@ jobs:
     timeout-minutes: 15
     env:
       ASTRO_TELEMETRY_DISABLED: 1
+      PUBLIC_SANITY_PROJECT_ID: xo2ahvjo
+      PUBLIC_SANITY_DATASET: production
 
     steps:
       - name: Récupérer le dépôt
