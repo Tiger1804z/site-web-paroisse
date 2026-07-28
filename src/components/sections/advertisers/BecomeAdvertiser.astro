@@ -1,0 +1,172 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { AdvertisersPageData } from '@/types/advertisers';
+
+interface Props {
+  solicitation: AdvertisersPageData['solicitation'];
+}
+
+const { solicitation } = Astro.props;
+---
+
+<section class="become-advertiser" aria-labelledby="become-advertiser-title">
+  <Container>
+    <div class="become-advertiser__layout">
+      <div class="become-advertiser__copy" data-motion-reveal>
+        <p class="become-advertiser__eyebrow type-eyebrow">
+          {solicitation.eyebrow}
+        </p>
+        <h2 id="become-advertiser-title">{solicitation.title}</h2>
+        <p>{solicitation.description}</p>
+      </div>
+
+      <div class="become-advertiser__practical" data-motion-reveal>
+        <ul>
+          {solicitation.details.map((detail) => <li>{detail}</li>)}
+        </ul>
+        <div class="become-advertiser__actions">
+          <Button href={solicitation.phone.href} variant="light">
+            {solicitation.phoneLabel}
+          </Button>
+          <Button href={solicitation.contactHref} variant="dark">
+            {solicitation.contactLabel}
+          </Button>
+        </div>
+        <a
+          class="become-advertiser__phone"
+          href={solicitation.phone.href}
+          aria-label={`Appeler le secrétariat au ${solicitation.phone.display}`}
+        >
+          {solicitation.phone.display}
+        </a>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .become-advertiser {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(5rem, 9vw, 8rem);
+    background:
+      radial-gradient(
+        circle at 82% 20%,
+        color-mix(in srgb, var(--color-gold) 14%, transparent),
+        transparent 26rem
+      ),
+      var(--color-burgundy-dark);
+    color: var(--color-ivory);
+  }
+
+  .become-advertiser::after {
+    position: absolute;
+    right: -8rem;
+    bottom: -16rem;
+    width: 28rem;
+    height: 28rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
+    border-radius: 50%;
+    pointer-events: none;
+    content: '';
+  }
+
+  .become-advertiser__layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 3rem;
+  }
+
+  .become-advertiser__copy {
+    max-width: 44rem;
+  }
+
+  .become-advertiser__eyebrow {
+    margin: 0 0 1rem;
+    color: var(--color-gold);
+  }
+
+  .become-advertiser h2 {
+    margin: 0;
+    color: var(--color-ivory);
+    font-size: clamp(2.75rem, calc(2.1rem + 2.7vw), 4.75rem);
+    font-weight: 600;
+    line-height: 1.03;
+  }
+
+  .become-advertiser__copy > p:last-child {
+    max-width: 40rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 76%, transparent);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .become-advertiser__practical {
+    align-self: end;
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+  }
+
+  .become-advertiser__practical ul {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .become-advertiser__practical li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+    line-height: 1.7;
+  }
+
+  .become-advertiser__practical li::before {
+    position: absolute;
+    top: 0.78rem;
+    left: 0;
+    width: 0.45rem;
+    height: 1px;
+    background: var(--color-gold);
+    content: '';
+  }
+
+  .become-advertiser__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .become-advertiser__phone {
+    display: block;
+    width: fit-content;
+    margin-top: 1.25rem;
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  @media (min-width: 64rem) {
+    .become-advertiser__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.75fr);
+      align-items: end;
+      gap: clamp(5rem, 10vw, 10rem);
+    }
+  }
+
+  @media (max-width: 37.5rem) {
+    .become-advertiser__actions {
+      display: grid;
+    }
+
+    .become-advertiser__actions :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

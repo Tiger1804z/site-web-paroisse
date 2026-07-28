@@ -21,7 +21,8 @@ révélations et un observateur ciblé pour la chronologie, sans boucle
 d’animation continue ni dépendance. S1-T11 ajoute à la section Histoire une
 ambiance progressive de « lumières de salle » : le décor s’assombrit, la
 timeline reste la scène lisible et le header conserve son propre niveau de
-lumière ambiante. Le hero de Notre paroisse n’est pas modifié. Le vitrail
+lumière ambiante. Le hero de Notre paroisse reste une scène statique sans
+lentille, avec le traitement cinématographique de Nos services. Le vitrail
 vivant est intégré une seule fois à l’accueil. Les règles de performance et
 d’accessibilité sont documentées dans
 [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
@@ -72,7 +73,9 @@ La route `/vie-paroissiale/` utilise `ParishLifePageData`. Les quatre groupes
 de la maquette restent identifiés comme contenus à confirmer : aucune activité,
 fréquence, personne responsable ou coordonnée fictive n'est publiée. La source
 locale, le getter et les composants Astro préparent un futur document
-`parishLifePage` sans dépendre du CMS.
+`parishLifePage` sans dépendre du CMS. Son hero plein cadre alterne trois
+illustrations éditoriales non documentaires avec une lentille révélant la
+suivante, sans zoom animé ni second plan.
 
 La route `/friperie/` utilise `ThriftStorePageData`, une source locale et un
 getter. Son hero Astro possède une lentille progressive en JavaScript natif et
@@ -101,6 +104,16 @@ neutralisé, aucun faux succès n’existe et aucune donnée n’est transmise.
 L’adresse, le téléphone, la carte et l’itinéraire proviennent de
 `src/data/siteSettings.ts` et alimentent aussi l’accueil, le footer et Nos
 services. Le courriel public et les heures du secrétariat restent masqués.
+
+La route `/nos-annonceurs/` utilise une source locale typée, un filtre de
+publication et des composants Astro dédiés. Les quatre placements trouvés sur
+l’ancien site sont `confirmation-required` et ne sont pas affichés tant que la
+secrétaire n’a pas confirmé les ententes, coordonnées, textes, logos et droits.
+La page reste néanmoins complète grâce à son introduction et au bloc « Devenir
+annonceur », qui réutilise le téléphone global. Elle demeure `noindex`.
+`/merci-a-nos-annonceurs/` conserve la compatibilité historique comme alias
+statique. Voir
+[docs/ADVERTISERS_CONTENT_AUDIT.md](docs/ADVERTISERS_CONTENT_AUDIT.md).
 
 Feuillets paroissiaux est bloqué et différé : aucun PDF réel n'est disponible.
 La route placeholder `/feuillets-paroissiaux/` reste `noindex`, mais sa

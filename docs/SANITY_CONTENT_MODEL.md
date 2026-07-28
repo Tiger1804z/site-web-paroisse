@@ -7,7 +7,9 @@ contrats Astro actuels restent stables.
 
 Le futur document de page pourra contenir :
 
-- `hero` avec eyebrow, titre, introduction, image et texte alternatif;
+- `hero` avec eyebrow, titre, introduction et `images[]`;
+- pour chaque image du hero : média, libellé, texte alternatif, position de
+  recadrage, crédit, caractère documentaire et statut de génération;
 - `introduction` et note éditoriale de confirmation;
 - `features[]` avec identifiant, titre, résumé, points clés, CTA, statut,
   activation et ordre;
@@ -20,8 +22,10 @@ référencé uniquement s'il doit être réutilisé ailleurs, posséder une page
 détaillée ou être relié à des responsables et activités validés.
 
 Sanity contrôlera le contenu, l'ordre et l'activation. Le code Astro conservera
-la grille alternée, les breakpoints, la palette, les reveals, les composants,
-les règles d'accessibilité et la validation du contrat.
+la grille alternée, les breakpoints, la palette, les reveals, la rotation et la
+lentille du hero, les composants, les règles d'accessibilité et la validation
+du contrat. Le CMS ne pourra pas injecter une durée, un masque, du CSS ou du
+JavaScript.
 
 ```text
 Sanity parishLifePage
@@ -251,3 +255,36 @@ quotidien après minuit, selon `America/Toronto`, recalculera aussi les statuts
 sans modification éditoriale. Le site conservera ainsi une génération
 statique : Astro produit une nouvelle version HTML, puis le navigateur la
 reçoit sans application React de calendrier.
+
+## `advertiser` et `advertisersPage`
+
+Une future collection `advertiser` pourra contenir :
+
+- nom, slug, catégorie et description;
+- adresse, téléphone, courriel et site Web;
+- logo et images avec texte alternatif, crédit et statut de droit;
+- statut éditorial, ordre et mise en avant;
+- dates de début et de fin facultatives;
+- date de dernière confirmation et note interne.
+
+Le document `advertisersPage` pourra administrer le hero, l’introduction,
+l’activation de la liste, le bloc « Devenir annonceur » et ses CTA.
+
+```text
+Sanity advertiser + advertisersPage + siteSettings
+  → GROQ
+  → normalisation statut / dates / droits
+  → AdvertisersPageData
+  → composants Astro existants
+```
+
+Seuls les annonceurs `active`, non expirés, avec des coordonnées et des droits
+valides seront normalisés pour la publication. Une date de fin nécessitera un
+rebuild périodique selon `America/Toronto`; en l’absence de date réelle, le
+statut éditorial explicite reste la seule source de décision.
+
+La paroisse pourra ajouter, masquer, réordonner ou mettre à jour une fiche sans
+modifier le code. Le CMS ne contiendra jamais de contrat complet, donnée de
+paiement, numéro de carte, secret, mot de passe, HTML arbitraire, CSS ou
+JavaScript. Il ne pourra pas publier un visuel sans alt ni retirer un crédit
+obligatoire.

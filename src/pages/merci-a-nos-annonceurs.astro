@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Nos annonceurs"
+  description="Cette ancienne adresse mène maintenant à la page Nos annonceurs de la Paroisse Saint-René-Goupil."
+  canonicalPath="/nos-annonceurs/"
+  redirectTo="/nos-annonceurs/"
+  headerVariant="light"
+  noIndex
+>
+  <section
+    class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
+    aria-labelledby="legacy-advertisers-title"
+  >
+    <div class="mx-auto max-w-[1280px] px-5 md:px-10 lg:px-20">
+      <div class="max-w-[680px]">
+        <p
+          class="mb-4 text-[0.75rem] font-semibold tracking-[0.2em] text-wood uppercase"
+        >
+          Adresse mise à jour
+        </p>
+        <h1
+          id="legacy-advertisers-title"
+          class="font-display text-[3rem] leading-[1.05] font-semibold text-charcoal md:text-[4.25rem]"
+        >
+          Merci à nos annonceurs devient Nos annonceurs
+        </h1>
+        <p class="mt-6 max-w-[38rem] text-lg leading-relaxed text-muted">
+          La reconnaissance des annonceurs et les renseignements pour soutenir
+          la paroisse sont maintenant réunis à une adresse plus simple.
+        </p>
+        <a
+          class="mt-10 inline-flex min-h-12 items-center bg-burgundy px-6 py-3 text-sm font-semibold tracking-wide text-ivory"
+          href="/nos-annonceurs/"
+        >
+          Continuer vers Nos annonceurs
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -9,9 +9,9 @@ l’utilisateur : un bouton répond en quelques centaines de millisecondes,
 tandis qu’une lumière de hero évolue sur plusieurs dizaines de secondes.
 
 Le système partagé est utilisé uniquement là où un mouvement soutient une
-intention éditoriale : Accueil, Notre paroisse et Nos services. Horaires,
-Première visite, les FAQ et les futurs formulaires restent volontairement
-sobres.
+intention éditoriale : Accueil, Notre paroisse, Nos services et Vie
+paroissiale. Horaires, Première visite, les FAQ et les futurs formulaires
+restent volontairement sobres.
 
 ## Tokens
 
@@ -87,6 +87,7 @@ Avec `prefers-reduced-motion: reduce` :
 - les translations et dérives cinématographiques sont supprimées;
 - la lumière et les particules ambiantes disparaissent;
 - le hero de l’accueil reste sur sa première image;
+- le hero de Vie paroissiale reste sur sa première illustration;
 - le vitrail reste complet et statique, sans poussière, grain ni parallaxe;
 - la liste « Vivre la paroisse » est immédiatement visible, sans translation;
 - les changements d’état fonctionnels, le focus et la navigation restent
@@ -149,6 +150,29 @@ Le contrôleur prépare les images de révélation après le premier rendu, se
 désactive sur pointer coarse, nettoie ses observateurs à la sortie de page et
 réagit à l’onglet masqué. Avec reduced motion, la première photographie reste
 statique et la lentille, les indicateurs et le zoom sont absents.
+
+## Heroes de Notre paroisse et Vie paroissiale
+
+Le hero de Notre paroisse conserve une photographie unique et n’utilise ni
+lentille, ni rotation, ni particules. Son étalonnage charbon, son voile
+directionnel, sa profondeur typographique et son zoom unique maximal de 1,022
+reprennent le langage cinématographique de Nos services sans ajouter une
+interaction concurrente à la timeline. Avec reduced motion, l’image reste
+entièrement statique.
+
+Vie paroissiale alterne trois illustrations toutes les 7,6 secondes avec un
+fondu de 1,25 seconde. La lentille révèle toujours l’illustration suivante et
+réutilise `src/scripts/organic-hero-lens.ts`; aucun second contrôleur de
+pointeur n’est créé. Chaque illustration occupe un seul plan plein cadre, sans
+zoom animé; les formats carré et portrait utilisent un point focal contrôlé
+plutôt qu’une déformation ou une duplication. Sur mobile, la lentille est
+désactivée par les capacités `pointer: coarse` ou l’absence de survol.
+
+Sans JavaScript, la première illustration et tous les textes HTML restent
+visibles. Avec reduced motion, la rotation, les indicateurs, la lentille et les
+transitions sont retirés. Le timer s’arrête lorsque l’onglet est masqué et la
+boucle `requestAnimationFrame` de la lentille ne vit que pendant le geste et
+sa fermeture.
 
 ## Galerie centrée de l’accueil
 
@@ -337,9 +361,9 @@ créé pour cette page.
 
 `src/scripts/organic-hero-lens.ts` centralise l'amélioration progressive
 inspirée du principe visuel du hero Patreon. Une seule ouverture masquée révèle
-une couche photographique plein cadre derrière l'image principale. Friperie et
-le hero d'accueil utilisent le même contrôleur; les autres héros restent hors
-du périmètre de S1-T10.
+une couche visuelle derrière l'image principale. Friperie et le hero d'accueil
+l’ont inauguré pendant S1-T10; Nos services et Vie paroissiale le réutilisent
+ensuite avec la règle « révéler l’image suivante ».
 
 La vidéo de référence fournie le 27 juillet 2026 précise le mouvement : la
 fenêtre n'est pas un disque fixe. Elle naît au début du geste, gonfle avec

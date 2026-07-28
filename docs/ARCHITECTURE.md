@@ -390,7 +390,8 @@ boucle continue n’est créée. Le voile fixe, la chronologie et le header
 occupent trois plans distincts (`55`, `56`, `60`) : le décor s’assombrit, le
 récit reste la scène lisible et aucun contenu de chapitre ne peut recouvrir la
 navigation. Le header reçoit sa propre valeur de luminosité ambiante. Le hero
-de Notre paroisse n’est pas concerné.
+reste indépendant de ce contrôleur : il utilise seulement une photographie,
+un voile CSS et un zoom cinématographique supprimé avec reduced motion.
 
 Le rendu reste visible sans JavaScript. Un marqueur inline pré-paint ne prépare
 l’état masqué que lorsque `IntersectionObserver` existe et que reduced motion
@@ -474,6 +475,14 @@ Les quatre groupes viennent de Figma et de l'inventaire interne, mais leur
 activité actuelle reste à confirmer. Le statut et les formulations prudentes
 sont conservés dans la source de contenu; les fréquences, responsables et
 coordonnées fictives de la maquette ne sont pas repris.
+
+Le contrat du hero expose une liste typée de trois `ParishLifeHeroImage`.
+Chaque entrée conserve l’image, son libellé, un alt honnête, son caractère non
+documentaire, son statut de génération et son crédit. Le composant Astro
+produit les variantes avec `astro:assets`; le script local gère la boucle et
+délègue la lentille au contrôleur organique partagé. Une seule copie plein
+cadre est affichée; les points focaux typés contrôlent le recadrage des formats
+carré et portrait.
 
 ## Architecture Friperie et report des Feuillets — S1-T10
 
@@ -581,3 +590,40 @@ l’instant.
 - aucun CMS, formulaire connecté, backend ou déploiement n’est configuré;
 - `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.
+
+## Architecture Nos annonceurs — S1-T13
+
+La route canonique `/nos-annonceurs/` suit le même découplage que les autres
+pages éditoriales :
+
+```text
+advertisersData + advertisersPageSource
+  → selectAdvertisers()
+  → getAdvertisersPageData()
+  → AdvertisersPageData
+  → composants Astro
+  → HTML statique
+```
+
+`Advertiser` encode le statut éditorial, l’ordre, les coordonnées facultatives,
+les médias et les notes de confirmation. Le sélecteur public ne rend que les
+entrées `active`; `inactive`, `draft` et `confirmation-required` sont exclues.
+L’option de prévisualisation des entrées à confirmer est explicite et n’est pas
+utilisée par la route publique.
+
+La page reste utile lorsque la collection filtrée est vide : l’introduction,
+la transparence éditoriale et « Devenir annonceur » demeurent, tandis que la
+liste est entièrement masquée. Les composants reçoivent leurs données par
+props et ne connaissent ni Sanity, ni la source métier.
+
+Le téléphone du secrétariat vient de `siteSettingsData`. Les liens commerciaux
+futurs portent `rel="sponsored noopener noreferrer"`; les liens internes ne le
+portent pas. Aucun formulaire, endpoint ou envoi n’est associé à cette page.
+
+`/merci-a-nos-annonceurs/` est un alias statique `noindex`, canonical vers
+`/nos-annonceurs/`, avec redirection HTML. L’URL Google Sites accentuée devra
+être redirigée au niveau du domaine ou de l’hébergement lors du déploiement.
+
+Le hero réutilise une photographie réelle de l’église approuvée pour le site.
+Son seul mouvement est un zoom CSS très lent, désactivé avec
+`prefers-reduced-motion`; le contenu reste complet sans JavaScript.
