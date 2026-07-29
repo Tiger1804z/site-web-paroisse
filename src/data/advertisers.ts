@@ -134,8 +134,10 @@ export function buildAdvertisersPageSource(
     solicitation: {
       eyebrow: 'Devenir annonceur',
       title: 'Soutenir la paroisse par une présence publicitaire',
+      // Formulation générique tant que l’existence du feuillet papier et du
+      // programme publicitaire n’est pas confirmée (révision du 11 août 2026).
       description:
-        'Un espace publicitaire peut être offert dans le feuillet paroissial ou dans d’autres communications, selon les supports, disponibilités et modalités confirmés par le secrétariat.',
+        'Un espace publicitaire peut être offert dans les communications paroissiales, selon les supports, disponibilités et modalités confirmés par le secrétariat.',
       details: [
         'Les formats, périodes et conditions sont communiqués directement par la paroisse.',
         'Aucun tarif ni espace disponible n’est annoncé en temps réel sur le site.',

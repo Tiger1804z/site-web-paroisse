@@ -22,7 +22,7 @@ Audit initial réalisé pendant S1-T08 et actualisé dans S1-T13 à partir de :
 | Ancien Sacrements            | `/sacrements/`                   | `Sacrements.tsx`               | `src/pages/sacrements.astro`              | alias `noindex`       | Compatibilité historique             | Canonical et redirection HTML statique vers `/nos-services/`; une redirection HTTP permanente pourra être configurée à l’hébergement.                                  |
 | Événements                   | `/evenements/`                   | `Evenements.tsx`               | `src/pages/evenements.astro`              | partiel               | Haute                                | S1-T07 est fusionné et la source `ParishEvent` est opérationnelle, mais la route reste `noindex` et la migration Figma complète doit être confirmée avant publication. |
 | Vie paroissiale              | `/vie-paroissiale/`              | `VieParoissiale.tsx`           | `src/pages/vie-paroissiale.astro`         | terminé dans S1-T08   | —                                    | Confirmation des groupes, activités, responsables et coordonnées.                                                                                                      |
-| Feuillets paroissiaux        | `/feuillets-paroissiaux/`        | `Feuillets.tsx`                | placeholder dans `src/pages/[slug].astro` | bloqué / différé      | Révision le 10 août 2026 ou après    | Aucun PDF disponible. Confirmer la volonté de publier, les fichiers, dates, droits, politique d'archives et responsable des mises à jour avec la secrétaire.           |
+| Feuillets paroissiaux        | —                                | `Feuillets.tsx`                | aucune route                              | retiré                | —                                    | Décision du 29 juillet 2026 : pas de page Web de feuillets PDF. Route, navigation, composant d'accueil, CTA et champs Sanity supprimés.                                |
 | Friperie                     | `/friperie/`                     | `Friperie.tsx`                 | `src/pages/friperie.astro`                | migré, `noindex`      | Validation éditoriale et photos      | Remplacer les prototypes, confirmer leurs droits temporaires, les horaires, les dons, l'accès et les coordonnées avant de retirer `noindex`.                           |
 | Location de salle            | `/location-de-salle/`            | `LocationSalle.tsx`            | `src/pages/location-de-salle.astro`       | alias `noindex`       | Intégrée à Nos services              | Redirection statique vers `/nos-services/#location-de-salle`; tarifs et disponibilités sont communiqués manuellement par le secrétariat.                               |
 | Galerie                      | `/galerie/`                      | `Galerie.tsx`                  | placeholder dans `src/pages/[slug].astro` | différée / `noindex`  | À réévaluer selon le besoin          | L’utilisateur conserve uniquement la mini-galerie de l’accueil; aucune page autonome ni promotion dans la navigation pour l’instant.                                   |
@@ -47,10 +47,8 @@ placeholder.
 Friperie répond maintenant par une page dédiée, mais reste `noindex`.
 Location de salle fait partie de `/nos-services/` et son ancienne route reste
 un alias technique `noindex`, absent du menu Informations.
-Feuillets est conservé comme définition inactive et comme placeholder
-`noindex`; il est absent du menu desktop, du menu mobile, du footer, du bloc
-Feuillets de l'accueil, du CTA Horaires de l'accueil et des promotions de la
-page Horaires.
+Feuillets n'a plus ni route ni définition de navigation : la fonctionnalité Web
+a été retirée le 29 juillet 2026.
 
 Galerie est également conservée comme définition inactive et comme placeholder
 `noindex`. La mini-galerie de l’accueil reste autonome et ne pointe pas vers
@@ -67,20 +65,19 @@ historiques avec le statut `confirmation-required`, tous exclus du rendu
 public. La confirmation est prévue avec la secrétaire le 10 août 2026 ou après
 son retour.
 
-## Décision Feuillets — bloqué / différé
+## Décision Feuillets — retiré le 29 juillet 2026
 
-Aucun véritable feuillet PDF n'est actuellement disponible. La page ne doit
-pas être livrée vide ni promue comme une archive existante.
+Le site ne publiera pas de page Web de feuillets PDF. La fonctionnalité a été
+retirée plutôt que laissée inactive : route, entrée de navigation,
+`ParishBulletin.astro`, CTA de l'accueil, bloc de l'encadré Horaires, champs
+Sanity et types associés.
 
-Condition de reprise :
+Ce qui reste à confirmer le **11 août 2026** ne concerne plus le site :
 
-- confirmer que la paroisse souhaite publier les feuillets;
-- obtenir les vrais fichiers PDF;
-- confirmer les dates et les droits de publication;
-- définir la politique d'archives;
-- déterminer qui effectuera les mises à jour.
-
-Date de révision : **10 août 2026 ou après le retour de la secrétaire**.
+- l'existence du feuillet papier lui-même;
+- l'existence et les supports du programme publicitaire, dont les promesses
+  commerciales ont été ramenées à la formulation générique « communications
+  paroissiales » dans `src/data/advertisers.ts`.
 
 ## Contenus présents dans l'inventaire, sans page Figma autonome
 
@@ -108,7 +105,6 @@ Date de révision : **10 août 2026 ou après le retour de la secrétaire**.
 - Les placeholders restent `noindex`.
 - Friperie reste aussi `noindex` pendant sa phase de photographies et de
   confirmation.
-- Feuillets répond encore en placeholder, mais aucun lien public ne le promeut.
 - Contact répond par son frontend complet `noindex`, sans envoi.
 - Galerie répond encore en placeholder, mais aucun lien public ne la promeut.
 - La mini-galerie de l’accueil exclut les images aux droits ou consentements en

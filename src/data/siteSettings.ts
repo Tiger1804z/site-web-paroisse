@@ -30,4 +30,7 @@ export const siteSettingsData = {
       'https://www.openstreetmap.org/export/embed.html?bbox=-73.6177965%2C45.5744702%2C-73.6057965%2C45.5824702&layer=mapnik&marker=45.5784702%2C-73.6117965',
     title: 'Carte indiquant l’emplacement de la Paroisse Saint-René-Goupil',
   },
+  // Relevé le 29 juillet 2026 sur le site actuel de la paroisse.
+  officeHoursLabel:
+    'Mardi et jeudi de 9 h à 14 h 30 (appels), mercredi de 9 h à 16 h (bureau ouvert)',
 } as const satisfies PublicContactDetails;

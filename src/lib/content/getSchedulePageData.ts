@@ -1,57 +1,50 @@
 import { sanityClient } from 'sanity:client';
 import { schedulePageData } from '@/data/schedules';
-import type { SchedulePageData, WeeklyMassEntry } from '@/types/schedule';
+import type { SchedulePageView } from '@/types/schedule';
 import { SCHEDULE_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanitySchedulePageResult } from '@/lib/sanity/types';
 import { normalizeSanitySchedulePage } from '@/lib/content/normalizeSanitySchedulePage';
-import { toWeeklyMassEntries } from '@/lib/schedules/weekly-masses';
+import { getMassScheduleData } from '@/lib/content/getMassSchedule';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
 
-function getLocalFallback(): SchedulePageData {
-  return {
-    ...schedulePageData,
-    faq: schedulePageData.faq.filter(({ active }) => active),
-  };
-}
-
-/**
- * Fetch partagé par les deux lectures du document.
- *
- * Volontairement sans cache : chaque page est rendue une fois au build et
- * aucune ne consomme les deux dérivations. Un cache module n'économiserait rien
- * ici et rendrait les données figées entre deux rechargements en dev.
- */
-async function fetchSchedulePageRaw(
-  context: string,
-): Promise<SanitySchedulePageResult> {
+async function fetchSchedulePageRaw(): Promise<SanitySchedulePageResult> {
   try {
     return await sanityClient.fetch(SCHEDULE_PAGE_QUERY);
   } catch (error) {
     console.error(
-      `[${context}] Échec du fetch Sanity — utilisation du fallback local.`,
+      '[getSchedulePageData] Échec du fetch Sanity — utilisation du repli local.',
       error,
     );
     return null;
   }
 }
 
-/** Contenu d'affichage de la page Horaires, libellés déjà dérivés. */
-export async function getSchedulePageData(): Promise<SchedulePageData> {
-  const raw = await fetchSchedulePageRaw('getSchedulePageData');
-
-  return normalizeSanitySchedulePage(raw, getLocalFallback());
-}
-
 /**
- * Célébrations hebdomadaires sous forme calculable, pour le calcul de la
- * prochaine messe.
+ * Agrège les trois sources de la page `/horaires` :
  *
- * Retourne une liste vide tant que Sanity ne publie pas d'horaire exploitable :
- * le fallback local ne contient que des gabarits (`[HEURE]`), qui ne sont pas
- * des heures. L'appelant doit afficher un état vide honnête, jamais une valeur
- * inventée.
+ * - `schedulePage` — le contenu propre à cette page;
+ * - `massSchedule` — les horaires, partagés avec l'accueil;
+ * - `siteSettings` — les heures du secrétariat, coordonnée globale.
+ *
+ * Aucune référence Sanity entre ces documents : trois lectures indépendantes,
+ * recomposées ici. Les composants gardent le contrat qu'ils avaient déjà.
  */
-export async function getWeeklyMasses(): Promise<WeeklyMassEntry[]> {
-  const raw = await fetchSchedulePageRaw('getWeeklyMasses');
+export async function getSchedulePageData(): Promise<SchedulePageView> {
+  const [raw, schedule, siteSettings] = await Promise.all([
+    fetchSchedulePageRaw(),
+    getMassScheduleData(),
+    getSiteSettings(),
+  ]);
 
-  return toWeeklyMassEntries(raw);
+  const page = normalizeSanitySchedulePage(
+    raw,
+    schedulePageData,
+    siteSettings.officeHoursLabel,
+  );
+
+  return {
+    ...page,
+    faq: page.faq.filter(({ active }) => active),
+    ...schedule,
+  };
 }

@@ -160,18 +160,26 @@ date à laquelle elle devra être révisée.
 
 ## Annonceurs
 
-1. Le programme de publicité dans le feuillet est-il toujours actif?
-2. Souhaitez-vous recruter de nouveaux annonceurs?
-3. Quels annonceurs sont encore actifs?
-4. Pour quelle période chaque partenariat est-il valide?
-5. Quels tarifs, formats et conditions doivent être communiqués?
-6. La paroisse possède-t-elle les autorisations pour publier leurs logos?
-7. Chaque annonceur a-t-il approuvé son nom, son logo, son lien et ses
+> **À confirmer le 11 août 2026.** Le site ne publie plus de page de feuillets
+> PDF, et les promesses commerciales ont été ramenées à « communications
+> paroissiales ». Deux faits restent à vérifier avant de reformuler quoi que ce
+> soit : le feuillet **papier** existe-t-il encore, et le programme publicitaire
+> est-il encore actif? Tant que ce n’est pas confirmé, aucun support précis ne
+> doit être nommé sur le site.
+
+1. Le feuillet paroissial papier existe-t-il toujours, et à quel rythme?
+2. Le programme de publicité est-il toujours actif?
+3. Souhaitez-vous recruter de nouveaux annonceurs?
+4. Quels annonceurs sont encore actifs?
+5. Pour quelle période chaque partenariat est-il valide?
+6. Quels tarifs, formats et conditions doivent être communiqués?
+7. La paroisse possède-t-elle les autorisations pour publier leurs logos?
+8. Chaque annonceur a-t-il approuvé son nom, son logo, son lien et ses
    coordonnées?
-8. Qui fournit et approuve la courte description de chaque annonceur?
-9. Le motif de contact « Publicité dans le feuillet paroissial » convient-il au
-   CTA « Devenir annonceur »?
-10. Faut-il afficher les annonceurs dans un ordre précis ou les faire alterner?
+9. Qui fournit et approuve la courte description de chaque annonceur?
+10. Quel motif de contact convient au CTA « Devenir annonceur », maintenant que
+    le site parle de « communications paroissiales »?
+11. Faut-il afficher les annonceurs dans un ordre précis ou les faire alterner?
 
 ## Photos
 
@@ -186,14 +194,14 @@ date à laquelle elle devra être révisée.
 
 ## Documents
 
-1. Quels feuillets PDF peuvent être publiés?
-2. Combien d’années d’archives faut-il conserver?
-3. Qui fournit le feuillet le plus récent et à quel rythme?
-4. Quels formulaires ou documents de préparation aux sacrements peuvent être
+> Les questions sur la publication Web des feuillets PDF sont retirées : la
+> décision du 29 juillet 2026 est de ne pas construire cette page.
+
+1. Quels formulaires ou documents de préparation aux sacrements peuvent être
    téléchargés publiquement?
-5. Les certificats doivent-ils rester une demande au secrétariat sans formulaire
+2. Les certificats doivent-ils rester une demande au secrétariat sans formulaire
    spécialisé?
-6. Quels documents contiennent des renseignements personnels et ne doivent
+3. Quels documents contiennent des renseignements personnels et ne doivent
    jamais être publiés?
 
 ## Réseaux sociaux

@@ -71,5 +71,9 @@ export function normalizeSanitySiteSettings(
     email: deriveEmail(raw?.publicEmail ?? null, raw?.showPublicEmail ?? null),
     directionsUrl: fallback.directionsUrl,
     map: fallback.map,
+    // Coordonnée globale : la page Horaires, Contact et Première visite
+    // affichent toutes la même valeur, corrigée à un seul endroit.
+    officeHoursLabel:
+      cleanString(raw?.officeHours) ?? fallback.officeHoursLabel,
   };
 }

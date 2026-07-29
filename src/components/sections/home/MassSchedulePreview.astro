@@ -2,7 +2,6 @@
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-import { isInformationRoutePublic } from '@/lib/navigation';
 import {
   formatTimeLabel,
   WEEKDAY_LABELS,
@@ -27,10 +26,6 @@ const introduction =
   schedule.length > 0
     ? 'Les horaires ci-dessous peuvent être modifiés lors des fêtes et des célébrations spéciales.'
     : 'Les horaires réguliers seront publiés après leur confirmation. Ils peuvent être modifiés lors des fêtes et des célébrations spéciales.';
-
-const showParishBulletinLink = isInformationRoutePublic(
-  '/feuillets-paroissiaux',
-);
 ---
 
 <section
@@ -46,13 +41,6 @@ const showParishBulletinLink = isInformationRoutePublic(
         <p class="type-body">{introduction}</p>
         <div class="mass-schedule__actions">
           <Button href="/horaires">Voir tous les horaires</Button>
-          {
-            showParishBulletinLink && (
-              <Button href="/feuillets-paroissiaux" variant="dark">
-                Consulter les feuillets
-              </Button>
-            )
-          }
         </div>
       </div>
 

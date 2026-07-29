@@ -29,7 +29,6 @@ function rawEntry(overrides = {}) {
 
 function rawDocument(regularOverrides = {}, documentOverrides = {}) {
   return {
-    hero: null,
     regularSchedule: {
       title: 'Horaires réguliers des messes',
       description: null,
@@ -127,6 +126,22 @@ test('les entrées calculables sont triées par ordre puis par heure', () => {
   assert.deepEqual(
     entries.map(({ weekday, time }) => `${weekday} ${time}`),
     ['saturday 16:00', 'sunday 09:00', 'sunday 11:00'],
+  );
+});
+
+test('sans numéro d’ordre, l’ordre du tableau est conservé', () => {
+  const entries = toWeeklyMassEntries(
+    rawDocument({
+      entries: [
+        rawEntry({ weekday: 'sunday', time: '11:00', order: null }),
+        rawEntry({ weekday: 'saturday', time: '16:00', order: null }),
+      ],
+    }),
+  );
+
+  assert.deepEqual(
+    entries.map(({ weekday }) => weekday),
+    ['sunday', 'saturday'],
   );
 });
 

@@ -1,5 +1,6 @@
 import type {
   SITE_SETTINGS_QUERY_RESULT,
+  MASS_SCHEDULE_QUERY_RESULT,
   SCHEDULE_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
@@ -14,9 +15,12 @@ import type {
 export type SanitySiteSettingsResult = SITE_SETTINGS_QUERY_RESULT;
 
 /**
- * Type brut du document schedulePage tel que renvoyé par SCHEDULE_PAGE_QUERY.
+ * Type brut du document massSchedule tel que renvoyé par MASS_SCHEDULE_QUERY.
  *
  * Même frontière que ci-dessus : structure machine (jours en anglais, heures
  * `HH:mm`), les libellés français sont dérivés dans le normalizer.
  */
+export type SanityMassScheduleResult = MASS_SCHEDULE_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par SCHEDULE_PAGE_QUERY. */
 export type SanitySchedulePageResult = SCHEDULE_PAGE_QUERY_RESULT;

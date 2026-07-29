@@ -70,14 +70,15 @@ Les images IA, externes, temporaires ou sans consentement ne sont pas mélangée
 - `/sacrements/` redirige statiquement vers `/nos-services/`;
 - `/location-de-salle/` redirige statiquement vers
   `/nos-services/#location-de-salle`;
-- `/feuillets-paroissiaux/` demeure un placeholder `noindex`, retiré de la
-  navigation publique.
+- `/feuillets-paroissiaux/` n’existe plus : décision du 29 juillet 2026 de ne
+  pas publier de page Web de feuillets PDF. Route, entrée de navigation,
+  composant d’accueil et CTA supprimés.
 
 ## Navigation et header
 
 La source canonique est `src/lib/navigation.ts`. Contact est actif dans le menu
-Informations desktop/mobile et le footer. Galerie, Feuillets et Location de
-salle y restent inactifs; Location de salle demeure intégrée à Nos services.
+Informations desktop/mobile et le footer. Galerie et Location de salle y restent
+inactifs; Location de salle demeure intégrée à Nos services.
 
 Le header reste translucide au sommet et après défilement, avec fallback
 lisible lorsque `backdrop-filter` n’est pas pris en charge.
@@ -105,7 +106,8 @@ secrétaire le 10 août 2026 ou après son retour avant de retirer `noindex`.
 
 - choix, sécurité et activation du système d’envoi Contact;
 - courriel public et heures du secrétariat;
-- Feuillets, différé jusqu’au 10 août 2026 ou au retour de la secrétaire;
+- existence du feuillet papier et du programme publicitaire, à confirmer le
+  11 août 2026;
 - horaires, procédures pastorales et données temporelles à réviser;
 - décision future sur l’utilité d’une page Galerie complète et enrichissement
   des crédits photographiques;

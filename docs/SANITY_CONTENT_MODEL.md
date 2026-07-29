@@ -3,6 +3,44 @@
 Sanity n’est pas installé. Ce document décrit la frontière future afin que les
 contrats Astro actuels restent stables.
 
+> **Note du 29 juillet 2026 — Sanity est désormais installé** et les premiers
+> documents sont en production. Les sections ci-dessous restent des intentions
+> pour les pages non migrées; la règle de découpage adoptée est décrite juste
+> en dessous et prime sur elles.
+
+## Règle de découpage : données partagées et pages
+
+Le Studio est organisé en deux sections, qui reflètent une seule question :
+**combien de pages affichent cette information, et survit-elle à la page?**
+
+- affichée à deux endroits ou plus, ou vraie indépendamment de toute page →
+  **document partagé**;
+- n’a de sens que sur une page → **document de page**.
+
+Application actuelle :
+
+| Document       | Section           | Contenu                                                         |
+| -------------- | ----------------- | --------------------------------------------------------------- |
+| `siteConfig`\* | Données partagées | Coordonnées, téléphone, courriel, heures du secrétariat.        |
+| `massSchedule` | Données partagées | Horaires réguliers et saisonniers, date de vérification.        |
+| `schedulePage` | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`. |
+
+\* le type s’appelle `siteSettings` dans le code.
+
+Trois conséquences pratiques :
+
+- les horaires des messes sont lus par `/horaires` **et** par l’accueil, donc
+  ils ne peuvent pas appartenir à une page;
+- les heures du secrétariat sont une coordonnée, pas du contenu de page : elles
+  serviront aussi Contact et Première visite;
+- les collections (événements, annonceurs) restent des collections. Un document
+  de page ne contient jamais une liste d’entités qui ont leur propre cycle de
+  vie.
+
+Aucune référence Sanity ne relie ces documents : la page Astro lit les sources
+dont elle a besoin et les recompose dans son getter. Une jointure GROQ n’aurait
+rien apporté tant qu’il n’existe qu’un seul horaire.
+
 ## `parishLifePage`
 
 Le futur document de page pourra contenir :

@@ -3,7 +3,6 @@ import MotionController from '@/components/motion/MotionController.astro';
 import HomeGallery from '@/components/sections/home/HomeGallery.astro';
 import HomeHero from '@/components/sections/home/HomeHero.astro';
 import MassSchedulePreview from '@/components/sections/home/MassSchedulePreview.astro';
-import ParishBulletin from '@/components/sections/home/ParishBulletin.astro';
 import ParishLifePreview from '@/components/sections/home/ParishLifePreview.astro';
 import PracticalServices from '@/components/sections/home/PracticalServices.astro';
 import SpiritualInterlude from '@/components/sections/home/SpiritualInterlude.astro';
@@ -11,14 +10,13 @@ import UpcomingActivitiesSection from '@/components/sections/home/UpcomingActivi
 import VisitSection from '@/components/sections/home/VisitSection.astro';
 import WelcomeSection from '@/components/sections/home/WelcomeSection.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { isInformationRoutePublic } from '@/lib/navigation';
 import {
   getHomepageEventsSettings,
   getHomepageParishEvents,
 } from '@/lib/content/getParishEvents';
 import { getHomepageGalleryItems } from '@/lib/content/getHomepageGalleryItems';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
-import { getWeeklyMasses } from '@/lib/content/getSchedulePageData';
+import { getWeeklyMasses } from '@/lib/content/getMassSchedule';
 
 const buildTime = new Date();
 const homepageEventsSettings = await getHomepageEventsSettings();
@@ -28,7 +26,6 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
       homepageEventsSettings.homepageUpcomingLimit,
     )
   : { secondary: [] };
-const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
 const siteSettings = await getSiteSettings();
 const homepageGalleryItems = await getHomepageGalleryItems(6);
 const weeklyMasses = await getWeeklyMasses();
@@ -54,7 +51,6 @@ const weeklyMasses = await getWeeklyMasses();
       )
   }
   <ParishLifePreview />
-  {showParishBulletin && <ParishBulletin />}
   <PracticalServices />
   <SpiritualInterlude />
   <HomeGallery items={homepageGalleryItems} />

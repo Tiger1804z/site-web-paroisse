@@ -1,15 +1,15 @@
-import type { SanitySchedulePageResult } from '@/lib/sanity/types';
+import type { SanityMassScheduleResult } from '@/lib/sanity/types';
 import type { WeeklyMassEntry } from '@/types/schedule';
 import { cleanString, parseTimeToMinutes } from './schedule-format.ts';
 
-type RawSchedulePage = NonNullable<SanitySchedulePageResult>;
-type RawPeriod = NonNullable<RawSchedulePage['regularSchedule']>;
+type RawMassSchedule = NonNullable<SanityMassScheduleResult>;
+type RawPeriod = NonNullable<RawMassSchedule['regularSchedule']>;
 type RawEntry = NonNullable<RawPeriod['entries']>[number];
 
 /**
  * Extrait la forme calculable des célébrations hebdomadaires.
  *
- * Complémentaire de `normalizeSanitySchedulePage`, qui produit les libellés
+ * Complémentaire de `normalizeSanityMassSchedule`, qui produit les libellés
  * d'affichage : ici on garde les valeurs machine (`sunday`, `16:00`) pour que
  * « la prochaine messe » se calcule sans jamais reparser un libellé français.
  *
@@ -22,7 +22,7 @@ type RawEntry = NonNullable<RawPeriod['entries']>[number];
  * décision de modèle (période en vigueur) — ticket ultérieur.
  */
 export function toWeeklyMassEntries(
-  raw: SanitySchedulePageResult,
+  raw: SanityMassScheduleResult,
 ): WeeklyMassEntry[] {
   const period = raw?.regularSchedule;
   if (!period || period.active === false) return [];
@@ -30,8 +30,9 @@ export function toWeeklyMassEntries(
   return (period.entries ?? [])
     .map((entry, index) => ({
       entry: toWeeklyMassEntry(entry),
-      order:
-        typeof entry.order === 'number' ? entry.order : Number.MAX_SAFE_INTEGER,
+      // Même règle que le normalizer : la position dans le tableau sert
+      // d'ordre par défaut.
+      order: typeof entry.order === 'number' ? entry.order : index,
       index,
     }))
     .filter(

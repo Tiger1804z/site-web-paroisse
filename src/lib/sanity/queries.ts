@@ -12,26 +12,23 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     },
     phone,
     publicEmail,
-    showPublicEmail
+    showPublicEmail,
+    officeHours
   }
 `);
 
 /**
- * La projection des entrées est répétée (horaire régulier + saisonniers) plutôt
- * qu'interpolée : Sanity TypeGen analyse la requête statiquement et ne résout
- * pas les fragments construits à l'exécution.
+ * Horaires des messes — donnée partagée entre `/horaires` et l’accueil.
  *
- * `_key` est l'identifiant stable des éléments de tableau — il alimente le champ
- * `id` du contrat frontend, aucun identifiant n'est saisi par l'éditrice.
+ * La projection des entrées est répétée (horaire régulier + saisonniers) plutôt
+ * qu’interpolée : Sanity TypeGen analyse la requête statiquement et ne résout
+ * pas les fragments construits à l’exécution.
+ *
+ * `_key` est l’identifiant stable des éléments de tableau — il alimente le champ
+ * `id` du contrat frontend, aucun identifiant n’est saisi par l’éditrice.
  */
-export const SCHEDULE_PAGE_QUERY = defineQuery(`
-  *[_type == "schedulePage"][0]{
-    hero {
-      eyebrow,
-      title,
-      introduction,
-      imageAlt
-    },
+export const MASS_SCHEDULE_QUERY = defineQuery(`
+  *[_type == "massSchedule"][0]{
     regularSchedule {
       title,
       description,
@@ -72,5 +69,38 @@ export const SCHEDULE_PAGE_QUERY = defineQuery(`
       }
     },
     lastReviewedAt
+  }
+`);
+
+/** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
+export const SCHEDULE_PAGE_QUERY = defineQuery(`
+  *[_type == "schedulePage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction,
+      imageAlt
+    },
+    notice {
+      title,
+      message,
+      severity,
+      actionTarget,
+      active
+    },
+    beforeYouVisit {
+      title,
+      message
+    },
+    sidebar {
+      officeEyebrow,
+      officeMessage
+    },
+    faq[]{
+      _key,
+      question,
+      answer,
+      active
+    }
   }
 `);

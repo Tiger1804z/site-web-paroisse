@@ -1,17 +1,32 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
-import {CalendarIcon} from '@sanity/icons/Calendar'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 
+/**
+ * Contenu propre à la page /horaires, et rien d’autre.
+ *
+ * Les horaires eux-mêmes vivent dans `massSchedule` (partagés avec l’accueil),
+ * les heures du secrétariat dans `siteSettings` (coordonnées globales). Ce
+ * document ne porte que ce qui n’a de sens que sur cette page.
+ */
 export const schedulePageType = defineType({
   name: 'schedulePage',
-  title: 'Horaires',
+  title: 'Page Horaires',
   type: 'document',
-  icon: CalendarIcon,
+  icon: DocumentTextIcon,
+  // Les groupes deviennent des onglets en haut du document : quatre formulaires
+  // courts plutôt qu’un seul très long.
+  groups: [
+    {name: 'header', title: 'En-tête', default: true},
+    {name: 'notice', title: 'Avis'},
+    {name: 'aside', title: 'Bandeau et encadré'},
+    {name: 'faq', title: 'Questions fréquentes'},
+  ],
   fields: [
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',
       type: 'object',
-      options: {collapsible: true, collapsed: false},
+      group: 'header',
       fields: [
         defineField({
           name: 'eyebrow',
@@ -42,42 +57,72 @@ export const schedulePageType = defineType({
       ],
     }),
     defineField({
-      name: 'regularSchedule',
-      title: 'Horaires réguliers',
-      type: 'schedulePeriod',
-      description: 'Le groupe principal des messes régulières (semaine, samedi, dimanche).',
+      name: 'notice',
+      title: 'Avis en haut de page',
+      type: 'scheduleNotice',
+      group: 'notice',
+      description:
+        'Encadré ponctuel affiché au-dessus des horaires. Laisser vide s’il n’y a rien à signaler.',
     }),
     defineField({
-      name: 'seasonalSchedules',
-      title: 'Horaires saisonniers',
+      name: 'beforeYouVisit',
+      title: 'Bandeau « Avant de vous déplacer »',
+      type: 'object',
+      group: 'aside',
+      description:
+        'Le bouton du bandeau reste défini par le code : sa destination dépend des routes actives du site.',
+      fields: [
+        defineField({name: 'title', title: 'Titre', type: 'string'}),
+        defineField({
+          name: 'message',
+          title: 'Message',
+          type: 'text',
+          rows: 3,
+        }),
+      ],
+    }),
+    defineField({
+      name: 'sidebar',
+      title: 'Encadré latéral',
+      type: 'object',
+      group: 'aside',
+      description:
+        'Les heures du secrétariat ne se saisissent pas ici : elles viennent des Coordonnées de la paroisse, pour rester identiques sur tout le site.',
+      fields: [
+        defineField({
+          name: 'officeEyebrow',
+          title: 'Surtitre',
+          type: 'string',
+        }),
+        defineField({
+          name: 'officeMessage',
+          title: 'Message',
+          type: 'text',
+          rows: 2,
+        }),
+      ],
+    }),
+    defineField({
+      name: 'faq',
+      title: 'Questions fréquentes',
       type: 'array',
-      of: [defineArrayMember({type: 'schedulePeriod'})],
-      description:
-        'Versions saisonnières facultatives, appliquées sur certaines périodes de l’année.',
-    }),
-    defineField({
-      name: 'lastReviewedAt',
-      title: 'Horaires vérifiés le',
-      type: 'datetime',
-      description:
-        'Date réelle de la dernière vérification des horaires avec la paroisse. Le libellé français affiché est généré automatiquement. À ne pas confondre avec une simple modification du document.',
+      group: 'faq',
+      of: [defineArrayMember({type: 'scheduleFaqItem'})],
+      description: 'L’ordre d’affichage est celui du tableau : glisser-déposer pour réorganiser.',
     }),
   ],
   // Sans `preview`, le Studio affiche un vidage brut des champs en guise de
   // titre du document.
   preview: {
-    select: {
-      heroTitle: 'hero.title',
-      entries: 'regularSchedule.entries',
-    },
-    prepare({heroTitle, entries}) {
-      const count = Array.isArray(entries) ? entries.length : 0
+    select: {heroTitle: 'hero.title', faq: 'faq'},
+    prepare({heroTitle, faq}) {
+      const count = Array.isArray(faq) ? faq.length : 0
       return {
-        title: heroTitle || 'Horaires',
+        title: heroTitle || 'Page Horaires',
         subtitle:
           count === 0
-            ? 'Aucune célébration'
-            : `${count} célébration${count > 1 ? 's' : ''} régulière${count > 1 ? 's' : ''}`,
+            ? 'Aucune question fréquente'
+            : `${count} question${count > 1 ? 's' : ''} fréquente${count > 1 ? 's' : ''}`,
       }
     },
   },

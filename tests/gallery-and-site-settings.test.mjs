@@ -50,6 +50,10 @@ test('le téléphone possède les formats public et cliquable attendus', () => {
   assert.equal(siteSettingsData.phone.href, 'tel:+15147221161');
 });
 
+test('les heures du secrétariat sont une coordonnée globale', () => {
+  assert.match(siteSettingsData.officeHoursLabel, /9 h à 14 h 30/);
+});
+
 test('le courriel non confirmé est explicitement exclu', () => {
   assert.equal(siteSettingsData.email.confirmed, false);
   assert.equal(siteSettingsData.email.display, '');

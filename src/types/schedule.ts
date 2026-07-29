@@ -94,20 +94,16 @@ export interface BeforeYouVisitContent {
   readonly title: string;
   readonly message: string;
   readonly contactLink: ScheduleLink;
-  readonly bulletinLink: ScheduleLink;
 }
 
 export interface ScheduleSidebarContent {
-  readonly bulletin: {
-    readonly eyebrow: string;
-    readonly title: string;
-    readonly periodLabel: string;
-    readonly link: ScheduleLink;
-    readonly active: boolean;
-  };
   readonly office: {
     readonly eyebrow: string;
-    readonly hoursLabel: string;
+    /**
+     * Vient des coordonnées globales : les mêmes heures servent ailleurs.
+     * Absent tant que la paroisse ne les a pas confirmées.
+     */
+    readonly hoursLabel?: string;
     readonly message: string;
     readonly link: ScheduleLink;
   };
@@ -120,15 +116,32 @@ export interface ScheduleFaqItem {
   readonly active: boolean;
 }
 
+/**
+ * Horaires des messes — donnée partagée, pas contenu de page.
+ *
+ * Affichée par `/horaires` et par l’accueil : elle vit donc dans son propre
+ * document Sanity, indépendant de toute page.
+ */
+export interface MassScheduleData {
+  readonly regularSchedule: SchedulePeriod;
+  readonly seasonalSchedules: readonly SchedulePeriod[];
+  /** Absent tant qu’aucune vérification n’a été datée dans Sanity. */
+  readonly lastUpdatedLabel?: string;
+}
+
+/** Contenu propre à la page `/horaires`, affiché nulle part ailleurs. */
 export interface SchedulePageData {
   readonly hero: ScheduleHero;
   readonly notice?: ScheduleNotice;
-  readonly regularSchedule: SchedulePeriod;
-  readonly seasonalSchedules: readonly SchedulePeriod[];
   readonly specialCelebrations: readonly SpecialCelebration[];
   readonly specialCelebrationsEmptyMessage: string;
-  readonly lastUpdatedLabel: string;
   readonly beforeYouVisit: BeforeYouVisitContent;
   readonly sidebar: ScheduleSidebarContent;
   readonly faq: readonly ScheduleFaqItem[];
 }
+
+/**
+ * Ce que la page `/horaires` reçoit réellement : son propre contenu, plus les
+ * horaires partagés, plus les heures du secrétariat injectées dans l’encadré.
+ */
+export interface SchedulePageView extends SchedulePageData, MassScheduleData {}

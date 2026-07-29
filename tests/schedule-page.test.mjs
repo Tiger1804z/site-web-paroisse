@@ -4,47 +4,9 @@ import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
 import { schedulePageData } from '../src/data/schedules.ts';
 import { normalizeSanitySchedulePage } from '../src/lib/content/normalizeSanitySchedulePage.ts';
-import {
-  formatDateOnlyLabel,
-  formatReviewedAtLabel,
-  formatTimeLabel,
-} from '../src/lib/schedules/schedule-format.ts';
 
-const fallback = {
-  ...schedulePageData,
-  faq: schedulePageData.faq.filter(({ active }) => active),
-};
-
-let keyCounter = 0;
-
-function entry(overrides = {}) {
-  keyCounter += 1;
-  return {
-    _key: `entry-${keyCounter}`,
-    recurrenceType: 'weekly',
-    weekday: 'sunday',
-    displayLabel: null,
-    time: '09:00',
-    title: 'Messe dominicale',
-    note: null,
-    active: true,
-    order: 0,
-    ...overrides,
-  };
-}
-
-function period(overrides = {}) {
-  return {
-    title: 'Horaires réguliers des messes',
-    description: null,
-    validFrom: null,
-    validUntil: null,
-    active: true,
-    order: 0,
-    entries: [entry()],
-    ...overrides,
-  };
-}
+const rootPath = fileURLToPath(new URL('..', import.meta.url));
+const fallback = schedulePageData;
 
 function document(overrides = {}) {
   return {
@@ -54,28 +16,36 @@ function document(overrides = {}) {
       introduction: 'Texte d’introduction publié depuis Sanity.',
       imageAlt: 'Intérieur de l’église',
     },
-    regularSchedule: period(),
-    seasonalSchedules: null,
-    lastReviewedAt: null,
+    notice: null,
+    beforeYouVisit: null,
+    sidebar: null,
+    faq: null,
     ...overrides,
   };
 }
 
-test('un document absent laisse le fallback local intact', () => {
-  assert.deepEqual(normalizeSanitySchedulePage(null, fallback), fallback);
-});
+function notice(overrides = {}) {
+  return {
+    title: 'Horaire spécial',
+    message: 'Les messes du 15 août sont déplacées.',
+    severity: 'important',
+    actionTarget: 'none',
+    active: true,
+    ...overrides,
+  };
+}
 
-test('un horaire régulier sans entrée exploitable conserve le bloc local', () => {
-  const result = normalizeSanitySchedulePage(
-    document({
-      regularSchedule: period({ entries: [] }),
-      seasonalSchedules: [period({ title: 'Horaire d’été' })],
-    }),
-    fallback,
-  );
+test('un document absent laisse le repli local intact', () => {
+  const result = normalizeSanitySchedulePage(null, fallback);
 
-  assert.deepEqual(result.regularSchedule, fallback.regularSchedule);
-  assert.deepEqual(result.seasonalSchedules, fallback.seasonalSchedules);
+  assert.deepEqual(result.hero, fallback.hero);
+  assert.deepEqual(result.beforeYouVisit, fallback.beforeYouVisit);
+  assert.deepEqual(result.faq, fallback.faq);
+  assert.equal(result.sidebar.office.eyebrow, fallback.sidebar.office.eyebrow);
+  assert.equal(result.sidebar.office.message, fallback.sidebar.office.message);
+  // Rien n’est inventé : ni avis, ni heures de secrétariat.
+  assert.equal(result.notice, undefined);
+  assert.equal(result.sidebar.office.hoursLabel, undefined);
 });
 
 test('le hero Sanity complet remplace le hero local', () => {
@@ -87,7 +57,7 @@ test('le hero Sanity complet remplace le hero local', () => {
   );
 });
 
-test('un hero incomplet retombe entièrement sur le fallback', () => {
+test('un hero incomplet retombe entièrement sur le repli', () => {
   const result = normalizeSanitySchedulePage(
     document({
       hero: {
@@ -103,223 +73,171 @@ test('un hero incomplet retombe entièrement sur le fallback', () => {
   assert.deepEqual(result.hero, fallback.hero);
 });
 
-test('les sections encore locales traversent la normalisation', () => {
+test('un avis complet est publié avec son ton', () => {
+  const result = normalizeSanitySchedulePage(
+    document({ notice: notice() }),
+    fallback,
+  );
+
+  assert.equal(result.notice.title, 'Horaire spécial');
+  assert.equal(result.notice.severity, 'important');
+  assert.equal(result.notice.active, true);
+  assert.equal(result.notice.action, undefined);
+});
+
+test('un avis sans titre ou sans message n’existe pas', () => {
+  const withoutTitle = normalizeSanitySchedulePage(
+    document({ notice: notice({ title: '  ' }) }),
+    fallback,
+  );
+  const withoutMessage = normalizeSanitySchedulePage(
+    document({ notice: notice({ message: null }) }),
+    fallback,
+  );
+
+  assert.equal(withoutTitle.notice, undefined);
+  assert.equal(withoutMessage.notice, undefined);
+});
+
+test('un ton inconnu retombe sur « info »', () => {
+  const result = normalizeSanitySchedulePage(
+    document({ notice: notice({ severity: 'urgentissime' }) }),
+    fallback,
+  );
+
+  assert.equal(result.notice.severity, 'info');
+});
+
+test('la destination de l’avis est traduite en lien connu du site', () => {
+  const toCelebrations = normalizeSanitySchedulePage(
+    document({ notice: notice({ actionTarget: 'specialCelebrations' }) }),
+    fallback,
+  );
+  const toContact = normalizeSanitySchedulePage(
+    document({ notice: notice({ actionTarget: 'contact' }) }),
+    fallback,
+  );
+  const unknown = normalizeSanitySchedulePage(
+    document({ notice: notice({ actionTarget: 'site-externe' }) }),
+    fallback,
+  );
+
+  assert.equal(toCelebrations.notice.action.href, '#celebrations-speciales');
+  assert.equal(toContact.notice.action.href, '/contact/');
+  assert.equal(unknown.notice.action, undefined);
+});
+
+test('un avis masqué reste masqué', () => {
+  const result = normalizeSanitySchedulePage(
+    document({ notice: notice({ active: false }) }),
+    fallback,
+  );
+
+  assert.equal(result.notice.active, false);
+});
+
+test('les heures du secrétariat viennent des coordonnées globales', () => {
+  const result = normalizeSanitySchedulePage(
+    document(),
+    fallback,
+    'Mardi de 9 h à 12 h',
+  );
+
+  assert.equal(result.sidebar.office.hoursLabel, 'Mardi de 9 h à 12 h');
+});
+
+test('sans coordonnées, aucune heure de secrétariat n’est inventée', () => {
   const result = normalizeSanitySchedulePage(document(), fallback);
 
-  assert.deepEqual(result.faq, fallback.faq);
-  assert.deepEqual(result.sidebar, fallback.sidebar);
-  assert.deepEqual(result.specialCelebrations, fallback.specialCelebrations);
+  assert.equal(result.sidebar.office.hoursLabel, undefined);
 });
 
-test('deux messes le même jour forment une seule ligne à deux heures', () => {
+test('la destination des boutons reste définie par le code', () => {
   const result = normalizeSanitySchedulePage(
     document({
-      regularSchedule: period({
-        entries: [
-          entry({ weekday: 'sunday', time: '09:00', order: 1 }),
-          entry({ weekday: 'sunday', time: '11:00', order: 1 }),
-        ],
-      }),
+      beforeYouVisit: { title: 'Avant de venir', message: 'Vérifiez l’heure.' },
+      sidebar: { officeEyebrow: 'Bureau', officeMessage: 'Appelez-nous.' },
     }),
     fallback,
   );
 
-  const [line] = result.regularSchedule.entries;
-  assert.equal(result.regularSchedule.entries.length, 1);
-  assert.equal(line.id, 'sunday');
-  assert.equal(line.dayLabel, 'Dimanche');
-  assert.equal(line.note, 'Messe dominicale');
-  assert.deepEqual(
-    line.times.map(({ label }) => label),
-    ['9 h', '11 h'],
+  assert.equal(result.beforeYouVisit.title, 'Avant de venir');
+  assert.equal(
+    result.beforeYouVisit.contactLink.href,
+    fallback.beforeYouVisit.contactLink.href,
   );
-  assert.equal(line.times[0].note, undefined);
+  assert.equal(result.sidebar.office.eyebrow, 'Bureau');
+  assert.equal(
+    result.sidebar.office.link.href,
+    fallback.sidebar.office.link.href,
+  );
 });
 
-test('des titres différents dans un groupe passent en note par heure', () => {
+test('la FAQ Sanity remplace la FAQ locale et garde l’ordre du tableau', () => {
   const result = normalizeSanitySchedulePage(
     document({
-      regularSchedule: period({
-        entries: [
-          entry({
-            weekday: 'sunday',
-            time: '09:00',
-            title: 'Messe dominicale',
-          }),
-          entry({
-            weekday: 'sunday',
-            time: '11:00',
-            title: 'Messe en italien',
-            note: 'Chorale',
-          }),
-        ],
-      }),
-    }),
-    fallback,
-  );
-
-  const [line] = result.regularSchedule.entries;
-  assert.equal(line.note, undefined);
-  assert.equal(line.times[0].note, 'Messe dominicale');
-  assert.equal(line.times[1].note, 'Messe en italien · Chorale');
-});
-
-test('les entrées sont triées par ordre puis par heure', () => {
-  const result = normalizeSanitySchedulePage(
-    document({
-      regularSchedule: period({
-        entries: [
-          entry({ weekday: 'sunday', time: '11:00', order: 2 }),
-          entry({
-            weekday: 'saturday',
-            time: '16:00',
-            order: 1,
-            title: 'Vigile',
-          }),
-          entry({ weekday: 'sunday', time: '09:00', order: 2 }),
-        ],
-      }),
-    }),
-    fallback,
-  );
-
-  assert.deepEqual(
-    result.regularSchedule.entries.map(({ dayLabel }) => dayLabel),
-    ['Samedi', 'Dimanche'],
-  );
-  assert.deepEqual(
-    result.regularSchedule.entries[1].times.map(({ label }) => label),
-    ['9 h', '11 h'],
-  );
-});
-
-test('une entrée inactive est exclue', () => {
-  const result = normalizeSanitySchedulePage(
-    document({
-      regularSchedule: period({
-        entries: [
-          entry({ weekday: 'saturday', time: '16:00', title: 'Vigile' }),
-          entry({ weekday: 'sunday', time: '09:00', active: false }),
-        ],
-      }),
-    }),
-    fallback,
-  );
-
-  assert.deepEqual(
-    result.regularSchedule.entries.map(({ dayLabel }) => dayLabel),
-    ['Samedi'],
-  );
-});
-
-test('une entrée hebdomadaire sans heure valide est ignorée', () => {
-  const result = normalizeSanitySchedulePage(
-    document({
-      regularSchedule: period({
-        entries: [
-          entry({ weekday: 'saturday', time: '16:00', title: 'Vigile' }),
-          entry({ weekday: 'sunday', time: '25:00' }),
-          entry({ weekday: 'monday', time: null }),
-        ],
-      }),
-    }),
-    fallback,
-  );
-
-  assert.deepEqual(
-    result.regularSchedule.entries.map(({ dayLabel }) => dayLabel),
-    ['Samedi'],
-  );
-});
-
-test('une entrée personnalisée sans heure affiche son titre comme heure', () => {
-  const result = normalizeSanitySchedulePage(
-    document({
-      regularSchedule: period({
-        entries: [
-          entry({
-            recurrenceType: 'custom',
-            weekday: null,
-            displayLabel: 'Premier vendredi du mois',
-            time: null,
-            title: 'Adoration',
-          }),
-        ],
-      }),
-    }),
-    fallback,
-  );
-
-  const [line] = result.regularSchedule.entries;
-  assert.equal(line.dayLabel, 'Premier vendredi du mois');
-  assert.equal(line.note, undefined);
-  assert.deepEqual(line.times, [{ label: 'Adoration', note: undefined }]);
-});
-
-test('un groupe inactif est conservé mais marqué inactif', () => {
-  const result = normalizeSanitySchedulePage(
-    document({ regularSchedule: period({ active: false }) }),
-    fallback,
-  );
-
-  assert.equal(result.regularSchedule.active, false);
-});
-
-test('les horaires saisonniers gardent leur _key comme identifiant', () => {
-  const result = normalizeSanitySchedulePage(
-    document({
-      seasonalSchedules: [
+      faq: [
         {
-          _key: 'seasonal-ete',
-          ...period({
-            title: 'Horaire d’été',
-            validFrom: '2026-06-21',
-            validUntil: '2026-09-06',
-          }),
+          _key: 'faq-2',
+          question: 'Deuxième question?',
+          answer: 'Deuxième réponse.',
+          active: true,
         },
-        { _key: 'seasonal-vide', ...period({ entries: [] }) },
+        {
+          _key: 'faq-1',
+          question: 'Première question?',
+          answer: 'Première réponse.',
+          active: false,
+        },
       ],
     }),
     fallback,
   );
 
-  assert.equal(result.seasonalSchedules.length, 1);
-  assert.equal(result.seasonalSchedules[0].id, 'seasonal-ete');
-  assert.equal(result.seasonalSchedules[0].validFromLabel, '21 juin 2026');
-  assert.equal(result.seasonalSchedules[0].validUntilLabel, '6 septembre 2026');
+  assert.deepEqual(
+    result.faq.map(({ id, active }) => `${id}:${active}`),
+    ['faq-2:true', 'faq-1:false'],
+  );
 });
 
-test('lastReviewedAt est lu dans le fuseau de la paroisse', () => {
-  const sameDay = normalizeSanitySchedulePage(
-    document({ lastReviewedAt: '2026-08-11T14:00:00Z' }),
-    fallback,
-  );
-  const previousEvening = normalizeSanitySchedulePage(
-    document({ lastReviewedAt: '2026-08-11T02:00:00Z' }),
+test('une question incomplète est écartée sans vider la FAQ', () => {
+  const result = normalizeSanitySchedulePage(
+    document({
+      faq: [
+        { _key: 'faq-1', question: 'Vraie question?', answer: 'Réponse.' },
+        { _key: 'faq-2', question: 'Sans réponse?', answer: '   ' },
+      ],
+    }),
     fallback,
   );
 
-  assert.equal(sameDay.lastUpdatedLabel, '11 août 2026');
-  assert.equal(previousEvening.lastUpdatedLabel, '10 août 2026');
+  assert.deepEqual(
+    result.faq.map(({ id }) => id),
+    ['faq-1'],
+  );
 });
 
-test('sans lastReviewedAt le libellé local est conservé', () => {
+test('une FAQ Sanity vide conserve la FAQ locale', () => {
+  const result = normalizeSanitySchedulePage(document({ faq: [] }), fallback);
+
+  assert.deepEqual(result.faq, fallback.faq);
+});
+
+test('les sections encore locales traversent la normalisation', () => {
   const result = normalizeSanitySchedulePage(document(), fallback);
 
-  assert.equal(result.lastUpdatedLabel, fallback.lastUpdatedLabel);
+  assert.deepEqual(result.specialCelebrations, fallback.specialCelebrations);
+  assert.equal(
+    result.specialCelebrationsEmptyMessage,
+    fallback.specialCelebrationsEmptyMessage,
+  );
 });
 
-test('les heures sont formatées à la française', () => {
-  assert.equal(formatTimeLabel('16:00'), '16 h');
-  assert.equal(formatTimeLabel('10:30'), '10 h 30');
-  assert.equal(formatTimeLabel('09:05'), '9 h 05');
-  assert.equal(formatTimeLabel('24:00'), undefined);
-  assert.equal(formatTimeLabel('16h00'), undefined);
-  assert.equal(formatTimeLabel(null), undefined);
+test('les données locales des horaires ne contiennent plus de gabarit', () => {
+  assert.doesNotMatch(JSON.stringify(schedulePageData), /\[[A-ZÀ-Ü\s'’]+\]/u);
 });
 
 test('l’accueil ne contient plus de gabarit d’heure', () => {
-  const rootPath = fileURLToPath(new URL('..', import.meta.url));
   const homePage = readFileSync(`${rootPath}/src/pages/index.astro`, 'utf8');
   const hero = readFileSync(
     `${rootPath}/src/components/sections/home/HomeHero.astro`,
@@ -338,9 +256,14 @@ test('l’accueil ne contient plus de gabarit d’heure', () => {
   assert.match(preview, /Horaires à confirmer/);
 });
 
-test('les dates seules ne glissent pas d’un jour', () => {
-  assert.equal(formatDateOnlyLabel('2026-01-01'), '1 janvier 2026');
-  assert.equal(formatDateOnlyLabel('2026-13-01'), undefined);
-  assert.equal(formatDateOnlyLabel('pas une date'), undefined);
-  assert.equal(formatReviewedAtLabel('pas une date'), undefined);
+test('la fonctionnalité Feuillets paroissiaux est retirée du site', () => {
+  const navigation = readFileSync(`${rootPath}/src/lib/navigation.ts`, 'utf8');
+  const placeholderPage = readFileSync(
+    `${rootPath}/src/pages/[slug].astro`,
+    'utf8',
+  );
+
+  assert.doesNotMatch(navigation, /feuillets-paroissiaux/);
+  assert.doesNotMatch(placeholderPage, /feuillets-paroissiaux/);
+  assert.doesNotMatch(JSON.stringify(schedulePageData), /feuillet/i);
 });

@@ -6,7 +6,6 @@ export type SitePath =
   | '/nos-services'
   | '/sacrements'
   | '/evenements'
-  | '/feuillets-paroissiaux'
   | '/friperie'
   | '/location-de-salle'
   | '/galerie'
@@ -36,11 +35,6 @@ export const primaryNavigation = [
 ] as const satisfies readonly NavigationItem[];
 
 export const informationRouteDefinitions = [
-  {
-    label: 'Feuillets paroissiaux',
-    href: '/feuillets-paroissiaux',
-    active: false,
-  },
   { label: 'Friperie', href: '/friperie', active: true },
   { label: 'Location de salle', href: '/location-de-salle', active: false },
   { label: 'Galerie', href: '/galerie', active: false },

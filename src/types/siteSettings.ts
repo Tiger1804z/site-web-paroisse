@@ -34,4 +34,11 @@ export interface PublicContactDetails {
   readonly email?: PublicEmail;
   readonly directionsUrl: string;
   readonly map: PublicMapSettings;
+  /**
+   * Heures d’ouverture du secrétariat, en une ligne prête à afficher.
+   *
+   * Coordonnée globale : la même valeur sert la page Horaires, Contact et
+   * Première visite. Absente tant que la paroisse ne l’a pas confirmée.
+   */
+  readonly officeHoursLabel?: string;
 }

@@ -102,7 +102,8 @@ export const scheduleEntryType = defineType({
       name: 'order',
       title: 'Ordre d’affichage',
       type: 'number',
-      validation: (rule) => rule.required().integer().min(0),
+      description: 'Facultatif. Sans valeur, l’ordre du tableau (glisser-déposer) est utilisé.',
+      validation: (rule) => rule.integer().min(0),
     }),
   ],
   preview: {
