@@ -63,4 +63,22 @@ export const schedulePageType = defineType({
         'Date réelle de la dernière vérification des horaires avec la paroisse. Le libellé français affiché est généré automatiquement. À ne pas confondre avec une simple modification du document.',
     }),
   ],
+  // Sans `preview`, le Studio affiche un vidage brut des champs en guise de
+  // titre du document.
+  preview: {
+    select: {
+      heroTitle: 'hero.title',
+      entries: 'regularSchedule.entries',
+    },
+    prepare({heroTitle, entries}) {
+      const count = Array.isArray(entries) ? entries.length : 0
+      return {
+        title: heroTitle || 'Horaires',
+        subtitle:
+          count === 0
+            ? 'Aucune célébration'
+            : `${count} célébration${count > 1 ? 's' : ''} régulière${count > 1 ? 's' : ''}`,
+      }
+    },
+  },
 })
