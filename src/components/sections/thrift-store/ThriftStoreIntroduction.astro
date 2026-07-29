@@ -12,7 +12,17 @@ interface Props {
 const { introduction, practicalInformation } = Astro.props;
 const hasConfirmedPracticalInformation =
   practicalInformation.hours.confirmed ||
-  practicalInformation.location.confirmed;
+  practicalInformation.location.confirmed ||
+  practicalInformation.responsibleContact.confirmed;
+
+// Le numéro est saisi tel qu’il s’affiche; le format cliquable en est dérivé,
+// jamais saisi une seconde fois.
+const phoneDisplay = practicalInformation.responsibleContact.confirmed
+  ? practicalInformation.responsibleContact.value
+  : undefined;
+const phoneDigits = phoneDisplay?.replace(/\D/g, '');
+const phoneHref =
+  phoneDigits?.length === 10 ? `tel:+1${phoneDigits}` : undefined;
 ---
 
 <section
@@ -57,6 +67,18 @@ const hasConfirmedPracticalInformation =
                 <div>
                   <dt>Emplacement</dt>
                   <dd>{practicalInformation.location.value}</dd>
+                </div>
+              )}
+              {phoneDisplay && (
+                <div>
+                  <dt>Téléphone</dt>
+                  <dd>
+                    {phoneHref ? (
+                      <a href={phoneHref}>{phoneDisplay}</a>
+                    ) : (
+                      phoneDisplay
+                    )}
+                  </dd>
                 </div>
               )}
             </dl>
@@ -169,6 +191,13 @@ const hasConfirmedPracticalInformation =
     color: var(--color-charcoal);
     font-size: var(--font-size-ui);
     line-height: 1.5;
+  }
+
+  .thrift-introduction__facts a {
+    color: var(--color-burgundy);
+    font-weight: 600;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
   }
 
   @media (min-width: 64rem) {

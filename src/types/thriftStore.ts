@@ -55,8 +55,11 @@ export interface ThriftStorePageData {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly primaryImage: ThriftStoreImage;
-    readonly revealImages: readonly ThriftStoreImage[];
+    /**
+     * Images du hero, affichées en alternance. La première est rendue par le
+     * serveur; la rotation et la loupe sont des améliorations du navigateur.
+     */
+    readonly slides: readonly ThriftStoreImage[];
   };
   readonly introduction: {
     readonly eyebrow: string;

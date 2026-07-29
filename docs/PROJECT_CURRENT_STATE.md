@@ -15,7 +15,8 @@ Dernière mise à jour : 27 juillet 2026 — S1-T13.
 - `/nos-services/` : page canonique complète, hero rotatif avec lentille et
   données 2026 révisables;
 - `/evenements/` : architecture événementielle locale;
-- `/friperie/` : page complète `noindex`, photographies temporaires;
+- `/friperie/` : page complète et indexable, informations pratiques réelles,
+  visuels thématiques sous licence Pixabay;
 - `/contact/` : frontend complet `noindex`, validation locale seulement;
 - `/nos-annonceurs/` : page complète `noindex`, aucun annonceur historique
   publié avant confirmation;
@@ -112,7 +113,7 @@ secrétaire le 10 août 2026 ou après son retour avant de retirer `noindex`.
 - décision future sur l’utilité d’une page Galerie complète et enrichissement
   des crédits photographiques;
 - confirmation des annonceurs, ententes, coordonnées, logos et droits;
-- remplacement des prototypes Friperie.
+- photographies réelles du local de la friperie et conditions de dons.
 
 ## Architecture
 

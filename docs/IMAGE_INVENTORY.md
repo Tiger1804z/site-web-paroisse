@@ -113,14 +113,15 @@ Les photographies montrent l'architecture et le décor intérieur; elles ne
 documentent pas les groupes eux-mêmes. Les textes alternatifs restent donc
 factuels et ne prétendent pas montrer une activité ou ses membres.
 
-## Prototypes Friperie — S1-T10
+## Prototypes Friperie — S1-T10, retirés le 29 juillet 2026
 
-Inspection effectuée le 27 juillet 2026. Les quatre copies de production sont
-binaires et leurs hashes correspondent aux fichiers entrants. Elles n'ont pas
-été retouchées. Aucun texte ni filigrane n'est visible dans les pixels, mais
-aucune licence de publication n'est confirmée.
+> **Ces quatre fichiers ont été supprimés du dépôt.** Aucune licence de
+> publication n'avait pu être établie : un actif iStock sans preuve d'achat, deux
+> photographies de reportage de Permanent Style et un fichier sans provenance.
+> Ils sont remplacés par des images Pixabay (section suivante). L'inspection
+> ci-dessous est conservée comme trace de la décision.
 
-Statut commun :
+Statut commun à l'époque :
 
 > PROTOTYPE TEMPORAIRE — DROITS À CONFIRMER
 
@@ -143,6 +144,36 @@ Ces images :
 - devront toutes être remplacées par les photographies réelles planifiées dans
   [`THRIFT_STORE_PHOTO_SHOT_LIST.md`](./THRIFT_STORE_PHOTO_SHOT_LIST.md);
 - ne permettent pas de retirer `noindex` même en l'absence de filigrane.
+
+## Visuels Friperie — remplacement du 29 juillet 2026
+
+Import depuis les fichiers fournis par l’utilisateur, issus de Pixabay. La
+Content License de Pixabay autorise l’usage commercial sans attribution; le
+crédit est conservé dans la donnée par choix éditorial, pas par obligation.
+
+| Fichier de production      | Source fournie                         | Dimensions           |          Poids | Auteur identifié par le nom | Contenu                                                           | Usage                  |
+| -------------------------- | -------------------------------------- | -------------------- | -------------: | --------------------------- | ----------------------------------------------------------------- | ---------------------- |
+| `hoodies-rack-pixabay.jpg` | `jarmoluk-sweatshirts-428607_1920.jpg` | 1920 × 1271, paysage | 508 499 octets | jarmoluk                    | Chandails à capuchon colorés serrés sur un portant; aucun visage. | Hero, première image.  |
+| `yarn-ball-pixabay.jpg`    | `stocksnap-yarn-2583976_1920.jpg`      | 1920 × 1280, paysage | 462 673 octets | StockSnap                   | Pelote de laine et bobines de fil, faible profondeur de champ.    | Hero, deuxième image.  |
+| `winter-boots-pixabay.jpg` | `stocksnap-fashion-2587909_1920.jpg`   | 1920 × 1280, paysage | 349 655 octets | StockSnap                   | Bottes de cuir portées avec un jean; jambes non identifiables.    | Hero, troisième image. |
+
+Ce qui change et ce qui ne change pas :
+
+- **la question des droits est réglée** — plus aucun visuel `rights-unverified`
+  sur le site, et le statut passe à `confirmed`;
+- **ce sont des visuels thématiques**, choisis pour l’univers du vêtement. Ils
+  ne sont jamais légendés comme des photographies du local, et aucun texte de la
+  page ne le laisse entendre;
+- **`/friperie/` reste `noindex`** — ce n’étaient pas les droits qui bloquaient
+  seuls, mais aussi les informations pratiques non confirmées.
+
+Empreintes SHA-256 :
+
+```
+95bc9708f77fef910feb075a74caab99defed6c45bc971cca25bb10ce91699b1  hoodies-rack-pixabay.jpg
+ec2fc870d80cdebe0552a40f7c503dc37317bb22bd20c4b9674f4494f056a5e9  yarn-ball-pixabay.jpg
+3b3eebe0a3d15903f63f542ce3a3464b618906aeadcf09441e39a0b69f835a2b  winter-boots-pixabay.jpg
+```
 
 ## Visuels éditoriaux Accueil et Nos services — S1-T11
 

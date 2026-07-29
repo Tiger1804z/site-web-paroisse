@@ -23,7 +23,7 @@ Audit initial réalisé pendant S1-T08 et actualisé dans S1-T13 à partir de :
 | Événements                   | `/evenements/`                   | `Evenements.tsx`               | `src/pages/evenements.astro`              | partiel               | Haute                                | S1-T07 est fusionné et la source `ParishEvent` est opérationnelle, mais la route reste `noindex` et la migration Figma complète doit être confirmée avant publication. |
 | Vie paroissiale              | `/vie-paroissiale/`              | `VieParoissiale.tsx`           | `src/pages/vie-paroissiale.astro`         | terminé dans S1-T08   | —                                    | Confirmation des groupes, activités, responsables et coordonnées.                                                                                                      |
 | Feuillets paroissiaux        | —                                | `Feuillets.tsx`                | aucune route                              | retiré                | —                                    | Décision du 29 juillet 2026 : pas de page Web de feuillets PDF. Route, navigation, composant d'accueil, CTA et champs Sanity supprimés.                                |
-| Friperie                     | `/friperie/`                     | `Friperie.tsx`                 | `src/pages/friperie.astro`                | migré, `noindex`      | Validation éditoriale et photos      | Remplacer les prototypes, confirmer leurs droits temporaires, les horaires, les dons, l'accès et les coordonnées avant de retirer `noindex`.                           |
+| Friperie                     | `/friperie/`                     | `Friperie.tsx`                 | `src/pages/friperie.astro`                | publiée, indexable    | —                                    | Nom, horaires, emplacement et téléphone relevés le 29 juillet 2026; visuels Pixabay sous licence. Restent à ajouter : conditions de dons et photographies du local.    |
 | Location de salle            | `/location-de-salle/`            | `LocationSalle.tsx`            | `src/pages/location-de-salle.astro`       | alias `noindex`       | Intégrée à Nos services              | Redirection statique vers `/nos-services/#location-de-salle`; tarifs et disponibilités sont communiqués manuellement par le secrétariat.                               |
 | Galerie                      | `/galerie/`                      | `Galerie.tsx`                  | placeholder dans `src/pages/[slug].astro` | différée / `noindex`  | À réévaluer selon le besoin          | L’utilisateur conserve uniquement la mini-galerie de l’accueil; aucune page autonome ni promotion dans la navigation pour l’instant.                                   |
 | Contact                      | `/contact/`                      | `Contact.tsx`                  | `src/pages/contact.astro`                 | frontend terminé      | Bloquée à la validation d’envoi      | Adresse, téléphone et carte confirmés; validation locale seulement. Aucun endpoint, SMTP, API, secret ou faux succès.                                                  |
@@ -103,8 +103,9 @@ Ce qui reste à confirmer le **11 août 2026** ne concerne plus le site :
 - Toutes les destinations actives de navigation répondent par des pages
   dédiées.
 - Les placeholders restent `noindex`.
-- Friperie reste aussi `noindex` pendant sa phase de photographies et de
-  confirmation.
+- Friperie est indexable depuis le 29 juillet 2026 : ses informations pratiques
+  sont réelles et ses visuels sont sous licence. Les photographies du local et
+  les conditions de dons s'ajouteront ensuite.
 - Contact répond par son frontend complet `noindex`, sans envoi.
 - Galerie répond encore en placeholder, mais aucun lien public ne la promeut.
 - La mini-galerie de l’accueil exclut les images aux droits ou consentements en

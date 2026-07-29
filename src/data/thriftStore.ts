@@ -1,79 +1,74 @@
-import blueRackImage from '@/assets/images/thrift-store/blue-rack-temporary.webp';
-import clothingRackImage from '@/assets/images/thrift-store/clothing-rack-primary-temporary.jpeg';
-import leatherJacketImage from '@/assets/images/thrift-store/leather-jacket-temporary.jpg';
-import vintageRackImage from '@/assets/images/thrift-store/vintage-rack-temporary.jpg';
+import hoodiesRackImage from '@/assets/images/thrift-store/hoodies-rack-pixabay.jpg';
+import winterBootsImage from '@/assets/images/thrift-store/winter-boots-pixabay.jpg';
+import yarnBallImage from '@/assets/images/thrift-store/yarn-ball-pixabay.jpg';
 import { SITE_NAME } from '@/lib/site';
 import type {
   ThriftStoreImage,
   ThriftStorePageData,
 } from '@/types/thriftStore';
 
+// Visuels thématiques libres de droits (Pixabay, Content License : usage
+// commercial autorisé sans attribution). Ils illustrent l'univers du vêtement,
+// sans jamais être présentés comme des photographies du local paroissial.
 const sharedReplacementNote =
-  'Prototype temporaire — remplacer par une photographie réelle de la friperie prise à l’église après confirmation des droits.';
+  'Remplaçable par une photographie du local si la paroisse en fournit une.';
 
-const clothingRackVisual = {
-  image: clothingRackImage,
-  alt: 'Main prenant un vêtement brun sur un portant dans une boutique non identifiée',
+const hoodiesRackVisual = {
+  image: hoodiesRackImage,
+  alt: 'Chandails à capuchon de plusieurs couleurs alignés sur un portant',
+  credit: 'jarmoluk (Pixabay)',
   sourceNote:
-    'Fichier entrant fast-fashion2.jpeg; aucune provenance ou licence exploitable dans les métadonnées.',
-  status: 'rights-unverified',
+    'Pixabay, image 428607, Content License — usage commercial autorisé sans attribution.',
+  status: 'confirmed',
   replacementNote: sharedReplacementNote,
 } as const satisfies ThriftStoreImage;
 
-const leatherJacketVisual = {
-  image: leatherJacketImage,
-  alt: 'Détail d’une veste en suède brun suspendue sur un portant',
+const yarnBallVisual = {
+  image: yarnBallImage,
+  alt: 'Pelote de laine grise posée près de bobines de fil sombre',
+  credit: 'StockSnap (Pixabay)',
   sourceNote:
-    'Le nom du fichier associe le visuel à Rifugio Leather; la source exacte et la licence restent à confirmer.',
-  status: 'rights-unverified',
+    'Pixabay, image 2583976, Content License — usage commercial autorisé sans attribution.',
+  status: 'confirmed',
   replacementNote: sharedReplacementNote,
 } as const satisfies ThriftStoreImage;
 
-const vintageRackVisual = {
-  image: vintageRackImage,
-  alt: 'Vestes de plusieurs couleurs alignées sur un portant',
-  credit: 'Alex Natt — crédit présent dans les métadonnées',
+const winterBootsVisual = {
+  image: winterBootsImage,
+  alt: 'Bottes d’hiver en cuir beige portées avec un jean',
+  credit: 'StockSnap (Pixabay)',
   sourceNote:
-    'Reportage Hang-Up Vintage publié par Permanent Style; aucune licence de réutilisation confirmée.',
-  status: 'rights-unverified',
-  replacementNote: sharedReplacementNote,
-} as const satisfies ThriftStoreImage;
-
-const blueRackVisual = {
-  image: blueRackImage,
-  alt: 'Chemises bleues et claires suspendues à des cintres en bois',
-  sourceNote:
-    'Le nom du fichier contient l’identifiant iStock 688127540; preuve d’achat et licence à confirmer.',
-  status: 'rights-unverified',
+    'Pixabay, image 2587909, Content License — usage commercial autorisé sans attribution.',
+  status: 'confirmed',
   replacementNote: sharedReplacementNote,
 } as const satisfies ThriftStoreImage;
 
 export const thriftStorePageData = {
   seo: {
-    title: 'Friperie',
-    description: `Découvrez la friperie de la ${SITE_NAME}, son rôle communautaire et les informations qui seront confirmées avant votre visite.`,
+    title: 'Friperie Au Coin de l’Entraide',
+    description: `La friperie Au Coin de l’Entraide, au sous-sol de la ${SITE_NAME} : vêtements et petits articles pour la maison, dans le respect et la confidentialité.`,
     canonicalPath: '/friperie/',
-    noIndex: true,
+    // Indexable depuis le 29 juillet 2026 : nom, horaires, emplacement et
+    // téléphone sont réels, et les visuels sont sous licence. Une personne qui
+    // cherche une friperie dans le quartier doit pouvoir trouver cette page.
+    noIndex: false,
   },
   hero: {
-    eyebrow: 'Services paroissiaux',
-    title: 'La friperie',
+    eyebrow: 'Friperie paroissiale',
+    title: 'Au Coin de l’Entraide',
     introduction:
-      'Donnez une seconde vie aux articles et découvrez un lieu paroissial accessible, chaleureux et tourné vers la communauté.',
-    primaryImage: clothingRackVisual,
-    revealImages: [
-      leatherJacketVisual,
-      vintageRackVisual,
-      blueRackVisual,
-      clothingRackVisual,
-    ],
+      'Un lieu de partage au service de la communauté, pour se vêtir ou trouver de petits articles pour la maison.',
+    slides: [hoodiesRackVisual, yarnBallVisual, winterBootsVisual],
   },
   introduction: {
     eyebrow: 'Notre friperie',
     title: 'Présentation',
+    // Message adapté de celui publié par la paroisse sur son site actuel,
+    // relevé le 29 juillet 2026. Le sens est conservé, la formulation resserrée.
     paragraphs: [
-      'La friperie paroissiale est un espace de réemploi au service de la communauté. Les articles offerts et leurs prix peuvent varier au cours de l’année.',
-      'Les photographies réelles du local seront intégrées après une séance à l’église. Les visuels actuels servent uniquement à valider la composition.',
+      'La friperie Au Coin de l’Entraide est un espace de réemploi au service de la communauté. Les articles offerts et leurs prix peuvent varier au cours de l’année.',
+      'Nous accueillons toute personne traversant une période de précarité ou ayant besoin d’un soutien ponctuel, pour se vêtir ou se procurer de petits articles pour la maison.',
+      'Passez nous voir ou communiquez avec nous : notre équipe de bénévoles vous aidera à trouver ce dont vous avez besoin, dans le respect et la confidentialité.',
     ],
     priceNotice:
       'Les prix peuvent varier selon les articles et les périodes de l’année. Des ventes spéciales peuvent aussi être annoncées occasionnellement.',
@@ -85,17 +80,24 @@ export const thriftStorePageData = {
     },
   },
   practicalInformation: {
+    // Relevé le 29 juillet 2026 sur le site actuel de la paroisse.
     hours: {
-      confirmed: false,
+      value: 'Tous les mardis, mercredis et jeudis, de 13 h à 17 h',
+      confirmed: true,
     },
     location: {
-      confirmed: false,
+      value:
+        'Sous-sol de l’église Saint-René-Goupil — entrée par la porte de la 25e Avenue',
+      confirmed: true,
     },
+    // Les conditions de dons ne sont publiées nulle part : rien à afficher.
     donationConditions: {
       confirmed: false,
     },
+    // Ligne propre à la friperie, distincte du secrétariat de la paroisse.
     responsibleContact: {
-      confirmed: false,
+      value: '514 721-2842',
+      confirmed: true,
     },
     pricingNote: {
       value:
@@ -171,7 +173,7 @@ export const thriftStorePageData = {
     eyebrow: 'Avant d’apporter des articles',
     title: 'Obtenir les renseignements à jour',
     description:
-      'Les conditions de don, les périodes de réception, les horaires et les coordonnées responsables doivent encore être confirmés. Communiquez avec la paroisse avant de vous déplacer ou d’apporter des articles.',
+      'Les conditions de don et les périodes de réception des articles ne sont pas encore publiées. Communiquez avec la friperie avant d’apporter des articles.',
     primaryCta: {
       label: 'Communiquer avec la paroisse',
       href: '/contact/',
