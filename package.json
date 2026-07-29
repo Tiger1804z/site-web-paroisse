@@ -18,6 +18,7 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build",
+    "sanity:typegen": "pnpm --dir studio typegen",
     "astro": "astro"
   },
   "dependencies": {

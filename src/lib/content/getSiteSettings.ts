@@ -1,7 +1,6 @@
 import { sanityClient } from 'sanity:client';
 import { siteSettingsData } from '@/data/siteSettings';
 import type { PublicContactDetails } from '@/types/siteSettings';
-import type { SanitySiteSettingsDocument } from '@/lib/sanity/types';
 import { SITE_SETTINGS_QUERY } from '@/lib/sanity/queries';
 import { normalizeSanitySiteSettings } from '@/lib/content/normalizeSanitySiteSettings';
 
@@ -24,9 +23,7 @@ export async function getSiteSettings(): Promise<PublicContactDetails> {
   const fallback = getLocalFallback();
 
   try {
-    const raw = await sanityClient.fetch<SanitySiteSettingsDocument | null>(
-      SITE_SETTINGS_QUERY,
-    );
+    const raw = await sanityClient.fetch(SITE_SETTINGS_QUERY);
     return normalizeSanitySiteSettings(raw, fallback);
   } catch (error) {
     console.error(

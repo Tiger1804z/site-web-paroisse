@@ -2,6 +2,9 @@
 dist/
 .astro/
 
+# Types Sanity générés par TypeGen (ne jamais éditer à la main)
+src/lib/sanity/sanity.types.ts
+
 # Dépendances et caches
 node_modules/
 .cache/

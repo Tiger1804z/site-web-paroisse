@@ -55,5 +55,8 @@ jobs:
       - name: Installer les dépendances
         run: pnpm install --frozen-lockfile
 
+      - name: Générer les types Sanity (TypeGen)
+        run: pnpm sanity:typegen
+
       - name: Valider
         run: pnpm validate

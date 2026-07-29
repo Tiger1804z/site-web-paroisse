@@ -12,6 +12,7 @@ export default [
       'node_modules/**',
       'reference/**',
       'coverage/**',
+      'src/lib/sanity/sanity.types.ts',
     ],
   },
   js.configs.recommended,

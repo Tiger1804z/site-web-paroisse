@@ -1,5 +1,5 @@
 import type { PublicContactDetails, PublicEmail } from '@/types/siteSettings';
-import type { SanitySiteSettingsDocument } from '@/lib/sanity/types';
+import type { SanitySiteSettingsResult } from '@/lib/sanity/types';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -26,7 +26,7 @@ function derivePhone(
 }
 
 function deriveAddress(
-  rawAddress: SanitySiteSettingsDocument['address'],
+  rawAddress: NonNullable<SanitySiteSettingsResult>['address'],
   fallback: PublicContactDetails['address'],
 ): PublicContactDetails['address'] {
   const street = cleanString(rawAddress?.street) ?? fallback.street;
@@ -60,7 +60,7 @@ function deriveEmail(
 }
 
 export function normalizeSanitySiteSettings(
-  raw: SanitySiteSettingsDocument | null,
+  raw: SanitySiteSettingsResult,
   fallback: PublicContactDetails,
 ): PublicContactDetails {
   return {
