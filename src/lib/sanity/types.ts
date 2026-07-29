@@ -1,4 +1,7 @@
-import type { SITE_SETTINGS_QUERY_RESULT } from '@/lib/sanity/sanity.types';
+import type {
+  SITE_SETTINGS_QUERY_RESULT,
+  SCHEDULE_PAGE_QUERY_RESULT,
+} from '@/lib/sanity/sanity.types';
 
 /**
  * Type brut du document siteSettings tel que renvoyé par SITE_SETTINGS_QUERY.
@@ -9,3 +12,11 @@ import type { SITE_SETTINGS_QUERY_RESULT } from '@/lib/sanity/sanity.types';
  * fichier généré directement. `null` = singleton absent ou requête sans résultat.
  */
 export type SanitySiteSettingsResult = SITE_SETTINGS_QUERY_RESULT;
+
+/**
+ * Type brut du document schedulePage tel que renvoyé par SCHEDULE_PAGE_QUERY.
+ *
+ * Même frontière que ci-dessus : structure machine (jours en anglais, heures
+ * `HH:mm`), les libellés français sont dérivés dans le normalizer.
+ */
+export type SanitySchedulePageResult = SCHEDULE_PAGE_QUERY_RESULT;

@@ -6,6 +6,28 @@ import violetAltarImage from '@/assets/images/paroisse/interieur-eglise-decor-vi
 import AmbientHero from '@/components/motion/AmbientHero.astro';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
+import {
+  formatTimeLabel,
+  WEEKDAY_LABELS,
+} from '@/lib/schedules/schedule-format.ts';
+import type { WeeklyMassEntry } from '@/types/schedule';
+
+interface Props {
+  masses?: readonly WeeklyMassEntry[];
+}
+
+const { masses = [] } = Astro.props;
+
+// Rendu serveur : l'horaire hebdomadaire complet, sans prétendre calculer la
+// prochaine messe. Le script client remplace ensuite liste et titre.
+const scheduleRows = masses.map((mass) => ({
+  id: mass.id,
+  dayLabel: WEEKDAY_LABELS[mass.weekday],
+  timeLabel: formatTimeLabel(mass.time) ?? mass.time,
+}));
+
+// `</script>` ne peut pas surgir d'un titre saisi dans Sanity et rompre le bloc.
+const massesPayload = JSON.stringify(masses).replaceAll('<', '\\u003c');
 
 const heroSlides = [
   {
@@ -151,24 +173,32 @@ const lensClipId = 'home-hero-organic-lens-clip';
     </div>
   </Container>
 
-  <aside class="home-hero__schedule" aria-labelledby="hero-schedule-title">
-    <p id="hero-schedule-title" class="home-hero__schedule-label">
-      Prochaines messes
+  <aside
+    class="home-hero__schedule"
+    aria-labelledby="hero-schedule-title"
+    data-upcoming-masses
+  >
+    <p
+      id="hero-schedule-title"
+      class="home-hero__schedule-label"
+      data-upcoming-masses-title
+    >
+      Horaires des messes
     </p>
-    <dl class="home-hero__schedule-list">
-      <div>
-        <dt>Samedi</dt>
-        <dd>[HEURE]</dd>
-      </div>
-      <div>
-        <dt>Dimanche</dt>
-        <dd>[HEURE]</dd>
-      </div>
-      <div>
-        <dt>Dimanche</dt>
-        <dd>[HEURE]</dd>
-      </div>
-    </dl>
+    {
+      scheduleRows.length > 0 ? (
+        <dl class="home-hero__schedule-list" data-upcoming-masses-list>
+          {scheduleRows.map((row) => (
+            <div>
+              <dt>{row.dayLabel}</dt>
+              <dd>{row.timeLabel}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p class="home-hero__schedule-empty">Horaires à confirmer.</p>
+      )
+    }
     <a class="home-hero__schedule-link" href="/horaires">
       Consulter tous les horaires
       <span aria-hidden="true">→</span>
@@ -176,6 +206,16 @@ const lensClipId = 'home-hero-organic-lens-clip';
     <p class="home-hero__schedule-note">
       Horaires sujets à changement lors des célébrations spéciales.
     </p>
+    {
+      scheduleRows.length > 0 && (
+        <script
+          is:inline
+          type="application/json"
+          data-upcoming-masses-data
+          set:html={massesPayload}
+        />
+      )
+    }
   </aside>
 
   <div
@@ -219,6 +259,9 @@ const lensClipId = 'home-hero-organic-lens-clip';
 
 <script>
   import { initializeOrganicHeroLens } from '@/scripts/organic-hero-lens';
+  import { initializeUpcomingMassesCards } from '@/scripts/upcoming-masses-card';
+
+  initializeUpcomingMassesCards();
 
   document.querySelectorAll<HTMLElement>('[data-home-hero]').forEach((hero) => {
     if (hero.dataset.initialized === 'true') return;
@@ -577,6 +620,14 @@ const lensClipId = 'home-hero-organic-lens-clip';
     color: color-mix(in srgb, var(--color-rose) 76%, var(--color-ivory));
     font-size: var(--font-size-ui);
     font-weight: 700;
+  }
+
+  .home-hero__schedule-empty {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    line-height: 1.4;
   }
 
   .home-hero__schedule-link {

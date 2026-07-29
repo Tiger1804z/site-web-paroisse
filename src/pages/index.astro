@@ -18,6 +18,7 @@ import {
 } from '@/lib/content/getParishEvents';
 import { getHomepageGalleryItems } from '@/lib/content/getHomepageGalleryItems';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
+import { getWeeklyMasses } from '@/lib/content/getSchedulePageData';
 
 const buildTime = new Date();
 const homepageEventsSettings = await getHomepageEventsSettings();
@@ -30,6 +31,7 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
 const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
 const siteSettings = await getSiteSettings();
 const homepageGalleryItems = await getHomepageGalleryItems(6);
+const weeklyMasses = await getWeeklyMasses();
 ---
 
 <BaseLayout
@@ -39,9 +41,9 @@ const homepageGalleryItems = await getHomepageGalleryItems(6);
   pageClass="home-page"
   headerVariant="transparent"
 >
-  <HomeHero />
+  <HomeHero masses={weeklyMasses} />
   <WelcomeSection />
-  <MassSchedulePreview />
+  <MassSchedulePreview masses={weeklyMasses} />
   {
     homepageEventsSettings.showHomepageUpcomingSection &&
       homepageEvents.featured && (

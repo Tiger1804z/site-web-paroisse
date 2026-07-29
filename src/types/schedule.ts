@@ -1,5 +1,43 @@
 export type ScheduleNoticeSeverity = 'info' | 'important' | 'special';
 
+/**
+ * Jour de la semaine en valeur machine — même union que le schéma Sanity.
+ * Les libellés français en sont dérivés, jamais saisis à la main.
+ */
+export type ScheduleWeekday =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+/**
+ * Célébration hebdomadaire sous forme calculable, en parallèle du contrat
+ * d'affichage `ScheduleEntry` qui, lui, ne porte que des libellés.
+ *
+ * `time` (`HH:mm`) est la seule source de vérité horaire : les minutes se
+ * dérivent avec `parseTimeToMinutes`, elles ne sont jamais stockées.
+ */
+export interface WeeklyMassEntry {
+  readonly id: string;
+  readonly weekday: ScheduleWeekday;
+  readonly time: string;
+  readonly title: string;
+  readonly note?: string;
+}
+
+/** Célébration à venir, résolue par `getUpcomingMasses` pour un instant donné. */
+export interface UpcomingMass extends WeeklyMassEntry {
+  /** Nombre de jours civils jusqu'à la célébration : 0 = aujourd'hui. */
+  readonly dayOffset: number;
+  readonly dayLabel: string;
+  /** « Aujourd'hui », « Demain », sinon le jour de la semaine. */
+  readonly relativeDayLabel: string;
+  readonly timeLabel: string;
+}
+
 export interface ScheduleLink {
   readonly label: string;
   readonly href: string;
