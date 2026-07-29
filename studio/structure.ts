@@ -7,6 +7,10 @@ import {DocumentsIcon} from '@sanity/icons/Documents'
 
 const SINGLETONS = ['siteSettings', 'massSchedule', 'schedulePage']
 
+// Les collections ont leur propre section : ce sont des documents multiples,
+// pas des réglages uniques.
+const COLLECTIONS = ['parishEvent']
+
 /**
  * Deux sections, pour rendre visible la distinction du modèle de contenu :
  * ce qui est partagé par plusieurs pages, et ce qui appartient à une page.
@@ -33,6 +37,14 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
       S.listItem()
+        .title('Collections')
+        .icon(CalendarIcon)
+        .child(
+          S.list()
+            .title('Collections')
+            .items([S.documentTypeListItem('parishEvent').title('Événements')]),
+        ),
+      S.listItem()
         .title('Pages')
         .icon(DocumentsIcon)
         .child(
@@ -46,7 +58,8 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
       S.divider(),
-      ...S.documentTypeListItems().filter(
-        (listItem) => !SINGLETONS.includes(listItem.getId() as string),
-      ),
+      ...S.documentTypeListItems().filter((listItem) => {
+        const id = listItem.getId() as string
+        return !SINGLETONS.includes(id) && !COLLECTIONS.includes(id)
+      }),
     ])

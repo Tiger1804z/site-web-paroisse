@@ -1,5 +1,3 @@
-import type { ImageMetadata } from 'astro';
-
 export const PARISH_EVENT_TIME_ZONE = 'America/Toronto' as const;
 
 export type ParishEventCategory =
@@ -16,12 +14,24 @@ export type ParishEventPublicationStatus = 'draft' | 'published' | 'cancelled';
 
 export type ParishEventTemporalStatus = 'upcoming' | 'ongoing' | 'past';
 
+/**
+ * Image téléversée dans Sanity et servie par son CDN.
+ *
+ * Contrairement aux images locales, elle n'est pas connue au build : on ne
+ * manipule donc pas un objet `astro:assets` mais une adresse déjà recadrée
+ * selon le point focal choisi par l'éditrice.
+ */
 export interface ParishEventImage {
-  readonly image: ImageMetadata;
+  readonly src: string;
+  readonly srcSet: string;
   readonly alt: string;
+  /** Dimensions d'origine, pour réserver la place avant le chargement. */
+  readonly width?: number;
+  readonly height?: number;
+  /** Vignette floue encodée, affichée pendant le chargement. */
+  readonly lqip?: string;
   readonly credit?: string;
   readonly caption?: string;
-  readonly rightsNote?: string;
 }
 
 export interface ParishEventCallToAction {

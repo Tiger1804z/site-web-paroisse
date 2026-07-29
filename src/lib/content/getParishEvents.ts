@@ -1,8 +1,11 @@
+import { sanityClient } from 'sanity:client';
 import {
   eventsPageSettings,
   homepageEventsSettings,
-  parishEvents,
 } from '@/data/parish-events';
+import { PARISH_EVENTS_QUERY } from '@/lib/sanity/queries';
+import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { normalizeSanityParishEvents } from '@/lib/content/normalizeSanityParishEvents';
 import {
   selectHomepageParishEvents,
   selectPastParishEvents,
@@ -16,8 +19,28 @@ import type {
   ParishEventWithTemporalStatus,
 } from '@/types/parish-events';
 
+/**
+ * Source unique des événements : la collection Sanity.
+ *
+ * Aucun repli local — un événement inventé n'aurait aucun sens. Si le fetch
+ * échoue, les sections concernées restent vides et le reste des pages continue
+ * de s'afficher.
+ */
 async function getParishEventSource(): Promise<readonly ParishEvent[]> {
-  return parishEvents;
+  try {
+    const raw = await sanityClient.fetch(PARISH_EVENTS_QUERY);
+    return normalizeSanityParishEvents(raw, (source) =>
+      buildRemoteImageSources(
+        source as Parameters<typeof buildRemoteImageSources>[0],
+      ),
+    );
+  } catch (error) {
+    console.error(
+      '[getParishEvents] Échec du fetch Sanity — aucune activité affichée.',
+      error,
+    );
+    return [];
+  }
 }
 
 export async function getUpcomingParishEvents(

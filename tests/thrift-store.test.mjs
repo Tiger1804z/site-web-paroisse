@@ -49,7 +49,10 @@ test('chaque visuel du hero déclare sa source et son remplacement', () => {
 
 test('les informations pratiques relevées sont publiées', () => {
   assert.match(thriftStoreSource, /Au Coin de l’Entraide/);
-  assert.match(thriftStoreSource, /mardis, mercredis et jeudis, de 13 h à 17 h/);
+  assert.match(
+    thriftStoreSource,
+    /mardis, mercredis et jeudis, de 13 h à 17 h/,
+  );
   assert.match(thriftStoreSource, /25e Avenue/);
   assert.match(thriftStoreSource, /514 721-2842/);
 });

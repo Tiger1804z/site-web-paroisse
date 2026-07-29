@@ -1,8 +1,8 @@
 ---
-import { Image } from 'astro:assets';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import {
   formatParishEventDate,
   formatParishEventPrice,
@@ -49,13 +49,9 @@ const { title, events } = Astro.props;
             {event.coverImage && (
               <div class="upcoming-event__media-column">
                 <figure class="upcoming-event__media">
-                  <Image
-                    src={event.coverImage.image}
-                    alt={event.coverImage.alt}
-                    widths={[560, 800, 1120]}
+                  <RemoteImage
+                    image={event.coverImage}
                     sizes="(min-width: 64rem) 48vw, calc(100vw - 2.5rem)"
-                    loading="lazy"
-                    decoding="async"
                   />
                   {event.coverImage.credit && (
                     <figcaption>Photo : {event.coverImage.credit}</figcaption>
@@ -68,13 +64,9 @@ const { title, events } = Astro.props;
                   >
                     {event.gallery.map((galleryImage) => (
                       <figure class="upcoming-event__gallery-item">
-                        <Image
-                          src={galleryImage.image}
-                          alt={galleryImage.alt}
-                          widths={[360, 560]}
+                        <RemoteImage
+                          image={galleryImage}
                           sizes="(min-width: 64rem) 24vw, calc(100vw - 2.5rem)"
-                          loading="lazy"
-                          decoding="async"
                         />
                         {galleryImage.credit && (
                           <figcaption>Photo : {galleryImage.credit}</figcaption>

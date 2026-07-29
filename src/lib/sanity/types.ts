@@ -1,6 +1,7 @@
 import type {
   SITE_SETTINGS_QUERY_RESULT,
   MASS_SCHEDULE_QUERY_RESULT,
+  PARISH_EVENTS_QUERY_RESULT,
   SCHEDULE_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
@@ -24,3 +25,11 @@ export type SanityMassScheduleResult = MASS_SCHEDULE_QUERY_RESULT;
 
 /** Type brut du contenu de page renvoyé par SCHEDULE_PAGE_QUERY. */
 export type SanitySchedulePageResult = SCHEDULE_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut des événements renvoyés par PARISH_EVENTS_QUERY.
+ *
+ * Les images y sont encore des objets Sanity complets — référence de fichier,
+ * point focal et rognage — parce que le constructeur d'adresses en a besoin.
+ */
+export type SanityParishEventsResult = PARISH_EVENTS_QUERY_RESULT;
