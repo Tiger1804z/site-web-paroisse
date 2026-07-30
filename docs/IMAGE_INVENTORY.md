@@ -69,10 +69,19 @@ Import effectué le 26 juillet 2026 depuis les fichiers fournis localement par
 le client. Les copies de production conservent les empreintes des sources.
 Elles ne documentent aucune date ou programmation actuelle.
 
-| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                              |
-| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ----------------------------------------------------------------------- |
-| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Visuel fourni; ne confirme ni lieu, ni artiste, ni événement réel.      |
-| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Visuel fourni; ne confirme ni célébration, ni date, ni décor permanent. |
+Origine confirmée par le client le 30 juillet 2026 : **les deux visuels sont
+générés par intelligence artificielle**. Ils illustrent des façons de se
+rassembler, ils ne témoignent d’aucune scène réelle. La case « Image générée par
+intelligence artificielle » doit rester cochée sur les documents Sanity
+correspondants.
+
+| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                                           |
+| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------ |
+| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Générée par IA; ne confirme ni lieu, ni artiste, ni événement réel.                  |
+| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Générée par IA; ne confirme ni célébration, ni date, ni décor permanent de l’église. |
+
+Ces deux fichiers restent hors de la galerie documentaire : `isPublishable`
+(`src/lib/gallery/gallery.ts`) écarte toute image générée par IA.
 
 Astro génère les variantes responsives au build. Les PNG sources ne sont pas
 dupliqués en copies WebP dans le dépôt.
