@@ -10,16 +10,15 @@ interface Props {
 }
 
 const { introduction, practicalInformation } = Astro.props;
-const hasConfirmedPracticalInformation =
-  practicalInformation.hours.confirmed ||
-  practicalInformation.location.confirmed ||
-  practicalInformation.responsibleContact.confirmed;
+const { hours, location } = practicalInformation;
+// Un renseignement absent n’est pas publié : la paroisse ne l’a pas confirmé.
+const hasPracticalInformation = Boolean(
+  hours || location || practicalInformation.phone,
+);
 
 // Le numéro est saisi tel qu’il s’affiche; le format cliquable en est dérivé,
 // jamais saisi une seconde fois.
-const phoneDisplay = practicalInformation.responsibleContact.confirmed
-  ? practicalInformation.responsibleContact.value
-  : undefined;
+const phoneDisplay = practicalInformation.phone;
 const phoneDigits = phoneDisplay?.replace(/\D/g, '');
 const phoneHref =
   phoneDigits?.length === 10 ? `tel:+1${phoneDigits}` : undefined;
@@ -55,18 +54,18 @@ const phoneHref =
         </aside>
 
         {
-          hasConfirmedPracticalInformation && (
+          hasPracticalInformation && (
             <dl class="thrift-introduction__facts">
-              {practicalInformation.hours.confirmed && (
+              {hours && (
                 <div>
                   <dt>Horaires</dt>
-                  <dd>{practicalInformation.hours.value}</dd>
+                  <dd>{hours}</dd>
                 </div>
               )}
-              {practicalInformation.location.confirmed && (
+              {location && (
                 <div>
                   <dt>Emplacement</dt>
-                  <dd>{practicalInformation.location.value}</dd>
+                  <dd>{location}</dd>
                 </div>
               )}
               {phoneDisplay && (

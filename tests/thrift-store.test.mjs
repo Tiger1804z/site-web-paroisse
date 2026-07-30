@@ -62,9 +62,21 @@ test('la page est indexable par les moteurs de recherche', () => {
 });
 
 test('les conditions de dons restent non publiées', () => {
+  // La paroisse ne les a jamais publiées. Depuis la migration Sanity, la
+  // garantie ne tient plus à un champ « non confirmé » : ni le repli local ni
+  // le Studio ne proposent d'endroit où en inventer, et la page dit clairement
+  // qu'il faut téléphoner avant d'apporter des articles.
+  assert.doesNotMatch(thriftStoreSource, /donationConditions/);
+
+  const thriftStoreSchema = readFileSync(
+    `${rootPath}/studio/schemaTypes/documents/thriftStoreType.ts`,
+    'utf8',
+  );
+  assert.doesNotMatch(thriftStoreSchema, /donationConditions/);
+
   assert.match(
     thriftStoreSource,
-    /donationConditions: \{\s*confirmed: false,\s*\}/,
+    /Les conditions de don .* ne sont pas encore publiées/,
   );
 });
 

@@ -17,23 +17,29 @@ export interface ThriftStoreImage {
   readonly replacementNote: string;
 }
 
-export type ThriftStoreInformationField =
-  | {
-      readonly value: string;
-      readonly confirmed: true;
-    }
-  | {
-      readonly value?: string;
-      readonly confirmed: false;
-    };
+/**
+ * Renseignements pratiques de la friperie.
+ *
+ * Chaque champ est facultatif : une valeur absente n'est pas affichée. Le
+ * couple `{value, confirmed}` d'avant la migration n'apportait rien — un
+ * renseignement non confirmé n'a de toute façon pas de valeur à publier.
+ */
+export interface ThriftStorePracticalInformation {
+  readonly hours?: string;
+  readonly location?: string;
+  /** Ligne propre à la friperie, distincte du secrétariat de la paroisse. */
+  readonly phone?: string;
+  readonly contactCta: ThriftStoreCallToAction;
+}
 
 export interface ThriftStoreSection {
+  /** Sert d'ancre HTML. Vient de la clé Sanity, jamais saisi par l'éditrice. */
   readonly id: string;
   readonly eyebrow: string;
   readonly title: string;
   readonly description: string;
   readonly active: boolean;
-  readonly order: number;
+  /** L'ordre d'affichage est celui du tableau, pas un numéro à tenir à jour. */
   readonly visualKind: 'clothing-rack' | 'none';
 }
 
@@ -68,15 +74,7 @@ export interface ThriftStorePageData {
     readonly priceNotice: string;
     readonly photoPlaceholder: ThriftStorePhotoPlaceholder;
   };
-  readonly practicalInformation: {
-    readonly hours: ThriftStoreInformationField;
-    readonly location: ThriftStoreInformationField;
-    readonly donationConditions: ThriftStoreInformationField;
-    readonly responsibleContact: ThriftStoreInformationField;
-    readonly pricingNote: ThriftStoreInformationField;
-    readonly specialSalesNote: ThriftStoreInformationField;
-    readonly contactCta: ThriftStoreCallToAction;
-  };
+  readonly practicalInformation: ThriftStorePracticalInformation;
   readonly sections: readonly ThriftStoreSection[];
   readonly gallery: {
     readonly eyebrow: string;

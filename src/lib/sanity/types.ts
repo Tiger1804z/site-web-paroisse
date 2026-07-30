@@ -5,6 +5,8 @@ import type {
   EVENTS_PAGE_QUERY_RESULT,
   HOME_PAGE_QUERY_RESULT,
   SCHEDULE_PAGE_QUERY_RESULT,
+  THRIFT_STORE_QUERY_RESULT,
+  THRIFT_STORE_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
 /**
@@ -41,3 +43,14 @@ export type SanityEventsPageResult = EVENTS_PAGE_QUERY_RESULT;
 
 /** Type brut des réglages d’accueil renvoyés par HOME_PAGE_QUERY. */
 export type SanityHomePageResult = HOME_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut de la friperie renvoyé par THRIFT_STORE_QUERY.
+ *
+ * Donnée partagée : heures, emplacement et téléphone propres à la friperie,
+ * distincts de ceux du secrétariat.
+ */
+export type SanityThriftStoreResult = THRIFT_STORE_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par THRIFT_STORE_PAGE_QUERY. */
+export type SanityThriftStorePageResult = THRIFT_STORE_PAGE_QUERY_RESULT;

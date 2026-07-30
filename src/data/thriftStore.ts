@@ -80,34 +80,14 @@ export const thriftStorePageData = {
     },
   },
   practicalInformation: {
-    // Relevé le 29 juillet 2026 sur le site actuel de la paroisse.
-    hours: {
-      value: 'Tous les mardis, mercredis et jeudis, de 13 h à 17 h',
-      confirmed: true,
-    },
-    location: {
-      value:
-        'Sous-sol de l’église Saint-René-Goupil — entrée par la porte de la 25e Avenue',
-      confirmed: true,
-    },
-    // Les conditions de dons ne sont publiées nulle part : rien à afficher.
-    donationConditions: {
-      confirmed: false,
-    },
+    // Relevé le 29 juillet 2026 sur le site actuel de la paroisse. Ces valeurs
+    // ne servent plus que si Sanity est injoignable : la source de vérité est
+    // le document partagé `thriftStore`.
+    hours: 'Tous les mardis, mercredis et jeudis, de 13 h à 17 h',
+    location:
+      'Sous-sol de l’église Saint-René-Goupil — entrée par la porte de la 25e Avenue',
     // Ligne propre à la friperie, distincte du secrétariat de la paroisse.
-    responsibleContact: {
-      value: '514 721-2842',
-      confirmed: true,
-    },
-    pricingNote: {
-      value:
-        'Les prix peuvent varier selon les articles et les périodes de l’année.',
-      confirmed: true,
-    },
-    specialSalesNote: {
-      value: 'Des ventes spéciales peuvent être annoncées occasionnellement.',
-      confirmed: true,
-    },
+    phone: '514 721-2842',
     contactCta: {
       label: 'Communiquer avec la paroisse',
       href: '/contact/',
@@ -121,7 +101,6 @@ export const thriftStorePageData = {
       description:
         'La friperie participe au réemploi d’articles et crée une occasion concrète de contribuer à la vie communautaire. Les catégories d’articles et les modalités de dons seront publiées seulement après confirmation.',
       active: true,
-      order: 1,
       visualKind: 'clothing-rack',
     },
   ],

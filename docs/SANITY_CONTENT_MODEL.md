@@ -19,14 +19,16 @@ Le Studio est organisé en deux sections, qui reflètent une seule question :
 
 Application actuelle :
 
-| Document       | Section           | Contenu                                                              |
-| -------------- | ----------------- | -------------------------------------------------------------------- |
-| `siteConfig`\* | Données partagées | Coordonnées, téléphone, courriel, heures du secrétariat.             |
-| `massSchedule` | Données partagées | Horaires réguliers et saisonniers, date de vérification.             |
-| `parishEvent`  | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
-| `homePage`     | Pages             | Réglages de la section des activités de l’accueil.                   |
-| `schedulePage` | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
-| `eventsPage`   | Pages             | Hero, catégories permanentes et réglages de sections.                |
+| Document          | Section           | Contenu                                                              |
+| ----------------- | ----------------- | -------------------------------------------------------------------- |
+| `siteConfig`\*    | Données partagées | Coordonnées, téléphone, courriel, heures du secrétariat.             |
+| `massSchedule`    | Données partagées | Horaires réguliers et saisonniers, date de vérification.             |
+| `thriftStore`     | Données partagées | Nom, heures, emplacement et téléphone propres à la friperie.         |
+| `parishEvent`     | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
+| `homePage`        | Pages             | Réglages de la section des activités de l’accueil.                   |
+| `schedulePage`    | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
+| `eventsPage`      | Pages             | Hero, catégories permanentes et réglages de sections.                |
+| `thriftStorePage` | Pages             | Hero, présentation, sections, textes de galerie et bloc de clôture.  |
 
 \* le type s’appelle `siteSettings` dans le code.
 
@@ -193,27 +195,42 @@ couche d’image choisie, validera le fuseau, convertira les CTA et supprimera
 les entrées invalides. Les composants ne connaîtront ni GROQ, ni le client
 Sanity, ni la réponse brute.
 
-## `thriftStorePage`
+## `thriftStore` et `thriftStorePage`
 
-Le futur document de page pourra contenir :
+Migrés. La friperie est coupée en deux selon la règle de découpage.
 
-- hero, eyebrow, titre et introduction;
-- image principale, quatre images de révélation, textes alternatifs, crédits,
-  droits et notes de remplacement;
-- sections avec identifiant, titre, texte, activation et ordre;
-- galerie et sujets photographiques;
-- horaires, emplacement, note de prix et modalités de dons;
-- CTA de contact;
-- note sur les ventes spéciales.
+**`thriftStore`, donnée partagée** — nom, heures d'ouverture, emplacement,
+téléphone. Ce sont des faits vrais indépendamment de la page, et `/contact`
+pourra les afficher sans lire un document de page. Le téléphone de la friperie
+est une ligne distincte de celle du secrétariat : il ne se lit surtout pas dans
+`siteSettings`.
 
-Les champs pratiques devront conserver un statut de confirmation. Une valeur
-non confirmée n'est pas normalisée en contenu public. Les ventes spéciales
-possédant une date restent des documents `parishEvent` et ne sont pas intégrées
-dans `thriftStorePage`.
+**`thriftStorePage`, document de page** — hero (textes), présentation
+(paragraphes, encadré « À noter », bouton), sections, textes de la galerie, bloc
+de clôture avec ses deux boutons.
+
+Deux choix retenus :
+
+- **Un champ vide n'est pas publié.** Le couple `{value, confirmed}` du contrat
+  local a disparu : un renseignement non confirmé n'a de toute façon aucune
+  valeur à afficher, et la case doublait l'information portée par l'absence.
+- **Aucun champ qui ne sort nulle part.** `donationConditions`, `pricingNote` et
+  `specialSalesNote` existaient dans le contrat sans qu'aucun composant les
+  rende — `pricingNote` répétait mot pour mot `introduction.priceNotice`. Ils
+  ont été retirés plutôt que recréés dans le Studio. Les conditions de dons
+  restent non publiées, et la page continue d'inviter à téléphoner avant
+  d'apporter des articles (`tests/thrift-store.test.mjs`).
+
+Les images du hero et les cadres de la galerie **ne sont pas migrés** : ils
+suivront le ticket qui déplacera tous les visuels de page ensemble. La paroisse
+n'a encore aucune photographie du local (`docs/THRIFT_STORE_PHOTO_SHOT_LIST.md`),
+donc un tableau d'images dans le Studio n'aurait aucun utilisateur.
+
+Les ventes spéciales possédant une date restent des documents `parishEvent`.
 
 ```text
-Sanity thriftStorePage
-  → GROQ
+Sanity thriftStorePage + thriftStore
+  → GROQ (deux requêtes, aucune référence entre les documents)
   → normalisation
   → ThriftStorePageData
   → composants Astro existants

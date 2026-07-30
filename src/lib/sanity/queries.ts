@@ -222,6 +222,68 @@ export const HOME_PAGE_QUERY = defineQuery(`
   }
 `);
 
+/**
+ * La friperie — donnée partagée, vraie indépendamment de sa page.
+ *
+ * Son téléphone est une ligne distincte de celle du secrétariat : il ne se lit
+ * surtout pas dans `siteSettings`.
+ */
+export const THRIFT_STORE_QUERY = defineQuery(`
+  *[_type == "thriftStore"][0]{
+    name,
+    hours,
+    location,
+    phone
+  }
+`);
+
+/** Contenu propre à la page `/friperie` : ni heures, ni emplacement, ni téléphone. */
+export const THRIFT_STORE_PAGE_QUERY = defineQuery(`
+  *[_type == "thriftStorePage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    introduction {
+      eyebrow,
+      title,
+      paragraphs,
+      priceNotice,
+      contactCta {
+        target,
+        label
+      }
+    },
+    sections[]{
+      _key,
+      eyebrow,
+      title,
+      description,
+      visualKind,
+      active
+    },
+    gallery {
+      eyebrow,
+      title,
+      introduction
+    },
+    closing {
+      eyebrow,
+      title,
+      description,
+      primaryCta {
+        target,
+        label
+      },
+      secondaryCta {
+        target,
+        label
+      }
+    }
+  }
+`);
+
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{

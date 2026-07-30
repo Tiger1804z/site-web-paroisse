@@ -1,4 +1,5 @@
 import type {StructureResolver} from 'sanity/structure'
+import {BasketIcon} from '@sanity/icons/Basket'
 import {CogIcon} from '@sanity/icons/Cog'
 import {CalendarIcon} from '@sanity/icons/Calendar'
 import {DocumentTextIcon} from '@sanity/icons/DocumentText'
@@ -6,7 +7,15 @@ import {FolderIcon} from '@sanity/icons/Folder'
 import {DocumentsIcon} from '@sanity/icons/Documents'
 import {HomeIcon} from '@sanity/icons/Home'
 
-const SINGLETONS = ['siteSettings', 'massSchedule', 'homePage', 'schedulePage', 'eventsPage']
+const SINGLETONS = [
+  'siteSettings',
+  'massSchedule',
+  'thriftStore',
+  'homePage',
+  'schedulePage',
+  'eventsPage',
+  'thriftStorePage',
+]
 
 // Les collections ont leur propre section : ce sont des documents multiples,
 // pas des réglages uniques.
@@ -35,6 +44,10 @@ export const structure: StructureResolver = (S) =>
                 .title('Horaires des messes')
                 .icon(CalendarIcon)
                 .child(S.document().schemaType('massSchedule').documentId('massSchedule')),
+              S.listItem()
+                .title('Friperie')
+                .icon(BasketIcon)
+                .child(S.document().schemaType('thriftStore').documentId('thriftStore')),
             ]),
         ),
       S.listItem()
@@ -64,6 +77,10 @@ export const structure: StructureResolver = (S) =>
                 .title('Page Événements')
                 .icon(DocumentTextIcon)
                 .child(S.document().schemaType('eventsPage').documentId('eventsPage')),
+              S.listItem()
+                .title('Page Friperie')
+                .icon(DocumentTextIcon)
+                .child(S.document().schemaType('thriftStorePage').documentId('thriftStorePage')),
             ]),
         ),
       S.divider(),
