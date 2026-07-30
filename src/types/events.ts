@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import type { ParishEventImage } from '@/types/parish-events';
 
 export type EventCategoryKind =
   'cultural' | 'liturgical' | 'community' | 'mutual-aid';
@@ -30,8 +31,19 @@ export interface EventGenerationsChainVisual {
   readonly accessibleLabel: string;
 }
 
+/**
+ * Image téléversée dans Sanity, par opposition à `EventImageVisual` qui reste
+ * un fichier du projet. Les deux coexistent pendant la migration : le hero de
+ * la page est encore local, les catégories viennent du CMS.
+ */
+export interface EventRemoteImageVisual {
+  readonly kind: 'remote-image';
+  readonly image: ParishEventImage;
+}
+
 export type EventVisual =
   | EventImageVisual
+  | EventRemoteImageVisual
   | EventClothingRackVisual
   | EventCommunityMealVisual
   | EventGenerationsChainVisual;

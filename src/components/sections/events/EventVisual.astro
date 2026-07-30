@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import AnimatedClothingRack from '@/components/illustrations/events/AnimatedClothingRack.astro';
 import AnimatedCommunityMeal from '@/components/illustrations/events/AnimatedCommunityMeal.astro';
 import AnimatedGenerationsChain from '@/components/illustrations/events/AnimatedGenerationsChain.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { EventVisual as EventVisualData } from '@/types/events';
 
 interface Props {
@@ -32,6 +33,16 @@ const visualStyle =
         }
         loading="lazy"
         decoding="async"
+      />
+    ) : visual.kind === 'remote-image' ? (
+      <RemoteImage
+        class="event-visual__image"
+        image={visual.image}
+        sizes={
+          featured
+            ? '(min-width: 64rem) 55vw, 100vw'
+            : '(min-width: 64rem) 48vw, 100vw'
+        }
       />
     ) : visual.kind === 'clothing-rack' ? (
       <AnimatedClothingRack accessibleLabel={visual.accessibleLabel} />

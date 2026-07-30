@@ -159,6 +159,69 @@ export const PARISH_EVENTS_QUERY = defineQuery(`
   }
 `);
 
+/** Contenu propre à la page `/evenements` : ni activités datées, ni réglages d’accueil. */
+export const EVENTS_PAGE_QUERY = defineQuery(`
+  *[_type == "eventsPage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    overview {
+      eyebrow,
+      title,
+      introduction,
+      confirmationNote
+    },
+    categories[]{
+      _key,
+      title,
+      summary,
+      kind,
+      visualKind,
+      illustrationLabel,
+      ctaTarget,
+      ctaLabel,
+      featured,
+      active,
+      confirmationRequired,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
+    upcomingSectionTitle,
+    showUpcomingSection,
+    upcomingLimit,
+    pastSectionTitle,
+    showPastSection,
+    pastLimit
+  }
+`);
+
+/** Réglages propres à la page d’accueil. */
+export const HOME_PAGE_QUERY = defineQuery(`
+  *[_type == "homePage"][0]{
+    upcomingEventsTitle,
+    showUpcomingEvents,
+    upcomingEventsLimit
+  }
+`);
+
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{

@@ -3,9 +3,14 @@ import {
   eventsPageSettings,
   homepageEventsSettings,
 } from '@/data/parish-events';
-import { PARISH_EVENTS_QUERY } from '@/lib/sanity/queries';
+import { HOME_PAGE_QUERY, PARISH_EVENTS_QUERY } from '@/lib/sanity/queries';
 import { buildRemoteImageSources } from '@/lib/sanity/image';
 import { normalizeSanityParishEvents } from '@/lib/content/normalizeSanityParishEvents';
+import { fetchEventsPageRaw } from '@/lib/content/getEventsPageData';
+import {
+  normalizeSanityEventsPageSettings,
+  normalizeSanityHomePageEvents,
+} from '@/lib/content/normalizeSanityEventsPage';
 import {
   selectHomepageParishEvents,
   selectPastParishEvents,
@@ -43,36 +48,58 @@ async function getParishEventSource(): Promise<readonly ParishEvent[]> {
   }
 }
 
+export async function getEventsPageSettings(): Promise<EventsPageSettings> {
+  const raw = await fetchEventsPageRaw();
+  return normalizeSanityEventsPageSettings(raw, eventsPageSettings);
+}
+
+export async function getHomepageEventsSettings(): Promise<HomepageEventsSettings> {
+  try {
+    const raw = await sanityClient.fetch(HOME_PAGE_QUERY);
+    return normalizeSanityHomePageEvents(raw, homepageEventsSettings);
+  } catch (error) {
+    console.error(
+      '[getHomepageEventsSettings] Échec du fetch Sanity — réglages locaux.',
+      error,
+    );
+    return homepageEventsSettings;
+  }
+}
+
 export async function getUpcomingParishEvents(
   now: Date,
 ): Promise<readonly ParishEventWithTemporalStatus[]> {
-  const events = await getParishEventSource();
-  return selectUpcomingParishEvents(
-    events,
-    now,
-    eventsPageSettings.upcomingLimit,
-  );
+  const [events, settings] = await Promise.all([
+    getParishEventSource(),
+    getEventsPageSettings(),
+  ]);
+
+  return selectUpcomingParishEvents(events, now, settings.upcomingLimit);
 }
 
 export async function getPastParishEvents(
   now: Date,
 ): Promise<readonly ParishEventWithTemporalStatus[]> {
-  const events = await getParishEventSource();
-  return selectPastParishEvents(events, now, eventsPageSettings.pastLimit);
+  const [events, settings] = await Promise.all([
+    getParishEventSource(),
+    getEventsPageSettings(),
+  ]);
+
+  return selectPastParishEvents(events, now, settings.pastLimit);
 }
 
 export async function getHomepageParishEvents(
   now: Date,
-  limit: number = homepageEventsSettings.homepageUpcomingLimit,
+  limit?: number,
 ): Promise<HomepageUpcomingEvents> {
-  const events = await getParishEventSource();
-  return selectHomepageParishEvents(events, now, limit);
-}
+  const [events, settings] = await Promise.all([
+    getParishEventSource(),
+    getHomepageEventsSettings(),
+  ]);
 
-export async function getEventsPageSettings(): Promise<EventsPageSettings> {
-  return eventsPageSettings;
-}
-
-export async function getHomepageEventsSettings(): Promise<HomepageEventsSettings> {
-  return homepageEventsSettings;
+  return selectHomepageParishEvents(
+    events,
+    now,
+    limit ?? settings.homepageUpcomingLimit,
+  );
 }
