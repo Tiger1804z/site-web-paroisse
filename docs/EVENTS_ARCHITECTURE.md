@@ -19,14 +19,29 @@ libellé éditorial de la section d’accueil; ce n’est pas une seconde source
 
 ## Flux unique
 
+Depuis le 29 juillet 2026, la source est la collection Sanity `parishEvent`.
+Il n’y a **aucun repli local** : un événement inventé n’aurait pas de sens, donc
+une lecture vide affiche des sections vides. `src/data/parish-events.ts` ne
+contient plus que des réglages, eux-mêmes lus depuis `eventsPage` et `homePage`
+quand ces documents sont remplis.
+
 ```text
-src/data/parish-events.ts
+Sanity — collection parishEvent
+  → PARISH_EVENTS_QUERY
+  → normalizeSanityParishEvents (+ adresses d’images du CDN)
   → getParishEvents.ts
   → visibilité + statut temporel + tri
   ├─→ /evenements/ — Événements à venir
   ├─→ / — Prochaines activités, maximum quatre
   └─→ /evenements/ — Retour sur nos événements
 ```
+
+Les images des événements sont servies par le CDN de Sanity et rendues par
+`RemoteImage.astro`. Le point focal choisi dans le Studio devient un
+`object-position`, parce que la plupart des cadres s’étirent à la hauteur de
+leur colonne et n’ont pas de format connu à l’avance. Les images locales du
+site continuent de passer par `astro:assets`; les deux systèmes coexistent
+pendant la migration.
 
 Les pages et les composants n’importent jamais le tableau brut. Le frontmatter
 Astro appelle la couche de contenu pendant le build, puis transmet des props

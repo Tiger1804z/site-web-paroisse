@@ -19,11 +19,14 @@ Le Studio est organisé en deux sections, qui reflètent une seule question :
 
 Application actuelle :
 
-| Document       | Section           | Contenu                                                         |
-| -------------- | ----------------- | --------------------------------------------------------------- |
-| `siteConfig`\* | Données partagées | Coordonnées, téléphone, courriel, heures du secrétariat.        |
-| `massSchedule` | Données partagées | Horaires réguliers et saisonniers, date de vérification.        |
-| `schedulePage` | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`. |
+| Document       | Section           | Contenu                                                              |
+| -------------- | ----------------- | -------------------------------------------------------------------- |
+| `siteConfig`\* | Données partagées | Coordonnées, téléphone, courriel, heures du secrétariat.             |
+| `massSchedule` | Données partagées | Horaires réguliers et saisonniers, date de vérification.             |
+| `parishEvent`  | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
+| `homePage`     | Pages             | Réglages de la section des activités de l’accueil.                   |
+| `schedulePage` | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
+| `eventsPage`   | Pages             | Hero, catégories permanentes et réglages de sections.                |
 
 \* le type s’appelle `siteSettings` dans le code.
 
@@ -40,6 +43,26 @@ Trois conséquences pratiques :
 Aucune référence Sanity ne relie ces documents : la page Astro lit les sources
 dont elle a besoin et les recompose dans son getter. Une jointure GROQ n’aurait
 rien apporté tant qu’il n’existe qu’un seul horaire.
+
+## Images téléversées
+
+Deux systèmes coexistent volontairement pendant la migration.
+
+- **Image locale** — fichier du projet, connu au build, traité par
+  `astro:assets`. C’est encore le cas de tous les heros de page.
+- **Image Sanity** — téléversée par l’éditrice, servie par le CDN, rendue par
+  `RemoteImage.astro`. Le recadrage qu’elle choisit dans le Studio devient un
+  `object-position`, parce que la plupart des cadres du site s’étirent à la
+  hauteur de leur colonne et n’ont pas de format connu à l’avance.
+
+L’objet `eventImage` porte ce qui rend une image publiable : texte alternatif
+**bloquant dès qu’un fichier est déposé**, crédit, note de licence, et deux
+cases — personne reconnaissable, image générée par IA. Ces deux cases
+n’interdisent rien; elles permettent de répondre à la question plus tard, ce
+qui est impossible si l’information n’a jamais été saisie.
+
+Migrer les heros de page demandera un ticket dédié, traitant tous les visuels
+de page ensemble plutôt qu’une page à la fois.
 
 ## `parishLifePage`
 

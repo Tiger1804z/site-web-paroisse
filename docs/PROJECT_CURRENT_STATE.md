@@ -14,7 +14,8 @@ Dernière mise à jour : 27 juillet 2026 — S1-T13.
   groupes à confirmer;
 - `/nos-services/` : page canonique complète, hero rotatif avec lentille et
   données 2026 révisables;
-- `/evenements/` : architecture événementielle locale;
+- `/evenements/` : activités datées lues depuis la collection Sanity
+  `parishEvent`, images téléversables avec point focal;
 - `/friperie/` : page complète et indexable, informations pratiques réelles,
   visuels thématiques sous licence Pixabay;
 - `/contact/` : frontend complet `noindex`, validation locale seulement;
