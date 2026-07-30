@@ -23,6 +23,22 @@ const {
   fetchpriority = 'auto',
   class: className,
 } = Astro.props;
+
+// Le point focal du Studio devient la position de recadrage du navigateur.
+// `object-fit: cover` découpe déjà l'image pour remplir son cadre; sans cette
+// ligne il découpe depuis le centre, et le choix de l'éditrice est ignoré.
+const objectPosition = image.focalPoint
+  ? `${(image.focalPoint.x * 100).toFixed(2)}% ${(image.focalPoint.y * 100).toFixed(2)}%`
+  : undefined;
+
+const inlineStyle = [
+  objectPosition ? `object-position: ${objectPosition};` : undefined,
+  image.lqip
+    ? `background-image: url(${image.lqip}); background-size: cover; background-position: center;`
+    : undefined,
+]
+  .filter(Boolean)
+  .join(' ');
 ---
 
 {
@@ -47,9 +63,7 @@ const {
   loading={loading}
   decoding="async"
   fetchpriority={fetchpriority}
-  style={image.lqip
-    ? `background-image: url(${image.lqip}); background-size: cover; background-position: center;`
-    : undefined}
+  style={inlineStyle || undefined}
 />
 
 <style>

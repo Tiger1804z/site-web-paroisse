@@ -30,6 +30,14 @@ export interface ParishEventImage {
   readonly height?: number;
   /** Vignette floue encodée, affichée pendant le chargement. */
   readonly lqip?: string;
+  /**
+   * Point focal choisi dans le Studio, en fractions de 0 à 1.
+   *
+   * Les cadres du site n'ont pas tous un format fixe : plusieurs s'étirent à
+   * la hauteur de leur colonne. Le recadrage se fait donc dans le navigateur,
+   * par `object-position`, et non par l'adresse de l'image.
+   */
+  readonly focalPoint?: { readonly x: number; readonly y: number };
   readonly credit?: string;
   readonly caption?: string;
 }

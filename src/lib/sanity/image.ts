@@ -49,15 +49,21 @@ export function buildRemoteImageSources(
   const widths = options.widths ?? DEFAULT_IMAGE_WIDTHS;
 
   const url = (width: number): string => {
-    let image = builder.image(source).width(width).auto('format').quality(78);
+    const image = builder.image(source).width(width).auto('format').quality(78);
 
+    // Un format imposé n'est demandé que si l'appelant en fournit un. Sans
+    // hauteur, Sanity renvoie l'image entière : le cadrage est alors fait par
+    // le navigateur, via le point focal posé en `object-position`. C'est ce
+    // qu'il faut ici, parce que plusieurs cadres du site s'étirent à la
+    // hauteur de leur colonne et n'ont pas de format connu à l'avance.
     if (options.aspectRatio) {
-      image = image.height(Math.round(width / options.aspectRatio));
+      return image
+        .height(Math.round(width / options.aspectRatio))
+        .fit('crop')
+        .url();
     }
 
-    // `fit: crop` avec le point focal du Studio : la partie choisie par
-    // l'éditrice reste visible quel que soit le format demandé.
-    return image.fit('crop').url();
+    return image.url();
   };
 
   const largest = widths[widths.length - 1] ?? 1280;

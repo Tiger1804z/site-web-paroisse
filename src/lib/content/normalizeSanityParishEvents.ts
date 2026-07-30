@@ -41,6 +41,7 @@ function normalizeImage(
 
   const dimensions = image.asset.metadata?.dimensions;
   const { src, srcSet } = buildSources(image);
+  const hotspot = image.hotspot;
 
   return {
     src,
@@ -49,6 +50,10 @@ function normalizeImage(
     width: dimensions?.width ?? undefined,
     height: dimensions?.height ?? undefined,
     lqip: image.asset.metadata?.lqip ?? undefined,
+    focalPoint:
+      typeof hotspot?.x === 'number' && typeof hotspot?.y === 'number'
+        ? { x: hotspot.x, y: hotspot.y }
+        : undefined,
     credit: cleanString(raw?.credit),
   };
 }
