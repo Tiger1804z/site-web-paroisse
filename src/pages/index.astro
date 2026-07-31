@@ -14,11 +14,12 @@ import {
   getHomepageEventsSettings,
   getHomepageParishEvents,
 } from '@/lib/content/getParishEvents';
-import { getHomepageGalleryItems } from '@/lib/content/getHomepageGalleryItems';
+import { getHomePageData } from '@/lib/content/getHomePageData';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { getWeeklyMasses } from '@/lib/content/getMassSchedule';
 
 const buildTime = new Date();
+const homePage = await getHomePageData();
 const homepageEventsSettings = await getHomepageEventsSettings();
 const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
   ? await getHomepageParishEvents(
@@ -27,7 +28,6 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
     )
   : { secondary: [] };
 const siteSettings = await getSiteSettings();
-const homepageGalleryItems = await getHomepageGalleryItems(6);
 const weeklyMasses = await getWeeklyMasses();
 ---
 
@@ -38,9 +38,9 @@ const weeklyMasses = await getWeeklyMasses();
   pageClass="home-page"
   headerVariant="transparent"
 >
-  <HomeHero masses={weeklyMasses} />
-  <WelcomeSection />
-  <MassSchedulePreview masses={weeklyMasses} />
+  <HomeHero content={homePage.hero} masses={weeklyMasses} />
+  <WelcomeSection content={homePage.welcome} />
+  <MassSchedulePreview content={homePage.massPreview} masses={weeklyMasses} />
   {
     homepageEventsSettings.showHomepageUpcomingSection &&
       homepageEvents.featured && (
@@ -50,10 +50,14 @@ const weeklyMasses = await getWeeklyMasses();
         />
       )
   }
-  <ParishLifePreview />
-  <PracticalServices />
-  <SpiritualInterlude />
-  <HomeGallery items={homepageGalleryItems} />
-  <VisitSection contact={siteSettings} />
+  <ParishLifePreview content={homePage.parishLife} />
+  <PracticalServices content={homePage.services} />
+  <SpiritualInterlude content={homePage.interlude} />
+  {
+    homePage.gallery.items.length > 0 && (
+      <HomeGallery content={homePage.gallery} />
+    )
+  }
+  <VisitSection content={homePage.visit} contact={siteSettings} />
   <MotionController />
 </BaseLayout>

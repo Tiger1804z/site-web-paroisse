@@ -3,6 +3,13 @@ import LivingStainedGlass from '@/components/motion/LivingStainedGlass.astro';
 import Reveal from '@/components/motion/Reveal.astro';
 import Container from '@/components/ui/Container.astro';
 import TextLink from '@/components/ui/TextLink.astro';
+import type { HomeWelcomeContent } from '@/types/homePage';
+
+interface Props {
+  content: HomeWelcomeContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <section
@@ -12,26 +19,31 @@ import TextLink from '@/components/ui/TextLink.astro';
   <Container>
     <div class="welcome-section__grid">
       <Reveal class="welcome-section__copy">
-        <p class="type-script-accent welcome-section__script">Ensemble</p>
+        <p class="type-script-accent welcome-section__script">
+          {content.script}
+        </p>
         <h2 id="bienvenue-title" class="type-h2" tabindex="-1">
-          Une communauté<br />enracinée dans la foi
+          {
+            content.titleLines.map((line, index) => (
+              <>
+                {index > 0 && <br />}
+                {line}
+              </>
+            ))
+          }
         </h2>
         <p class="type-body welcome-section__introduction">
-          Notre paroisse est un lieu de prière, de rencontre et de solidarité,
-          ouvert à toutes les personnes qui souhaitent cheminer dans la foi. Que
-          vous soyez de passage ou enraciné dans le quartier, vous êtes les
-          bienvenus parmi nous.
+          {content.introduction}
         </p>
-        <blockquote>
-          <p>
-            « Là où deux ou trois sont rassemblés en mon nom, je suis au milieu
-            d’eux. »
-          </p>
-          <cite>Matthieu 18,20</cite>
-        </blockquote>
-        <TextLink href="/notre-paroisse">
-          En savoir plus sur notre paroisse
-        </TextLink>
+        {
+          content.quote && (
+            <blockquote>
+              <p>{content.quote.text}</p>
+              <cite>{content.quote.attribution}</cite>
+            </blockquote>
+          )
+        }
+        <TextLink href="/notre-paroisse">{content.linkLabel}</TextLink>
       </Reveal>
 
       <div class="welcome-section__art">

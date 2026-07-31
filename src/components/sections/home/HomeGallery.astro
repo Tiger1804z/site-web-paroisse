@@ -1,28 +1,18 @@
 ---
-import { getImage, Image } from 'astro:assets';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-import type { GalleryItem } from '@/types/gallery';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { HomeGalleryContent } from '@/types/homePage';
 
 interface Props {
-  items: readonly GalleryItem[];
+  content: HomeGalleryContent;
 }
 
-const { items } = Astro.props;
-const fullImageSources = new Map(
-  await Promise.all(
-    items.map(async (item) => {
-      const optimizedImage = await getImage({
-        src: item.image,
-        width: Math.min(1800, item.image.width),
-        format: 'webp',
-        quality: 84,
-      });
-
-      return [item.id, optimizedImage.src] as const;
-    }),
-  ),
-);
+const { content } = Astro.props;
+const items = content.items;
+// Plus de `getImage` : ces photographies sont téléversées dans le Studio et ne
+// sont pas connues au build. `src` est déjà la plus grande variante servie par
+// le CDN, c'est elle qu'ouvre la loupe.
 const initialItem = items[0];
 ---
 
@@ -33,8 +23,8 @@ const initialItem = items[0];
   data-home-gallery-root
 >
   <Container class="home-gallery__heading" data-motion-reveal>
-    <Eyebrow>Photographie</Eyebrow>
-    <h2 id="home-gallery-title" class="type-h2">La paroisse en images</h2>
+    <Eyebrow>{content.eyebrow}</Eyebrow>
+    <h2 id="home-gallery-title" class="type-h2">{content.title}</h2>
   </Container>
 
   <div
@@ -72,7 +62,7 @@ const initialItem = items[0];
         items.map((item, index) => (
           <a
             class="home-gallery__item"
-            href={fullImageSources.get(item.id) ?? item.image.src}
+            href={item.image.src}
             target="_blank"
             rel="noreferrer"
             aria-label={`Agrandir : ${item.title}`}
@@ -81,23 +71,14 @@ const initialItem = items[0];
             data-gallery-position={index === 0 ? '0' : undefined}
             data-gallery-title={item.title}
             data-gallery-description={item.description}
-            data-gallery-alt={item.alt}
-            data-gallery-credit={item.credit}
+            data-gallery-alt={item.image.alt}
+            data-gallery-credit={item.image.credit}
             data-gallery-full-width={item.image.width}
             data-gallery-full-height={item.image.height}
           >
-            <Image
-              src={item.image}
-              alt={item.alt}
-              widths={[320, 480, 640, 800, 1040]}
+            <RemoteImage
+              image={item.image}
               sizes="(min-width: 64rem) 29rem, (min-width: 48rem) 36vw, 78vw"
-              loading="lazy"
-              quality={78}
-              style={
-                item.objectPosition
-                  ? `object-position: ${item.objectPosition}`
-                  : undefined
-              }
             />
             <span class="home-gallery__open-cue" aria-hidden="true">
               <svg

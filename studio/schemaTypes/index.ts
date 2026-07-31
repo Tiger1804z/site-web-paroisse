@@ -30,6 +30,9 @@ import {expectationItemType} from './objects/expectationItemType'
 import {practicalInfoItemType} from './objects/practicalInfoItemType'
 import {firstVisitFaqItemType} from './objects/firstVisitFaqItemType'
 import {contactReasonType} from './objects/contactReasonType'
+import {homeGroupTeaserType} from './objects/homeGroupTeaserType'
+import {homeServiceLinkType} from './objects/homeServiceLinkType'
+import {galleryPhotoType} from './objects/galleryPhotoType'
 
 export const schemaTypes = [
   // Documents — données partagées
@@ -68,4 +71,7 @@ export const schemaTypes = [
   practicalInfoItemType,
   firstVisitFaqItemType,
   contactReasonType,
+  homeGroupTeaserType,
+  homeServiceLinkType,
+  galleryPhotoType,
 ]

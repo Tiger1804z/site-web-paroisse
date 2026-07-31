@@ -4,26 +4,24 @@ import exteriorImage from '@/assets/images/paroisse/eglise-exterieur-identificat
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { HomeVisitContent } from '@/types/homePage';
 import type { PublicContactDetails } from '@/types/siteSettings';
 
 interface Props {
+  content: HomeVisitContent;
   contact: PublicContactDetails;
 }
 
-const { contact } = Astro.props;
+const { content, contact } = Astro.props;
 ---
 
 <section class="visit-section" aria-labelledby="visit-title">
   <Container>
     <div class="visit-section__layout">
       <div class="visit-section__content" data-motion-reveal>
-        <Eyebrow>Nous joindre</Eyebrow>
-        <h2 id="visit-title">Venez nous rencontrer</h2>
-        <p class="visit-section__introduction">
-          Une présence accueillante au cœur du quartier. Retrouvez les
-          coordonnées confirmées de la paroisse ou préparez votre demande sur la
-          page Contact.
-        </p>
+        <Eyebrow>{content.eyebrow}</Eyebrow>
+        <h2 id="visit-title">{content.title}</h2>
+        <p class="visit-section__introduction">{content.introduction}</p>
 
         <address class="visit-section__address">
           <span class="visit-section__organization">
@@ -38,13 +36,15 @@ const { contact } = Astro.props;
         </address>
 
         <div class="visit-section__actions">
-          <Button href="/contact/" variant="light">Nous joindre</Button>
+          <Button href="/contact/" variant="light">
+            {content.contactCtaLabel}
+          </Button>
           <Button
             href={contact.directionsUrl}
             variant="secondary"
             target="_blank"
           >
-            Obtenir l’itinéraire
+            {content.directionsCtaLabel}
           </Button>
         </div>
       </div>

@@ -10,13 +10,15 @@ import {
   formatTimeLabel,
   WEEKDAY_LABELS,
 } from '@/lib/schedules/schedule-format.ts';
+import type { HomeHeroContent } from '@/types/homePage';
 import type { WeeklyMassEntry } from '@/types/schedule';
 
 interface Props {
+  content: HomeHeroContent;
   masses?: readonly WeeklyMassEntry[];
 }
 
-const { masses = [] } = Astro.props;
+const { content, masses = [] } = Astro.props;
 
 // Rendu serveur : l'horaire hebdomadaire complet, sans prétendre calculer la
 // prochaine messe. Le script client remplace ensuite liste et titre.
@@ -154,20 +156,33 @@ const lensClipId = 'home-hero-organic-lens-clip';
 
   <Container class="home-hero__content">
     <div class="home-hero__copy">
-      <p class="type-script-accent home-hero__script">Bienvenue</p>
+      <p class="type-script-accent home-hero__script">{content.script}</p>
+      {
+        /*
+        Une ligne de titre par entrée, séparées par un retour à la ligne. Le
+        Studio ne saisit jamais de HTML : les coupures typographiques passent
+        par la structure, pas par du balisage collé dans une chaîne.
+      */
+      }
       <h1 id="home-hero-title" class="type-display-xl">
-        Un lieu de foi,<br />
-        de paix et<br />
-        de rencontre.
+        {
+          content.titleLines.map((line, index) => (
+            <>
+              {index > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
       </h1>
       <p class="type-body-large home-hero__introduction">
-        Bienvenue à la Paroisse Saint-René-Goupil. Découvrez nos célébrations,
-        nos activités et la vie de notre communauté.
+        {content.introduction}
       </p>
       <div class="home-hero__actions">
-        <Button href="/horaires" variant="light">Voir les horaires</Button>
+        <Button href="/horaires" variant="light">
+          {content.primaryCtaLabel}
+        </Button>
         <Button href="/notre-paroisse" variant="dark">
-          Découvrir la paroisse
+          {content.secondaryCtaLabel}
         </Button>
       </div>
     </div>
@@ -183,7 +198,7 @@ const lensClipId = 'home-hero-organic-lens-clip';
       class="home-hero__schedule-label"
       data-upcoming-masses-title
     >
-      Horaires des messes
+      {content.scheduleTitle}
     </p>
     {
       scheduleRows.length > 0 ? (
@@ -200,12 +215,10 @@ const lensClipId = 'home-hero-organic-lens-clip';
       )
     }
     <a class="home-hero__schedule-link" href="/horaires">
-      Consulter tous les horaires
+      {content.scheduleLinkLabel}
       <span aria-hidden="true">→</span>
     </a>
-    <p class="home-hero__schedule-note">
-      Horaires sujets à changement lors des célébrations spéciales.
-    </p>
+    <p class="home-hero__schedule-note">{content.scheduleNote}</p>
     {
       scheduleRows.length > 0 && (
         <script

@@ -215,9 +215,120 @@ export const EVENTS_PAGE_QUERY = defineQuery(`
   }
 `);
 
-/** Réglages propres à la page d’accueil. */
+/**
+ * Contenu et réglages de la page d’accueil.
+ *
+ * Une seule projection pour un seul document : les réglages des activités et
+ * les textes des sections sont lus ensemble, puis répartis entre deux
+ * normalizers. Deux requêtes sur `homePage` feraient deux allers-retours pour
+ * le même document.
+ *
+ * N’y figure aucune coordonnée ni aucune heure de messe : la section « Venez
+ * nous rencontrer » lit `siteSettings`, l’aperçu des célébrations lit
+ * `massSchedule`. Les adresses des boutons sont des routes, restées dans le
+ * code.
+ */
 export const HOME_PAGE_QUERY = defineQuery(`
   *[_type == "homePage"][0]{
+    hero {
+      script,
+      titleLines,
+      introduction,
+      primaryCtaLabel,
+      secondaryCtaLabel,
+      scheduleTitle,
+      scheduleLinkLabel,
+      scheduleNote
+    },
+    welcome {
+      script,
+      titleLines,
+      introduction,
+      quote {
+        text,
+        attribution
+      },
+      linkLabel
+    },
+    massPreview {
+      eyebrow,
+      title,
+      introduction,
+      ctaLabel,
+      specialTitle,
+      specialDescription
+    },
+    parishLife {
+      eyebrow,
+      title,
+      introduction,
+      groups[]{
+        group,
+        teaser
+      },
+      ctaLabel
+    },
+    services {
+      eyebrow,
+      title,
+      introduction,
+      links[]{
+        label,
+        target
+      },
+      ctaLabel,
+      visualNote,
+      thrift {
+        eyebrow,
+        title,
+        description,
+        linkLabel
+      }
+    },
+    interlude {
+      eyebrow,
+      title,
+      description,
+      linkLabel
+    },
+    gallery {
+      eyebrow,
+      title,
+      photos[]{
+        _key,
+        title,
+        description,
+        rightsCleared,
+        consentConfirmed,
+        photo {
+          alt,
+          credit,
+          containsRecognizablePeople,
+          generatedByAi,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    visit {
+      eyebrow,
+      title,
+      introduction,
+      contactCtaLabel,
+      directionsCtaLabel
+    },
     upcomingEventsTitle,
     showUpcomingEvents,
     upcomingEventsLimit

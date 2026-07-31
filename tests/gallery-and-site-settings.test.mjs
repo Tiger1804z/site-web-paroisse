@@ -4,24 +4,28 @@ import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
 import { siteSettingsData } from '../src/data/siteSettings.ts';
 import {
-  getPublishedGalleryItems,
   isGalleryItemPublic,
+  selectGalleryItems,
   selectHomepageGalleryItems,
 } from '../src/lib/gallery/gallery.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 
-function galleryItem(overrides = {}) {
+function galleryCandidate(overrides = {}) {
+  const { id = 'gallery-default', alt = 'Vue factuelle de l’église' } =
+    overrides;
+
   return {
-    id: 'gallery-default',
-    order: 1,
-    status: 'published',
-    rightsStatus: 'approved-for-site',
-    alt: 'Vue factuelle de l’église',
-    documentary: true,
+    item: {
+      id,
+      title: 'Photographie',
+      description: '',
+      image: { src: 'https://cdn', srcSet: 'https://cdn 480w', alt },
+    },
+    rightsCleared: true,
     generatedByAi: false,
     containsRecognizablePeople: false,
-    homepageVisible: true,
+    consentConfirmed: false,
     ...overrides,
   };
 }
@@ -60,47 +64,35 @@ test('le courriel non confirmé est explicitement exclu', () => {
   assert.equal(siteSettingsData.email.href, '');
 });
 
-test('un brouillon est exclu de la galerie publique', () => {
+test('une photographie aux droits non confirmés reste invisible', () => {
   assert.equal(
-    getPublishedGalleryItems([galleryItem({ id: 'draft', status: 'draft' })])
-      .length,
-    0,
-  );
-});
-
-test('un droit en attente est exclu de la galerie publique', () => {
-  assert.equal(
-    isGalleryItemPublic(
-      galleryItem({
-        status: 'rights-pending',
-        rightsStatus: 'pending',
-      }),
-    ),
+    isGalleryItemPublic(galleryCandidate({ rightsCleared: false })),
     false,
   );
 });
 
-test('la sélection de l’accueil respecte sa limite', () => {
-  const items = Array.from({ length: 8 }, (_, index) =>
-    galleryItem({ id: `item-${index}`, order: index }),
+test('la sélection de l’accueil respecte son plafond', () => {
+  const candidates = Array.from({ length: 14 }, (_, index) =>
+    galleryCandidate({ id: `item-${index}` }),
   );
 
-  assert.equal(selectHomepageGalleryItems(items, 6).length, 6);
+  assert.equal(selectHomepageGalleryItems(candidates, 12).length, 12);
 });
 
-test('homepageVisible false exclut une image du carrousel', () => {
-  const items = [
-    galleryItem({ id: 'visible', order: 1 }),
-    galleryItem({
-      id: 'hidden',
-      homepageVisible: false,
-      order: 2,
-    }),
-  ];
+test('une personne reconnaissable sans consentement n’est pas publiée', () => {
+  assert.equal(
+    isGalleryItemPublic(galleryCandidate({ containsRecognizablePeople: true })),
+    false,
+  );
 
-  assert.deepEqual(
-    selectHomepageGalleryItems(items, 6).map(({ id }) => id),
-    ['visible'],
+  assert.equal(
+    isGalleryItemPublic(
+      galleryCandidate({
+        containsRecognizablePeople: true,
+        consentConfirmed: true,
+      }),
+    ),
+    true,
   );
 });
 
@@ -123,26 +115,26 @@ test('Galerie reste un placeholder noindex sans page autonome', () => {
   assert.equal(existsSync(`${rootPath}/src/pages/galerie.astro`), false);
 });
 
-test('l’ordre éditorial de la galerie est respecté', () => {
-  const items = [
-    galleryItem({ id: 'third', order: 3 }),
-    galleryItem({ id: 'first', order: 1 }),
-    galleryItem({ id: 'second', order: 2 }),
+test('l’ordre de la liste du Studio est celui du carrousel', () => {
+  const candidates = [
+    galleryCandidate({ id: 'clochers' }),
+    galleryCandidate({ id: 'autel' }),
+    galleryCandidate({ id: 'croix' }),
   ];
 
   assert.deepEqual(
-    getPublishedGalleryItems(items).map(({ id }) => id),
-    ['first', 'second', 'third'],
+    selectGalleryItems(candidates).map(({ id }) => id),
+    ['clochers', 'autel', 'croix'],
   );
 });
 
 test('une image sans texte alternatif est exclue', () => {
-  assert.equal(isGalleryItemPublic(galleryItem({ alt: '   ' })), false);
+  assert.equal(isGalleryItemPublic(galleryCandidate({ alt: '   ' })), false);
 });
 
-test('une image générée par IA ne peut pas être documentaire et publique', () => {
+test('une image générée par IA n’entre pas dans le carrousel', () => {
   assert.equal(
-    isGalleryItemPublic(galleryItem({ generatedByAi: true })),
+    isGalleryItemPublic(galleryCandidate({ generatedByAi: true })),
     false,
   );
 });

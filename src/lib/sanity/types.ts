@@ -47,7 +47,13 @@ export type SanityParishEventsResult = PARISH_EVENTS_QUERY_RESULT;
 /** Type brut du contenu de page renvoyé par EVENTS_PAGE_QUERY. */
 export type SanityEventsPageResult = EVENTS_PAGE_QUERY_RESULT;
 
-/** Type brut des réglages d’accueil renvoyés par HOME_PAGE_QUERY. */
+/**
+ * Type brut de la page d’accueil renvoyé par HOME_PAGE_QUERY.
+ *
+ * Un seul document, deux lectures : `normalizeSanityHomePage` en tire les
+ * textes des sections, `normalizeSanityHomePageEvents` les trois réglages de la
+ * section des activités.
+ */
 export type SanityHomePageResult = HOME_PAGE_QUERY_RESULT;
 
 /**

@@ -6,14 +6,16 @@ import {
   formatTimeLabel,
   WEEKDAY_LABELS,
 } from '@/lib/schedules/schedule-format.ts';
+import type { HomeMassPreviewContent } from '@/types/homePage';
 import type { WeeklyMassEntry } from '@/types/schedule';
 
 interface Props {
+  content: HomeMassPreviewContent;
   masses?: readonly WeeklyMassEntry[];
   lastUpdatedLabel?: string;
 }
 
-const { masses = [], lastUpdatedLabel } = Astro.props;
+const { content, masses = [], lastUpdatedLabel } = Astro.props;
 
 const schedule = masses.map((mass) => ({
   id: mass.id,
@@ -22,10 +24,15 @@ const schedule = masses.map((mass) => ({
   time: formatTimeLabel(mass.time) ?? mass.time,
 }));
 
+// Texte d'attente : il ne s'affiche que si aucune heure n'est publiée, et dit
+// alors le contraire de l'introduction saisie dans le Studio — annoncer des
+// horaires « ci-dessous » sous une liste vide serait faux. Un état dégradé
+// appartient au code, pas au CMS.
+const EMPTY_SCHEDULE_INTRODUCTION =
+  'Les horaires réguliers seront publiés après leur confirmation. Ils peuvent être modifiés lors des fêtes et des célébrations spéciales.';
+
 const introduction =
-  schedule.length > 0
-    ? 'Les horaires ci-dessous peuvent être modifiés lors des fêtes et des célébrations spéciales.'
-    : 'Les horaires réguliers seront publiés après leur confirmation. Ils peuvent être modifiés lors des fêtes et des célébrations spéciales.';
+  schedule.length > 0 ? content.introduction : EMPTY_SCHEDULE_INTRODUCTION;
 ---
 
 <section
@@ -36,11 +43,11 @@ const introduction =
   <Container>
     <div class="mass-schedule__grid">
       <div class="mass-schedule__copy">
-        <Eyebrow tone="light">Célébrations</Eyebrow>
-        <h2 id="mass-schedule-title" class="type-h2">Célébrer avec nous</h2>
+        <Eyebrow tone="light">{content.eyebrow}</Eyebrow>
+        <h2 id="mass-schedule-title" class="type-h2">{content.title}</h2>
         <p class="type-body">{introduction}</p>
         <div class="mass-schedule__actions">
-          <Button href="/horaires">Voir tous les horaires</Button>
+          <Button href="/horaires">{content.ctaLabel}</Button>
         </div>
       </div>
 
@@ -70,8 +77,8 @@ const introduction =
         }
         <div class="mass-schedule__special">
           <div>
-            <h3>Célébrations spéciales</h3>
-            <p>Consultez les annonces récentes avant de vous déplacer.</p>
+            <h3>{content.specialTitle}</h3>
+            <p>{content.specialDescription}</p>
           </div>
         </div>
         {
