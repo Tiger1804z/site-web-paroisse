@@ -12,6 +12,7 @@ import type {
   FIRST_VISIT_PAGE_QUERY_RESULT,
   ADVERTISERS_QUERY_RESULT,
   ADVERTISERS_PAGE_QUERY_RESULT,
+  CONTACT_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
 /**
@@ -96,3 +97,12 @@ export type SanityAdvertisersResult = ADVERTISERS_QUERY_RESULT;
 
 /** Type brut du contenu de page renvoyé par ADVERTISERS_PAGE_QUERY. */
 export type SanityAdvertisersPageResult = ADVERTISERS_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par CONTACT_PAGE_QUERY.
+ *
+ * N'y figure aucune coordonnée : elles arrivent par `SanitySiteSettingsResult`,
+ * et le getter recompose les deux. La structure du formulaire n'y est pas non
+ * plus — elle appartient au code.
+ */
+export type SanityContactPageResult = CONTACT_PAGE_QUERY_RESULT;

@@ -1,5 +1,93 @@
-import type { ContactPageData } from '@/types/contact';
+import type {
+  ContactMethod,
+  ContactOfficeHours,
+  ContactPageData,
+} from '@/types/contact';
 import type { PublicContactDetails } from '@/types/siteSettings';
+
+/**
+ * Coordonnées affichées, dérivées de « Coordonnées de la paroisse ».
+ *
+ * Rien ici ne se saisit dans le document de page : une adresse ou un téléphone
+ * est un fait sur la paroisse, vrai indépendamment de la page qui l'affiche, et
+ * le recopier créerait une deuxième vérité à corriger en cas de déménagement.
+ *
+ * Le courriel n'apparaît qu'une fois confirmé et rendu public. Tant qu'il ne
+ * l'est pas, il n'y a pas de carte : mieux vaut taire la ligne qu'afficher une
+ * adresse que personne ne relève.
+ */
+export function buildContactMethods(
+  siteSettings: PublicContactDetails,
+): readonly ContactMethod[] {
+  const methods: ContactMethod[] = [
+    {
+      id: 'address',
+      kind: 'address',
+      label: 'Adresse',
+      value: siteSettings.address.formatted,
+      href: '#nous-trouver',
+      note: 'Emplacement confirmé par la paroisse.',
+    },
+    {
+      id: 'phone',
+      kind: 'phone',
+      label: 'Téléphone',
+      value: siteSettings.phone.display,
+      href: siteSettings.phone.href,
+      note: 'Touchez le numéro pour appeler.',
+    },
+  ];
+
+  const email = siteSettings.email;
+  if (email?.confirmed && email.href) {
+    methods.push({
+      id: 'email',
+      kind: 'email',
+      label: 'Courriel',
+      value: email.display,
+      href: email.href,
+    });
+  }
+
+  return methods;
+}
+
+/**
+ * Bloc des heures du secrétariat.
+ *
+ * Absent tant que `officeHoursLabel` est vide. La valeur n'est pas recopiée ici
+ * : elle sert aussi Horaires et Première visite.
+ */
+export function buildContactOfficeHours(
+  siteSettings: PublicContactDetails,
+  title: string,
+  note?: string,
+): ContactOfficeHours | undefined {
+  const schedule = siteSettings.officeHoursLabel?.trim();
+  if (!schedule) return undefined;
+
+  return { title, schedule: [schedule], ...(note ? { note } : {}) };
+}
+
+/**
+ * Notes d'accès : les faits partagés d'abord, les précisions de la page ensuite.
+ *
+ * Le stationnement et l'accessibilité décrivent le lieu, pas la page. Une valeur
+ * absente ne laisse pas de trou — la ligne n'existe simplement pas.
+ */
+export function buildContactAccessNotes(
+  siteSettings: PublicContactDetails,
+  extraNotes: readonly string[] = [],
+): readonly string[] {
+  return [
+    siteSettings.parkingLabel,
+    siteSettings.accessibilityLabel,
+    ...extraNotes,
+  ].flatMap((note) => {
+    const trimmed = note?.trim();
+    return trimmed ? [trimmed] : [];
+  });
+}
 
 export function buildContactPageData(
   siteSettings: PublicContactDetails,
@@ -15,41 +103,23 @@ export function buildContactPageData(
       eyebrow: 'Communication',
       title: 'Nous joindre',
       introduction:
-        'Nous souhaitons répondre à vos questions avec attention. Retrouvez l’église et préparez votre message; les autres coordonnées publiques sont encore en cours de validation.',
+        'Nous souhaitons répondre à vos questions avec attention. Retrouvez l’église, ses heures d’ouverture et préparez votre message.',
     },
-    methods: [
-      {
-        id: 'address',
-        kind: 'address',
-        label: 'Adresse',
-        value: siteSettings.address.formatted,
-        href: '#nous-trouver',
-        note: 'Emplacement confirmé par la paroisse.',
-        active: true,
-        order: 1,
-        status: 'confirmed',
-      },
-      {
-        id: 'phone',
-        kind: 'phone',
-        label: 'Téléphone',
-        value: siteSettings.phone.display,
-        href: siteSettings.phone.href,
-        note: 'Touchez le numéro pour appeler.',
-        active: true,
-        order: 2,
-        status: 'confirmed',
-      },
-    ],
+    methods: buildContactMethods(siteSettings),
     methodsFallback: {
       title: 'Autres coordonnées en cours de validation',
       description:
-        'Le courriel et les heures du secrétariat seront affichés ici après leur confirmation par la paroisse.',
+        'Le courriel du secrétariat sera affiché ici après sa confirmation par la paroisse.',
     },
+    officeHours: buildContactOfficeHours(
+      siteSettings,
+      'Heures du secrétariat',
+      'Ces heures sont celles du secrétariat, pas celles des célébrations. Consultez la page Horaires pour les messes.',
+    ),
     location: {
       title: 'Nous trouver',
       description:
-        'L’église est située à Montréal. Les renseignements détaillés sur le stationnement et l’accessibilité restent à confirmer.',
+        'L’église est située à Montréal, dans le quartier Saint-Michel. Deux entrées principales donnent sur la rue Denis-Papin et sur la rue Parc René-Goupil.',
       address: siteSettings.address.formatted,
       mapEmbedUrl: siteSettings.map.embedUrl,
       mapTitle: siteSettings.map.title,
@@ -57,8 +127,7 @@ export function buildContactPageData(
         label: 'Obtenir l’itinéraire',
         href: siteSettings.directionsUrl,
       },
-      accessNotes: [],
-      status: 'confirmed',
+      accessNotes: buildContactAccessNotes(siteSettings),
     },
     form: {
       title: 'Préparer votre message',

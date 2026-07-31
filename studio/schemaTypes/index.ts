@@ -11,6 +11,7 @@ import {parishLifePageType} from './documents/parishLifePageType'
 import {firstVisitPageType} from './documents/firstVisitPageType'
 import {advertiserType} from './documents/advertiserType'
 import {advertisersPageType} from './documents/advertisersPageType'
+import {contactPageType} from './documents/contactPageType'
 import {eventCategoryType} from './objects/eventCategoryType'
 import {eventImageType} from './objects/eventImageType'
 import {scheduleEntryType} from './objects/scheduleEntryType'
@@ -28,6 +29,7 @@ import {visitStepType} from './objects/visitStepType'
 import {expectationItemType} from './objects/expectationItemType'
 import {practicalInfoItemType} from './objects/practicalInfoItemType'
 import {firstVisitFaqItemType} from './objects/firstVisitFaqItemType'
+import {contactReasonType} from './objects/contactReasonType'
 
 export const schemaTypes = [
   // Documents — données partagées
@@ -46,6 +48,7 @@ export const schemaTypes = [
   parishLifePageType,
   firstVisitPageType,
   advertisersPageType,
+  contactPageType,
   // Objets réutilisables
   eventCategoryType,
   eventImageType,
@@ -64,4 +67,5 @@ export const schemaTypes = [
   expectationItemType,
   practicalInfoItemType,
   firstVisitFaqItemType,
+  contactReasonType,
 ]

@@ -1,12 +1,11 @@
 # État actuel du projet
 
-Dernière mise à jour : 31 juillet 2026 — migration Sanity de Nos annonceurs,
-collection comprise.
+Dernière mise à jour : 31 juillet 2026 — migration Sanity de Contact.
 
 > **Travail non poussé.** La branche `feature/sanity-content-migration` porte la
 > prévisualisation éditoriale (Visual Editing) et les migrations de Nos
-> services, Vie paroissiale, Première visite et Nos annonceurs. Rien n’est
-> poussé ni fusionné.
+> services, Vie paroissiale, Première visite, Nos annonceurs et Contact. Rien
+> n’est poussé ni fusionné.
 
 ## Pages principales
 
@@ -38,7 +37,10 @@ collection comprise.
   `parishEvent`, images téléversables avec point focal;
 - `/friperie/` : page complète et indexable, informations pratiques réelles,
   visuels thématiques sous licence Pixabay;
-- `/contact/` : frontend complet `noindex`, validation locale seulement;
+- `/contact/` : frontend complet `noindex`, validation locale seulement; textes
+  et motifs du formulaire lus depuis le document Sanity `contactPage`. Les
+  heures du secrétariat, le stationnement et l’accessibilité s’y affichent
+  désormais, lus dans `siteSettings`;
 - `/nos-annonceurs/` : page complète `noindex`; les quatre fiches historiques
   sont publiées et lues depuis la collection Sanity `advertiser`, le contenu de
   page depuis `advertisersPage`. Aucun portrait n’est repris, et le champ image
@@ -60,8 +62,27 @@ Les données confirmées sont :
 
 `src/data/siteSettings.ts` est la source unique. Le normalisateur
 `getSiteSettings()` masque le courriel tant que `confirmed` est faux. Les
-consommateurs actuels sont Contact, la fin de l’accueil, le footer et Nos
-services.
+consommateurs actuels sont Contact, la fin de l’accueil, le footer, Nos services
+et Première visite.
+
+**Migration Sanity du 31 juillet 2026.** Le document `contactPage` porte les
+textes de la page et les motifs du formulaire. Il ne porte **aucune
+coordonnée** : elles viennent toutes de `siteSettings`.
+
+Cela a réparé un défaut de la même classe qu’à Première visite — des faits
+confirmés dans `siteSettings` que la page ne lisait pas. Les **heures du
+secrétariat** n’étaient jamais affichées alors que la page annonçait qu’elles
+étaient « en cours de validation »; le **stationnement** et l’**accessibilité**
+étaient absents des notes d’accès que la description disait « à confirmer ».
+Les trois s’affichent maintenant. Le bloc des heures disparaît de lui-même si
+l’horaire est effacé, et la carte du courriel apparaîtra seule le jour où il
+sera confirmé et rendu public.
+
+La **structure du formulaire** reste dans le code : noms de champs, types,
+longueurs, expressions de validation et messages d’erreur. Le script de
+validation les lit, et une expression mal saisie dans le Studio casserait la
+page en silence. Seule la liste des motifs se saisit, parce qu’elle suit les
+services offerts.
 
 Le formulaire Contact demeure une préparation frontend :
 
@@ -151,7 +172,11 @@ secrétaire le 10 août 2026 ou après son retour.
 ## Contenus en attente
 
 - choix, sécurité et activation du système d’envoi Contact;
-- courriel public et heures du secrétariat;
+- courriel public, toujours absent : aucune carte ne s’affiche tant qu’il n’est
+  pas confirmé;
+- heures du secrétariat saisies le 31 juillet 2026 et **affichées** sur Contact,
+  Horaires et Première visite, mais relevées sur l’ancien site et **non
+  vérifiées auprès du secrétariat**;
 - existence du feuillet papier et du programme publicitaire, à confirmer le
   11 août 2026;
 - horaires, procédures pastorales et données temporelles à réviser;

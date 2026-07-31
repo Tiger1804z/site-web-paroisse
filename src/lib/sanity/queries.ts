@@ -583,6 +583,54 @@ export const ADVERTISERS_PAGE_QUERY = defineQuery(`
   }
 `);
 
+/**
+ * Contenu propre à la page `/contact`.
+ *
+ * Aucune coordonnée n'y figure : adresse, téléphone, courriel, heures du
+ * secrétariat, stationnement et accessibilité viennent tous de `siteSettings`.
+ * Le document ne porte que les textes, et l'horaire du bloc « Heures du
+ * secrétariat » n'est pas projeté — seuls son titre et sa note le sont.
+ *
+ * La structure du formulaire n'y est pas non plus. Un `pattern` ou une longueur
+ * saisis dans le Studio casseraient la validation sans que personne le voie :
+ * seuls les textes autour du formulaire et les motifs se lisent ici.
+ */
+export const CONTACT_PAGE_QUERY = defineQuery(`
+  *[_type == "contactPage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    officeHours {
+      title,
+      note
+    },
+    methodsFallback {
+      title,
+      description
+    },
+    location {
+      title,
+      description,
+      extraNotes
+    },
+    form {
+      title,
+      introduction,
+      reasons[]{
+        _key,
+        label,
+        "value": value.current
+      },
+      unavailableNotice,
+      validationButtonLabel,
+      locallyValidNotice,
+      privacyNotice
+    }
+  }
+`);
+
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{

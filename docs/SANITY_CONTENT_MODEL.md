@@ -27,6 +27,7 @@ Application actuelle :
 | `parishEvent`     | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
 | `advertiser`      | Collections       | Une fiche d’annonceur par document, lue par `/nos-annonceurs`.       |
 | `homePage`        | Pages             | Réglages de la section des activités de l’accueil.                   |
+| `contactPage`     | Pages             | Textes de `/contact` et motifs du formulaire. Aucune coordonnée.     |
 | `schedulePage`    | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
 | `eventsPage`      | Pages             | Hero, catégories permanentes et réglages de sections.                |
 | `thriftStorePage` | Pages             | Hero, présentation, sections, textes de galerie et bloc de clôture.  |
@@ -549,3 +550,76 @@ modifier le code. Le CMS ne contient jamais de contrat complet, donnée de
 paiement, numéro de carte, secret, mot de passe, HTML arbitraire, CSS ou
 JavaScript. Il ne peut pas publier un visuel sans alt ni retirer la mention de
 transparence.
+
+## `contactPage` — migré
+
+Document unique. C'est la page où la **règle de découpage rend le plus** : le
+document ne porte que des textes, et **aucune coordonnée**.
+
+Adresse, téléphone, courriel, heures du secrétariat, stationnement,
+accessibilité, carte et lien d'itinéraire viennent tous de `siteSettings`. Ce
+sont des faits sur la paroisse, vrais indépendamment de la page, lus par
+plusieurs pages. Les recopier ici créerait une deuxième vérité à corriger.
+
+Le document contient :
+
+- `hero` — surtitre, titre, introduction;
+- `officeHours` — titre du bloc et note. **L'horaire lui-même n'y est pas**;
+- `methodsFallback` — titre et description affichés quand une coordonnée
+  publique manque encore;
+- `location` — titre, description, `extraNotes[]`;
+- `form` — titre, introduction, `reasons[]` (objet `contactReason`), avis
+  « envoi non activé », libellé du bouton, message de vérification, mention de
+  confidentialité.
+
+### La structure du formulaire n'est pas du contenu
+
+Noms de champs, types, longueurs minimales et maximales, expressions de
+validation, valeurs d'`autocomplete`, messages d'erreur : **rien de tout cela ne
+passe par le CMS**. Le script de validation les lit, et une expression mal
+saisie casserait la page sans que personne le voie. Un test interdit à la
+requête comme au schéma de porter ces champs.
+
+Seule la **liste des motifs** se saisit, parce qu'elle est éditoriale : elle
+suit les services offerts par la paroisse. Le libellé se lit, la clé sert au
+routage futur; renommer un libellé ne doit pas changer un routage, d'où la clé
+saisie plutôt que dérivée. Une liste vide laisse les motifs du code en place.
+
+### Ce que la migration a réparé
+
+Même classe de défaut qu'à Première visite, et trouvée pareillement : des faits
+confirmés dans `siteSettings` que la page ne lisait pas.
+
+- les **heures du secrétariat** n'étaient jamais affichées, et la page disait au
+  visiteur qu'elles étaient « en cours de validation »;
+- le **stationnement** et l'**accessibilité** étaient absents des notes d'accès,
+  que la description annonçait pourtant comme « à confirmer ».
+
+Les trois valeurs existaient depuis le 31 juillet 2026. La page les affiche
+maintenant, et le bloc des heures disparaît tout seul si l'horaire est effacé —
+un titre saisi dans le Studio ne le fait pas apparaître seul, il n'aurait rien à
+montrer.
+
+Le **courriel** suit la même mécanique : sa carte n'existe pas tant qu'il n'est
+pas confirmé et rendu public, et elle apparaîtra seule le jour où il le sera.
+
+### Champs supprimés plutôt que migrés
+
+Comptés à 0 rendu sur les six composants : `ContactContentStatus` en entier,
+`status`, `active` et `order` sur les coordonnées, `active` et `status` sur les
+heures du secrétariat, `status` sur le bloc de localisation. Les coordonnées ne
+sont plus une liste éditoriale à trier et filtrer : elles sont dérivées d'une
+source unique et apparaissent quand la valeur existe. Le tri et le filtre du
+getter ont disparu avec les champs.
+
+```text
+Sanity contactPage + siteSettings
+  → GROQ
+  → normalizeSanityContactPage (textes seulement)
+  → ContactPageData
+  → composants Astro existants
+```
+
+Le `seo`, `noindex` compris, et l'adresse de la politique de confidentialité
+restent des décisions de code : retirer `noindex` suppose qu'un système d'envoi
+et une politique approuvée existent, ce qui n'est pas le cas.
