@@ -1,3 +1,4 @@
+import type { SanityRenderableImage } from '@/types/sanityImage';
 export const PARISH_EVENT_TIME_ZONE = 'America/Toronto' as const;
 
 export type ParishEventCategory =
@@ -21,26 +22,7 @@ export type ParishEventTemporalStatus = 'upcoming' | 'ongoing' | 'past';
  * manipule donc pas un objet `astro:assets` mais une adresse déjà recadrée
  * selon le point focal choisi par l'éditrice.
  */
-export interface ParishEventImage {
-  readonly src: string;
-  readonly srcSet: string;
-  readonly alt: string;
-  /** Dimensions d'origine, pour réserver la place avant le chargement. */
-  readonly width?: number;
-  readonly height?: number;
-  /** Vignette floue encodée, affichée pendant le chargement. */
-  readonly lqip?: string;
-  /**
-   * Point focal choisi dans le Studio, en fractions de 0 à 1.
-   *
-   * Les cadres du site n'ont pas tous un format fixe : plusieurs s'étirent à
-   * la hauteur de leur colonne. Le recadrage se fait donc dans le navigateur,
-   * par `object-position`, et non par l'adresse de l'image.
-   */
-  readonly focalPoint?: { readonly x: number; readonly y: number };
-  readonly credit?: string;
-  readonly caption?: string;
-}
+export type ParishEventImage = SanityRenderableImage;
 
 export interface ParishEventCallToAction {
   readonly label: string;

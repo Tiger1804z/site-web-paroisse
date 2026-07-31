@@ -4,59 +4,22 @@ import type {
   PARISH_EVENT_TIME_ZONE,
 } from '@/types/parish-events';
 import type { SanityParishEventsResult } from '@/lib/sanity/types';
+// Chemin relatif, pas l'alias `@/` : ce module est chargé tel quel par
+// `node --test`, qui ne connaît pas les alias de Vite. Un import de type
+// serait effacé à la compilation, celui-ci ne l'est pas.
+import {
+  normalizeSanityImage,
+  type ImageSourceBuilder,
+} from './normalizeSanityImage.ts';
 
-type RawEvent = SanityParishEventsResult[number];
-type RawImage = NonNullable<RawEvent['coverImage']>;
-
-/**
- * Construit une adresse et un `srcset` à partir d'une image Sanity.
- *
- * Injecté plutôt qu'importé : le vrai constructeur lit `import.meta.env`, qui
- * n'existe pas sous `node --test`. Le getter fournit l'implémentation réelle,
- * les tests une doublure — et la logique de tri et de filtrage reste testable.
- */
-export type ImageSourceBuilder = (source: unknown) => {
-  src: string;
-  srcSet: string;
-};
+export type { ImageSourceBuilder };
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
 }
 
-/**
- * Une image sans fichier ou sans texte alternatif n'est pas publiable.
- *
- * Le Studio l'interdit déjà, mais un document créé avant cette règle, ou une
- * image dont l'asset a été supprimé, ne doit pas produire une balise vide.
- */
-function normalizeImage(
-  raw: RawImage | null | undefined,
-  buildSources: ImageSourceBuilder,
-): ParishEventImage | undefined {
-  const alt = cleanString(raw?.alt);
-  const image = raw?.image;
-  if (!alt || !image?.asset?._id) return undefined;
-
-  const dimensions = image.asset.metadata?.dimensions;
-  const { src, srcSet } = buildSources(image);
-  const hotspot = image.hotspot;
-
-  return {
-    src,
-    srcSet,
-    alt,
-    width: dimensions?.width ?? undefined,
-    height: dimensions?.height ?? undefined,
-    lqip: image.asset.metadata?.lqip ?? undefined,
-    focalPoint:
-      typeof hotspot?.x === 'number' && typeof hotspot?.y === 'number'
-        ? { x: hotspot.x, y: hotspot.y }
-        : undefined,
-    credit: cleanString(raw?.credit),
-  };
-}
+type RawEvent = SanityParishEventsResult[number];
 
 function normalizeEvent(
   raw: RawEvent,
@@ -88,7 +51,7 @@ function normalizeEvent(
   const phoneDigits = phone?.replace(/\D/g, '');
 
   const gallery = (raw.gallery ?? [])
-    .map((item) => normalizeImage(item, buildSources))
+    .map((item) => normalizeSanityImage(item, buildSources))
     .filter((item): item is ParishEventImage => item !== undefined);
 
   return {
@@ -136,7 +99,7 @@ function normalizeEvent(
       typeof raw.homepagePriority === 'number'
         ? raw.homepagePriority
         : undefined,
-    coverImage: normalizeImage(raw.coverImage, buildSources),
+    coverImage: normalizeSanityImage(raw.coverImage, buildSources),
     gallery: gallery.length > 0 ? gallery : undefined,
     cta:
       cleanString(raw.cta?.label) && cleanString(raw.cta?.url)
