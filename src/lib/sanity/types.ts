@@ -8,6 +8,7 @@ import type {
   THRIFT_STORE_QUERY_RESULT,
   THRIFT_STORE_PAGE_QUERY_RESULT,
   SERVICES_PAGE_QUERY_RESULT,
+  PARISH_LIFE_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
 /**
@@ -62,3 +63,11 @@ export type SanityThriftStorePageResult = THRIFT_STORE_PAGE_QUERY_RESULT;
  * Les ancres y sont déjà des chaînes : la projection extrait `slug.current`.
  */
 export type SanityServicesPageResult = SERVICES_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par PARISH_LIFE_PAGE_QUERY.
+ *
+ * Les ancres y sont déjà des chaînes : la projection extrait `slug.current`.
+ * Elles rattachent aussi l’image locale de chaque groupe.
+ */
+export type SanityParishLifePageResult = PARISH_LIFE_PAGE_QUERY_RESULT;

@@ -13,6 +13,12 @@ interface Props {
   loading?: 'lazy' | 'eager';
   fetchpriority?: 'high' | 'low' | 'auto';
   class?: string;
+  /**
+   * Les attributs `data-*` sont transmis tels quels à la balise. Sans cela, un
+   * marqueur comme `data-organic-lens-image` — que le contrôleur de lentille
+   * cherche pour retrouver ses calques — serait silencieusement perdu.
+   */
+  [key: `data-${string}`]: string | boolean | undefined;
 }
 
 const {
@@ -22,6 +28,7 @@ const {
   loading = 'lazy',
   fetchpriority = 'auto',
   class: className,
+  ...rest
 } = Astro.props;
 
 // Le point focal du Studio devient la position de recadrage du navigateur.
@@ -64,6 +71,7 @@ const inlineStyle = [
   decoding="async"
   fetchpriority={fetchpriority}
   style={inlineStyle || undefined}
+  {...rest}
 />
 
 <style>

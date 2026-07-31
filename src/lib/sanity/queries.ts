@@ -338,6 +338,84 @@ export const SERVICES_PAGE_QUERY = defineQuery(`
   }
 `);
 
+/**
+ * Contenu propre à la page `/vie-paroissiale`.
+ *
+ * Comme pour les services, les ancres sont projetées depuis `slug.current` :
+ * elles rattachent aussi l'image de chaque groupe, restée un fichier du projet.
+ * Aucune adresse de lien n'est lue — les boutons mènent tous à `/contact/`.
+ */
+export const PARISH_LIFE_PAGE_QUERY = defineQuery(`
+  *[_type == "parishLifePage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction,
+      slides[]{
+        _key,
+        label,
+        visual {
+          alt,
+          credit,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    introduction {
+      eyebrow,
+      title,
+      paragraphs,
+      confirmationNote
+    },
+    features[]{
+      "slug": slug.current,
+      eyebrow,
+      title,
+      summary,
+      highlights,
+      ctaLabel,
+      active,
+      visual {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
+    participation {
+      accent,
+      title,
+      description,
+      ctaLabel
+    }
+  }
+`);
+
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{
