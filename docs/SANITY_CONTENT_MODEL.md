@@ -27,6 +27,7 @@ Application actuelle :
 | `parishEvent`     | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
 | `advertiser`      | Collections       | Une fiche d’annonceur par document, lue par `/nos-annonceurs`.       |
 | `homePage`        | Pages             | Toutes les sections de l’accueil, carrousel photographique compris.  |
+| `aboutPage`       | Pages             | Récit, chronologie illustrée, architecture et architectes.           |
 | `contactPage`     | Pages             | Textes de `/contact` et motifs du formulaire. Aucune coordonnée.     |
 | `schedulePage`    | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
 | `eventsPage`      | Pages             | Hero, catégories permanentes et réglages de sections.                |
@@ -634,3 +635,39 @@ Sanity contactPage + siteSettings
 Le `seo`, `noindex` compris, et l'adresse de la politique de confidentialité
 restent des décisions de code : retirer `noindex` suppose qu'un système d'envoi
 et une politique approuvée existent, ce qui n'est pas le cas.
+
+## `aboutPage` — migré, chronologie comprise
+
+La page a été gardée pour la fin : ses neuf repères historiques sont tressés
+avec leurs illustrations, et un repère sans son image est un repère cassé. Les
+**neuf images ont donc suivi leur repère dans Sanity**, alors que l’image du
+hero et celle de la section d’architecture restent des fichiers du dépôt — ce
+sont des visuels de page, réservés au ticket qui les migrera tous.
+
+Conséquence assumée : si Sanity ne répond pas au build, la chronologie garde
+ses textes et perd ses cadres. Une chronologie sans images reste lisible; une
+chronologie disparue effacerait l’histoire du lieu.
+
+Huit des neuf images sont générées par intelligence artificielle, **et la page
+le dit** : chacune porte sa légende « Illustration artistique — non
+documentaire », en plus de l’avertissement général en tête de section. C’est
+l’inverse du choix fait pour les visuels d’événements, où le drapeau IA reste
+un registre éditorial : ici le sujet est historique, et laisser croire à des
+archives serait faux. Le Studio interdit d’ailleurs les deux mensonges
+symétriques — une image déclarée « illustration artistique » doit être cochée
+« générée par IA », et une image cochée « générée par IA » ne peut pas être
+présentée comme une photographie.
+
+Le numéro d’étape n’est plus saisi : il suit l’ordre de la liste, comme les
+groupes de l’accueil. Ajouter un repère au milieu du récit ne demande plus de
+renuméroter les huit autres, et le compte annoncé aux lecteurs d’écran se lit
+dans la liste au lieu d’être écrit « Neuf » en dur.
+
+**Le doute est la valeur par défaut** pour les architectes : une attribution qui
+n’est pas explicitement marquée comme confirmée reste affichée comme à
+confirmer. Les rôles de Roger D’Astous et de Jean-Paul Pothier n’ont jamais été
+validés par la paroisse.
+
+Champs supprimés, aucun rendu : `stepNumber`, `embeddedText`, `editorialStatus`
+(qui atteignait le HTML en attribut `data-*` que personne ne lisait), et les dix
+`status` éditoriaux des sections introduction, principes et architecture.

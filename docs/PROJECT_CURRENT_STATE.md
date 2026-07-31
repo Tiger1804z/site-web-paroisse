@@ -209,16 +209,18 @@ secrétaire le 10 août 2026 ou après son retour.
 
 ## Migration Sanity
 
-Treize documents sont administrés depuis le Studio : `siteSettings`,
-`massSchedule`, `parishEvent`, `advertiser`, `homePage`, `schedulePage`,
-`eventsPage`, `thriftStore` et `thriftStorePage`, `servicesPage`,
-`parishLifePage`, `firstVisitPage`, `advertisersPage`, `contactPage`.
+Quatorze documents sont administrés depuis le Studio : `siteSettings`,
+`massSchedule`, `parishEvent`, `advertiser`, `homePage`, `aboutPage`,
+`schedulePage`, `eventsPage`, `thriftStore` et `thriftStorePage`,
+`servicesPage`, `parishLifePage`, `firstVisitPage`, `advertisersPage`,
+`contactPage`.
 
-Une seule source reste un fichier du dépôt : `about`. Chaque page migrée
-conserve en plus son repli local : si Sanity ne répond pas, le site se construit
-avec le dernier contenu connu du dépôt. Deux exceptions assumées, sans repli :
-les événements et les photographies du carrousel. Un événement inventé n’aurait
-aucun sens, et une photographie n’existe que là où la paroisse l’a déposée.
+**Plus aucune page ne lit son contenu depuis un fichier du dépôt.** Chaque page
+migrée conserve en plus son repli local : si Sanity ne répond pas, le site se
+construit avec le dernier contenu connu du dépôt. Trois exceptions assumées,
+sans repli : les événements, les photographies du carrousel et les illustrations
+de la chronologie historique. Un événement inventé n’aurait aucun sens, et une
+image n’existe que là où la paroisse l’a déposée.
 
 Les images sont téléversées pour les Événements, la Vie paroissiale et Première
 visite. Les autres pages gardent leurs visuels dans `src/assets/`.
