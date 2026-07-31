@@ -12,7 +12,9 @@ Dernière mise à jour : 31 juillet 2026 — migration Sanity de Contact.
 
 - `/` : accueil enrichi, hero interactif, vitrail vivant, événements, scène
   « Vivre la paroisse », services, interlude spirituel, carrousel Galerie et
-  coordonnées confirmées;
+  coordonnées confirmées. **Toutes ses sections sont lues depuis le document
+  Sanity `homePage`**, photographies du carrousel comprises; seules les images
+  éditoriales restent locales;
 - `/notre-paroisse/` : page complète avec timeline immersive et hero
   cinématographique statique, sans lentille;
 - `/horaires/` : structure complète avec données non confirmées;
@@ -101,8 +103,14 @@ Une page Galerie autonome n’est pas utile pour l’instant. La route technique
 reste réservée comme placeholder `noindex`, mais sa définition est inactive
 dans la navigation canonique.
 
-Le carrousel de l’accueil reçoit au plus six éléments `homepageVisible` d’une
-source typée. L’image centrale est mise en valeur par un cadre éditorial; son
+Depuis le 31 juillet 2026, les photographies du carrousel sont **téléversées
+dans le Studio** : elles vivent dans `homePage.gallery.photos`, servies par le
+CDN de Sanity. L’ordre de la liste est celui du carrousel, et être dans la
+liste, c’est être visible — ni champ d’ordre, ni case « afficher ». Le plafond
+de douze est une garde technique, pas un réglage éditorial. Sans photographie
+publiable, la section disparaît de la page : il n’y a pas de repli local.
+
+L’image centrale est mise en valeur par un cadre éditorial; son
 titre, sa description et son compteur sont synchronisés. La lightbox utilise
 `<dialog>` avec fermeture `Escape`, flèches clavier et restauration du focus.
 Sans JavaScript, les images restent visibles en bande horizontale et chaque
@@ -201,15 +209,16 @@ secrétaire le 10 août 2026 ou après son retour.
 
 ## Migration Sanity
 
-Dix documents sont administrés depuis le Studio : `siteSettings`,
-`massSchedule`, `parishEvent`, `homePage`, `schedulePage`, `eventsPage`,
-`thriftStore` et `thriftStorePage`, `servicesPage`, `parishLifePage`,
-`firstVisitPage`.
+Treize documents sont administrés depuis le Studio : `siteSettings`,
+`massSchedule`, `parishEvent`, `advertiser`, `homePage`, `schedulePage`,
+`eventsPage`, `thriftStore` et `thriftStorePage`, `servicesPage`,
+`parishLifePage`, `firstVisitPage`, `advertisersPage`, `contactPage`.
 
-Quatre sources restent des fichiers du dépôt : `about`, `advertisers`,
-`contact`, `gallery`. Chaque page migrée conserve en plus son repli local : si
-Sanity ne répond pas, le site se construit avec le dernier contenu connu du
-dépôt.
+Une seule source reste un fichier du dépôt : `about`. Chaque page migrée
+conserve en plus son repli local : si Sanity ne répond pas, le site se construit
+avec le dernier contenu connu du dépôt. Deux exceptions assumées, sans repli :
+les événements et les photographies du carrousel. Un événement inventé n’aurait
+aucun sens, et une photographie n’existe que là où la paroisse l’a déposée.
 
 Les images sont téléversées pour les Événements, la Vie paroissiale et Première
 visite. Les autres pages gardent leurs visuels dans `src/assets/`.

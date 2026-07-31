@@ -26,7 +26,7 @@ Application actuelle :
 | `thriftStore`     | Données partagées | Nom, heures, emplacement et téléphone propres à la friperie.         |
 | `parishEvent`     | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
 | `advertiser`      | Collections       | Une fiche d’annonceur par document, lue par `/nos-annonceurs`.       |
-| `homePage`        | Pages             | Réglages de la section des activités de l’accueil.                   |
+| `homePage`        | Pages             | Toutes les sections de l’accueil, carrousel photographique compris.  |
 | `contactPage`     | Pages             | Textes de `/contact` et motifs du formulaire. Aucune coordonnée.     |
 | `schedulePage`    | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
 | `eventsPage`      | Pages             | Hero, catégories permanentes et réglages de sections.                |
@@ -424,35 +424,46 @@ Une valeur non confirmée est supprimée par la normalisation. `siteSettings` ne
 contiendra jamais de mot de passe SMTP, destinataire privé, clé API, secret,
 code serveur ou logique d’envoi.
 
-## `galleryItem` pour l’aperçu de l’accueil
+## `homePage` — migré, carrousel compris
 
-La page Galerie complète est différée. Une future collection `galleryItem`
-pourra d’abord administrer la sélection photographique de l’accueil.
+L’accueil est un seul document. Sept sections y sont saisissables : en-tête,
+« Ensemble », aperçu des célébrations, activités, « Vivre la paroisse »,
+services, prière, galerie et « Venez nous rencontrer ».
 
-Chaque `galleryItem` pourra contenir :
+**La galerie n’est pas devenue une collection.** Le modèle prévoyait une
+collection `galleryItem`; le tableau `homePage.gallery.photos` l’a remplacée.
+Une photographie du carrousel n’a pas de cycle de vie propre — elle n’existe
+que dans cette section, et la page Galerie autonome reste différée. Le tableau
+supprime du même coup le champ d’ordre et la case « afficher sur l’accueil » :
+l’ordre de la liste est celui du carrousel, et être dans la liste, c’est être
+visible. Si `/galerie` est un jour reprise, six documents à extraire est un
+script d’une heure — pas une raison de compliquer le Studio aujourd’hui.
 
-- image et texte alternatif obligatoire;
-- titre, description, catégorie et ordre;
-- statut de publication et état des droits;
-- mise en vedette et visibilité sur l’accueil;
-- crédit, source et date de capture facultative;
-- caractère documentaire ou artistique;
-- présence de personnes et consentement confirmé;
-- variante de composition dans une liste contrôlée.
+Quatre raisons de ne pas publier une photographie, rejouées à la lecture même
+si le Studio les empêche déjà : pas de texte alternatif, droits non confirmés,
+image générée par IA, personne reconnaissable sans consentement. Le carrousel,
+ses transitions et sa lightbox restent dans le code Astro.
 
 ```text
-Sanity galleryItem
+homePage.gallery.photos[]
   → GROQ
-  → normalisation droits / alt / consentement
+  → normalizeSanityHomeGallery → GalleryCandidate[]
+  → isGalleryItemPublic (droits / alt / IA / consentement)
   → GalleryItem[]
-  → sélection de l’accueil
 ```
 
-Le CMS ne pourra pas publier une image sans alt, aux droits en attente, ou
-montrant une personne sans consentement. Il ne pourra pas injecter de CSS,
-HTML arbitraire, JavaScript, `clip-path`, ni retirer automatiquement un crédit.
-Le carrousel, ses transitions et sa lightbox restent dans le code Astro. Un
-futur `galleryPage` ne sera préparé que si la route autonome est reprise.
+**Deux listes nomment leur source au lieu de la recopier.** Les groupes de
+« Vivre la paroisse » ne portent qu’un identifiant et une ligne d’accroche : le
+nom est lu dans `parishLifePage`, où le groupe vit. Renommer « Chorale » là-bas
+le renomme ici, et désactiver un groupe le retire des deux pages. Les raccourcis
+vers les services choisissent une destination dans une liste fermée de quatre
+ancres, et le code fabrique l’adresse. Une source inconnue fait disparaître la
+ligne — jamais un lien mort.
+
+Ne sont **pas** dans le document : les coordonnées et les heures de messe, lues
+dans `siteSettings` et `massSchedule`; les adresses des boutons, qui sont des
+routes; les textes d’état vide, qui relèvent du code; et les images des sections
+éditoriales, encore locales jusqu’au ticket des visuels de page.
 
 ## Publication et rebuild
 
