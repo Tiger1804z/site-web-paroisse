@@ -1,12 +1,13 @@
 # État actuel du projet
 
-Dernière mise à jour : 31 juillet 2026 — migration Sanity de Contact.
+Dernière mise à jour : 31 juillet 2026 — fin de la migration de contenu vers
+Sanity (accueil et Notre paroisse).
 
 > **Branche poussée, pas fusionnée.** `feature/sanity-content-migration` porte
 > la prévisualisation éditoriale (Visual Editing) et les migrations de Nos
-> services, Vie paroissiale, Première visite, Nos annonceurs et Contact. Elle
-> est publiée sur `origin` depuis le 31 juillet 2026; `main` ne l’a pas encore
-> reçue.
+> services, Vie paroissiale, Première visite, Nos annonceurs, Contact, l’accueil
+> entier et Notre paroisse. Elle est publiée sur `origin`; `main` ne l’a pas
+> encore reçue.
 
 ## Pages principales
 
@@ -15,8 +16,13 @@ Dernière mise à jour : 31 juillet 2026 — migration Sanity de Contact.
   coordonnées confirmées. **Toutes ses sections sont lues depuis le document
   Sanity `homePage`**, photographies du carrousel comprises; seules les images
   éditoriales restent locales;
-- `/notre-paroisse/` : page complète avec timeline immersive et hero
-  cinématographique statique, sans lentille;
+- `/notre-paroisse/` : page complète avec chronologie immersive et hero
+  cinématographique statique, sans lentille. Récit, neuf repères, architecture
+  et architectes lus depuis le document Sanity `aboutPage`. **Les neuf
+  illustrations de la chronologie sont téléversées** — elles ne se séparent pas
+  de leur repère — tandis que le hero et le cadre d’architecture restent des
+  fichiers du dépôt. Huit des neuf images sont générées par IA et la page le
+  déclare, image par image;
 - `/horaires/` : structure complète avec données non confirmées;
 - `/vie-paroissiale/` : page complète, hero illustré rotatif avec lentille;
   présentation, groupes **et images** lus depuis le document Sanity

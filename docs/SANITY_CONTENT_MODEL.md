@@ -1,12 +1,11 @@
-# Modèle de contenu Sanity prévu
+# Modèle de contenu Sanity
 
-Sanity n’est pas installé. Ce document décrit la frontière future afin que les
-contrats Astro actuels restent stables.
-
-> **Note du 29 juillet 2026 — Sanity est désormais installé** et les premiers
-> documents sont en production. Les sections ci-dessous restent des intentions
-> pour les pages non migrées; la règle de découpage adoptée est décrite juste
-> en dessous et prime sur elles.
+> **État au 31 juillet 2026 — la migration de contenu est terminée.** Les
+> quatorze documents décrits ici sont en production, et plus aucune page ne lit
+> son contenu depuis un fichier du dépôt. Les sections rédigées avant la
+> migration ont été conservées quand elles expliquent une décision; celles qui
+> annonçaient un modèle différent de ce qui a été construit le disent
+> explicitement. La règle de découpage ci-dessous prime sur toutes.
 
 ## Règle de découpage : données partagées et pages
 
