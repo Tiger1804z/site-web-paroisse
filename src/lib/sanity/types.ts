@@ -13,6 +13,7 @@ import type {
   ADVERTISERS_QUERY_RESULT,
   ADVERTISERS_PAGE_QUERY_RESULT,
   CONTACT_PAGE_QUERY_RESULT,
+  ABOUT_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
 /**
@@ -112,3 +113,13 @@ export type SanityAdvertisersPageResult = ADVERTISERS_PAGE_QUERY_RESULT;
  * plus — elle appartient au code.
  */
 export type SanityContactPageResult = CONTACT_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par ABOUT_PAGE_QUERY.
+ *
+ * Les illustrations de la chronologie y sont encore des objets Sanity complets
+ * — référence de fichier, point focal et rognage — parce que le constructeur
+ * d’adresses en a besoin. Le hero et le cadre d’architecture n’y figurent pas :
+ * ces images sont des fichiers du dépôt.
+ */
+export type SanityAboutPageResult = ABOUT_PAGE_QUERY_RESULT;

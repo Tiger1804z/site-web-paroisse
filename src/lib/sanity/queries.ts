@@ -774,3 +774,110 @@ export const SCHEDULE_PAGE_QUERY = defineQuery(`
     }
   }
 `);
+
+/**
+ * Contenu de la page `/notre-paroisse`.
+ *
+ * Les neuf repères remontent leur illustration complète — référence de fichier,
+ * point focal et métadonnées — parce que le constructeur d'adresses en a
+ * besoin. Le hero et le cadre d'architecture n'y figurent pas : ces images sont
+ * des fichiers du dépôt.
+ */
+export const ABOUT_PAGE_QUERY = defineQuery(`
+  *[_type == "aboutPage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    introduction {
+      eyebrow,
+      accent,
+      title,
+      paragraphs
+    },
+    history {
+      eyebrow,
+      title,
+      introduction,
+      illustrationDisclosure,
+      entries[]{
+        _key,
+        periodLabel,
+        title,
+        summary,
+        body,
+        imageKind,
+        sourceLabel,
+        disclosure,
+        image {
+          alt,
+          credit,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      },
+      epilogue {
+        eyebrow,
+        title,
+        paragraphs
+      }
+    },
+    principles {
+      eyebrow,
+      title,
+      items[]{
+        _key,
+        title,
+        description,
+        symbol
+      }
+    },
+    architecture {
+      eyebrow,
+      title,
+      paragraphs,
+      features[]{
+        _key,
+        title,
+        description
+      }
+    },
+    architects {
+      eyebrow,
+      title,
+      introduction,
+      profiles[]{
+        _key,
+        name,
+        role,
+        description,
+        confirmationRequired
+      },
+      validationCard {
+        eyebrow,
+        title,
+        text
+      }
+    },
+    closing {
+      accent,
+      title,
+      text,
+      primaryCtaLabel,
+      secondaryCtaLabel
+    }
+  }
+`);

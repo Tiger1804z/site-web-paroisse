@@ -1,17 +1,19 @@
 import type { ImageMetadata } from 'astro';
-
-export type AboutContentStatus =
-  | 'probably-stable'
-  | 'legacy-source'
-  | 'photo-source'
-  | 'to-confirm'
-  | 'temporary';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export interface AboutLink {
   readonly label: string;
   readonly href: string;
 }
 
+/**
+ * Image locale de la page.
+ *
+ * Le hero et le cadre d'architecture restent des fichiers du dépôt : ce sont
+ * des visuels de page, pas du contenu. Un ticket dédié migrera tous les visuels
+ * de page ensemble. Les illustrations de la chronologie, elles, ont suivi leur
+ * repère dans Sanity — un repère sans son image est un repère cassé.
+ */
 export interface AboutImage {
   readonly image: ImageMetadata;
   readonly alt: string;
@@ -32,28 +34,32 @@ export interface AboutIntroduction {
   readonly title: string;
   readonly paragraphs: readonly string[];
   readonly accent?: string;
-  readonly status: AboutContentStatus;
 }
 
+/**
+ * Ce que montre l'image d'un repère.
+ *
+ * Décide de la légende sous l'image et du cadre qui l'entoure. Une illustration
+ * générée n'a pas le droit de se présenter comme une archive : la distinction
+ * est portée par le contenu, pas par la mise en page.
+ */
 export type HistoryImageKind =
   'ai-illustration' | 'documentary-photo' | 'current-photo';
 
-export type HistoryEditorialStatus =
-  'accepted-source' | 'to-confirm' | 'volatile';
-
 export interface HistoryTimelineEntry {
   readonly id: string;
-  readonly stepNumber: number;
   readonly periodLabel: string;
   readonly title: string;
   readonly summary: string;
   readonly body?: readonly string[];
-  readonly image: ImageMetadata;
-  readonly imageAlt: string;
+  /**
+   * Absente si Sanity n'a pas répondu : le repli local porte les textes, pas
+   * les illustrations. Le repère s'affiche alors sans son cadre plutôt que de
+   * disparaître.
+   */
+  readonly image?: SanityRenderableImage;
   readonly imageKind: HistoryImageKind;
-  readonly embeddedText: boolean;
   readonly sourceLabel: string;
-  readonly editorialStatus: HistoryEditorialStatus;
   readonly disclosure?: string;
 }
 
@@ -73,11 +79,9 @@ export interface HistoryTimelineContent {
 export type AboutPrincipleSymbol = 'book' | 'people' | 'heart';
 
 export interface AboutPrinciple {
-  readonly id: string;
   readonly title: string;
   readonly description: string;
   readonly symbol: AboutPrincipleSymbol;
-  readonly status: AboutContentStatus;
 }
 
 export interface AboutPrinciples {
@@ -87,10 +91,8 @@ export interface AboutPrinciples {
 }
 
 export interface ArchitectureFeature {
-  readonly id: string;
   readonly title: string;
   readonly description: string;
-  readonly status: AboutContentStatus;
 }
 
 export interface AboutArchitecture {
@@ -102,7 +104,6 @@ export interface AboutArchitecture {
 }
 
 export interface ArchitectProfile {
-  readonly id: string;
   readonly name: string;
   readonly role: string;
   readonly description?: string;

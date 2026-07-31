@@ -12,6 +12,7 @@ import {firstVisitPageType} from './documents/firstVisitPageType'
 import {advertiserType} from './documents/advertiserType'
 import {advertisersPageType} from './documents/advertisersPageType'
 import {contactPageType} from './documents/contactPageType'
+import {aboutPageType} from './documents/aboutPageType'
 import {eventCategoryType} from './objects/eventCategoryType'
 import {eventImageType} from './objects/eventImageType'
 import {scheduleEntryType} from './objects/scheduleEntryType'
@@ -33,6 +34,10 @@ import {contactReasonType} from './objects/contactReasonType'
 import {homeGroupTeaserType} from './objects/homeGroupTeaserType'
 import {homeServiceLinkType} from './objects/homeServiceLinkType'
 import {galleryPhotoType} from './objects/galleryPhotoType'
+import {historyEntryType} from './objects/historyEntryType'
+import {aboutPrincipleType} from './objects/aboutPrincipleType'
+import {architectureFeatureType} from './objects/architectureFeatureType'
+import {architectProfileType} from './objects/architectProfileType'
 
 export const schemaTypes = [
   // Documents — données partagées
@@ -52,6 +57,7 @@ export const schemaTypes = [
   firstVisitPageType,
   advertisersPageType,
   contactPageType,
+  aboutPageType,
   // Objets réutilisables
   eventCategoryType,
   eventImageType,
@@ -74,4 +80,8 @@ export const schemaTypes = [
   homeGroupTeaserType,
   homeServiceLinkType,
   galleryPhotoType,
+  historyEntryType,
+  aboutPrincipleType,
+  architectureFeatureType,
+  architectProfileType,
 ]
