@@ -1,4 +1,4 @@
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '@/lib/sanity/preview';
 import { schedulePageData } from '@/data/schedules';
 import type { SchedulePageView } from '@/types/schedule';
 import { SCHEDULE_PAGE_QUERY } from '@/lib/sanity/queries';
@@ -9,7 +9,7 @@ import { getSiteSettings } from '@/lib/content/getSiteSettings';
 
 async function fetchSchedulePageRaw(): Promise<SanitySchedulePageResult> {
   try {
-    return await sanityClient.fetch(SCHEDULE_PAGE_QUERY);
+    return await loadQuery(SCHEDULE_PAGE_QUERY);
   } catch (error) {
     console.error(
       '[getSchedulePageData] Échec du fetch Sanity — utilisation du repli local.',

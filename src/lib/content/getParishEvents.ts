@@ -1,4 +1,4 @@
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '@/lib/sanity/preview';
 import {
   eventsPageSettings,
   homepageEventsSettings,
@@ -33,7 +33,7 @@ import type {
  */
 async function getParishEventSource(): Promise<readonly ParishEvent[]> {
   try {
-    const raw = await sanityClient.fetch(PARISH_EVENTS_QUERY);
+    const raw = await loadQuery(PARISH_EVENTS_QUERY);
     return normalizeSanityParishEvents(raw, (source) =>
       buildRemoteImageSources(
         source as Parameters<typeof buildRemoteImageSources>[0],
@@ -55,7 +55,7 @@ export async function getEventsPageSettings(): Promise<EventsPageSettings> {
 
 export async function getHomepageEventsSettings(): Promise<HomepageEventsSettings> {
   try {
-    const raw = await sanityClient.fetch(HOME_PAGE_QUERY);
+    const raw = await loadQuery(HOME_PAGE_QUERY);
     return normalizeSanityHomePageEvents(raw, homepageEventsSettings);
   } catch (error) {
     console.error(

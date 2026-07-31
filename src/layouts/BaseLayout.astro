@@ -4,6 +4,19 @@ import Header from '@/components/layout/Header.astro';
 import { SITE_NAME } from '@/lib/site';
 import '@/styles/global.css';
 
+/**
+ * Le test d'environnement est écrit ici, littéralement, plutôt qu'importé :
+ * Vite remplace `import.meta.env.*` par sa valeur au build, ce qui rend la
+ * branche morte évidente et fait disparaître l'import dynamique du bundle.
+ * Avec un import statique, l'île de Visual Editing était émise dans la sortie
+ * publique — 678 kB jamais servis, mais bien présents.
+ */
+const visualEditingEnabled =
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
+const VisualEditing = visualEditingEnabled
+  ? (await import('@sanity/astro/visual-editing')).VisualEditing
+  : null;
+
 interface Props {
   title: string;
   description?: string;
@@ -44,7 +57,14 @@ const documentTitle =
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta name="description" content={description} />
-    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    {
+      /* En prévisualisation, toutes les pages sont interdites d'indexation :
+         elles montrent des brouillons, qui ne doivent jamais atterrir dans un
+         moteur de recherche même si l'environnement fuit. */
+      (noIndex || visualEditingEnabled) && (
+        <meta name="robots" content="noindex, nofollow" />
+      )
+    }
     {canonicalPath && <link rel="canonical" href={canonicalPath} />}
     {
       redirectTo && (
@@ -75,5 +95,10 @@ const documentTitle =
       <slot />
     </main>
     <Footer variant={footerVariant} />
+    {
+      /* Overlays officiels de Sanity. Sans le drapeau, rien n'est rendu et
+        aucun JavaScript de Visual Editing n'est envoyé au navigateur. */
+    }
+    {VisualEditing && <VisualEditing enabled />}
   </body>
 </html>

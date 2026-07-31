@@ -1,4 +1,4 @@
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '@/lib/sanity/preview';
 import { eventsPageData } from '@/data/events';
 import type { EventsPageData } from '@/types/events';
 import { EVENTS_PAGE_QUERY } from '@/lib/sanity/queries';
@@ -14,7 +14,7 @@ import { normalizeSanityEventsPage } from '@/lib/content/normalizeSanityEventsPa
  */
 export async function fetchEventsPageRaw(): Promise<SanityEventsPageResult> {
   try {
-    return await sanityClient.fetch(EVENTS_PAGE_QUERY);
+    return await loadQuery(EVENTS_PAGE_QUERY);
   } catch (error) {
     console.error(
       '[getEventsPageData] Échec du fetch Sanity — utilisation du repli local.',

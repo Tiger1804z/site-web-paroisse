@@ -11,13 +11,14 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:public": "node scripts/build-public.mjs",
     "preview": "astro preview",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "check": "astro check",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build",
+    "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build:public",
     "sanity:typegen": "pnpm --dir studio typegen",
     "astro": "astro"
   },
@@ -29,9 +30,13 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.3",
     "groq": "^6.6.0",
+    "lodash": "4.18.1",
     "react": "^19.2.8",
+    "react-compiler-runtime": "1.0.0",
     "react-dom": "^19.2.8",
+    "react-is": "19.2.8",
     "sharp": "^0.35.3",
+    "styled-components": "^6.4.4",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {

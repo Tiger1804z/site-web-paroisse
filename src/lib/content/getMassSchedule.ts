@@ -1,4 +1,4 @@
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '@/lib/sanity/preview';
 import { massScheduleData } from '@/data/schedules';
 import type { MassScheduleData, WeeklyMassEntry } from '@/types/schedule';
 import { MASS_SCHEDULE_QUERY } from '@/lib/sanity/queries';
@@ -17,7 +17,7 @@ async function fetchMassScheduleRaw(
   context: string,
 ): Promise<SanityMassScheduleResult> {
   try {
-    return await sanityClient.fetch(MASS_SCHEDULE_QUERY);
+    return await loadQuery(MASS_SCHEDULE_QUERY);
   } catch (error) {
     console.error(
       `[${context}] Échec du fetch Sanity — utilisation du repli local.`,

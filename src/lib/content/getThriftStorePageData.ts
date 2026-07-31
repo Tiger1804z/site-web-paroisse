@@ -1,4 +1,4 @@
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '@/lib/sanity/preview';
 import { thriftStorePageData } from '@/data/thriftStore';
 import type { ThriftStorePageData } from '@/types/thriftStore';
 import {
@@ -13,7 +13,7 @@ import { normalizeSanityThriftStorePage } from '@/lib/content/normalizeSanityThr
 
 export async function fetchThriftStorePageRaw(): Promise<SanityThriftStorePageResult> {
   try {
-    return await sanityClient.fetch(THRIFT_STORE_PAGE_QUERY);
+    return await loadQuery(THRIFT_STORE_PAGE_QUERY);
   } catch (error) {
     console.error(
       '[getThriftStorePageData] Échec du fetch Sanity (page) — utilisation du repli local.',
@@ -25,7 +25,7 @@ export async function fetchThriftStorePageRaw(): Promise<SanityThriftStorePageRe
 
 export async function fetchThriftStoreRaw(): Promise<SanityThriftStoreResult> {
   try {
-    return await sanityClient.fetch(THRIFT_STORE_QUERY);
+    return await loadQuery(THRIFT_STORE_QUERY);
   } catch (error) {
     console.error(
       '[getThriftStorePageData] Échec du fetch Sanity (friperie) — utilisation du repli local.',

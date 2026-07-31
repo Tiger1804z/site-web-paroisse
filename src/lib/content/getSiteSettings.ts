@@ -1,4 +1,4 @@
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '@/lib/sanity/preview';
 import { siteSettingsData } from '@/data/siteSettings';
 import type { PublicContactDetails } from '@/types/siteSettings';
 import { SITE_SETTINGS_QUERY } from '@/lib/sanity/queries';
@@ -23,7 +23,7 @@ export async function getSiteSettings(): Promise<PublicContactDetails> {
   const fallback = getLocalFallback();
 
   try {
-    const raw = await sanityClient.fetch(SITE_SETTINGS_QUERY);
+    const raw = await loadQuery(SITE_SETTINGS_QUERY);
     return normalizeSanitySiteSettings(raw, fallback);
   } catch (error) {
     console.error(
