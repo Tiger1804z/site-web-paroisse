@@ -284,6 +284,60 @@ export const THRIFT_STORE_PAGE_QUERY = defineQuery(`
   }
 `);
 
+/**
+ * Contenu propre à la page `/nos-services`.
+ *
+ * Les ancres sont projetées depuis `slug.current` : ce sont des fragments
+ * d'adresse publique, saisis explicitement plutôt que dérivés de `_key`, qu'une
+ * réorganisation du tableau pourrait faire bouger.
+ *
+ * Ni téléphone ni bouton : tous les services renvoient au secrétariat, dont le
+ * numéro vient de `siteSettings`.
+ */
+export const SERVICES_PAGE_QUERY = defineQuery(`
+  *[_type == "servicesPage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    notice {
+      title,
+      message,
+      reviewDate
+    },
+    chapters[]{
+      "slug": slug.current,
+      eyebrow,
+      title,
+      introduction,
+      surface,
+      services[]{
+        "slug": slug.current,
+        title,
+        summary,
+        active,
+        details[]{
+          _key,
+          label,
+          value
+        },
+        steps,
+        note
+      }
+    },
+    paymentMethods {
+      title,
+      description,
+      methods
+    },
+    finalCta {
+      title,
+      description
+    }
+  }
+`);
+
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{

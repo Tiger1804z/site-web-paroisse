@@ -5,39 +5,11 @@ import communionImage from '@/assets/images/services/first-communion-candle.jpg'
 import weddingImage from '@/assets/images/services/wedding-silhouette.jpg';
 import type { PublicContactDetails } from '@/types/siteSettings';
 import { SITE_NAME } from '@/lib/site';
-import type {
-  ParishServiceDetail,
-  ServiceReviewMetadata,
-  ServicesPageData,
-} from '@/types/services';
+import type { ParishServiceDetail, ServicesPageData } from '@/types/services';
 
-const currentPublicSiteReview = {
-  sourceContext: 'current-public-site',
-  lastReviewedAt: '2026-07-27',
-  effectiveYear: 2026,
-  requiresPeriodicReview: true,
-} as const satisfies ServiceReviewMetadata;
-
-const catechesisReview = {
-  ...currentPublicSiteReview,
-  effectivePeriod: 'Août 2026 à mai 2027',
-} as const satisfies ServiceReviewMetadata;
-
-const roomRentalReview = {
-  sourceContext: 'parish-questionnaire',
-  lastReviewedAt: '2026-07-27',
-  requiresPeriodicReview: true,
-} as const satisfies ServiceReviewMetadata;
-
-const detail = (
-  label: string,
-  value: string,
-  review: ServiceReviewMetadata = currentPublicSiteReview,
-): ParishServiceDetail => ({
+const detail = (label: string, value: string): ParishServiceDetail => ({
   label,
   value,
-  confirmed: true,
-  review,
 });
 
 export function buildServicesPageData(
@@ -106,7 +78,6 @@ export function buildServicesPageData(
         introduction:
           'Chaque démarche commence par un échange avec le secrétariat afin de confirmer la préparation, les documents et les dates.',
         surface: 'ivory',
-        order: 1,
         image: {
           image: iconImage,
           alt: 'Reproduction de l’icône de Notre-Dame du Perpétuel Secours, utilisée comme œuvre d’illustration',
@@ -122,9 +93,7 @@ export function buildServicesPageData(
             title: 'Mariage',
             summary:
               'La date est confirmée avec le prêtre après un premier rendez-vous. Une préparation au mariage reconnue par la paroisse est requise.',
-            category: 'sacrament',
             active: true,
-            order: 1,
             details: [
               detail(
                 'Délai publié',
@@ -148,9 +117,7 @@ export function buildServicesPageData(
             title: 'Baptême',
             summary:
               'La préparation comprend un échange documentaire et une rencontre collective avant la célébration.',
-            category: 'sacrament',
             active: true,
-            order: 2,
             details: [
               detail('Horaire publié', 'Deuxième dimanche du mois à 14 h.'),
               detail('Rencontre publiée', 'Mardi précédant le baptême à 18 h.'),
@@ -171,24 +138,16 @@ export function buildServicesPageData(
             title: 'Première communion, confirmation et catéchuménat',
             summary:
               'Les parcours concernent les jeunes qui se préparent à la communion ou à la confirmation ainsi que les adultes non baptisés qui entreprennent un catéchuménat.',
-            category: 'pastoral',
             active: true,
-            order: 3,
             details: [
-              detail(
-                'Période publiée',
-                'De septembre 2026 à mai 2027.',
-                catechesisReview,
-              ),
+              detail('Période publiée', 'De septembre 2026 à mai 2027.'),
               detail(
                 'Inscriptions publiées',
                 '12 et 19 août 2026, de 9 h à 17 h, au secrétariat.',
-                catechesisReview,
               ),
               detail(
                 'Frais publiés',
                 '80 $ non remboursables, payables en argent comptant ou par virement Interac.',
-                catechesisReview,
               ),
             ],
             note: 'Les critères d’âge, le dossier précis et les responsables doivent être reconfirmés avant l’inscription.',
@@ -203,16 +162,13 @@ export function buildServicesPageData(
         introduction:
           'Le secrétariat oriente les familles et vérifie la disponibilité des registres ou des célébrations.',
         surface: 'paper',
-        order: 2,
         services: [
           {
             id: 'funerailles',
             title: 'Funérailles',
             summary:
               'La paroisse accompagne les familles dans la préparation d’une célébration funéraire et convient de la date directement avec elles.',
-            category: 'pastoral',
             active: true,
-            order: 1,
             details: [
               detail('Tarif 2026', '350 $; chantre et musicien en supplément.'),
             ],
@@ -223,9 +179,7 @@ export function buildServicesPageData(
             title: 'Demandes de certificats',
             summary:
               'Les demandes de certificats de baptême, de confirmation ou de mariage sont traitées par le secrétariat.',
-            category: 'administrative',
             active: true,
-            order: 2,
             details: [
               detail(
                 'Tarif 2026',
@@ -243,7 +197,6 @@ export function buildServicesPageData(
         introduction:
           'Ces demandes sont inscrites auprès du secrétariat. Une date ou une célébration spéciale demeure toujours à confirmer.',
         surface: 'charcoal',
-        order: 3,
         image: {
           image: candlesImage,
           alt: 'Lampions allumés dans un espace sombre; photographie d’illustration ne montrant pas la paroisse',
@@ -259,9 +212,7 @@ export function buildServicesPageData(
             title: 'Messes annoncées',
             summary:
               'Une intention peut être confiée pour une messe annoncée, selon les disponibilités communiquées par le secrétariat.',
-            category: 'memorial',
             active: true,
-            order: 1,
             details: [detail('Tarif 2026', '15 $ par messe annoncée.')],
             cta: phoneCta,
           },
@@ -270,9 +221,7 @@ export function buildServicesPageData(
             title: 'Lampions et lampe du sanctuaire',
             summary:
               'Un lampion ou une lampe du sanctuaire peut accompagner une intention de prière.',
-            category: 'devotional',
             active: true,
-            order: 2,
             details: [
               detail('Tarif 2026', '5 $ par lampion.'),
               detail('Tarif 2026', '5 $ pour une lampe du sanctuaire.'),
@@ -284,9 +233,7 @@ export function buildServicesPageData(
             title: 'Messes commémoratives et anniversaires',
             summary:
               'Une célébration peut être demandée à la mémoire d’une personne, sous réserve de la date convenue avec la paroisse.',
-            category: 'memorial',
             active: true,
-            order: 3,
             details: [detail('Tarif 2026', '150 $, sans musicien ni chantre.')],
             cta: phoneCta,
           },
@@ -295,9 +242,7 @@ export function buildServicesPageData(
             title: 'Célébrations spéciales',
             summary:
               'Le site actuel annonce une commémoration des défunts le 2 novembre et une journée de prière pour les personnes malades le 11 février.',
-            category: 'devotional',
             active: true,
-            order: 4,
             details: [
               detail(
                 'Inscriptions publiées',
@@ -316,32 +261,20 @@ export function buildServicesPageData(
         introduction:
           'La disponibilité est vérifiée manuellement afin d’éviter toute promesse de réservation qui ne pourrait pas être tenue.',
         surface: 'burgundy',
-        order: 4,
         services: [
           {
             id: 'demande-location',
             title: 'Une demande traitée avec le secrétariat',
             summary:
               'Une salle peut être offerte sur demande. Le secrétariat communique les tarifs et les disponibilités, confirme la réservation directement avec la personne et remet le contrat à signer le jour de la réservation.',
-            category: 'facility',
             active: true,
-            order: 1,
             details: [
               detail(
                 'Disponibilité',
                 'Communiquée directement par le secrétariat; aucun calendrier public automatique.',
-                roomRentalReview,
               ),
-              detail(
-                'Réservation',
-                'Confirmée directement avec la paroisse.',
-                roomRentalReview,
-              ),
-              detail(
-                'Contrat',
-                'Remis et signé le jour de la réservation.',
-                roomRentalReview,
-              ),
+              detail('Réservation', 'Confirmée directement avec la paroisse.'),
+              detail('Contrat', 'Remis et signé le jour de la réservation.'),
             ],
             note: 'Aucune capacité, aucun tarif, aucun équipement ni aucune heure disponible ne sont publiés avant confirmation.',
             cta: phoneCta,
@@ -354,7 +287,6 @@ export function buildServicesPageData(
       description:
         'Le site actuel mentionne ces modes pour les démarches admissibles. Le secrétariat confirme le mode applicable à chaque demande.',
       methods: ['Argent comptant', 'Chèque', 'Virement Interac'],
-      review: currentPublicSiteReview,
     },
     finalCta: {
       title: 'Parler de votre démarche',

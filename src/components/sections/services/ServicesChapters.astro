@@ -10,12 +10,12 @@ interface Props {
 }
 
 const { chapters } = Astro.props;
-const orderedChapters = [...chapters].sort((a, b) => a.order - b.order);
 
-const orderedServices = (chapter: ParishServiceChapter) =>
-  [...chapter.services]
-    .filter((service) => service.active)
-    .sort((a, b) => a.order - b.order);
+// L'ordre du tableau fait foi — celui du Studio comme celui du repli local.
+const orderedChapters = chapters;
+
+const visibleServices = (chapter: ParishServiceChapter) =>
+  chapter.services.filter((service) => service.active);
 ---
 
 <div class="services-chapters">
@@ -66,7 +66,7 @@ const orderedServices = (chapter: ParishServiceChapter) =>
           </div>
 
           <div class="services-chapter__list" data-motion-stagger>
-            {orderedServices(chapter).map((service, index) => (
+            {visibleServices(chapter).map((service, index) => (
               <article
                 id={service.id}
                 class="service-entry"

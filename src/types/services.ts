@@ -1,13 +1,5 @@
 import type { ImageMetadata } from 'astro';
 
-export type ParishServiceCategory =
-  | 'sacrament'
-  | 'pastoral'
-  | 'memorial'
-  | 'administrative'
-  | 'devotional'
-  | 'facility';
-
 export type ServiceSurface = 'ivory' | 'paper' | 'charcoal' | 'burgundy';
 
 export interface ServicesCallToAction {
@@ -15,19 +7,16 @@ export interface ServicesCallToAction {
   readonly href: string;
 }
 
-export interface ServiceReviewMetadata {
-  readonly sourceContext: 'current-public-site' | 'parish-questionnaire';
-  readonly lastReviewedAt: string;
-  readonly effectiveYear?: number;
-  readonly effectivePeriod?: string;
-  readonly requiresPeriodicReview: boolean;
-}
-
+/**
+ * Une ligne de renseignement affichée sous un service.
+ *
+ * Le booléen `confirmed` et le bloc de métadonnées de révision qui vivaient ici
+ * ont disparu en migrant : aucun composant ne les rendait, et `confirmed` valait
+ * toujours vrai. La seule date de révision publiée est celle de `notice`.
+ */
 export interface ParishServiceDetail {
   readonly label: string;
   readonly value: string;
-  readonly confirmed: boolean;
-  readonly review?: ServiceReviewMetadata;
 }
 
 export interface ServicesEditorialImage {
@@ -39,13 +28,18 @@ export interface ServicesEditorialImage {
   readonly frame: 'arch' | 'landscape' | 'organic' | 'oval' | 'portrait-offset';
 }
 
+/**
+ * `id` est l'ancre publique de la section, pas une clé technique : le sommaire
+ * et la redirection de `/location-de-salle/` s'en servent.
+ *
+ * `order` a disparu : l'ordre du tableau fait foi, dans Sanity comme dans le
+ * repli local. `category` aussi — aucun composant ne la lisait.
+ */
 export interface ParishService {
   readonly id: string;
   readonly title: string;
   readonly summary: string;
-  readonly category: ParishServiceCategory;
   readonly active: boolean;
-  readonly order: number;
   readonly details?: readonly ParishServiceDetail[];
   readonly steps?: readonly string[];
   readonly note?: string;
@@ -58,7 +52,6 @@ export interface ParishServiceChapter {
   readonly title: string;
   readonly introduction: string;
   readonly surface: ServiceSurface;
-  readonly order: number;
   readonly services: readonly ParishService[];
   readonly image?: ServicesEditorialImage;
 }
@@ -87,7 +80,6 @@ export interface ServicesPageData {
     readonly title: string;
     readonly description: string;
     readonly methods: readonly string[];
-    readonly review: ServiceReviewMetadata;
   };
   readonly finalCta: {
     readonly title: string;

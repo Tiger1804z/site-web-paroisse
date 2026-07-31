@@ -6,6 +6,7 @@ import {eventsPageType} from './documents/eventsPageType'
 import {homePageType} from './documents/homePageType'
 import {schedulePageType} from './documents/schedulePageType'
 import {thriftStorePageType} from './documents/thriftStorePageType'
+import {servicesPageType} from './documents/servicesPageType'
 import {eventCategoryType} from './objects/eventCategoryType'
 import {eventImageType} from './objects/eventImageType'
 import {scheduleEntryType} from './objects/scheduleEntryType'
@@ -14,6 +15,9 @@ import {scheduleNoticeType} from './objects/scheduleNoticeType'
 import {schedulePeriodType} from './objects/schedulePeriodType'
 import {thriftStoreCtaType} from './objects/thriftStoreCtaType'
 import {thriftStoreSectionType} from './objects/thriftStoreSectionType'
+import {serviceChapterType} from './objects/serviceChapterType'
+import {serviceDetailType} from './objects/serviceDetailType'
+import {parishServiceType} from './objects/parishServiceType'
 
 export const schemaTypes = [
   // Documents — données partagées
@@ -27,6 +31,7 @@ export const schemaTypes = [
   schedulePageType,
   eventsPageType,
   thriftStorePageType,
+  servicesPageType,
   // Objets réutilisables
   eventCategoryType,
   eventImageType,
@@ -36,4 +41,7 @@ export const schemaTypes = [
   schedulePeriodType,
   thriftStoreCtaType,
   thriftStoreSectionType,
+  serviceChapterType,
+  parishServiceType,
+  serviceDetailType,
 ]
