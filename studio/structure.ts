@@ -17,6 +17,7 @@ const SINGLETONS = [
   'thriftStorePage',
   'servicesPage',
   'parishLifePage',
+  'firstVisitPage',
 ]
 
 // Les collections ont leur propre section : ce sont des documents multiples,
@@ -87,6 +88,10 @@ export const structure: StructureResolver = (S) =>
                 .title('Page Vie paroissiale')
                 .icon(DocumentTextIcon)
                 .child(S.document().schemaType('parishLifePage').documentId('parishLifePage')),
+              S.listItem()
+                .title('Page Première visite')
+                .icon(DocumentTextIcon)
+                .child(S.document().schemaType('firstVisitPage').documentId('firstVisitPage')),
               S.listItem()
                 .title('Page Friperie')
                 .icon(DocumentTextIcon)

@@ -8,6 +8,7 @@ import {schedulePageType} from './documents/schedulePageType'
 import {thriftStorePageType} from './documents/thriftStorePageType'
 import {servicesPageType} from './documents/servicesPageType'
 import {parishLifePageType} from './documents/parishLifePageType'
+import {firstVisitPageType} from './documents/firstVisitPageType'
 import {eventCategoryType} from './objects/eventCategoryType'
 import {eventImageType} from './objects/eventImageType'
 import {scheduleEntryType} from './objects/scheduleEntryType'
@@ -21,6 +22,10 @@ import {serviceDetailType} from './objects/serviceDetailType'
 import {parishServiceType} from './objects/parishServiceType'
 import {parishGroupType} from './objects/parishGroupType'
 import {heroSlideType} from './objects/heroSlideType'
+import {visitStepType} from './objects/visitStepType'
+import {expectationItemType} from './objects/expectationItemType'
+import {practicalInfoItemType} from './objects/practicalInfoItemType'
+import {firstVisitFaqItemType} from './objects/firstVisitFaqItemType'
 
 export const schemaTypes = [
   // Documents — données partagées
@@ -36,6 +41,7 @@ export const schemaTypes = [
   thriftStorePageType,
   servicesPageType,
   parishLifePageType,
+  firstVisitPageType,
   // Objets réutilisables
   eventCategoryType,
   eventImageType,
@@ -50,4 +56,8 @@ export const schemaTypes = [
   serviceDetailType,
   parishGroupType,
   heroSlideType,
+  visitStepType,
+  expectationItemType,
+  practicalInfoItemType,
+  firstVisitFaqItemType,
 ]

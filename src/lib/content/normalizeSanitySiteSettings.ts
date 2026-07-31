@@ -75,5 +75,11 @@ export function normalizeSanitySiteSettings(
     // affichent toutes la même valeur, corrigée à un seul endroit.
     officeHoursLabel:
       cleanString(raw?.officeHours) ?? fallback.officeHoursLabel,
+    // Faits sur le lieu, pas contenu de page : le champ existait dans le schéma
+    // depuis S1-T14 sans jamais être projeté. C’est Première visite qui les
+    // consomme la première.
+    parkingLabel: cleanString(raw?.parkingInformation) ?? fallback.parkingLabel,
+    accessibilityLabel:
+      cleanString(raw?.accessibilityInformation) ?? fallback.accessibilityLabel,
   };
 }

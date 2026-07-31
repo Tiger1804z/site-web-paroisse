@@ -13,7 +13,9 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     phone,
     publicEmail,
     showPublicEmail,
-    officeHours
+    officeHours,
+    parkingInformation,
+    accessibilityInformation
   }
 `);
 
@@ -412,6 +414,93 @@ export const PARISH_LIFE_PAGE_QUERY = defineQuery(`
       title,
       description,
       ctaLabel
+    }
+  }
+`);
+
+/**
+ * Contenu propre à la page `/premiere-visite`.
+ *
+ * Les lignes d'informations pratiques ne rapportent que leur source, jamais une
+ * adresse ni un téléphone : ces valeurs vivent dans `siteSettings` et le getter
+ * les y lit séparément. Une jointure GROQ n'apporterait rien — il n'y a qu'un
+ * seul jeu de coordonnées, déjà chargé par ailleurs.
+ */
+export const FIRST_VISIT_PAGE_QUERY = defineQuery(`
+  *[_type == "firstVisitPage"][0]{
+    seo {
+      title,
+      description
+    },
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    preparation {
+      eyebrow,
+      title,
+      introduction,
+      steps[]{
+        _key,
+        numberLabel,
+        title,
+        description,
+        note
+      }
+    },
+    expectations {
+      eyebrow,
+      title,
+      introduction,
+      items[]{
+        _key,
+        title,
+        description
+      }
+    },
+    practicalInformation {
+      eyebrow,
+      title,
+      items[]{
+        _key,
+        label,
+        source,
+        value,
+        linkLabel,
+        linkTarget
+      },
+      primaryCtaLabel,
+      primaryCtaTarget,
+      secondaryCtaLabel,
+      secondaryCtaTarget,
+      imageCaption,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
+    faq {
+      title,
+      items[]{
+        _key,
+        question,
+        answer
+      }
     }
   }
 `);

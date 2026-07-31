@@ -33,4 +33,12 @@ export const siteSettingsData = {
   // Relevé le 29 juillet 2026 sur le site actuel de la paroisse.
   officeHoursLabel:
     'Mardi et jeudi de 9 h à 14 h 30 (appels), mercredi de 9 h à 16 h (bureau ouvert)',
+  // Confirmés par la paroisse le 31 juillet 2026.
+  parkingLabel:
+    'L’église n’a pas de stationnement réservé aux visiteurs. Le stationnement se fait dans les rues avoisinantes : rue Denis-Papin, rue Parc René-Goupil et 25e Avenue. La disponibilité varie selon le jour et l’heure.',
+  // Ne dit que ce qui est confirmé : la rampe extérieure. L’accessibilité de
+  // l’intérieur n’a pas été vérifiée, et l’annoncer ferait déplacer quelqu’un
+  // pour rien.
+  accessibilityLabel:
+    'Une rampe d’accès donne sur la rue Parc René-Goupil. Pour un besoin particulier, communiquez avec le secrétariat avant votre visite.',
 } as const satisfies PublicContactDetails;

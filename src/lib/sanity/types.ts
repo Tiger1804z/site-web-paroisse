@@ -9,6 +9,7 @@ import type {
   THRIFT_STORE_PAGE_QUERY_RESULT,
   SERVICES_PAGE_QUERY_RESULT,
   PARISH_LIFE_PAGE_QUERY_RESULT,
+  FIRST_VISIT_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
 /**
@@ -71,3 +72,13 @@ export type SanityServicesPageResult = SERVICES_PAGE_QUERY_RESULT;
  * Elles rattachent aussi l’image locale de chaque groupe.
  */
 export type SanityParishLifePageResult = PARISH_LIFE_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du document firstVisitPage tel que renvoyé par
+ * FIRST_VISIT_PAGE_QUERY.
+ *
+ * Les lignes d’informations pratiques n’y portent que leur source : les valeurs
+ * partagées (adresse, téléphone, stationnement, accessibilité) arrivent par
+ * `SanitySiteSettingsResult`, et le getter recompose les deux.
+ */
+export type SanityFirstVisitPageResult = FIRST_VISIT_PAGE_QUERY_RESULT;

@@ -41,4 +41,19 @@ export interface PublicContactDetails {
    * Première visite. Absente tant que la paroisse ne l’a pas confirmée.
    */
   readonly officeHoursLabel?: string;
+  /**
+   * Informations de stationnement, en une ligne prête à afficher.
+   *
+   * Même statut que `officeHoursLabel` : c’est un fait sur le lieu, vrai
+   * indépendamment de la page qui l’affiche. Absent tant que la paroisse ne
+   * l’a pas confirmé.
+   */
+  readonly parkingLabel?: string;
+  /**
+   * Informations d’accessibilité, en une ligne prête à afficher.
+   *
+   * Absent tant que la paroisse ne l’a pas confirmé — et il vaut mieux ne rien
+   * afficher qu’annoncer un accès dont personne n’a vérifié la réalité.
+   */
+  readonly accessibilityLabel?: string;
 }
