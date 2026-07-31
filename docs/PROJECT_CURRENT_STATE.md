@@ -2,10 +2,11 @@
 
 Dernière mise à jour : 31 juillet 2026 — migration Sanity de Contact.
 
-> **Travail non poussé.** La branche `feature/sanity-content-migration` porte la
-> prévisualisation éditoriale (Visual Editing) et les migrations de Nos
-> services, Vie paroissiale, Première visite, Nos annonceurs et Contact. Rien
-> n’est poussé ni fusionné.
+> **Branche poussée, pas fusionnée.** `feature/sanity-content-migration` porte
+> la prévisualisation éditoriale (Visual Editing) et les migrations de Nos
+> services, Vie paroissiale, Première visite, Nos annonceurs et Contact. Elle
+> est publiée sur `origin` depuis le 31 juillet 2026; `main` ne l’a pas encore
+> reçue.
 
 ## Pages principales
 
