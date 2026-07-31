@@ -505,6 +505,84 @@ export const FIRST_VISIT_PAGE_QUERY = defineQuery(`
   }
 `);
 
+/**
+ * Annonceurs — collection lue par la seule page `/nos-annonceurs`.
+ *
+ * Une collection, et non une liste dans le document de page : une fiche arrive,
+ * se confirme et se retire sans que le reste de la page bouge.
+ *
+ * `status` est projeté au lieu d'être filtré ici : c'est `selectAdvertisers()`
+ * qui décide, et il décide aussi pour le repli local. Filtrer en GROQ ferait
+ * diverger les deux origines.
+ *
+ * `confirmationNote` n'est **pas** projetée. C'est une note de révision interne,
+ * saisissable dans le Studio et qui n'a rien à faire dans le HTML public.
+ */
+export const ADVERTISERS_QUERY = defineQuery(`
+  *[_type == "advertiser"] | order(order asc, name asc){
+    _id,
+    name,
+    category,
+    description,
+    addressLines,
+    phone,
+    email,
+    website,
+    status,
+    order,
+    logo {
+      alt,
+      credit,
+      image {
+        ...,
+        asset->{
+          _id,
+          metadata {
+            lqip,
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
+/**
+ * Contenu propre à la page `/nos-annonceurs` : ni fiche d'annonceur, ni
+ * téléphone du secrétariat, qui vient de `siteSettings`.
+ */
+export const ADVERTISERS_PAGE_QUERY = defineQuery(`
+  *[_type == "advertisersPage"][0]{
+    hero {
+      eyebrow,
+      title,
+      introduction
+    },
+    introduction {
+      eyebrow,
+      title,
+      paragraphs,
+      disclosure
+    },
+    solicitation {
+      eyebrow,
+      title,
+      description,
+      details,
+      phoneLabel,
+      contactLabel
+    },
+    settings {
+      showAdvertisers,
+      showSolicitation
+    }
+  }
+`);
+
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{

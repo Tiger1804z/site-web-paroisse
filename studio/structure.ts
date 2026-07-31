@@ -18,11 +18,12 @@ const SINGLETONS = [
   'servicesPage',
   'parishLifePage',
   'firstVisitPage',
+  'advertisersPage',
 ]
 
 // Les collections ont leur propre section : ce sont des documents multiples,
 // pas des réglages uniques.
-const COLLECTIONS = ['parishEvent']
+const COLLECTIONS = ['parishEvent', 'advertiser']
 
 /**
  * Deux sections, pour rendre visible la distinction du modèle de contenu :
@@ -59,7 +60,10 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.list()
             .title('Collections')
-            .items([S.documentTypeListItem('parishEvent').title('Événements')]),
+            .items([
+              S.documentTypeListItem('parishEvent').title('Événements'),
+              S.documentTypeListItem('advertiser').title('Annonceurs'),
+            ]),
         ),
       S.listItem()
         .title('Pages')
@@ -92,6 +96,10 @@ export const structure: StructureResolver = (S) =>
                 .title('Page Première visite')
                 .icon(DocumentTextIcon)
                 .child(S.document().schemaType('firstVisitPage').documentId('firstVisitPage')),
+              S.listItem()
+                .title('Page Nos annonceurs')
+                .icon(DocumentTextIcon)
+                .child(S.document().schemaType('advertisersPage').documentId('advertisersPage')),
               S.listItem()
                 .title('Page Friperie')
                 .icon(DocumentTextIcon)

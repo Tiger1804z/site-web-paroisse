@@ -10,6 +10,8 @@ import type {
   SERVICES_PAGE_QUERY_RESULT,
   PARISH_LIFE_PAGE_QUERY_RESULT,
   FIRST_VISIT_PAGE_QUERY_RESULT,
+  ADVERTISERS_QUERY_RESULT,
+  ADVERTISERS_PAGE_QUERY_RESULT,
 } from '@/lib/sanity/sanity.types';
 
 /**
@@ -82,3 +84,15 @@ export type SanityParishLifePageResult = PARISH_LIFE_PAGE_QUERY_RESULT;
  * `SanitySiteSettingsResult`, et le getter recompose les deux.
  */
 export type SanityFirstVisitPageResult = FIRST_VISIT_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut de la collection d’annonceurs renvoyée par ADVERTISERS_QUERY.
+ *
+ * Déjà triée par la requête (`order` puis `name`), mais pas filtrée : le statut
+ * y est encore présent, et c’est `selectAdvertisers()` qui écarte ce qui ne se
+ * publie pas.
+ */
+export type SanityAdvertisersResult = ADVERTISERS_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par ADVERTISERS_PAGE_QUERY. */
+export type SanityAdvertisersPageResult = ADVERTISERS_PAGE_QUERY_RESULT;

@@ -1,11 +1,12 @@
 # État actuel du projet
 
-Dernière mise à jour : 31 juillet 2026 — migration Sanity de Première visite,
-image comprise.
+Dernière mise à jour : 31 juillet 2026 — migration Sanity de Nos annonceurs,
+collection comprise.
 
-> **Travail non commité.** La branche `feature/sanity-content-migration` porte
-> en working tree la prévisualisation éditoriale (Visual Editing), les deux
-> migrations du 30 juillet et celle du 31. Rien n’est poussé ni fusionné.
+> **Travail non poussé.** La branche `feature/sanity-content-migration` porte la
+> prévisualisation éditoriale (Visual Editing) et les migrations de Nos
+> services, Vie paroissiale, Première visite et Nos annonceurs. Rien n’est
+> poussé ni fusionné.
 
 ## Pages principales
 
@@ -38,8 +39,10 @@ image comprise.
 - `/friperie/` : page complète et indexable, informations pratiques réelles,
   visuels thématiques sous licence Pixabay;
 - `/contact/` : frontend complet `noindex`, validation locale seulement;
-- `/nos-annonceurs/` : page complète `noindex`, aucun annonceur historique
-  publié avant confirmation;
+- `/nos-annonceurs/` : page complète `noindex`; les quatre fiches historiques
+  sont publiées et lues depuis la collection Sanity `advertiser`, le contenu de
+  page depuis `advertisersPage`. Aucun portrait n’est repris, et le champ image
+  de chaque fiche reste vide tant qu’un logo n’est pas téléversé;
 - `/galerie/` : placeholder `noindex`, volontairement absent de la navigation.
 
 ## Contact et coordonnées publiques
@@ -110,18 +113,40 @@ La nouvelle route `/nos-annonceurs/` est active dans la source canonique de
 navigation. L’ancienne route locale `/merci-a-nos-annonceurs/` est un alias
 `noindex` avec canonical et redirection HTML.
 
+**Contenu migré vers Sanity le 31 juillet 2026** : la collection `advertiser` et
+le document `advertisersPage`. La révision du 10 août se fait donc dans le
+Studio, fiche par fiche, sans changement de code.
+
 L’audit historique a relevé Buffet Marina ainsi que trois placements composés
 des portraits et coordonnées de Frantz Benjamin, Josué Corvil et Patricia
-Lattanzio. Les quatre entrées sont conservées comme
-`confirmation-required`; aucune n’est rendue par le getter public. Les images
-Google Sites n’ont pas été importées, car les droits et les consentements ne
-sont pas documentés.
+Lattanzio.
 
-La page affiche une introduction et le bloc « Devenir annonceur » même sans
-annonceur actif. Le téléphone du secrétariat vient de `siteSettings`; aucun
-tarif, espace disponible ou formulaire publicitaire n’est inventé. La liste,
-les ententes, les coordonnées et les logos doivent être revus avec la
-secrétaire le 10 août 2026 ou après son retour avant de retirer `noindex`.
+**Les quatre fiches sont publiées, en statut `active`, depuis le 31 juillet 2026.** Décision de l’administratrice du site : ces placements figurent encore
+sur l’ancien site de la paroisse, donc les reprendre est la continuité de ce qui
+est déjà en ligne, pas une divulgation nouvelle. Ce n’est pas au site de décider
+à la place de la paroisse; la secrétaire retire une fiche en la passant à
+« Inactif ». Chaque fiche garde sa note de révision interne, invisible du
+public.
+
+Les images Google Sites n’ont pas été importées, car les droits et les
+consentements ne sont pas documentés : **aucun portrait n’est publié**, seules
+les coordonnées déjà affichées le sont. Sans image, une fiche affiche les
+initiales du nom; le champ image reste vide par défaut et se remplit dans le
+Studio.
+
+Trois textes ont été réécrits en même temps, parce qu’ils devenaient faux une
+fois les fiches publiées : la description de Buffet Marina (qui contenait sa
+propre condition de révision), le titre « Les annonceurs confirmés », et le
+paragraphe affirmant qu’une présence n’apparaît qu’après confirmation. Ce
+dernier annonce désormais la marche à suivre pour corriger ou retirer une fiche.
+
+La page affiche l’introduction et le bloc « Devenir annonceur » même sans
+annonceur actif : la case « Afficher la liste » autorise la section, elle ne la
+remplit pas, et une grille vide ne s’affiche jamais. Le téléphone du secrétariat
+vient de `siteSettings`; aucun tarif, espace disponible ou formulaire
+publicitaire n’est inventé. La page reste `noindex` : les ententes, les
+coordonnées, les fonctions des élus et les logos restent à revoir avec la
+secrétaire le 10 août 2026 ou après son retour.
 
 ## Contenus en attente
 

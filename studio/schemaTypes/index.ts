@@ -9,6 +9,8 @@ import {thriftStorePageType} from './documents/thriftStorePageType'
 import {servicesPageType} from './documents/servicesPageType'
 import {parishLifePageType} from './documents/parishLifePageType'
 import {firstVisitPageType} from './documents/firstVisitPageType'
+import {advertiserType} from './documents/advertiserType'
+import {advertisersPageType} from './documents/advertisersPageType'
 import {eventCategoryType} from './objects/eventCategoryType'
 import {eventImageType} from './objects/eventImageType'
 import {scheduleEntryType} from './objects/scheduleEntryType'
@@ -34,6 +36,7 @@ export const schemaTypes = [
   thriftStoreType,
   // Documents — collections
   parishEventType,
+  advertiserType,
   // Documents — pages
   homePageType,
   schedulePageType,
@@ -42,6 +45,7 @@ export const schemaTypes = [
   servicesPageType,
   parishLifePageType,
   firstVisitPageType,
+  advertisersPageType,
   // Objets réutilisables
   eventCategoryType,
   eventImageType,

@@ -666,9 +666,9 @@ Trois règles tiennent l'ensemble :
 
 Migré : `siteSettings`, `massSchedule`, `parishEvent`, `homePage`,
 `schedulePage`, `eventsPage`, `thriftStore` + `thriftStorePage`, `servicesPage`,
-`parishLifePage`, `firstVisitPage`.
+`parishLifePage`, `firstVisitPage`, `advertiser` + `advertisersPage`.
 
-Encore dans `src/data/` : `about`, `advertisers`, `contact`, `gallery`.
+Encore dans `src/data/` : `about`, `contact`, `gallery`.
 
 ### Découpage des documents
 

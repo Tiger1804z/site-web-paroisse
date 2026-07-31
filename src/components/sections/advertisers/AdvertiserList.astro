@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { Advertiser } from '@/types/advertisers';
 
 interface Props {
@@ -23,7 +23,7 @@ const initialsFor = (name: string) =>
   <Container>
     <div class="advertiser-list__heading" data-motion-reveal>
       <p class="type-eyebrow">Avec gratitude</p>
-      <h2 id="advertiser-list-title">Les annonceurs confirmés</h2>
+      <h2 id="advertiser-list-title">Les annonceurs de la paroisse</h2>
       <p>
         Les présences ci-dessous sont des placements publicitaires distincts du
         contenu éditorial de la paroisse.
@@ -35,11 +35,9 @@ const initialsFor = (name: string) =>
         advertisers.map((advertiser) => (
           <article class="advertiser-card" data-motion-item>
             <div class="advertiser-card__identity">
-              {advertiser.logo?.status === 'confirmed' ? (
-                <Image
-                  src={advertiser.logo.image}
-                  alt={advertiser.logo.alt}
-                  widths={[240, 360, 480]}
+              {advertiser.logo ? (
+                <RemoteImage
+                  image={advertiser.logo}
                   sizes="(min-width: 64rem) 18rem, 70vw"
                   loading="lazy"
                 />
@@ -75,7 +73,7 @@ const initialsFor = (name: string) =>
 
               {advertiser.website && (
                 <Button
-                  href={advertiser.website.href}
+                  href={advertiser.website}
                   variant="secondary"
                   target="_blank"
                   rel="sponsored noopener noreferrer"

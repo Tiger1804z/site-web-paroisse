@@ -25,6 +25,7 @@ Application actuelle :
 | `massSchedule`    | Données partagées | Horaires réguliers et saisonniers, date de vérification.             |
 | `thriftStore`     | Données partagées | Nom, heures, emplacement et téléphone propres à la friperie.         |
 | `parishEvent`     | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
+| `advertiser`      | Collections       | Une fiche d’annonceur par document, lue par `/nos-annonceurs`.       |
 | `homePage`        | Pages             | Réglages de la section des activités de l’accueil.                   |
 | `schedulePage`    | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
 | `eventsPage`      | Pages             | Hero, catégories permanentes et réglages de sections.                |
@@ -460,35 +461,91 @@ sans modification éditoriale. Le site conservera ainsi une génération
 statique : Astro produit une nouvelle version HTML, puis le navigateur la
 reçoit sans application React de calendrier.
 
-## `advertiser` et `advertisersPage`
+## `advertiser` et `advertisersPage` — migrés
 
-Une future collection `advertiser` pourra contenir :
+Une **collection** et un document de page. Une fiche d’annonceur arrive, se
+confirme, se retire, sans que le reste de la page bouge : c’est la définition
+d’un cycle de vie propre, et donc d’une collection. C’est le seul cas, avec les
+événements, où une liste ne vit pas dans son document de page.
 
-- nom, slug, catégorie et description;
-- adresse, téléphone, courriel et site Web;
-- logo et images avec texte alternatif, crédit et statut de droit;
-- statut éditorial, ordre et mise en avant;
-- dates de début et de fin facultatives;
-- date de dernière confirmation et note interne.
+La collection `advertiser` contient :
 
-Le document `advertisersPage` pourra administrer le hero, l’introduction,
-l’activation de la liste, le bloc « Devenir annonceur » et ses CTA.
+- `name`, `category`, `description`;
+- `addressLines[]`, `phone`, `email`, `website`;
+- `logo` (objet `eventImage` réutilisé);
+- `status`, `order`;
+- `confirmationNote` — note de révision interne.
+
+Le document `advertisersPage` administre `hero`, `introduction` (dont la mention
+de transparence), `solicitation` et `settings`.
 
 ```text
 Sanity advertiser + advertisersPage + siteSettings
   → GROQ
-  → normalisation statut / dates / droits
+  → normalisation + selectAdvertisers()
   → AdvertisersPageData
   → composants Astro existants
 ```
 
-Seuls les annonceurs `active`, non expirés, avec des coordonnées et des droits
-valides seront normalisés pour la publication. Une date de fin nécessitera un
-rebuild périodique selon `America/Toronto`; en l’absence de date réelle, le
-statut éditorial explicite reste la seule source de décision.
+### Le statut est un champ, pas l’état de publication de Sanity
 
-La paroisse pourra ajouter, masquer, réordonner ou mettre à jour une fiche sans
-modifier le code. Le CMS ne contiendra jamais de contrat complet, donnée de
+Un brouillon Sanity veut dire « modification en cours ». Une fiche d’annonceur à
+confirmer n’est pas une modification en cours : c’est une entente dont personne
+n’a encore vérifié qu’elle existe. Confondre les deux ferait disparaître une
+fiche du Studio dès qu’on la corrige.
+
+`status` vaut donc `active`, `confirmation-required`, `draft` ou `inactive`, et
+**seul `active` s’affiche**. Une valeur inconnue retombe sur `draft` : ce que le
+code ne comprend pas ne doit jamais ouvrir la publication.
+
+Les quatre fiches historiques sont `active` depuis le 31 juillet 2026 : elles
+figurent encore sur l’ancien site de la paroisse. Le retrait se fait dans le
+Studio, en passant la fiche à « Inactif ». Voir
+`docs/ADVERTISERS_CONTENT_AUDIT.md`.
+
+Le filtrage n’est **pas** fait en GROQ. `selectAdvertisers()` décide, et il
+décide aussi pour le repli local — les deux origines passent par le même code.
+
+### Trois champs qui ne se saisissent pas deux fois
+
+- le **lien d’appel** est reconstruit à partir des chiffres du téléphone
+  affiché; un numéro qui n’a pas dix chiffres n’obtient pas de lien;
+- le **`mailto:`** est reconstruit à partir de l’adresse; une valeur qui n’est
+  pas une adresse n’en obtient pas;
+- la **note de révision** n’est jamais projetée par la requête : elle sert la
+  secrétaire dans le Studio et n’atteint pas le HTML public.
+
+### La seule adresse de lien saisissable du site
+
+`website` est l’exception assumée à la règle « le CMS ne fournit jamais une
+adresse de lien ». L’adresse d’un annonceur est son contenu à lui, et une page
+de reconnaissance sans lien vers l’annonceur n’a pas de sens. Elle reste tenue
+en laisse : seuls `http` et `https` passent le normalisateur, même si le schéma
+venait à perdre sa validation, et le lien sortant porte
+`rel="sponsored noopener noreferrer"`.
+
+### Champs supprimés plutôt que migrés
+
+Comptés à 0 rendu sur les quatre composants : `featured`, `validFrom`,
+`validUntil`, `lastConfirmedAt`, `images[]`, `website.label`, `slug` et le statut
+de droit du média. Les dates de validité auraient de plus exigé un rebuild
+nocturne pour rien : sans date réelle, le statut explicite est la seule source
+de décision, ce que l’audit disait déjà.
+
+Le `logo` est passé à Sanity, en `SanityRenderableImage` sans variante locale :
+aucun logo n’existe dans le dépôt, et la paroisse pourra en téléverser un sans
+changement de code. Sans logo, la fiche affiche les initiales du nom.
+
+### Piège : un point dans l’identifiant rend le document privé
+
+Les quatre fiches ont d’abord été écrites sous `advertiser.buffet-marina` et
+consorts. Le point place le document dans un **chemin privé** : la CLI porteuse
+d’un jeton les voyait, la lecture publique du build ne les voyait pas. Le site
+se construisait sans erreur et sans annonceur. Identifiants repris en
+`advertiser-buffet-marina`; un test interdit désormais le point.
+
+La paroisse peut ajouter, masquer, réordonner ou mettre à jour une fiche sans
+modifier le code. Le CMS ne contient jamais de contrat complet, donnée de
 paiement, numéro de carte, secret, mot de passe, HTML arbitraire, CSS ou
-JavaScript. Il ne pourra pas publier un visuel sans alt ni retirer un crédit
-obligatoire.
+JavaScript. Il ne peut pas publier un visuel sans alt ni retirer la mention de
+transparence.

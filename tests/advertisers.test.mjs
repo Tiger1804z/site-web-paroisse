@@ -13,10 +13,8 @@ const rootPath = fileURLToPath(new URL('..', import.meta.url));
 function advertiser(overrides = {}) {
   return {
     id: 'advertiser-default',
-    slug: 'advertiser-default',
     name: 'Annonceur exemple',
     status: 'active',
-    featured: false,
     order: 1,
     ...overrides,
   };
@@ -28,8 +26,8 @@ test('un annonceur actif est publiable', () => {
 
 test('un annonceur inactif et un brouillon sont exclus', () => {
   const selected = selectAdvertisers([
-    advertiser({ id: 'inactive', slug: 'inactive', status: 'inactive' }),
-    advertiser({ id: 'draft', slug: 'draft', status: 'draft' }),
+    advertiser({ id: 'inactive', status: 'inactive' }),
+    advertiser({ id: 'draft', status: 'draft' }),
   ]);
 
   assert.equal(selected.length, 0);
@@ -49,17 +47,29 @@ test('un annonceur à confirmer est exclu par défaut', () => {
 
 test('la sélection respecte l’ordre et évite les doublons', () => {
   const selected = selectAdvertisers([
-    advertiser({ id: 'third', slug: 'third', order: 3 }),
-    advertiser({ id: 'first', slug: 'first', order: 1 }),
-    advertiser({ id: 'second', slug: 'second', order: 2 }),
-    advertiser({ id: 'second', slug: 'second', order: 4 }),
-    advertiser({ id: 'first', slug: 'different-slug', order: 5 }),
-    advertiser({ id: 'different-id', slug: 'third', order: 6 }),
+    advertiser({ id: 'third', order: 3 }),
+    advertiser({ id: 'first', order: 1 }),
+    advertiser({ id: 'second', order: 2 }),
+    advertiser({ id: 'second', order: 4 }),
+    advertiser({ id: 'first', order: 5 }),
   ]);
 
   assert.deepEqual(
     selected.map(({ id }) => id),
     ['first', 'second', 'third'],
+  );
+});
+
+test('à rang égal, les fiches sont classées par nom', () => {
+  const selected = selectAdvertisers([
+    advertiser({ id: 'zephyr', name: 'Zephyr', order: 5 }),
+    advertiser({ id: 'atelier', name: 'Atelier', order: 5 }),
+    advertiser({ id: 'epicerie', name: 'Épicerie', order: 5 }),
+  ]);
+
+  assert.deepEqual(
+    selected.map(({ name }) => name),
+    ['Atelier', 'Épicerie', 'Zephyr'],
   );
 });
 
@@ -70,7 +80,7 @@ test('une fiche sans logo possède un fallback typographique', () => {
   );
 
   assert.match(component, /advertiser-card__monogram/);
-  assert.match(component, /advertiser\.logo\?\.status === 'confirmed'/);
+  assert.match(component, /\{advertiser\.logo \?/);
 });
 
 test('les données manquantes ne créent pas de lignes vides', () => {
