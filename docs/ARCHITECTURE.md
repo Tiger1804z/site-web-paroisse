@@ -305,13 +305,16 @@ Le header et le footer constituent maintenant les références globales. Lors de
 
 Le CMS sera intégré comme source de données, pas comme moteur de routage côté client. Astro pourra charger les contenus pendant la construction statique et générer les routes nécessaires. Un mode hybride ou une reconstruction déclenchée pourra être évalué lorsque les besoins éditoriaux, la fréquence de publication et l’hébergeur seront connus.
 
-Aucun package CMS n’est installé pendant l’initialisation.
+> **Cette section décrivait un CMS non installé. Il l’est depuis.** Le pipeline
+> réel est décrit plus bas, sous « Pipeline de contenu Sanity ». Le reste de la
+> section garde sa valeur : la frontière qu’elle décrivait est celle qui a été
+> respectée.
 
-La page Horaires démontre cette frontière avant l’installation du CMS. Une
-future implémentation Sanity de `getSchedulePageData()` exécutera une requête
-GROQ, transmettra sa réponse brute à un normaliseur, puis retournera toujours
-`SchedulePageData`. Une publication Sanity devra déclencher un nouveau build
-pour modifier le HTML statique déployé. Le détail pédagogique est consigné dans
+La page Horaires a démontré cette frontière avant l’installation du CMS, et
+`getSchedulePageData()` fonctionne aujourd’hui exactement comme annoncé :
+requête GROQ, réponse brute passée à un normaliseur, retour toujours typé
+`SchedulePageData`. Une publication Sanity exige un nouveau build pour modifier
+le HTML statique déployé. Le détail pédagogique est consigné dans
 [`ASTRO_SANITY_SCHEDULES_PREPARATION.md`](./ASTRO_SANITY_SCHEDULES_PREPARATION.md).
 
 La même stratégie est décrite pour la page narrative dans
@@ -627,3 +630,78 @@ portent pas. Aucun formulaire, endpoint ou envoi n’est associé à cette page.
 Le hero réutilise une photographie réelle de l’église approuvée pour le site.
 Son seul mouvement est un zoom CSS très lent, désactivé avec
 `prefers-reduced-motion`; le contenu reste complet sans JavaScript.
+
+## Pipeline de contenu Sanity
+
+Ajouté après l'installation du CMS, ce chapitre décrit ce qui tourne
+réellement. Il remplace, sur ce point, les passages au futur des sections plus
+anciennes.
+
+### Le chemin d'une page
+
+```text
+Studio Sanity
+  → requête GROQ typée (src/lib/sanity/queries.ts)
+  → loadQuery() (src/lib/sanity/preview.ts)
+  → normalizeSanity<Page>() + repli local (src/data/)
+  → contrat typé (src/types/)
+  → composants Astro
+  → HTML statique
+```
+
+Trois règles tiennent l'ensemble :
+
+1. **Le contrat ne change pas selon la source.** Un composant ne sait pas si son
+   contenu vient de Sanity ou d'un fichier du projet. C'est ce qui a permis de
+   migrer page par page sans toucher au rendu.
+2. **Le repli local n'est jamais supprimé.** Si Sanity ne répond pas, le site se
+   construit quand même, avec le dernier contenu connu du dépôt. Chaque
+   normalisateur fusionne champ par champ : une valeur vide côté Sanity laisse
+   le repli en place plutôt que d'effacer la page.
+3. **Le CMS ne fournit jamais une adresse de lien.** Les boutons pointent vers
+   des destinations décidées par le code. L'éditrice choisit le libellé, parfois
+   une destination dans une liste fermée; jamais une URL libre.
+
+### État de la migration
+
+Migré : `siteSettings`, `massSchedule`, `parishEvent`, `homePage`,
+`schedulePage`, `eventsPage`, `thriftStore` + `thriftStorePage`, `servicesPage`,
+`parishLifePage`, `firstVisitPage`.
+
+Encore dans `src/data/` : `about`, `advertisers`, `contact`, `gallery`.
+
+### Découpage des documents
+
+Un document « Données partagées » n'est créé qu'à partir du **deuxième
+consommateur réel**. Les horaires et la friperie en ont un, parce que leurs
+faits s'affichent sur plusieurs pages. Les services et la vie paroissiale n'en
+ont pas : un document partagé sans second lecteur serait une abstraction vide.
+
+### Images
+
+Deux provenances coexistent, distinguées par un discriminant `kind` :
+
+- **`image`** — fichier du projet, optimisé au build par `astro:assets`, recadré
+  par des positions écrites à la main;
+- **`remote-image`** — fichier téléversé dans le Studio, servi par le CDN,
+  recadré par le **point focal** posé par l'éditrice, avec vignette floue
+  pendant le chargement.
+
+`src/types/sanityImage.ts` porte le contrat commun, `normalizeSanityImage()` la
+conversion, `RemoteImage.astro` le rendu. Une image sans texte alternatif n'est
+jamais publiée, en plus de la validation du Studio.
+
+Les pages Événements et Vie paroissiale utilisent ce chemin. Les autres gardent
+leurs visuels dans le dépôt.
+
+### Prévisualisation éditoriale
+
+Un seul drapeau, `PUBLIC_SANITY_VISUAL_EDITING_ENABLED`, sépare deux modes.
+Public : statique, contenu publié, aucun jeton, aucune île dans le bundle.
+Prévisualisation : rendu à la demande, brouillons, overlays cliquables,
+`noindex` sur toute page. Voir
+[`SANITY_VISUAL_EDITING.md`](./SANITY_VISUAL_EDITING.md).
+
+`pnpm build` reste sensible à ce drapeau; **`pnpm build:public` force le site
+public** et c'est lui que `pnpm validate` appelle, pour que la porte de
+validation vérifie bien la sortie qu'on publie.

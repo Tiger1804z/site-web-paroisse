@@ -1,6 +1,11 @@
 # État actuel du projet
 
-Dernière mise à jour : 27 juillet 2026 — S1-T13.
+Dernière mise à jour : 31 juillet 2026 — migration Sanity de Première visite,
+image comprise.
+
+> **Travail non commité.** La branche `feature/sanity-content-migration` porte
+> en working tree la prévisualisation éditoriale (Visual Editing), les deux
+> migrations du 30 juillet et celle du 31. Rien n’est poussé ni fusionné.
 
 ## Pages principales
 
@@ -10,10 +15,24 @@ Dernière mise à jour : 27 juillet 2026 — S1-T13.
 - `/notre-paroisse/` : page complète avec timeline immersive et hero
   cinématographique statique, sans lentille;
 - `/horaires/` : structure complète avec données non confirmées;
-- `/vie-paroissiale/` : page complète, hero illustré rotatif avec lentille,
-  groupes à confirmer;
-- `/nos-services/` : page canonique complète, hero rotatif avec lentille et
-  données 2026 révisables;
+- `/vie-paroissiale/` : page complète, hero illustré rotatif avec lentille;
+  présentation, groupes **et images** lus depuis le document Sanity
+  `parishLifePage`. Les 3 illustrations d’en-tête (domaine public, dont 2
+  générées par IA et déclarées comme telles) et les 4 photographies de l’église
+  sont téléversées avec texte alternatif, crédit et note de droits. Seule la
+  destination des boutons reste dérivée du code. Contenu des groupes encore à
+  confirmer auprès de la paroisse;
+- `/nos-services/` : page canonique complète, hero rotatif avec lentille;
+  chapitres, services, renseignements et modes de paiement lus depuis le
+  document Sanity `servicesPage`, images et bouton d’appel toujours dérivés du
+  code;
+- `/premiere-visite/` : guide, déroulement de la célébration, informations
+  pratiques et foire aux questions lus depuis le document Sanity
+  `firstVisitPage`, repère visuel téléversé. Les lignes d’informations pratiques
+  ne recopient plus les coordonnées : elles désignent leur source dans
+  `siteSettings`, ce qui a fait apparaître l’adresse et le téléphone réels à la
+  place des mentions entre crochets. Une ligne dont la valeur n’est pas
+  confirmée n’est pas affichée;
 - `/evenements/` : activités datées lues depuis la collection Sanity
   `parishEvent`, images téléversables avec point focal;
 - `/friperie/` : page complète et indexable, informations pratiques réelles,
@@ -114,11 +133,52 @@ secrétaire le 10 août 2026 ou après son retour avant de retirer `noindex`.
 - décision future sur l’utilité d’une page Galerie complète et enrichissement
   des crédits photographiques;
 - confirmation des annonceurs, ententes, coordonnées, logos et droits;
-- photographies réelles du local de la friperie et conditions de dons.
+- photographies réelles du local de la friperie et conditions de dons;
+- **nom de la photographe** à inscrire dans le crédit des quatre photographies
+  de l’église publiées sur la Vie paroissiale, et de celle de Première visite.
+  Leur note de droits, saisie dans le Studio, le réclame explicitement;
+- **accessibilité intérieure** — la paroisse a confirmé le 31 juillet 2026 une
+  rampe d’accès donnant sur la rue Parc René-Goupil. Ce qui se passe **une fois
+  la rampe franchie** (dénivelé, toilettes, place réservée) n’est pas vérifié :
+  le site nomme donc la rampe et renvoie au secrétariat, sans jamais écrire que
+  le bâtiment est accessible. À compléter après visite des lieux;
+- **heures du secrétariat** — saisies dans Sanity le 31 juillet 2026, mais
+  **relevées sur l’ancien site de la paroisse**, pas vérifiées auprès du
+  secrétariat. Elles ne sont plus seulement dans le repli local, donc le Studio
+  ne montre plus un champ vide qu’une saisie écraserait; leur exactitude reste à
+  confirmer.
+
+## Migration Sanity
+
+Dix documents sont administrés depuis le Studio : `siteSettings`,
+`massSchedule`, `parishEvent`, `homePage`, `schedulePage`, `eventsPage`,
+`thriftStore` et `thriftStorePage`, `servicesPage`, `parishLifePage`,
+`firstVisitPage`.
+
+Quatre sources restent des fichiers du dépôt : `about`, `advertisers`,
+`contact`, `gallery`. Chaque page migrée conserve en plus son repli local : si
+Sanity ne répond pas, le site se construit avec le dernier contenu connu du
+dépôt.
+
+Les images sont téléversées pour les Événements, la Vie paroissiale et Première
+visite. Les autres pages gardent leurs visuels dans `src/assets/`.
+
+`siteSettings` a gagné deux lecteurs au passage : `parkingInformation` et
+`accessibilityInformation` existaient dans le schéma depuis S1-T14 sans jamais
+être projetés par la requête. Première visite est la première page à les lire —
+même défaut que `officeHours` à l’époque, et même correctif.
 
 ## Architecture
 
-Astro demeure statique, TypeScript strict et sans nouvelle dépendance. Les
-images passent par `astro:assets`, les mouvements par CSS et les contrôleurs
-JavaScript natifs. Sanity, l’envoi Contact, la réservation et les paiements ne
-sont pas installés.
+Astro demeure statique et TypeScript strict. Les mouvements passent par CSS et
+des contrôleurs JavaScript natifs.
+
+Sanity est installé et sert de source de contenu : requête GROQ, normalisation,
+contrat typé, HTML statique. Le détail est dans
+[`ARCHITECTURE.md`](./ARCHITECTURE.md), section « Pipeline de contenu Sanity ».
+Les images locales passent par `astro:assets`, celles du Studio par le CDN de
+Sanity avec point focal.
+
+L’envoi du formulaire Contact, la réservation et les paiements ne sont toujours
+pas installés. Le site n’est déployé nulle part : aucun adaptateur, aucun
+domaine, et la CI valide sans déployer.
