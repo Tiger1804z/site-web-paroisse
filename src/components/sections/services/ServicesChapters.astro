@@ -1,15 +1,37 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
-import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
+import EditorialImageFrame, {
+  type EditorialImageVariant,
+} from '@/components/ui/EditorialImageFrame.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-import type { ParishServiceChapter, ServicesPageData } from '@/types/services';
+import type {
+  ParishServiceChapter,
+  ServiceSurface,
+  ServicesPageData,
+} from '@/types/services';
 
 interface Props {
   chapters: ServicesPageData['chapters'];
 }
 
 const { chapters } = Astro.props;
+
+/**
+ * La forme du cadre suit le traitement visuel choisi par l'éditrice.
+ *
+ * `surface` est déjà une liste fermée que le Studio propose; la forme qui va
+ * avec est une décision de composition et reste donc ici. Un champ de plus dans
+ * le Studio demanderait à l'éditrice de trancher une question de design.
+ */
+const FRAME_BY_SURFACE: Readonly<
+  Record<ServiceSurface, EditorialImageVariant>
+> = {
+  ivory: 'portrait-offset',
+  paper: 'landscape',
+  charcoal: 'organic',
+  burgundy: 'arch',
+};
 
 // L'ordre du tableau fait foi — celui du Studio comme celui du repli local.
 const orderedChapters = chapters;
@@ -54,13 +76,9 @@ const visibleServices = (chapter: ParishServiceChapter) =>
             {chapter.image && (
               <EditorialImageFrame
                 class="services-chapter__image"
-                image={chapter.image.image}
-                alt={chapter.image.alt}
-                variant={chapter.image.frame}
-                objectPosition={chapter.image.objectPosition}
-                widths={[360, 540, 720, 960]}
+                image={chapter.image}
+                variant={FRAME_BY_SURFACE[chapter.surface]}
                 sizes="(min-width: 64rem) 32vw, 86vw"
-                credit={chapter.image.credit}
               />
             )}
           </div>

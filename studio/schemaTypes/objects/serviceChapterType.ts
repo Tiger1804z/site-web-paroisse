@@ -8,8 +8,8 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
  * visuel codé. L'éditrice choisit lequel appliquer, elle n'invente pas une
  * couleur.
  *
- * L'image d'ambiance de certains chapitres reste un fichier du projet tant que
- * les visuels de page ne sont pas migrés.
+ * L'image d'ambiance est facultative : un chapitre sans image se compose en
+ * pleine largeur, sans cadre vide ni espace réservé.
  */
 const SURFACES = [
   {title: 'Ivoire', value: 'ivory'},
@@ -53,6 +53,13 @@ export const serviceChapterType = defineType({
       options: {list: SURFACES, layout: 'radio'},
       initialValue: 'ivory',
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'image',
+      title: 'Image d’ambiance',
+      type: 'eventImage',
+      description:
+        'Facultative. Sans image, le chapitre occupe toute la largeur — aucun cadre vide n’est affiché.',
     }),
     defineField({
       name: 'services',

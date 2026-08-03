@@ -185,6 +185,11 @@ export function normalizeSanityAboutPage(
     return normalized ? [normalized] : [];
   });
 
+  const architectureImage = normalizeSanityImage(
+    raw?.architecture?.image,
+    buildSources,
+  );
+
   return {
     seo: fallback.seo,
     hero: {
@@ -247,7 +252,10 @@ export function normalizeSanityAboutPage(
         raw?.architecture?.features,
         fallback.architecture.features,
       ),
-      image: fallback.architecture.image,
+      ...(architectureImage ? { image: architectureImage } : {}),
+      ...(cleanString(raw?.architecture?.imageCaption)
+        ? { imageCaption: cleanString(raw?.architecture?.imageCaption) }
+        : {}),
     },
     architects: fallback.architects
       ? {

@@ -28,6 +28,10 @@ const thriftStorePageData = await getThriftStorePageData();
       <ThriftStoreReuseSection section={section} />
     ))
   }
-  <ThriftStoreGallery gallery={thriftStorePageData.gallery} />
+  {
+    thriftStorePageData.gallery.items.length > 0 && (
+      <ThriftStoreGallery gallery={thriftStorePageData.gallery} />
+    )
+  }
   <ThriftStoreClosingCta closing={thriftStorePageData.closing} />
 </BaseLayout>

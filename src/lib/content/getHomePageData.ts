@@ -5,6 +5,7 @@ import { HOME_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityHomePageResult } from '@/lib/sanity/types';
 import { getParishLifePageData } from '@/lib/content/getParishLifePageData';
 import { normalizeSanityHomeGallery } from '@/lib/content/normalizeSanityHomeGallery';
+import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
 import {
   normalizeSanityHomePage,
   type ParishGroupNames,
@@ -53,16 +54,34 @@ export async function getHomePageData(): Promise<HomePageData> {
 
   const page = normalizeSanityHomePage(raw, homePageData, groupNames);
 
+  const buildSources = (source: unknown) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    );
+
   const candidates = normalizeSanityHomeGallery(
     raw?.gallery?.photos,
-    (source) =>
-      buildRemoteImageSources(
-        source as Parameters<typeof buildRemoteImageSources>[0],
-      ),
+    buildSources,
   );
+
+  // Les illustrations de section sont composées ici, comme les photographies du
+  // carrousel : elles demandent le constructeur d'adresses du CDN, que le
+  // normalizer n'a pas. Une section sans illustration reste une section
+  // complète — c'est le composant qui décide de ne pas dessiner son cadre.
+  const sectionImage = (source: unknown) => {
+    const image = normalizeSanityImage(
+      source as Parameters<typeof normalizeSanityImage>[0],
+      buildSources,
+    );
+    return image ? { image } : {};
+  };
 
   return {
     ...page,
+    parishLife: { ...page.parishLife, ...sectionImage(raw?.parishLife?.image) },
+    services: { ...page.services, ...sectionImage(raw?.services?.image) },
+    interlude: { ...page.interlude, ...sectionImage(raw?.interlude?.image) },
+    visit: { ...page.visit, ...sectionImage(raw?.visit?.image) },
     gallery: {
       ...page.gallery,
       items: selectHomepageGalleryItems(candidates, GALLERY_LIMIT),

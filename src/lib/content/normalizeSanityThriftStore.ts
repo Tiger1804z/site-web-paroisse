@@ -1,5 +1,6 @@
 import type {
   ThriftStoreCallToAction,
+  ThriftStoreHeroSlide,
   ThriftStorePageData,
   ThriftStorePracticalInformation,
   ThriftStoreSection,
@@ -8,6 +9,14 @@ import type {
   SanityThriftStorePageResult,
   SanityThriftStoreResult,
 } from '@/lib/sanity/types';
+// Chemins relatifs et extensions explicites : ce module est chargé tel quel
+// par `node --test`, qui ne résout pas l'alias `@/`.
+import {
+  normalizeSanityImage,
+  type ImageSourceBuilder,
+} from './normalizeSanityImage.ts';
+import { normalizeSanityHomeGallery } from './normalizeSanityHomeGallery.ts';
+import { selectGalleryItems } from '../gallery/gallery.ts';
 
 type RawPage = NonNullable<SanityThriftStorePageResult>;
 type RawSection = NonNullable<RawPage['sections']>[number];
@@ -95,10 +104,29 @@ export function normalizeSanityThriftStoreInformation(
  * ils restent des fichiers du projet tant que les visuels de page ne sont pas
  * migrés.
  */
+/**
+ * Les images du carrousel d'en-tête.
+ *
+ * Une entrée sans libellé ou sans fichier exploitable est écartée : le libellé
+ * s'affiche par-dessus l'image, l'un sans l'autre n'a pas de sens.
+ */
+function normalizeHeroSlides(
+  raw: RawPage['hero'] | undefined,
+  buildSources: ImageSourceBuilder,
+): ThriftStoreHeroSlide[] {
+  return (raw?.slides ?? []).flatMap((slide) => {
+    const label = cleanString(slide.label);
+    const image = normalizeSanityImage(slide.visual, buildSources);
+
+    return label && image ? [{ label, image }] : [];
+  });
+}
+
 export function normalizeSanityThriftStorePage(
   rawPage: SanityThriftStorePageResult,
   rawStore: SanityThriftStoreResult,
   fallback: ThriftStorePageData,
+  buildSources: ImageSourceBuilder,
 ): ThriftStorePageData {
   const paragraphs = (rawPage?.introduction?.paragraphs ?? []).flatMap(
     (paragraph) => {
@@ -124,7 +152,7 @@ export function normalizeSanityThriftStorePage(
       title: cleanString(rawPage?.hero?.title) ?? fallback.hero.title,
       introduction:
         cleanString(rawPage?.hero?.introduction) ?? fallback.hero.introduction,
-      slides: fallback.hero.slides,
+      slides: normalizeHeroSlides(rawPage?.hero, buildSources),
     },
     introduction: {
       eyebrow:
@@ -138,7 +166,6 @@ export function normalizeSanityThriftStorePage(
       priceNotice:
         cleanString(rawPage?.introduction?.priceNotice) ??
         fallback.introduction.priceNotice,
-      photoPlaceholder: fallback.introduction.photoPlaceholder,
     },
     practicalInformation: normalizeSanityThriftStoreInformation(
       rawStore,
@@ -153,7 +180,12 @@ export function normalizeSanityThriftStorePage(
       introduction:
         cleanString(rawPage?.gallery?.introduction) ??
         fallback.gallery.introduction,
-      placeholders: fallback.gallery.placeholders,
+      // Mêmes verrous que le carrousel de l'accueil : sans texte alternatif,
+      // sans droits confirmés, ou avec des personnes reconnaissables sans
+      // consentement, la photographie reste dans le Studio sans s'afficher.
+      items: selectGalleryItems(
+        normalizeSanityHomeGallery(rawPage?.gallery?.photos, buildSources),
+      ),
     },
     closing: {
       eyebrow:

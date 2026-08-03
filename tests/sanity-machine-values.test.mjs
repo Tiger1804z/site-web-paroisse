@@ -56,7 +56,19 @@ const carriesStega = (value) =>
 // ---------------------------------------------------------------------------
 
 test('tout champ à valeurs contrôlées du schéma est déclaré comme valeur machine', () => {
-  const schema = JSON.parse(readFileSync('studio/schema.json', 'utf8'));
+  // `studio/schema.json` est produit par TypeGen et n'est pas suivi par git.
+  // Sans lui, cette garantie ne peut pas s'exercer : on le dit franchement
+  // plutôt que de laisser remonter un ENOENT.
+  let raw;
+  try {
+    raw = readFileSync('studio/schema.json', 'utf8');
+  } catch {
+    assert.fail(
+      'studio/schema.json est absent. Lancer « pnpm sanity:typegen » avant les tests — la CI le fait déjà.',
+    );
+  }
+
+  const schema = JSON.parse(raw);
   const uncovered = new Set();
 
   const isStringUnion = (value) =>

@@ -18,27 +18,13 @@ const fallback = {
     eyebrow: 'Friperie paroissiale',
     title: 'Au Coin de l’Entraide',
     introduction: 'Introduction locale.',
-    slides: [
-      {
-        image: { src: '/local.jpg', width: 1600, height: 1067, format: 'jpg' },
-        alt: 'Chandails alignés sur un portant',
-        sourceNote: 'Pixabay, Content License.',
-        status: 'confirmed',
-        replacementNote: 'Remplaçable par une photographie du local.',
-      },
-    ],
+    slides: [],
   },
   introduction: {
     eyebrow: 'Notre friperie',
     title: 'Présentation',
     paragraphs: ['Paragraphe local.'],
     priceNotice: 'Note de prix locale.',
-    photoPlaceholder: {
-      id: 'presentation-generale',
-      subject: 'Vue générale du local',
-      ratio: '4:3',
-      orientation: 'landscape',
-    },
   },
   practicalInformation: {
     hours: 'Mardi, mercredi et jeudi, de 13 h à 17 h',
@@ -60,14 +46,7 @@ const fallback = {
     eyebrow: 'À documenter',
     title: 'La friperie en images',
     introduction: 'Introduction locale de galerie.',
-    placeholders: [
-      {
-        id: 'portants-horizontal',
-        subject: 'Portants organisés',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-    ],
+    items: [],
   },
   closing: {
     eyebrow: 'Avant d’apporter des articles',
@@ -78,6 +57,28 @@ const fallback = {
   },
 };
 
+// Doublure du constructeur d'adresses : le vrai lit `import.meta.env`, absent
+// sous `node --test`.
+const buildSources = () => ({
+  src: 'https://cdn.test/image?w=1920',
+  srcSet: 'https://cdn.test/image?w=480 480w',
+});
+
+/** Image telle que la projection GROQ la remonte. */
+const rawImage = (alt, extra = {}) => ({
+  alt,
+  ...extra,
+  image: {
+    asset: {
+      _id: 'image-abc-1200x900-jpg',
+      metadata: {
+        lqip: 'data:image/png;base64,x',
+        dimensions: { width: 1200, height: 900 },
+      },
+    },
+  },
+});
+
 const rawStore = {
   name: 'Au Coin de l’Entraide',
   hours: 'Tous les mardis, mercredis et jeudis, de 13 h à 17 h',
@@ -86,7 +87,12 @@ const rawStore = {
 };
 
 test('sans document Sanity, la page garde le repli local', () => {
-  const page = normalizeSanityThriftStorePage(null, null, fallback);
+  const page = normalizeSanityThriftStorePage(
+    null,
+    null,
+    fallback,
+    buildSources,
+  );
 
   assert.deepEqual(page, fallback);
 });
@@ -112,6 +118,7 @@ test('le contenu de page Sanity remplace le repli, champ par champ', () => {
     },
     null,
     fallback,
+    buildSources,
   );
 
   assert.equal(page.hero.title, 'Titre Sanity');
@@ -127,25 +134,95 @@ test('le contenu de page Sanity remplace le repli, champ par champ', () => {
   assert.equal(page.closing.title, fallback.closing.title);
 });
 
-test('les visuels ne viennent jamais de Sanity dans ce ticket', () => {
+test('les visuels du hero viennent du Studio', () => {
   const page = normalizeSanityThriftStorePage(
-    { hero: { eyebrow: 'A', title: 'B', introduction: 'C' } },
+    {
+      hero: {
+        eyebrow: 'A',
+        title: 'B',
+        introduction: 'C',
+        slides: [
+          { _key: 's1', label: 'Portants', visual: rawImage('Des portants') },
+        ],
+      },
+    },
     rawStore,
     fallback,
+    buildSources,
   );
 
-  assert.deepEqual(page.hero.slides, fallback.hero.slides);
-  assert.deepEqual(page.gallery.placeholders, fallback.gallery.placeholders);
-  assert.deepEqual(
-    page.introduction.photoPlaceholder,
-    fallback.introduction.photoPlaceholder,
-  );
+  assert.equal(page.hero.slides.length, 1);
+  assert.equal(page.hero.slides[0].label, 'Portants');
+  assert.equal(page.hero.slides[0].image.alt, 'Des portants');
   // Le SEO reste au code : il n'est pas saisissable dans le Studio.
   assert.deepEqual(page.seo, fallback.seo);
 });
 
+test('sans visuel dans le Studio, l’en-tête ne réserve aucun cadre', () => {
+  const page = normalizeSanityThriftStorePage(
+    { hero: { eyebrow: 'A', title: 'B', introduction: 'C' } },
+    rawStore,
+    fallback,
+    buildSources,
+  );
+
+  assert.deepEqual(page.hero.slides, []);
+  assert.deepEqual(page.gallery.items, []);
+});
+
+test('la galerie applique les mêmes verrous que le carrousel de l’accueil', () => {
+  const page = normalizeSanityThriftStorePage(
+    {
+      gallery: {
+        photos: [
+          {
+            _key: 'ok',
+            title: 'Portants organisés',
+            rightsCleared: true,
+            photo: rawImage('Des portants garnis'),
+          },
+          {
+            _key: 'droits-absents',
+            title: 'Vue large',
+            rightsCleared: false,
+            photo: rawImage('Une vue large'),
+          },
+          {
+            _key: 'personne-sans-consentement',
+            title: 'Bénévole',
+            rightsCleared: true,
+            consentConfirmed: false,
+            photo: rawImage('Une bénévole', {
+              containsRecognizablePeople: true,
+            }),
+          },
+          {
+            _key: 'sans-alt',
+            title: 'Sans texte alternatif',
+            rightsCleared: true,
+            photo: { image: rawImage('x').image },
+          },
+        ],
+      },
+    },
+    rawStore,
+    fallback,
+    buildSources,
+  );
+
+  assert.deepEqual(
+    page.gallery.items.map(({ id }) => id),
+    ['ok'],
+  );
+});
+
 test('les renseignements pratiques viennent du document partagé', () => {
-  const page = normalizeSanityThriftStorePage(null, rawStore, fallback);
+  const page = normalizeSanityThriftStorePage(
+    null,
+    rawStore,
+    fallback,
+    buildSources,
+  );
 
   assert.equal(page.practicalInformation.hours, rawStore.hours);
   assert.equal(page.practicalInformation.location, rawStore.location);
@@ -193,6 +270,7 @@ test('les sections sans titre ou sans description sont écartées', () => {
     },
     null,
     fallback,
+    buildSources,
   );
 
   assert.equal(page.sections.length, 1);
@@ -211,6 +289,7 @@ test('sans section exploitable, les sections locales restent affichées', () => 
     { sections: [{ _key: 'a', title: null, description: null }] },
     null,
     fallback,
+    buildSources,
   );
 
   assert.deepEqual(page.sections, fallback.sections);
@@ -227,6 +306,7 @@ test('l’adresse des boutons est construite par le code, jamais saisie', () => 
     },
     null,
     fallback,
+    buildSources,
   );
 
   assert.deepEqual(page.practicalInformation.contactCta, {
@@ -249,6 +329,7 @@ test('une destination inconnue garde le bouton local plutôt qu’un lien mort',
     { closing: { primaryCta: { target: 'inexistante', label: 'Aller' } } },
     null,
     fallback,
+    buildSources,
   );
 
   assert.deepEqual(page.closing.primaryCta, fallback.closing.primaryCta);

@@ -1,9 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import type {
-  ThriftStoreImage,
-  ThriftStorePageData,
-} from '@/types/thriftStore';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { ThriftStorePageData } from '@/types/thriftStore';
 
 interface Props {
   hero: ThriftStorePageData['hero'];
@@ -11,15 +8,6 @@ interface Props {
 
 const { hero } = Astro.props;
 const lensClipId = 'thrift-store-hero-lens-clip';
-
-const responsiveWidths = (visual: ThriftStoreImage): number[] => {
-  const candidates = [480, 720, 960, 1280, 1600, 1920];
-  const available = candidates.filter(
-    (candidate) => candidate <= visual.image.width,
-  );
-
-  return available.length > 0 ? available : [visual.image.width];
-};
 ---
 
 <section
@@ -50,15 +38,11 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
           data-hero-slide
           data-active={index === 0 ? 'true' : 'false'}
         >
-          <Image
-            src={visual.image}
+          <RemoteImage
+            image={visual.image}
             alt=""
-            widths={responsiveWidths(visual)}
             sizes="100vw"
-            format="webp"
-            quality={78}
             loading={index === 0 ? 'eager' : 'lazy'}
-            decoding="async"
             fetchpriority={index === 0 ? 'high' : 'low'}
           />
         </div>
@@ -79,16 +63,10 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
           data-organic-lens-layer
           data-active={index === 1 ? 'true' : 'false'}
         >
-          <Image
-            src={visual.image}
+          <RemoteImage
+            image={visual.image}
             alt=""
-            widths={responsiveWidths(visual)}
             sizes="100vw"
-            format="webp"
-            quality={74}
-            loading="lazy"
-            decoding="async"
-            fetchpriority="low"
             data-organic-lens-image
           />
         </div>
@@ -128,7 +106,7 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
         {hero.slides.map((visual, index) => (
           <button
             type="button"
-            aria-label={`Afficher l’image ${index + 1} sur ${hero.slides.length} : ${visual.alt}`}
+            aria-label={`Afficher l’image ${index + 1} sur ${hero.slides.length} : ${visual.label}`}
             aria-pressed={index === 0 ? 'true' : 'false'}
             data-hero-indicator
           >

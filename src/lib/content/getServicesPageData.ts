@@ -1,5 +1,6 @@
 import { loadQuery } from '@/lib/sanity/preview';
 import { buildServicesPageData } from '@/data/services';
+import { buildRemoteImageSources } from '@/lib/sanity/image';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { SERVICES_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityServicesPageResult } from '@/lib/sanity/types';
@@ -19,13 +20,18 @@ export async function fetchServicesPageRaw(): Promise<SanityServicesPageResult> 
 }
 
 /**
- * Le repli local est construit d'abord : il fournit les images, le téléphone du
- * secrétariat et la totalité du contenu si Sanity ne répond pas.
+ * Le repli local est construit d'abord : il fournit le téléphone du secrétariat
+ * et les textes si Sanity ne répond pas. Il ne porte plus d'image — celles-ci
+ * n'existent que dans le Studio.
  */
 export async function getServicesPageData(): Promise<ServicesPageData> {
   const siteSettings = await getSiteSettings();
   const fallback = buildServicesPageData(siteSettings);
   const raw = await fetchServicesPageRaw();
 
-  return normalizeSanityServicesPage(raw, fallback);
+  return normalizeSanityServicesPage(raw, fallback, (source) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    ),
+  );
 }

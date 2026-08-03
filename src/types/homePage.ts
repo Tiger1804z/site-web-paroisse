@@ -1,4 +1,5 @@
 import type { GalleryItem } from '@/types/gallery';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 
 /**
  * Contenu éditorial de la page d'accueil.
@@ -65,6 +66,11 @@ export interface HomeVisitContent {
   readonly introduction: string;
   readonly contactCtaLabel: string;
   readonly directionsCtaLabel: string;
+  /**
+   * Illustration de la section, facultative. Absente, la section se compose
+   * sans son cadre — aucun espace n'est réservé à une image qui n'existe pas.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 /**
@@ -87,6 +93,11 @@ export interface HomeParishLifeContent {
   readonly introduction: string;
   readonly groups: readonly HomeGroupTeaser[];
   readonly ctaLabel: string;
+  /**
+   * Illustration de la section, facultative. Absente, la section se compose
+   * sans son cadre — aucun espace n'est réservé à une image qui n'existe pas.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 /**
@@ -121,8 +132,14 @@ export interface HomeServicesContent {
   readonly introduction: string;
   readonly links: readonly HomeServiceLink[];
   readonly ctaLabel: string;
-  readonly visualNote: string;
+  /** Légende sous l'illustration. Sans illustration, elle ne s'affiche pas. */
+  readonly visualNote?: string;
   readonly thrift: HomeThriftCard;
+  /**
+   * Illustration de la section, facultative. Absente, la section se compose
+   * sans son cadre — aucun espace n'est réservé à une image qui n'existe pas.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 export interface HomeInterludeContent {
@@ -130,6 +147,11 @@ export interface HomeInterludeContent {
   readonly title: string;
   readonly description: string;
   readonly linkLabel: string;
+  /**
+   * Illustration de la section, facultative. Absente, la section se compose
+   * sans son cadre — aucun espace n'est réservé à une image qui n'existe pas.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 /**

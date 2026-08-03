@@ -4,11 +4,20 @@ import type {
   ParishServiceDetail,
   ServiceSurface,
   ServicesCallToAction,
+  ServicesHeroSlide,
   ServicesPageData,
 } from '@/types/services';
 import type { SanityServicesPageResult } from '@/lib/sanity/types';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`. L'alias reste réservé aux
+// imports de types, effacés à l'exécution.
+import {
+  normalizeSanityImage,
+  type ImageSourceBuilder,
+} from './normalizeSanityImage.ts';
 
 type RawPage = NonNullable<SanityServicesPageResult>;
+type RawServicesPage = RawPage;
 type RawChapter = NonNullable<RawPage['chapters']>[number];
 type RawService = NonNullable<RawChapter['services']>[number];
 
@@ -87,7 +96,7 @@ function normalizeService(
 function normalizeChapter(
   raw: RawChapter,
   cta: ServicesCallToAction,
-  fallbackImages: ReadonlyMap<string, ParishServiceChapter['image']>,
+  buildSources: ImageSourceBuilder,
 ): ParishServiceChapter | undefined {
   const id = cleanString(raw.slug);
   const title = cleanString(raw.title);
@@ -102,7 +111,7 @@ function normalizeChapter(
   // Un chapitre sans service serait un bandeau coloré vide au milieu de la page.
   if (services.length === 0) return undefined;
 
-  const image = fallbackImages.get(id);
+  const image = normalizeSanityImage(raw.image, buildSources);
 
   return {
     id,
@@ -116,21 +125,40 @@ function normalizeChapter(
 }
 
 /**
+ * Les images du carrousel d'en-tête.
+ *
+ * Une entrée sans libellé ou sans fichier exploitable est écartée plutôt que
+ * rendue à moitié : le libellé s'affiche par-dessus l'image, l'un sans l'autre
+ * n'a pas de sens.
+ */
+function normalizeHeroSlides(
+  raw: RawServicesPage['hero'] | undefined,
+  buildSources: ImageSourceBuilder,
+): ServicesHeroSlide[] {
+  return (raw?.slides ?? []).flatMap((slide) => {
+    const label = cleanString(slide.label);
+    const image = normalizeSanityImage(slide.visual, buildSources);
+
+    return label && image ? [{ label, image }] : [];
+  });
+}
+
+/**
  * Fusionne le contenu Sanity avec le repli local.
  *
- * Deux choses ne viennent jamais de Sanity :
+ * Une seule chose ne vient jamais de Sanity : **le bouton d'appel**, dérivé du
+ * téléphone du secrétariat. Le Studio ne contient aucune adresse de lien pour
+ * cette page.
  *
- * - **les images**, qui restent des fichiers du projet avec leur cadrage et leur
- *   crédit, tant que les visuels de page ne sont pas migrés. Elles sont
- *   rattachées par l'ancre du chapitre : renommer une ancre dans le Studio
- *   détache donc son image, ce qui est le comportement voulu — une ancre est une
- *   adresse publique et ne se renomme pas à la légère;
- * - **le bouton d'appel**, dérivé du téléphone du secrétariat. Le Studio ne
- *   contient aucune adresse de lien pour cette page.
+ * Les images, elles, viennent désormais du Studio et de nulle part ailleurs. Le
+ * repli local n'en porte plus : un en-tête sans image garde son fond sombre, un
+ * chapitre sans image occupe toute la largeur. Aucun cadre ne se réserve une
+ * place qu'il ne remplira pas.
  */
 export function normalizeSanityServicesPage(
   raw: SanityServicesPageResult,
   fallback: ServicesPageData,
+  buildSources: ImageSourceBuilder,
 ): ServicesPageData {
   const cta =
     fallback.finalCta.primary ??
@@ -139,12 +167,8 @@ export function normalizeSanityServicesPage(
       href: fallback.finalCta.phone.href,
     } as const);
 
-  const fallbackImages = new Map(
-    fallback.chapters.map((chapter) => [chapter.id, chapter.image] as const),
-  );
-
   const chapters = (raw?.chapters ?? []).flatMap((chapter) => {
-    const normalized = normalizeChapter(chapter, cta, fallbackImages);
+    const normalized = normalizeChapter(chapter, cta, buildSources);
     return normalized ? [normalized] : [];
   });
 
@@ -157,7 +181,7 @@ export function normalizeSanityServicesPage(
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,
       introduction:
         cleanString(raw?.hero?.introduction) ?? fallback.hero.introduction,
-      images: fallback.hero.images,
+      slides: normalizeHeroSlides(raw?.hero, buildSources),
     },
     notice: {
       title: cleanString(raw?.notice?.title) ?? fallback.notice.title,

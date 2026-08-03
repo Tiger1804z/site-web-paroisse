@@ -10,10 +10,6 @@ import {DocumentTextIcon} from '@sanity/icons/DocumentText'
  *
  * Le téléphone du secrétariat n'y est pas : il vient de `siteSettings`, et tous
  * les boutons de la page pointent dessus.
- *
- * Les cinq images (trois du hero, deux de chapitres) restent des fichiers du
- * projet, avec leur cadrage et leur crédit, tant que les visuels de page ne sont
- * pas migrés.
  */
 export const servicesPageType = defineType({
   name: 'servicesPage',
@@ -32,8 +28,6 @@ export const servicesPageType = defineType({
       title: 'En-tête (hero)',
       type: 'object',
       group: 'header',
-      description:
-        'Les trois images qui défilent restent définies par le code tant que les visuels de page ne sont pas migrés.',
       fields: [
         defineField({
           name: 'eyebrow',
@@ -53,6 +47,15 @@ export const servicesPageType = defineType({
           type: 'text',
           rows: 3,
           validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: 'slides',
+          title: 'Images qui défilent',
+          type: 'array',
+          of: [defineArrayMember({type: 'heroSlide'})],
+          description:
+            'Elles défilent derrière le titre. Sans image, l’en-tête garde son fond sombre et reste lisible.',
+          validation: (rule) => rule.max(6),
         }),
       ],
     }),

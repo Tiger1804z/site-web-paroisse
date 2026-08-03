@@ -1,21 +1,30 @@
 ---
-import type { ImageMetadata } from 'astro';
-import { Image } from 'astro:assets';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 
-type EditorialImageVariant =
+export type EditorialImageVariant =
   'arch' | 'landscape' | 'organic' | 'oval' | 'portrait-offset';
 
+/**
+ * Cadre éditorial : une image du Studio, dans une forme choisie par le code.
+ *
+ * La forme est un choix de composition, pas un choix éditorial — elle reste
+ * donc une propriété du composant. Le cadrage, lui, suit le point focal posé
+ * dans le Studio : `RemoteImage` le traduit en `object-position`, ce qui rend
+ * l'ancienne propriété `objectPosition` inutile.
+ *
+ * Le crédit ne s'affiche que s'il existe. Tant qu'une photographie n'a pas de
+ * crédit confirmé, la légende n'apparaît pas — mieux vaut rien qu'un
+ * espace réservé.
+ */
 interface Props {
-  image: ImageMetadata;
-  alt: string;
+  image: SanityRenderableImage;
+  /** Chaîne vide pour une image décorative, quand le texte voisin dit déjà tout. */
+  alt?: string;
   variant?: EditorialImageVariant;
   class?: string;
-  objectPosition?: string;
-  widths?: number[];
   sizes?: string;
   loading?: 'eager' | 'lazy';
-  quality?: number;
-  credit?: string;
 }
 
 const {
@@ -23,12 +32,8 @@ const {
   alt,
   variant = 'landscape',
   class: className,
-  objectPosition = 'center',
-  widths = [360, 540, 720, 960],
   sizes = '(min-width: 64rem) 40vw, 100vw',
   loading = 'lazy',
-  quality = 72,
-  credit,
 } = Astro.props;
 ---
 
@@ -36,17 +41,9 @@ const {
   class:list={['editorial-image', `editorial-image--${variant}`, className]}
 >
   <div class="editorial-image__media">
-    <Image
-      src={image}
-      alt={alt}
-      widths={widths}
-      sizes={sizes}
-      loading={loading}
-      quality={quality}
-      style={`object-position: ${objectPosition}`}
-    />
+    <RemoteImage image={image} alt={alt} sizes={sizes} loading={loading} />
   </div>
-  {credit && <figcaption>{credit}</figcaption>}
+  {image.credit && <figcaption>{image.credit}</figcaption>}
 </figure>
 
 <style>

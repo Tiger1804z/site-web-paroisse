@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import parishLifeArtwork from '@/assets/images/home/editorial/parish-life-marian-artwork.jpg';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
@@ -25,16 +24,13 @@ const groups = content.groups.map((group, index) => ({
   class="parish-life section-block"
   aria-labelledby="parish-life-title"
 >
-  <div class="parish-life__media" aria-hidden="true">
-    <Image
-      src={parishLifeArtwork}
-      alt=""
-      widths={[640, 960, 1280, 1600, 1920]}
-      sizes="100vw"
-      loading="lazy"
-      quality={72}
-    />
-  </div>
+  {
+    content.image && (
+      <div class="parish-life__media" aria-hidden="true">
+        <RemoteImage image={content.image} alt="" sizes="100vw" />
+      </div>
+    )
+  }
   <div class="parish-life__overlay" aria-hidden="true"></div>
 
   <Container class="parish-life__container">

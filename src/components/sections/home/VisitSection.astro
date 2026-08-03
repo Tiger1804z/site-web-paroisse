@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import exteriorImage from '@/assets/images/paroisse/eglise-exterieur-identification-01.webp';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
@@ -49,19 +48,19 @@ const { content, contact } = Astro.props;
         </div>
       </div>
 
-      <figure class="visit-section__visual" data-motion-reveal>
-        <Image
-          src={exteriorImage}
-          alt="Vue extérieure du bâtiment portant l’identification de la paroisse"
-          widths={[480, 720, 960, 1200]}
-          sizes="(min-width: 64rem) 48vw, 100vw"
-          loading="lazy"
-          quality={78}
-        />
-        <figcaption>
-          {contact.address.street}, {contact.address.city}
-        </figcaption>
-      </figure>
+      {
+        content.image && (
+          <figure class="visit-section__visual" data-motion-reveal>
+            <RemoteImage
+              image={content.image}
+              sizes="(min-width: 64rem) 48vw, 100vw"
+            />
+            <figcaption>
+              {contact.address.street}, {contact.address.city}
+            </figcaption>
+          </figure>
+        )
+      }
     </div>
   </Container>
 </section>

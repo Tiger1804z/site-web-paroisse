@@ -13,8 +13,9 @@ import {HomeIcon} from '@sanity/icons/Home'
  * du site, pas du contenu — ni **les textes d'état vide**, qui n'apparaissent
  * que si une donnée manque et relèvent du code.
  *
- * Les images, elles, restent locales : un ticket dédié migrera tous les visuels
- * de page ensemble.
+ * Les illustrations des sections, elles, se déposent ici : chacune est
+ * facultative, et une section sans illustration se compose sans son cadre.
+ * Seules les trois photographies de fond du hero restent des fichiers du site.
  */
 export const homePageType = defineType({
   name: 'homePage',
@@ -221,6 +222,12 @@ export const homePageType = defineType({
             'La numérotation 01, 02, 03 suit l’ordre de la liste et se recalcule toute seule.',
           validation: (rule) => rule.max(6),
         }),
+        defineField({
+          name: 'image',
+          title: 'Illustration',
+          type: 'eventImage',
+          description: 'Facultative. Sans elle, la section se compose sans cadre vide.',
+        }),
         defineField({name: 'ctaLabel', title: 'Libellé du bouton', type: 'string'}),
       ],
     }),
@@ -249,10 +256,17 @@ export const homePageType = defineType({
         }),
         defineField({name: 'ctaLabel', title: 'Libellé du bouton', type: 'string'}),
         defineField({
+          name: 'image',
+          title: 'Illustration',
+          type: 'eventImage',
+          description: 'Facultative. Sans elle, la section se compose sans cadre vide.',
+        }),
+        defineField({
           name: 'visualNote',
           title: 'Légende sous l’image',
           type: 'string',
-          description: 'Ex. : Accueil · célébration · accompagnement.',
+          description:
+            'Ex. : Accueil · célébration · accompagnement. Ne s’affiche que si une illustration est déposée.',
         }),
         defineField({
           name: 'thrift',
@@ -293,6 +307,12 @@ export const homePageType = defineType({
           title: 'Libellé du lien',
           type: 'string',
           description: 'Descend vers les services de prière. L’adresse est fixée par le site.',
+        }),
+        defineField({
+          name: 'image',
+          title: 'Illustration',
+          type: 'eventImage',
+          description: 'Facultative. Sans elle, la section se compose sans cadre vide.',
         }),
       ],
     }),
@@ -341,6 +361,13 @@ export const homePageType = defineType({
           title: 'Libellé du bouton d’itinéraire',
           type: 'string',
           description: 'Ouvre la carte. L’adresse du lien vient des coordonnées de la paroisse.',
+        }),
+        defineField({
+          name: 'image',
+          title: 'Illustration',
+          type: 'eventImage',
+          description:
+            'Photographie de l’église. Facultative : sans elle, la section se compose sans cadre vide.',
         }),
       ],
     }),

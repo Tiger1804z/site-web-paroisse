@@ -29,8 +29,6 @@ export const thriftStorePageType = defineType({
       title: 'En-tête (hero)',
       type: 'object',
       group: 'header',
-      description:
-        'Les images qui défilent dans le hero restent définies par le code tant que les visuels de page ne sont pas migrés.',
       fields: [
         defineField({
           name: 'eyebrow',
@@ -50,6 +48,15 @@ export const thriftStorePageType = defineType({
           type: 'text',
           rows: 3,
           validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: 'slides',
+          title: 'Images qui défilent',
+          type: 'array',
+          of: [defineArrayMember({type: 'heroSlide'})],
+          description:
+            'Elles défilent derrière le titre. Sans image, l’en-tête garde son fond sombre et reste lisible.',
+          validation: (rule) => rule.max(6),
         }),
       ],
     }),
@@ -97,7 +104,7 @@ export const thriftStorePageType = defineType({
       type: 'object',
       group: 'gallery',
       description:
-        'Seuls les textes se saisissent ici. Les cadres restent définis par le code : ils indiquent les prises de vue attendues, en attendant de vraies photographies du local.',
+        'Tant qu’aucune photographie n’est ajoutée, la section entière reste invisible sur le site. Rien n’oblige à la remplir.',
       fields: [
         defineField({name: 'eyebrow', title: 'Surtitre', type: 'string'}),
         defineField({name: 'title', title: 'Titre', type: 'string'}),
@@ -106,6 +113,15 @@ export const thriftStorePageType = defineType({
           title: 'Introduction',
           type: 'text',
           rows: 3,
+        }),
+        defineField({
+          name: 'photos',
+          title: 'Photographies',
+          type: 'array',
+          of: [defineArrayMember({type: 'galleryPhoto'})],
+          description:
+            'Photographies du local. Les mêmes verrous que le carrousel de l’accueil s’appliquent : sans texte alternatif ni droits confirmés, une photo reste dans la liste sans s’afficher.',
+          validation: (rule) => rule.max(12),
         }),
       ],
     }),

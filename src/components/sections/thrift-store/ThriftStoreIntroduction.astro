@@ -1,7 +1,6 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
-import ThriftStorePhotoPlaceholder from './ThriftStorePhotoPlaceholder.astro';
 import type { ThriftStorePageData } from '@/types/thriftStore';
 
 interface Props {
@@ -30,15 +29,6 @@ const phoneHref =
 >
   <Container>
     <div class="thrift-introduction__grid">
-      <figure class="thrift-introduction__visual">
-        <ThriftStorePhotoPlaceholder
-          placeholder={introduction.photoPlaceholder}
-        />
-        <figcaption>
-          Cadre réservé à une photographie réelle de la friperie.
-        </figcaption>
-      </figure>
-
       <div class="thrift-introduction__content">
         <p class="thrift-introduction__eyebrow">{introduction.eyebrow}</p>
         <h2 id="thrift-introduction-title">{introduction.title}</h2>
@@ -103,17 +93,6 @@ const phoneHref =
     display: grid;
     gap: clamp(2.5rem, 5vw, 4rem);
     align-items: center;
-  }
-
-  .thrift-introduction__visual {
-    margin: 0;
-  }
-
-  .thrift-introduction__visual figcaption {
-    margin-top: 0.75rem;
-    color: var(--color-muted);
-    font-size: 0.6875rem;
-    line-height: 1.5;
   }
 
   .thrift-introduction__eyebrow {
@@ -201,7 +180,7 @@ const phoneHref =
 
   @media (min-width: 64rem) {
     .thrift-introduction__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 52rem;
     }
   }
 

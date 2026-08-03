@@ -1,4 +1,3 @@
-import architectureImage from '@/assets/images/paroisse/nef-vue-generale-02.webp';
 import heroImage from '@/assets/images/paroisse/eglise-exterieur-identification-01.webp';
 import type { AboutPageData } from '@/types/about';
 
@@ -201,12 +200,6 @@ export const aboutPageData = {
       'L’église se distingue notamment par une composition où le bois foncé, la brique rouge et le béton encadrent un chœur largement éclairé.',
       'Les documents existants attribuent principalement la conception à Roger D’Astous, avec la collaboration de Jean-Paul Pothier. Cette attribution et leurs rôles exacts doivent être confirmés avant le lancement public.',
     ],
-    image: {
-      image: architectureImage,
-      alt: 'Vue intérieure de l’autel, des murs de brique, des poutres de bois et des puits de lumière',
-      desktopPosition: 'center 42%',
-      mobilePosition: 'center 42%',
-    },
     features: [
       {
         title: 'Bois, brique et béton',

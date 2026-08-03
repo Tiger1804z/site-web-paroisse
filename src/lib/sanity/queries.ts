@@ -266,7 +266,25 @@ export const HOME_PAGE_QUERY = defineQuery(`
         group,
         teaser
       },
-      ctaLabel
+      ctaLabel,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     services {
       eyebrow,
@@ -278,6 +296,24 @@ export const HOME_PAGE_QUERY = defineQuery(`
       },
       ctaLabel,
       visualNote,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      },
       thrift {
         eyebrow,
         title,
@@ -289,7 +325,25 @@ export const HOME_PAGE_QUERY = defineQuery(`
       eyebrow,
       title,
       description,
-      linkLabel
+      linkLabel,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     gallery {
       eyebrow,
@@ -327,7 +381,25 @@ export const HOME_PAGE_QUERY = defineQuery(`
       title,
       introduction,
       contactCtaLabel,
-      directionsCtaLabel
+      directionsCtaLabel,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     upcomingEventsTitle,
     showUpcomingEvents,
@@ -356,7 +428,29 @@ export const THRIFT_STORE_PAGE_QUERY = defineQuery(`
     hero {
       eyebrow,
       title,
-      introduction
+      introduction,
+      slides[]{
+        _key,
+        label,
+        visual {
+          alt,
+          credit,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      }
     },
     introduction {
       eyebrow,
@@ -379,7 +473,34 @@ export const THRIFT_STORE_PAGE_QUERY = defineQuery(`
     gallery {
       eyebrow,
       title,
-      introduction
+      introduction,
+      photos[]{
+        _key,
+        title,
+        description,
+        rightsCleared,
+        consentConfirmed,
+        photo {
+          alt,
+          credit,
+          containsRecognizablePeople,
+          generatedByAi,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      }
     },
     closing {
       eyebrow,
@@ -412,7 +533,29 @@ export const SERVICES_PAGE_QUERY = defineQuery(`
     hero {
       eyebrow,
       title,
-      introduction
+      introduction,
+      slides[]{
+        _key,
+        label,
+        visual {
+          alt,
+          credit,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      }
     },
     notice {
       title,
@@ -425,6 +568,24 @@ export const SERVICES_PAGE_QUERY = defineQuery(`
       title,
       introduction,
       surface,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      },
       services[]{
         "slug": slug.current,
         title,
@@ -849,6 +1010,25 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
       eyebrow,
       title,
       paragraphs,
+      imageCaption,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      },
       features[]{
         _key,
         title,

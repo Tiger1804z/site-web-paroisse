@@ -1,6 +1,6 @@
 ---
 import Container from '@/components/ui/Container.astro';
-import ThriftStorePhotoPlaceholder from './ThriftStorePhotoPlaceholder.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { ThriftStorePageData } from '@/types/thriftStore';
 
 interface Props {
@@ -20,11 +20,22 @@ const { gallery } = Astro.props;
 
     <div class="thrift-gallery__grid">
       {
-        gallery.placeholders.map((placeholder, index) => (
-          <ThriftStorePhotoPlaceholder
-            placeholder={placeholder}
-            variant={index}
-          />
+        gallery.items.map((item) => (
+          <figure class="thrift-gallery__item">
+            <RemoteImage
+              image={item.image}
+              sizes="(min-width: 64rem) 30vw, (min-width: 48rem) 45vw, 100vw"
+            />
+            <figcaption>
+              <span class="thrift-gallery__item-title">{item.title}</span>
+              {item.description && <span>{item.description}</span>}
+              {item.image.credit && (
+                <span class="thrift-gallery__item-credit">
+                  Photo : {item.image.credit}
+                </span>
+              )}
+            </figcaption>
+          </figure>
         ))
       }
     </div>
@@ -70,6 +81,36 @@ const { gallery } = Astro.props;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(0.75rem, 2vw, 1rem);
+  }
+
+  .thrift-gallery__item {
+    display: grid;
+    margin: 0;
+    gap: 0.625rem;
+  }
+
+  .thrift-gallery__item :global(img) {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: var(--color-paper);
+  }
+
+  .thrift-gallery__item figcaption {
+    display: grid;
+    gap: 0.25rem;
+    color: var(--color-muted);
+    font-size: var(--font-size-meta);
+    line-height: 1.5;
+  }
+
+  .thrift-gallery__item-title {
+    color: var(--color-charcoal);
+    font-weight: 600;
+  }
+
+  .thrift-gallery__item-credit {
+    font-size: var(--font-size-micro);
   }
 
   @media (min-width: 48rem) {

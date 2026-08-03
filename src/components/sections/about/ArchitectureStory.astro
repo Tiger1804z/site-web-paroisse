@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { AboutArchitecture } from '@/types/about';
 
 interface Props {
@@ -9,10 +9,6 @@ interface Props {
 }
 
 const { architecture } = Astro.props;
-const imageStyle = [
-  `--architecture-position-desktop: ${architecture.image.desktopPosition ?? 'center'}`,
-  `--architecture-position-mobile: ${architecture.image.mobilePosition ?? architecture.image.desktopPosition ?? 'center'}`,
-].join('; ');
 ---
 
 <section
@@ -20,27 +16,31 @@ const imageStyle = [
   aria-labelledby="architecture-title"
 >
   <Container>
-    <div class="architecture-story__layout">
-      <figure
-        class="architecture-story__media"
-        style={imageStyle}
-        data-motion-reveal
-        data-motion-variant="image"
-      >
-        <Image
-          src={architecture.image.image}
-          alt={architecture.image.alt}
-          widths={[480, 720, 960]}
-          sizes="(min-width: 64rem) 420px, 100vw"
-          loading="lazy"
-          decoding="async"
-        />
-        {
-          architecture.image.caption && (
-            <figcaption>{architecture.image.caption}</figcaption>
-          )
-        }
-      </figure>
+    <div
+      class:list={[
+        'architecture-story__layout',
+        !architecture.image && 'architecture-story__layout--textonly',
+      ]}
+    >
+      {
+        architecture.image && (
+          <figure
+            class="architecture-story__media"
+            data-motion-reveal
+            data-motion-variant="image"
+          >
+            <RemoteImage
+              image={architecture.image}
+              sizes="(min-width: 64rem) 420px, 100vw"
+            />
+            {(architecture.imageCaption ?? architecture.image.credit) && (
+              <figcaption>
+                {architecture.imageCaption ?? architecture.image.credit}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
 
       <div class="architecture-story__content" data-motion-reveal>
         <Eyebrow>{architecture.eyebrow}</Eyebrow>
@@ -98,7 +98,6 @@ const imageStyle = [
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    object-position: var(--architecture-position-mobile);
   }
 
   .architecture-story__media figcaption {
@@ -175,9 +174,12 @@ const imageStyle = [
       gap: 4.5rem;
     }
 
+    .architecture-story__layout--textonly {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .architecture-story__media img {
       aspect-ratio: 3 / 4;
-      object-position: var(--architecture-position-desktop);
     }
   }
 </style>

@@ -1,5 +1,4 @@
 ---
-import churchImage from '@/assets/images/home/editorial/church-facade-editorial.jpg';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
@@ -40,19 +39,22 @@ const { content } = Astro.props;
         <Button href="/nos-services/">{content.ctaLabel}</Button>
       </div>
 
-      <div class="practical-services__visual" data-motion-reveal>
-        <EditorialImageFrame
-          image={churchImage}
-          alt="Détail architectural de la façade de Santa Maria del Fiore à Florence, utilisé comme illustration"
-          variant="arch"
-          objectPosition="49% center"
-          widths={[400, 600, 800, 1000]}
-          sizes="(min-width: 64rem) 34vw, 80vw"
-        />
-        <span class="practical-services__visual-note">
-          {content.visualNote}
-        </span>
-      </div>
+      {
+        content.image && (
+          <div class="practical-services__visual" data-motion-reveal>
+            <EditorialImageFrame
+              image={content.image}
+              variant="arch"
+              sizes="(min-width: 64rem) 34vw, 80vw"
+            />
+            {content.visualNote && (
+              <span class="practical-services__visual-note">
+                {content.visualNote}
+              </span>
+            )}
+          </div>
+        )
+      }
 
       <a class="practical-services__thrift" href="/friperie/">
         <span class="practical-services__thrift-index" aria-hidden="true">

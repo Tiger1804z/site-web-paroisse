@@ -1,8 +1,3 @@
-import candlesImage from '@/assets/images/home/editorial/candles-prayer.jpg';
-import iconImage from '@/assets/images/home/editorial/mother-of-perpetual-help-icon.jpg';
-import baptismImage from '@/assets/images/services/baptism-ceremony.jpg';
-import communionImage from '@/assets/images/services/first-communion-candle.jpg';
-import weddingImage from '@/assets/images/services/wedding-silhouette.jpg';
 import type { PublicContactDetails } from '@/types/siteSettings';
 import { SITE_NAME } from '@/lib/site';
 import type { ParishServiceDetail, ServicesPageData } from '@/types/services';
@@ -31,38 +26,7 @@ export function buildServicesPageData(
       title: 'Nos services',
       introduction:
         'Des premiers repères pour préparer un sacrement, demander un document, confier une intention ou communiquer avec la paroisse.',
-      images: [
-        {
-          image: baptismImage,
-          alt: 'Geste de baptême photographié dans une autre communauté; image d’illustration',
-          documentary: false,
-          credit:
-            'Image : auteur indiqué « 664072 » dans le fichier, provenance Pixabay déclarée par l’utilisateur; page source exacte à archiver.',
-          objectPosition: 'center 55%',
-          frame: 'landscape',
-          label: 'Le baptême',
-        },
-        {
-          image: weddingImage,
-          alt: 'Silhouette en noir et blanc d’un couple marié; image d’illustration',
-          documentary: false,
-          credit:
-            'Image : Pexels, provenance Pixabay identifiée par le fichier; licence et page source archivées dans l’inventaire.',
-          objectPosition: 'center 52%',
-          frame: 'portrait-offset',
-          label: 'Le mariage',
-        },
-        {
-          image: communionImage,
-          alt: 'Enfant tenant un cierge lors d’une première communion; image d’illustration',
-          documentary: false,
-          credit:
-            'Image : Tobias C. Wahl, provenance Pixabay identifiée par le fichier; licence et page source archivées dans l’inventaire.',
-          objectPosition: 'center 52%',
-          frame: 'landscape',
-          label: 'La première communion',
-        },
-      ],
+      slides: [],
     },
     notice: {
       title: 'Des informations à vérifier avant votre démarche',
@@ -78,15 +42,6 @@ export function buildServicesPageData(
         introduction:
           'Chaque démarche commence par un échange avec le secrétariat afin de confirmer la préparation, les documents et les dates.',
         surface: 'ivory',
-        image: {
-          image: iconImage,
-          alt: 'Reproduction de l’icône de Notre-Dame du Perpétuel Secours, utilisée comme œuvre d’illustration',
-          documentary: false,
-          credit:
-            'Image : teotea, Pixabay — licence de la source vérifiée; attribution à conserver dans l’inventaire.',
-          objectPosition: 'center',
-          frame: 'portrait-offset',
-        },
         services: [
           {
             id: 'mariage',
@@ -197,15 +152,6 @@ export function buildServicesPageData(
         introduction:
           'Ces demandes sont inscrites auprès du secrétariat. Une date ou une célébration spéciale demeure toujours à confirmer.',
         surface: 'charcoal',
-        image: {
-          image: candlesImage,
-          alt: 'Lampions allumés dans un espace sombre; photographie d’illustration ne montrant pas la paroisse',
-          documentary: false,
-          credit:
-            'Image : Robert Cheaib, provenance Pixabay indiquée par le fichier; page source exacte à archiver.',
-          objectPosition: 'center 54%',
-          frame: 'organic',
-        },
         services: [
           {
             id: 'messes-annoncees',

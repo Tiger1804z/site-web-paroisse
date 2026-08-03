@@ -139,10 +139,22 @@ export const aboutPageType = defineType({
       title: 'Section « Le lieu »',
       type: 'object',
       group: 'architecture',
-      description: 'La photographie de la nef est un fichier du site et ne se change pas ici.',
       fields: [
         defineField({name: 'eyebrow', title: 'Surtitre', type: 'string'}),
         defineField({name: 'title', title: 'Titre', type: 'string'}),
+        defineField({
+          name: 'image',
+          title: 'Photographie du lieu',
+          type: 'eventImage',
+          description:
+            'Photographie de l’église elle-même. Facultative : sans elle, la section se compose en pleine largeur.',
+        }),
+        defineField({
+          name: 'imageCaption',
+          title: 'Légende de la photographie',
+          type: 'string',
+          description: 'Courte phrase affichée sous la photographie. Facultative.',
+        }),
         defineField({
           name: 'paragraphs',
           title: 'Paragraphes',

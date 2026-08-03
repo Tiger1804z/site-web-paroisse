@@ -9,10 +9,9 @@ export interface AboutLink {
 /**
  * Image locale de la page.
  *
- * Le hero et le cadre d'architecture restent des fichiers du dépôt : ce sont
- * des visuels de page, pas du contenu. Un ticket dédié migrera tous les visuels
- * de page ensemble. Les illustrations de la chronologie, elles, ont suivi leur
- * repère dans Sanity — un repère sans son image est un repère cassé.
+ * Ne sert plus qu'au hero : une image de fond pleine largeur, choisie une fois
+ * pour la composition de la page. La photographie du lieu, elle, est du
+ * contenu — elle documente le bâtiment et se change dans le Studio.
  */
 export interface AboutImage {
   readonly image: ImageMetadata;
@@ -100,7 +99,13 @@ export interface AboutArchitecture {
   readonly title: string;
   readonly paragraphs: readonly string[];
   readonly features: readonly ArchitectureFeature[];
-  readonly image: AboutImage;
+  /**
+   * Photographie du lieu, facultative. C'est une image documentaire : elle
+   * montre l'église elle-même, et se remplace dans le Studio. Sans elle, la
+   * section se compose en pleine largeur.
+   */
+  readonly image?: SanityRenderableImage;
+  readonly imageCaption?: string;
 }
 
 export interface ArchitectProfile {

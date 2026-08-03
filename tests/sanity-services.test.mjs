@@ -23,16 +23,7 @@ const fallback = {
     eyebrow: 'Accueil et accompagnement',
     title: 'Nos services',
     introduction: 'Introduction locale.',
-    images: [
-      {
-        image: { src: '/local.jpg', width: 1600, height: 1067, format: 'jpg' },
-        alt: 'Geste de baptême',
-        documentary: false,
-        credit: 'Image : Pixabay.',
-        frame: 'landscape',
-        label: 'Le baptême',
-      },
-    ],
+    slides: [],
   },
   notice: {
     title: 'Titre local',
@@ -46,13 +37,6 @@ const fallback = {
       title: 'Sacrements et initiation chrétienne',
       introduction: 'Introduction locale du chapitre.',
       surface: 'ivory',
-      image: {
-        image: { src: '/icone.jpg', width: 800, height: 1200, format: 'jpg' },
-        alt: 'Icône',
-        documentary: false,
-        credit: 'Image : teotea, Pixabay.',
-        frame: 'portrait-offset',
-      },
       services: [
         {
           id: 'mariage',
@@ -113,8 +97,30 @@ const sanityChapter = {
   ],
 };
 
+// Doublure du constructeur d'adresses : le vrai lit `import.meta.env`, absent
+// sous `node --test`.
+const buildSources = () => ({
+  src: 'https://cdn.test/image?w=1920',
+  srcSet: 'https://cdn.test/image?w=480 480w',
+});
+
+/** Image telle que la projection GROQ la remonte. */
+const rawImage = (alt, credit) => ({
+  alt,
+  ...(credit ? { credit } : {}),
+  image: {
+    asset: {
+      _id: 'image-abc-1200x900-jpg',
+      metadata: {
+        lqip: 'data:image/png;base64,x',
+        dimensions: { width: 1200, height: 900 },
+      },
+    },
+  },
+});
+
 test('sans document Sanity, la page reste identique au repli local', () => {
-  const result = normalizeSanityServicesPage(null, fallback);
+  const result = normalizeSanityServicesPage(null, fallback, buildSources);
   assert.deepEqual(result, fallback);
 });
 
@@ -125,6 +131,7 @@ test('le contenu Sanity remplace le contenu local', () => {
       chapters: [sanityChapter],
     },
     fallback,
+    buildSources,
   );
 
   assert.equal(result.hero.title, 'Titre Sanity');
@@ -135,22 +142,72 @@ test('le contenu Sanity remplace le contenu local', () => {
   assert.equal(result.chapters[0].services[0].note, 'Une note.');
 });
 
-test('les images restent locales et se rattachent par l’ancre', () => {
+test('les images viennent du Studio, plus jamais du repli local', () => {
+  const result = normalizeSanityServicesPage(
+    {
+      hero: {
+        slides: [
+          {
+            _key: 's1',
+            label: 'Le baptême',
+            visual: rawImage('Un baptême', 'Pixabay'),
+          },
+        ],
+      },
+      chapters: [{ ...sanityChapter, image: rawImage('Une icône') }],
+    },
+    fallback,
+    buildSources,
+  );
+
+  assert.equal(result.hero.slides.length, 1);
+  assert.equal(result.hero.slides[0].label, 'Le baptême');
+  assert.equal(result.hero.slides[0].image.alt, 'Un baptême');
+  assert.equal(result.hero.slides[0].image.credit, 'Pixabay');
+  assert.equal(result.chapters[0].image.alt, 'Une icône');
+});
+
+test('sans image dans le Studio, aucun cadre n’est réservé', () => {
   const result = normalizeSanityServicesPage(
     { chapters: [sanityChapter] },
     fallback,
+    buildSources,
   );
 
-  // Le hero garde ses fichiers du projet, quoi que dise Sanity.
-  assert.deepEqual(result.hero.images, fallback.hero.images);
-  // L'image du chapitre suit son ancre, pas sa position dans le tableau.
-  assert.deepEqual(result.chapters[0].image, fallback.chapters[0].image);
+  assert.deepEqual(result.hero.slides, []);
+  assert.equal(result.chapters[0].image, undefined);
+});
+
+test('une image sans texte alternatif n’est pas publiable', () => {
+  const withoutAlt = { image: rawImage('x').image };
+  const result = normalizeSanityServicesPage(
+    {
+      hero: { slides: [{ _key: 's1', label: 'Sans alt', visual: withoutAlt }] },
+      chapters: [{ ...sanityChapter, image: withoutAlt }],
+    },
+    fallback,
+    buildSources,
+  );
+
+  assert.deepEqual(result.hero.slides, []);
+  assert.equal(result.chapters[0].image, undefined);
+});
+
+test('une image sans libellé ne rejoint pas le carrousel d’en-tête', () => {
+  const result = normalizeSanityServicesPage(
+    { hero: { slides: [{ _key: 's1', visual: rawImage('Une image') }] } },
+    fallback,
+    buildSources,
+  );
+
+  assert.deepEqual(result.hero.slides, []);
 });
 
 test('le bouton d’appel ne vient jamais de Sanity', () => {
   const result = normalizeSanityServicesPage(
     { chapters: [sanityChapter] },
     fallback,
+    buildSources,
   );
 
   assert.deepEqual(result.chapters[0].services[0].cta, phoneCta);
@@ -172,6 +229,7 @@ test('un service masqué garde son drapeau, il n’est pas supprimé', () => {
       ],
     },
     fallback,
+    buildSources,
   );
 
   assert.equal(result.chapters[0].services[0].active, false);
@@ -199,6 +257,7 @@ test('une entrée incomplète est écartée plutôt qu’affichée à moitié', 
       ],
     },
     fallback,
+    buildSources,
   );
 
   const services = result.chapters[0].services;
@@ -213,6 +272,7 @@ test('un chapitre sans service valide ne laisse pas un bandeau vide', () => {
   const result = normalizeSanityServicesPage(
     { chapters: [{ ...sanityChapter, services: [] }] },
     fallback,
+    buildSources,
   );
 
   // Plus aucun chapitre exploitable : le repli local reprend la main.
@@ -223,6 +283,7 @@ test('une surface inconnue retombe sur la plus neutre', () => {
   const result = normalizeSanityServicesPage(
     { chapters: [{ ...sanityChapter, surface: 'fuchsia' }] },
     fallback,
+    buildSources,
   );
 
   assert.equal(result.chapters[0].surface, 'ivory');

@@ -1,47 +1,5 @@
-import hoodiesRackImage from '@/assets/images/thrift-store/hoodies-rack-pixabay.jpg';
-import winterBootsImage from '@/assets/images/thrift-store/winter-boots-pixabay.jpg';
-import yarnBallImage from '@/assets/images/thrift-store/yarn-ball-pixabay.jpg';
 import { SITE_NAME } from '@/lib/site';
-import type {
-  ThriftStoreImage,
-  ThriftStorePageData,
-} from '@/types/thriftStore';
-
-// Visuels thématiques libres de droits (Pixabay, Content License : usage
-// commercial autorisé sans attribution). Ils illustrent l'univers du vêtement,
-// sans jamais être présentés comme des photographies du local paroissial.
-const sharedReplacementNote =
-  'Remplaçable par une photographie du local si la paroisse en fournit une.';
-
-const hoodiesRackVisual = {
-  image: hoodiesRackImage,
-  alt: 'Chandails à capuchon de plusieurs couleurs alignés sur un portant',
-  credit: 'jarmoluk (Pixabay)',
-  sourceNote:
-    'Pixabay, image 428607, Content License — usage commercial autorisé sans attribution.',
-  status: 'confirmed',
-  replacementNote: sharedReplacementNote,
-} as const satisfies ThriftStoreImage;
-
-const yarnBallVisual = {
-  image: yarnBallImage,
-  alt: 'Pelote de laine grise posée près de bobines de fil sombre',
-  credit: 'StockSnap (Pixabay)',
-  sourceNote:
-    'Pixabay, image 2583976, Content License — usage commercial autorisé sans attribution.',
-  status: 'confirmed',
-  replacementNote: sharedReplacementNote,
-} as const satisfies ThriftStoreImage;
-
-const winterBootsVisual = {
-  image: winterBootsImage,
-  alt: 'Bottes d’hiver en cuir beige portées avec un jean',
-  credit: 'StockSnap (Pixabay)',
-  sourceNote:
-    'Pixabay, image 2587909, Content License — usage commercial autorisé sans attribution.',
-  status: 'confirmed',
-  replacementNote: sharedReplacementNote,
-} as const satisfies ThriftStoreImage;
+import type { ThriftStorePageData } from '@/types/thriftStore';
 
 export const thriftStorePageData = {
   seo: {
@@ -58,7 +16,7 @@ export const thriftStorePageData = {
     title: 'Au Coin de l’Entraide',
     introduction:
       'Un lieu de partage au service de la communauté, pour se vêtir ou trouver de petits articles pour la maison.',
-    slides: [hoodiesRackVisual, yarnBallVisual, winterBootsVisual],
+    slides: [],
   },
   introduction: {
     eyebrow: 'Notre friperie',
@@ -72,12 +30,6 @@ export const thriftStorePageData = {
     ],
     priceNotice:
       'Les prix peuvent varier selon les articles et les périodes de l’année. Des ventes spéciales peuvent aussi être annoncées occasionnellement.',
-    photoPlaceholder: {
-      id: 'presentation-generale',
-      subject: 'Vue générale du local',
-      ratio: '4:3',
-      orientation: 'landscape',
-    },
   },
   practicalInformation: {
     // Relevé le 29 juillet 2026 sur le site actuel de la paroisse. Ces valeurs
@@ -109,44 +61,7 @@ export const thriftStorePageData = {
     title: 'La friperie en images',
     introduction:
       'Ces cadres indiquent les prises de vue attendues. Ils seront remplacés par des photographies réelles, sans présenter un autre commerce comme la friperie paroissiale.',
-    placeholders: [
-      {
-        id: 'portants-horizontal',
-        subject: 'Portants organisés',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-      {
-        id: 'espace-large',
-        subject: 'Vue large du local',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-      {
-        id: 'tri-dons',
-        subject: 'Tri et dons',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-      {
-        id: 'vente-speciale',
-        subject: 'Vente spéciale réelle',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-      {
-        id: 'details-textiles',
-        subject: 'Détails textiles',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-      {
-        id: 'signalisation',
-        subject: 'Signalisation du lieu',
-        ratio: '1:1',
-        orientation: 'square',
-      },
-    ],
+    items: [],
   },
   closing: {
     eyebrow: 'Avant d’apporter des articles',

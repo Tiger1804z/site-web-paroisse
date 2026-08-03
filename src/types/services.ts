@@ -1,4 +1,4 @@
-import type { ImageMetadata } from 'astro';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export type ServiceSurface = 'ivory' | 'paper' | 'charcoal' | 'burgundy';
 
@@ -19,13 +19,15 @@ export interface ParishServiceDetail {
   readonly value: string;
 }
 
-export interface ServicesEditorialImage {
-  readonly image: ImageMetadata;
-  readonly alt: string;
-  readonly documentary: boolean;
-  readonly credit?: string;
-  readonly objectPosition?: string;
-  readonly frame: 'arch' | 'landscape' | 'organic' | 'oval' | 'portrait-offset';
+/**
+ * Une image du carrousel d'en-tête.
+ *
+ * Le cadrage n'est plus décrit ici : le point focal posé dans le Studio suit
+ * l'image, quelle que soit la forme du cadre qui l'accueille.
+ */
+export interface ServicesHeroSlide {
+  readonly label: string;
+  readonly image: SanityRenderableImage;
 }
 
 /**
@@ -53,7 +55,11 @@ export interface ParishServiceChapter {
   readonly introduction: string;
   readonly surface: ServiceSurface;
   readonly services: readonly ParishService[];
-  readonly image?: ServicesEditorialImage;
+  /**
+   * Image d'ambiance, facultative. Sans elle le chapitre occupe toute la
+   * largeur — le cadre ne se réserve pas une place qu'il ne remplira pas.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 export interface ServicesPageData {
@@ -66,9 +72,8 @@ export interface ServicesPageData {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly images: readonly (ServicesEditorialImage & {
-      readonly label: string;
-    })[];
+    /** Peut être vide : l'en-tête garde alors son fond sombre. */
+    readonly slides: readonly ServicesHeroSlide[];
   };
   readonly notice: {
     readonly title: string;

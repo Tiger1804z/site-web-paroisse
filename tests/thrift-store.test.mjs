@@ -33,18 +33,24 @@ test('les prototypes sans licence ont quitté le dépôt', () => {
   }
 });
 
-test('chaque visuel du hero déclare sa source et son remplacement', () => {
-  const slideCount = (
-    thriftStoreSource.match(/satisfies ThriftStoreImage/g) ?? []
-  ).length;
-  const sourceNotes = (thriftStoreSource.match(/sourceNote:/g) ?? []).length;
-  const replacementNotes = (
-    thriftStoreSource.match(/replacementNote: sharedReplacementNote/g) ?? []
-  ).length;
+test('le repli local ne porte plus aucune image', () => {
+  // Les visuels de la friperie vivent dans le Studio depuis la migration des
+  // images éditoriales. Un repli qui en garderait une copie ferait diverger
+  // deux vérités, et la paroisse ne pourrait pas la remplacer elle-même.
+  assert.ok(!thriftStoreSource.includes('@/assets/images'));
+  assert.ok(thriftStoreSource.includes('slides: []'));
+});
 
-  assert.equal(slideCount, 3);
-  assert.equal(sourceNotes, slideCount);
-  assert.equal(replacementNotes, slideCount);
+test('aucun cadre « photographie prévue » n’est imposé par le code', () => {
+  // Six cadres vides annonçaient un chantier sur une page publique et
+  // indexable. La galerie n'existe désormais que si le Studio la remplit.
+  assert.doesNotMatch(thriftStoreSource, /placeholder/i);
+  assert.equal(
+    existsSync(
+      `${rootPath}/src/components/sections/thrift-store/ThriftStorePhotoPlaceholder.astro`,
+    ),
+    false,
+  );
 });
 
 test('les informations pratiques relevées sont publiées', () => {

@@ -1,5 +1,4 @@
 ---
-import candlesImage from '@/assets/images/home/editorial/candles-prayer.jpg';
 import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import TextLink from '@/components/ui/TextLink.astro';
@@ -19,15 +18,16 @@ const { content } = Astro.props;
 >
   <Container>
     <div class="spiritual-interlude__layout">
-      <EditorialImageFrame
-        class="spiritual-interlude__image"
-        image={candlesImage}
-        alt="Lampions allumés dans un espace sombre; photographie d’illustration ne montrant pas la paroisse"
-        variant="organic"
-        objectPosition="center 54%"
-        widths={[480, 720, 960, 1280]}
-        sizes="(min-width: 64rem) 48vw, 100vw"
-      />
+      {
+        content.image && (
+          <EditorialImageFrame
+            class="spiritual-interlude__image"
+            image={content.image}
+            variant="organic"
+            sizes="(min-width: 64rem) 48vw, 100vw"
+          />
+        )
+      }
 
       <div class="spiritual-interlude__copy" data-motion-reveal>
         <Eyebrow tone="light">{content.eyebrow}</Eyebrow>
