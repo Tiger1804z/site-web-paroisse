@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
+import { MACHINE_VALUE_FIELDS } from '../src/lib/sanity/machine-values.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 const read = (relativePath) =>
@@ -72,9 +73,29 @@ test('stega n’encode jamais les champs envoyés dans un attribut', () => {
   // Des caractères invisibles dans un `alt`, un `tel:` ou un courriel
   // casseraient l'attribut ou pollueraient un lecteur d'écran.
   for (const field of ['alt', 'imageAlt', 'phone', 'publicEmail']) {
-    assert.match(previewSource, new RegExp(`'${field}'`));
+    assert.ok(
+      MACHINE_VALUE_FIELDS.has(field),
+      `${field} atterrit dans un attribut HTML et doit rester non encodé`,
+    );
   }
   assert.match(previewSource, /filter: stegaFilter/);
+  assert.match(previewSource, /MACHINE_VALUE_FIELDS\.has\(lastSegment\)/);
+});
+
+test('les valeurs machine sont aussi nettoyées après la lecture', () => {
+  // Le filtre ne voit que le nom du champ tel que le résultat le porte. Une
+  // projection qui renomme un champ lui présente un nom inconnu : le second
+  // passage est ce qui rattrape ce cas.
+  assert.match(previewSource, /cleanMachineValues\(result\)/);
+});
+
+test('un build de production refuse le drapeau de prévisualisation', () => {
+  // Un avertissement dans un journal de build ne se remarque pas. Publier des
+  // brouillons, des marqueurs stega et un noindex généralisé, si.
+  assert.match(
+    previewSource,
+    /if \(visualEditingEnabled && import\.meta\.env\.PROD\) \{\s*throw new Error\(/,
+  );
 });
 
 test('les clés de tableau sont conservées dans les source maps', () => {

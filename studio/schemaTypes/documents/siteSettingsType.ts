@@ -1,4 +1,4 @@
-import {defineType, defineField, defineArrayMember} from 'sanity'
+import {defineType, defineField} from 'sanity'
 import {CogIcon} from '@sanity/icons/Cog'
 
 export const siteSettingsType = defineType({
@@ -118,47 +118,6 @@ export const siteSettingsType = defineType({
         'Informations d’accessibilité (accès, rampe, ascenseur, etc.). Laisser vide tant qu’elles ne sont pas confirmées.',
     }),
 
-    defineField({
-      name: 'socialLinks',
-      title: 'Réseaux sociaux',
-      type: 'array',
-      description: 'Liens vers les pages officielles. N’ajouter que des liens confirmés.',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          name: 'socialLink',
-          title: 'Lien de réseau social',
-          fields: [
-            defineField({
-              name: 'platform',
-              title: 'Plateforme',
-              type: 'string',
-              options: {
-                list: [
-                  {title: 'Facebook', value: 'facebook'},
-                  {title: 'YouTube', value: 'youtube'},
-                  {title: 'Instagram', value: 'instagram'},
-                ],
-              },
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: 'url',
-              title: 'URL',
-              type: 'url',
-              validation: (rule) =>
-                rule
-                  .required()
-                  .uri({scheme: ['http', 'https']})
-                  .error('Saisir une URL valide commençant par http:// ou https://'),
-            }),
-          ],
-          preview: {
-            select: {title: 'platform', subtitle: 'url'},
-          },
-        }),
-      ],
-    }),
     defineField({
       name: 'lastReviewedAt',
       title: 'Dernière révision des informations',

@@ -32,11 +32,6 @@ const siteSettings = await getSiteSettings();
           Un lieu de foi, de paix et de rencontre ouvert à tous, au cœur de
           notre communauté québécoise.
         </p>
-        <div class="site-footer__socials" aria-label="Réseaux sociaux">
-          <span title="Lien Facebook à confirmer">Facebook</span>
-          <span aria-hidden="true">·</span>
-          <span title="Lien YouTube à confirmer">YouTube</span>
-        </div>
       </div>
 
       <nav
@@ -85,10 +80,7 @@ const siteSettings = await getSiteSettings();
     </div>
 
     <div class="site-footer__legal">
-      <p>
-        © {currentYear}
-        {SITE_NAME}. Tous droits réservés.
-      </p>
+      <p>© {currentYear} {SITE_NAME}. Tous droits réservés.</p>
       <div class="site-footer__legal-links">
         {
           legalNavigation.map((item, index) => (
@@ -213,14 +205,6 @@ const siteSettings = await getSiteSettings();
     color: color-mix(in srgb, var(--color-ivory) 65%, transparent);
     font-size: var(--font-size-ui);
     line-height: 1.7;
-  }
-
-  .site-footer__socials {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    color: color-mix(in srgb, var(--color-ivory) 60%, transparent);
-    font-size: var(--font-size-ui);
   }
 
   .site-footer__heading {

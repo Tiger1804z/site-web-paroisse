@@ -4,6 +4,10 @@ import type {
   FilterDefault,
   ResponseQueryOptions,
 } from '@sanity/client';
+import {
+  cleanMachineValues,
+  MACHINE_VALUE_FIELDS,
+} from '@/lib/sanity/machine-values';
 
 /**
  * Prévisualisation éditoriale — la frontière entre le site public et Presentation.
@@ -66,17 +70,20 @@ const PREVIEW_API_VERSION = '2025-02-19';
  * Champs qui ne doivent jamais être encodés.
  *
  * Stega glisse des caractères invisibles dans les chaînes. Dans un texte
- * affiché c'est sans conséquence; dans un attribut, ça casse : une adresse
- * `tel:` cesse d'être valide, et un texte alternatif lu par un lecteur d'écran
- * se met à contenir du bruit. Le filtre par défaut du client écarte déjà les
- * identifiants et ce qui ressemble à une adresse; on y ajoute ce que notre
- * contrat envoie explicitement dans des attributs.
+ * affiché c'est sans conséquence; dans une valeur que le code compare, trie ou
+ * analyse, ça casse : `"tuesday"` cesse d'être une clé connue, `"08:00"` cesse
+ * d'être une heure valide, `publicationStatus === 'published'` devient faux.
+ *
+ * La liste vit dans `machine-values.ts` et sert deux fois : ici pour ne pas
+ * encoder, et après la lecture pour nettoyer ce qui l'aurait été malgré tout.
+ * Deux barrières, une seule liste — c'est ce qui empêche les deux de diverger.
  */
-const ATTRIBUTE_FIELDS = new Set(['alt', 'imageAlt', 'phone', 'publicEmail']);
-
 const stegaFilter: FilterDefault = (props) => {
   const lastSegment = props.resultPath.at(-1);
-  if (typeof lastSegment === 'string' && ATTRIBUTE_FIELDS.has(lastSegment)) {
+  if (
+    typeof lastSegment === 'string' &&
+    MACHINE_VALUE_FIELDS.has(lastSegment)
+  ) {
     return false;
   }
 
@@ -123,14 +130,25 @@ if (visualEditingEnabled && !readToken) {
 }
 
 /**
- * Le site est configuré en `output: 'static'`. Construire avec le drapeau actif
- * figerait donc des brouillons et des caractères stega dans du HTML destiné à
- * être déployé publiquement. Un environnement de prévisualisation déployé devra
- * rendre à la demande, pas produire ce build.
+ * Le site public est pré-rendu. Construire avec le drapeau actif figerait des
+ * brouillons, des marqueurs stega et l'île d'overlays dans du HTML destiné à
+ * être déployé — et un avertissement dans un journal de build ne se remarque
+ * pas. On refuse donc de produire cette sortie.
+ *
+ * `pnpm build:public` force le drapeau à « false » le temps du build : c'est
+ * la commande de production, et elle ne rencontre jamais cette barrière. Un
+ * environnement de prévisualisation déployé rendra à la demande, sans passer
+ * par un build statique.
  */
 if (visualEditingEnabled && import.meta.env.PROD) {
-  console.warn(
-    '[preview] Build lancé avec la prévisualisation active : le HTML produit contiendra des brouillons et des marqueurs stega. Ne pas publier cette sortie.',
+  throw new Error(
+    [
+      'Build de production lancé avec la prévisualisation active.',
+      '',
+      "PUBLIC_SANITY_VISUAL_EDITING_ENABLED vaut « true ». Le HTML produit contiendrait des brouillons, des caractères stega invisibles, un noindex sur toutes les pages et l'île de Visual Editing.",
+      '',
+      'Utiliser « pnpm build:public », qui force le drapeau à « false » sans toucher au fichier .env.',
+    ].join('\n'),
   );
 }
 
@@ -140,16 +158,20 @@ if (visualEditingEnabled && import.meta.env.PROD) {
  * Le type de retour reste celui que Sanity TypeGen a généré pour cette requête :
  * `ClientReturn` résout la chaîne de requête vers son type, exactement comme le
  * faisait l'appel direct à `sanityClient.fetch`.
+ *
+ * En prévisualisation, le résultat repasse par `cleanMachineValues` : le filtre
+ * ci-dessus empêche l'encodage des valeurs machine que l'on connaît, ce second
+ * passage rattrape celles qui auraient été encodées quand même — une projection
+ * qui renomme un champ, par exemple, présente au filtre un nom qu'il ne
+ * reconnaît pas.
  */
 export async function loadQuery<const Q extends string>(
   query: Q,
 ): Promise<ClientReturn<Q>> {
   if (previewClient) {
-    return (await previewClient.fetch(
-      query,
-      {},
-      PREVIEW_OPTIONS,
-    )) as ClientReturn<Q>;
+    const result = await previewClient.fetch(query, {}, PREVIEW_OPTIONS);
+
+    return cleanMachineValues(result) as ClientReturn<Q>;
   }
 
   // Perspective explicite : avec l'ancienne version d'API de l'intégration, le
