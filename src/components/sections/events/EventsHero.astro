@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Container from '@/components/ui/Container.astro';
 import type { EventsPageData } from '@/types/events';
 
@@ -8,24 +8,20 @@ interface Props {
 }
 
 const { hero } = Astro.props;
-const heroStyle = `--events-hero-position: ${hero.image.position ?? 'center'}`;
 ---
 
-<section
-  class="events-hero"
-  style={heroStyle}
-  aria-labelledby="events-hero-title"
->
-  <Image
-    class="events-hero__image"
-    src={hero.image.image}
-    alt={hero.image.imageAlt}
-    widths={[640, 960, 1280, 1600, 1920]}
-    sizes="100vw"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-  />
+<section class="events-hero" aria-labelledby="events-hero-title">
+  {
+    hero.image && (
+      <RemoteImage
+        class="events-hero__image"
+        image={hero.image}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )
+  }
   <div class="events-hero__overlay" aria-hidden="true"></div>
   <Container class="events-hero__container">
     <div class="events-hero__content">

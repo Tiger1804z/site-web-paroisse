@@ -36,6 +36,14 @@ export interface HomeHeroContent {
   readonly scheduleTitle: string;
   readonly scheduleLinkLabel: string;
   readonly scheduleNote: string;
+  /** Peut être vide : l'en-tête garde alors son fond sombre. */
+  readonly slides: readonly HomeHeroSlide[];
+}
+
+/** Une image du carrousel d'en-tête : un libellé, une image du Studio. */
+export interface HomeHeroSlide {
+  readonly label: string;
+  readonly image: SanityRenderableImage;
 }
 
 export interface HomeQuote {

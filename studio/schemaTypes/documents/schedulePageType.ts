@@ -48,11 +48,11 @@ export const schedulePageType = defineType({
           validation: (rule) => rule.required(),
         }),
         defineField({
-          name: 'imageAlt',
-          title: 'Texte alternatif de l’image',
-          type: 'string',
-          description: 'Description de l’image du hero, pour l’accessibilité.',
-          validation: (rule) => rule.required(),
+          name: 'image',
+          title: 'Image de fond',
+          type: 'eventImage',
+          description:
+            'La photographie du premier écran. Son texte alternatif se saisit avec elle. Sans image, l’en-tête garde son fond sombre et le titre reste lisible.',
         }),
       ],
     }),

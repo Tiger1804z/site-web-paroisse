@@ -314,7 +314,7 @@ test('preview : les événements publiés restent visibles', () => {
   assert.equal(events[0].slug, 'pelerinage-notre-dame-du-cap');
 });
 
-test('preview : les catégories d’événements ne basculent pas vers le repli local', () => {
+test('preview : les catégories d’événements gardent leur visuel et leur nature', () => {
   const document = {
     hero: null,
     overview: null,
@@ -381,11 +381,10 @@ test('preview : les catégories d’événements ne basculent pas vers le repli 
     fallback,
     buildSources,
   );
-  assert.equal(
-    withoutCleaning.categories[0].title,
-    'Catégorie du repli local',
-    'sans nettoyage, visualKind est illisible et le repli local reprend la main — c’est le défaut mesuré',
-  );
+  // Sans nettoyage, `visualKind` et `kind` sont illisibles : la catégorie perd
+  // son illustration et retombe sur un libellé par défaut.
+  assert.equal(withoutCleaning.categories[0].visual, undefined);
+  assert.notEqual(withoutCleaning.categories[0].category, 'cultural');
 
   const page = normalizeSanityEventsPage(
     cleanMachineValues(encodeDeep(document)),

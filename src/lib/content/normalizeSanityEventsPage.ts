@@ -13,6 +13,9 @@ import type {
   SanityHomePageResult,
 } from '@/lib/sanity/types';
 import type { ImageSourceBuilder } from '@/lib/content/normalizeSanityParishEvents';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`.
+import { normalizeSanityImage } from './normalizeSanityImage.ts';
 
 type RawEventsPage = NonNullable<SanityEventsPageResult>;
 type RawCategory = NonNullable<RawEventsPage['categories']>[number];
@@ -104,9 +107,10 @@ function normalizeCategory(
   const summary = cleanString(raw.summary);
   const visual = normalizeVisual(raw, buildSources);
 
-  // Sans titre, sans description ou sans visuel exploitable, la carte serait
-  // un trou dans la grille : on l'écarte.
-  if (!title || !summary || !visual) return undefined;
+  // Sans titre ni description, la carte serait un trou dans la grille : on
+  // l'écarte. Un visuel manquant, lui, ne la disqualifie pas — la carte
+  // s'affiche alors sans son cadre.
+  if (!title || !summary) return undefined;
 
   const ctaHref = raw.ctaTarget ? CTA_HREFS[raw.ctaTarget] : undefined;
 
@@ -148,6 +152,8 @@ export function normalizeSanityEventsPage(
     return normalized ? [normalized] : [];
   });
 
+  const heroImage = normalizeSanityImage(raw?.hero?.image, buildSources);
+
   return {
     seo: fallback.seo,
     hero: {
@@ -155,7 +161,7 @@ export function normalizeSanityEventsPage(
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,
       introduction:
         cleanString(raw?.hero?.introduction) ?? fallback.hero.introduction,
-      image: fallback.hero.image,
+      ...(heroImage ? { image: heroImage } : {}),
     },
     overview: {
       eyebrow: cleanString(raw?.overview?.eyebrow) ?? fallback.overview.eyebrow,

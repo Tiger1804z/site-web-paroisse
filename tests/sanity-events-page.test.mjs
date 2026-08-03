@@ -21,12 +21,6 @@ const fallback = {
     eyebrow: 'Calendrier',
     title: 'Événements',
     introduction: 'Introduction locale.',
-    image: {
-      kind: 'image',
-      image: { src: '/local.jpg', width: 1920, height: 1080, format: 'jpg' },
-      imageAlt: 'Autel décoré',
-      position: 'center 52%',
-    },
   },
   overview: {
     eyebrow: 'Vie paroissiale',
@@ -125,17 +119,38 @@ test('un document absent laisse le repli local intact', () => {
   assert.deepEqual(page.categories, fallback.categories);
 });
 
-test('l’image du hero n’est jamais remplacée par Sanity', () => {
+test('l’image du hero vient du Studio', () => {
   const page = normalize({
     hero: {
       eyebrow: 'Agenda',
       title: 'Nos rendez-vous',
       introduction: 'Texte publié depuis Sanity.',
+      image: {
+        alt: 'Autel décoré de tissus rouges',
+        image: {
+          asset: {
+            _id: 'image-abc-1920x1080-jpg',
+            metadata: { dimensions: { width: 1920, height: 1080 } },
+          },
+        },
+      },
     },
   });
 
   assert.equal(page.hero.title, 'Nos rendez-vous');
-  assert.deepEqual(page.hero.image, fallback.hero.image);
+  assert.equal(page.hero.image.alt, 'Autel décoré de tissus rouges');
+});
+
+test('sans image dans le Studio, l’en-tête ne réserve aucun cadre', () => {
+  const page = normalize({
+    hero: {
+      eyebrow: 'Agenda',
+      title: 'Nos rendez-vous',
+      introduction: 'Texte.',
+    },
+  });
+
+  assert.equal(page.hero.image, undefined);
 });
 
 test('une catégorie sans titre est écartée', () => {
@@ -154,7 +169,9 @@ test('une catégorie sans description est écartée', () => {
   assert.deepEqual(page.categories, fallback.categories);
 });
 
-test('un visuel de type inconnu écarte la catégorie', () => {
+test('un visuel inconnu ou absent laisse la carte, sans son cadre', () => {
+  // Le titre et le résumé suffisent à faire une carte lisible. Écarter la
+  // catégorie entière ferait disparaître du contenu pour une image manquante.
   const page = normalize({
     categories: [
       rawCategory({ _key: 'visuel-inconnu', visualKind: 'video-immersive' }),
@@ -162,10 +179,12 @@ test('un visuel de type inconnu écarte la catégorie', () => {
     ],
   });
 
-  assert.deepEqual(page.categories, fallback.categories);
+  assert.equal(page.categories.length, 2);
+  assert.equal(page.categories[0].visual, undefined);
+  assert.equal(page.categories[1].visual, undefined);
 });
 
-test('une photographie sans texte alternatif écarte la catégorie', () => {
+test('une photographie sans texte alternatif n’est pas affichée', () => {
   const page = normalize({
     categories: [
       rawCategory({
@@ -176,10 +195,11 @@ test('une photographie sans texte alternatif écarte la catégorie', () => {
     ],
   });
 
-  assert.deepEqual(page.categories, fallback.categories);
+  assert.equal(page.categories.length, 1);
+  assert.equal(page.categories[0].visual, undefined);
 });
 
-test('une photographie annoncée mais absente écarte la catégorie', () => {
+test('une photographie annoncée mais absente ne laisse pas de cadre vide', () => {
   const page = normalize({
     categories: [
       rawCategory({ _key: 'photo-promise', visualKind: 'image', image: null }),
@@ -191,7 +211,11 @@ test('une photographie annoncée mais absente écarte la catégorie', () => {
     ],
   });
 
-  assert.deepEqual(page.categories, fallback.categories);
+  assert.equal(page.categories.length, 2);
+  assert.deepEqual(
+    page.categories.map(({ visual }) => visual),
+    [undefined, undefined],
+  );
 });
 
 test('une catégorie invalide n’emporte pas les valides autour d’elle', () => {

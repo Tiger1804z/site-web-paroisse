@@ -1,5 +1,7 @@
 import { loadQuery } from '@/lib/sanity/preview';
 import { schedulePageData } from '@/data/schedules';
+import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
 import type { SchedulePageView } from '@/types/schedule';
 import { SCHEDULE_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanitySchedulePageResult } from '@/lib/sanity/types';
@@ -42,8 +44,17 @@ export async function getSchedulePageData(): Promise<SchedulePageView> {
     siteSettings.officeHoursLabel,
   );
 
+  // L'image du premier écran demande le constructeur d'adresses du CDN, que le
+  // normalizer n'a pas : elle se compose ici, comme sur l'accueil.
+  const heroImage = normalizeSanityImage(raw?.hero?.image, (source) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    ),
+  );
+
   return {
     ...page,
+    hero: { ...page.hero, ...(heroImage ? { image: heroImage } : {}) },
     faq: page.faq.filter(({ active }) => active),
     ...schedule,
   };

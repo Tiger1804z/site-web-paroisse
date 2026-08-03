@@ -76,8 +76,19 @@ export async function getHomePageData(): Promise<HomePageData> {
     return image ? { image } : {};
   };
 
+  // Les images du premier écran suivent la même route que les illustrations
+  // de section : un libellé sans image, ou une image sans libellé, ne compose
+  // pas une diapositive.
+  const heroSlides = (raw?.hero?.slides ?? []).flatMap((slide) => {
+    const label = slide.label?.trim();
+    const image = normalizeSanityImage(slide.visual, buildSources);
+
+    return label && image ? [{ label, image }] : [];
+  });
+
   return {
     ...page,
+    hero: { ...page.hero, slides: heroSlides },
     parishLife: { ...page.parishLife, ...sectionImage(raw?.parishLife?.image) },
     services: { ...page.services, ...sectionImage(raw?.services?.image) },
     interlude: { ...page.interlude, ...sectionImage(raw?.interlude?.image) },

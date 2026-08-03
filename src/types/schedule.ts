@@ -1,3 +1,4 @@
+import type { SanityRenderableImage } from '@/types/sanityImage';
 export type ScheduleNoticeSeverity = 'info' | 'important' | 'special';
 
 /**
@@ -48,7 +49,11 @@ export interface ScheduleHero {
   readonly eyebrow: string;
   readonly title: string;
   readonly introduction: string;
-  readonly imageAlt: string;
+  /**
+   * Photographie du premier écran, facultative. Sans elle, l'en-tête garde son
+   * fond sombre : le titre reste lisible, aucun cadre vide n'apparaît.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 export interface ScheduleTime {

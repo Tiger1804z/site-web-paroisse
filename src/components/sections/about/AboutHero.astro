@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import type { AboutHero as AboutHeroContent } from '@/types/about';
@@ -9,27 +9,20 @@ interface Props {
 }
 
 const { hero } = Astro.props;
-const heroStyle = [
-  `--about-hero-position-desktop: ${hero.image.desktopPosition ?? 'center'}`,
-  `--about-hero-position-mobile: ${hero.image.mobilePosition ?? hero.image.desktopPosition ?? 'center'}`,
-].join('; ');
 ---
 
-<section
-  class="about-hero"
-  style={heroStyle}
-  aria-labelledby="about-hero-title"
->
-  <Image
-    class="about-hero__image"
-    src={hero.image.image}
-    alt={hero.image.alt}
-    widths={[640, 960, 1280, 1600, 1920]}
-    sizes="100vw"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-  />
+<section class="about-hero" aria-labelledby="about-hero-title">
+  {
+    hero.image && (
+      <RemoteImage
+        class="about-hero__image"
+        image={hero.image}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )
+  }
   <div class="about-hero__overlay" aria-hidden="true"></div>
 
   <Container class="about-hero__container">

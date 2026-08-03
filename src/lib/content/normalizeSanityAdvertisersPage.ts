@@ -44,9 +44,8 @@ export function normalizeSanityAdvertisersPage(
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,
       introduction:
         cleanString(raw?.hero?.introduction) ?? fallback.hero.introduction,
-      image: fallback.hero.image,
-      imageAlt: fallback.hero.imageAlt,
-      objectPosition: fallback.hero.objectPosition,
+      // L'image est composée par le getter, qui détient le constructeur
+      // d'adresses du CDN.
     },
     introduction: {
       eyebrow:

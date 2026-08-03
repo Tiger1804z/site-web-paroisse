@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import heroImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import type { ScheduleHero } from '@/types/schedule';
@@ -13,17 +12,18 @@ const { hero } = Astro.props;
 ---
 
 <section class="schedules-hero" aria-labelledby="schedules-hero-title">
-  <div class="schedules-hero__media">
-    <Image
-      src={heroImage}
-      alt={hero.imageAlt}
-      widths={[640, 960, 1360, 1920]}
-      sizes="100vw"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
-  </div>
+  {
+    hero.image && (
+      <div class="schedules-hero__media">
+        <RemoteImage
+          image={hero.image}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    )
+  }
   <div class="schedules-hero__overlay" aria-hidden="true"></div>
 
   <Container class="schedules-hero__content">

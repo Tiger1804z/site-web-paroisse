@@ -49,11 +49,13 @@ function normalizeHero(
   const eyebrow = cleanString(raw?.eyebrow);
   const title = cleanString(raw?.title);
   const introduction = cleanString(raw?.introduction);
-  const imageAlt = cleanString(raw?.imageAlt);
 
-  if (!eyebrow || !title || !introduction || !imageAlt) return fallback;
+  // L'image est composée par le getter, qui détient le constructeur d'adresses
+  // du CDN. Son texte alternatif la suit désormais, au lieu d'être un champ
+  // séparé que rien ne rattachait au fichier.
+  if (!eyebrow || !title || !introduction) return fallback;
 
-  return { eyebrow, title, introduction, imageAlt };
+  return { eyebrow, title, introduction };
 }
 
 /**

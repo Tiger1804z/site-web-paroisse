@@ -1,4 +1,3 @@
-import churchExteriorImage from '@/assets/images/paroisse/eglise-exterieur-clochers-01.webp';
 import type { PublicContactDetails } from '@/types/siteSettings';
 import type { Advertiser, AdvertisersPageData } from '@/types/advertisers';
 
@@ -109,10 +108,6 @@ export function buildAdvertisersPageSource(
       title: 'Nos annonceurs',
       introduction:
         'Un espace de reconnaissance pour les commerces, organisations et personnes dont la contribution publicitaire soutient les communications de la paroisse.',
-      image: churchExteriorImage,
-      imageAlt:
-        'Vue extérieure de la Paroisse Saint-René-Goupil et de ses clochers',
-      objectPosition: 'center 42%',
     },
     introduction: {
       eyebrow: 'Reconnaissance',

@@ -52,6 +52,13 @@ export const advertisersPageType = defineType({
           rows: 3,
           validation: (rule) => rule.required(),
         }),
+        defineField({
+          name: 'image',
+          title: 'Image de fond',
+          type: 'eventImage',
+          description:
+            'La photographie du premier écran. Sans elle, l’en-tête garde son fond sombre et le titre reste lisible.',
+        }),
       ],
     }),
     defineField({

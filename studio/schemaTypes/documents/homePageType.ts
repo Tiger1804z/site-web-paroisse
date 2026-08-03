@@ -13,9 +13,10 @@ import {HomeIcon} from '@sanity/icons/Home'
  * du site, pas du contenu — ni **les textes d'état vide**, qui n'apparaissent
  * que si une donnée manque et relèvent du code.
  *
- * Les illustrations des sections, elles, se déposent ici : chacune est
- * facultative, et une section sans illustration se compose sans son cadre.
- * Seules les trois photographies de fond du hero restent des fichiers du site.
+ * Les images, elles, se déposent toutes ici : les photographies du premier
+ * écran comme les illustrations de section. Chacune est facultative — une
+ * section sans image se compose sans son cadre, un en-tête sans image garde son
+ * fond sombre.
  */
 export const homePageType = defineType({
   name: 'homePage',
@@ -90,6 +91,15 @@ export const homePageType = defineType({
           title: 'Note sous l’encart',
           type: 'text',
           rows: 2,
+        }),
+        defineField({
+          name: 'slides',
+          title: 'Images qui défilent',
+          type: 'array',
+          of: [defineArrayMember({type: 'heroSlide'})],
+          description:
+            'Les photographies du premier écran. Sans image, l’en-tête garde son fond sombre et le titre reste lisible.',
+          validation: (rule) => rule.max(6),
         }),
       ],
     }),

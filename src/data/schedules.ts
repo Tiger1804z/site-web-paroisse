@@ -30,7 +30,6 @@ export const schedulePageData = {
     title: 'Horaires et célébrations',
     introduction:
       'Retrouvez ici les horaires réguliers ainsi que les changements liés aux célébrations spéciales.',
-    imageAlt: 'Vue intérieure symétrique de l’autel avec une décoration rouge',
   },
   // Aucun avis par défaut : un encadré ne s’affiche que si la paroisse en
   // publie un dans Sanity. Un avis gabarit vaut moins que pas d’avis.

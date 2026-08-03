@@ -165,6 +165,9 @@ export function normalizeSanityHomePage(
         cleanString(hero?.scheduleLinkLabel) ?? fallback.hero.scheduleLinkLabel,
       scheduleNote:
         cleanString(hero?.scheduleNote) ?? fallback.hero.scheduleNote,
+      // Les images sont composées par le getter, qui détient le constructeur
+      // d'adresses du CDN.
+      slides: fallback.hero.slides,
     },
     welcome: {
       script: cleanString(welcome?.script) ?? fallback.welcome.script,

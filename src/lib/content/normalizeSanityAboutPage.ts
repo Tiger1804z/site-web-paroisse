@@ -160,17 +160,14 @@ function normalizeProfiles(
 /**
  * Fusionne le contenu Sanity avec le repli local, champ par champ.
  *
- * Rien de ce qui suit ne vient jamais de Sanity :
+ * Deux choses ne viennent jamais de Sanity :
  *
- * - **l'image du hero et celle de la section d'architecture** — visuels de
- *   page, encore des fichiers du dépôt jusqu'au ticket qui les migrera tous.
- *   Seules les illustrations de la chronologie ont suivi leur repère, parce
- *   qu'un repère sans son image est un repère cassé;
  * - **les adresses des boutons**, qui sont des routes du site;
  * - **le `seo`**, comme sur les autres pages migrées.
  *
- * Les illustrations n'ont pas de repli : si Sanity ne répond pas, la
- * chronologie garde ses textes et perd ses cadres.
+ * Aucune image n'a de repli : si Sanity ne répond pas, la page garde ses textes
+ * et perd ses cadres. Un en-tête sans photographie reste lisible sur son fond
+ * sombre, un repère de chronologie sans illustration reste un repère.
  */
 export function normalizeSanityAboutPage(
   raw: SanityAboutPageResult,
@@ -185,6 +182,8 @@ export function normalizeSanityAboutPage(
     return normalized ? [normalized] : [];
   });
 
+  const heroImage = normalizeSanityImage(raw?.hero?.image, buildSources);
+
   const architectureImage = normalizeSanityImage(
     raw?.architecture?.image,
     buildSources,
@@ -197,7 +196,7 @@ export function normalizeSanityAboutPage(
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,
       introduction:
         cleanString(raw?.hero?.introduction) ?? fallback.hero.introduction,
-      image: fallback.hero.image,
+      ...(heroImage ? { image: heroImage } : {}),
     },
     introduction: {
       eyebrow:

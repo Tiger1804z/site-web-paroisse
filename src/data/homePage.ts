@@ -19,6 +19,7 @@ export const homePageData = {
     scheduleLinkLabel: 'Consulter tous les horaires',
     scheduleNote:
       'Horaires sujets à changement lors des célébrations spéciales.',
+    slides: [],
   },
   welcome: {
     script: 'Ensemble',

@@ -1,4 +1,3 @@
-import type { ImageMetadata } from 'astro';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 import type { PublicPhone } from '@/types/siteSettings';
 
@@ -64,9 +63,11 @@ export interface AdvertisersPageData {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly image: ImageMetadata;
-    readonly imageAlt: string;
-    readonly objectPosition?: string;
+    /**
+     * Photographie du premier écran, facultative. Sans elle, l'en-tête garde son
+     * fond sombre : le titre reste lisible, aucun cadre vide n'apparaît.
+     */
+    readonly image?: SanityRenderableImage;
   };
   readonly introduction: {
     readonly eyebrow: string;

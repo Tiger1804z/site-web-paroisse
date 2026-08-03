@@ -13,6 +13,7 @@ import type {
 } from '@/lib/sanity/types';
 import { normalizeSanityAdvertisers } from '@/lib/content/normalizeSanityAdvertisers';
 import { normalizeSanityAdvertisersPage } from '@/lib/content/normalizeSanityAdvertisersPage';
+import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
 import type { AdvertisersPageData } from '@/types/advertisers';
 
 export async function fetchAdvertisersPageRaw(): Promise<SanityAdvertisersPageResult> {
@@ -74,8 +75,15 @@ export async function getAdvertisersPageData(): Promise<AdvertisersPageData> {
 
   const advertisers = selectAdvertisers(source);
 
+  const heroImage = normalizeSanityImage(rawPage?.hero?.image, (source) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    ),
+  );
+
   return {
     ...page,
+    hero: { ...page.hero, ...(heroImage ? { image: heroImage } : {}) },
     advertisers,
     settings: {
       ...page.settings,

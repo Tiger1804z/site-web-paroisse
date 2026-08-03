@@ -201,11 +201,14 @@ test('les adresses des boutons ne viennent jamais du Studio', () => {
   assert.equal(result.closing.primaryCta.href, '/premiere-visite/');
 });
 
-test('les images du hero et de l’architecture restent des fichiers du dépôt', () => {
+test('toutes les images de la page se déposent dans le Studio', () => {
   const schema = read('studio/schemaTypes/documents/aboutPageType.ts');
 
-  assert.doesNotMatch(schema, /name: 'image'.*\n.*type: 'eventImage'/);
-  assert.match(schema, /L’image de fond est un fichier du site/);
+  // L'en-tête, la photographie du lieu et les neuf illustrations de la
+  // chronologie : plus aucune n'est un fichier du dépôt.
+  assert.match(schema, /name: 'hero'[\s\S]*?type: 'eventImage'/);
+  assert.match(schema, /name: 'architecture'[\s\S]*?type: 'eventImage'/);
+  assert.doesNotMatch(schema, /fichier du site/);
 });
 
 test('la numérotation des repères suit la liste, elle n’est pas saisie', () => {

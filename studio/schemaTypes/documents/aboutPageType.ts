@@ -10,10 +10,12 @@ import {DocumentTextIcon} from '@sanity/icons/DocumentText'
  * repère sans son illustration est un repère cassé — d'où le téléversement des
  * neuf images dans le Studio.
  *
- * Restent hors du document : l'image du hero et celle de la section
- * d'architecture (visuels de page, réservés au ticket qui les migrera tous),
- * les adresses des boutons (des routes), et le titre et la description pour les
- * moteurs de recherche, qui appartiennent au code comme sur les autres pages.
+ * Toutes les images de la page se déposent ici : celle du premier écran, la
+ * photographie du lieu et les neuf illustrations de la chronologie.
+ *
+ * Restent hors du document : les adresses des boutons (ce sont des routes), et
+ * le titre et la description pour les moteurs de recherche, qui appartiennent
+ * au code comme sur les autres pages.
  */
 export const aboutPageType = defineType({
   name: 'aboutPage',
@@ -35,7 +37,6 @@ export const aboutPageType = defineType({
       title: 'En-tête (hero)',
       type: 'object',
       group: 'header',
-      description: 'L’image de fond est un fichier du site et ne se change pas ici.',
       fields: [
         defineField({name: 'eyebrow', title: 'Surtitre', type: 'string'}),
         defineField({name: 'title', title: 'Titre', type: 'string'}),
@@ -44,6 +45,13 @@ export const aboutPageType = defineType({
           title: 'Introduction',
           type: 'text',
           rows: 3,
+        }),
+        defineField({
+          name: 'image',
+          title: 'Image de fond',
+          type: 'eventImage',
+          description:
+            'La photographie du premier écran. Sans elle, l’en-tête garde son fond sombre et le titre reste lisible.',
         }),
       ],
     }),

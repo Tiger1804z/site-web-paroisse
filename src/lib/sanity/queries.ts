@@ -167,7 +167,25 @@ export const EVENTS_PAGE_QUERY = defineQuery(`
     hero {
       eyebrow,
       title,
-      introduction
+      introduction,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     overview {
       eyebrow,
@@ -238,7 +256,29 @@ export const HOME_PAGE_QUERY = defineQuery(`
       secondaryCtaLabel,
       scheduleTitle,
       scheduleLinkLabel,
-      scheduleNote
+      scheduleNote,
+      slides[]{
+        _key,
+        label,
+        visual {
+          alt,
+          credit,
+          image {
+            ...,
+            asset->{
+              _id,
+              metadata {
+                lqip,
+                dimensions {
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            }
+          }
+        }
+      }
     },
     welcome {
       script,
@@ -832,7 +872,25 @@ export const ADVERTISERS_PAGE_QUERY = defineQuery(`
     hero {
       eyebrow,
       title,
-      introduction
+      introduction,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     introduction {
       eyebrow,
@@ -910,7 +968,24 @@ export const SCHEDULE_PAGE_QUERY = defineQuery(`
       eyebrow,
       title,
       introduction,
-      imageAlt
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     notice {
       title,
@@ -949,7 +1024,25 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     hero {
       eyebrow,
       title,
-      introduction
+      introduction,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     introduction {
       eyebrow,

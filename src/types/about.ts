@@ -25,7 +25,11 @@ export interface AboutHero {
   readonly eyebrow: string;
   readonly title: string;
   readonly introduction: string;
-  readonly image: AboutImage;
+  /**
+   * Photographie du premier écran, facultative. Sans elle, l'en-tête garde son
+   * fond sombre : le titre reste lisible, aucun cadre vide n'apparaît.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 export interface AboutIntroduction {

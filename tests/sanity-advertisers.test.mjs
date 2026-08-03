@@ -45,8 +45,6 @@ const fallbackPage = {
     eyebrow: 'Soutenir notre mission',
     title: 'Nos annonceurs',
     introduction: 'Introduction locale.',
-    image: { src: '/hero.jpg', width: 1600, height: 900, format: 'jpg' },
-    imageAlt: 'Vue extérieure de la paroisse',
     objectPosition: 'center 42%',
   },
   introduction: {
@@ -202,7 +200,7 @@ test('le contrat public ne porte plus de note de révision', () => {
   assert.doesNotMatch(contract, /lastConfirmedAt|validFrom|validUntil/);
 });
 
-test('le contenu de page vient de Sanity, le seo et l’image du repli', () => {
+test('le contenu de page vient de Sanity, le seo reste au code', () => {
   const page = normalizeSanityAdvertisersPage(
     {
       hero: {
@@ -231,9 +229,10 @@ test('le contenu de page vient de Sanity, le seo et l’image du repli', () => {
 
   assert.equal(page.hero.eyebrow, 'Merci');
   assert.equal(page.hero.introduction, 'Introduction Sanity.');
-  // Le seo et l'image de l'en-tête restent des décisions de code.
+  // Le seo reste une décision de code. L'image, elle, est composée par le
+  // getter à partir du Studio : le normalizer n'en porte plus.
   assert.equal(page.seo.noIndex, true);
-  assert.equal(page.hero.imageAlt, 'Vue extérieure de la paroisse');
+  assert.equal(page.hero.image, undefined);
   // Un champ vide laisse le repli en place, un champ rempli le remplace.
   assert.equal(page.introduction.eyebrow, 'Reconnaissance');
   assert.equal(page.introduction.title, 'Titre Sanity');

@@ -1,4 +1,3 @@
-import heroImage from '@/assets/images/paroisse/eglise-exterieur-identification-01.webp';
 import type { AboutPageData } from '@/types/about';
 
 /**
@@ -23,12 +22,6 @@ export const aboutPageData = {
     title: 'Une paroisse au cœur de sa communauté',
     introduction:
       'Découvrez l’histoire, l’architecture et la communauté de la Paroisse Saint-René-Goupil.',
-    image: {
-      image: heroImage,
-      alt: 'Vue extérieure du bâtiment de l’église et de son identification',
-      desktopPosition: 'center 47%',
-      mobilePosition: '48% center',
-    },
   },
   introduction: {
     eyebrow: 'Bienvenue',

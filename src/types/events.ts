@@ -1,3 +1,4 @@
+import type { SanityRenderableImage } from '@/types/sanityImage';
 import type { ImageMetadata } from 'astro';
 import type { ParishEventImage } from '@/types/parish-events';
 
@@ -54,7 +55,12 @@ export interface EventCategory {
   readonly title: string;
   readonly summary: string;
   readonly category: EventCategoryKind;
-  readonly visual: EventVisual;
+  /**
+   * Facultatif. Une catégorie sans visuel exploitable reste une carte lisible :
+   * son titre et son résumé suffisent. Le cadre ne se réserve pas une place
+   * qu'il ne remplira pas.
+   */
+  readonly visual?: EventVisual;
   readonly featured: boolean;
   readonly active: boolean;
   readonly confirmationRequired: boolean;
@@ -70,7 +76,11 @@ export interface EventsPageData {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly image: EventImageVisual;
+    /**
+     * Photographie du premier écran, facultative. Sans elle, l'en-tête garde son
+     * fond sombre : le titre reste lisible, aucun cadre vide n'apparaît.
+     */
+    readonly image?: SanityRenderableImage;
   };
   readonly overview: {
     readonly eyebrow: string;
