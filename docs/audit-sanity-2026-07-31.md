@@ -7,6 +7,54 @@ Aucun document de projet, ticket ni mémoire n'a servi de liste de contrôle. Au
 
 ---
 
+## 0. État des corrections — mis à jour le 3 août 2026
+
+Le corps du rapport ci-dessous est **laissé tel qu'il a été écrit le 31 juillet**, comme constat daté. Ce tableau dit ce qui a changé depuis. La suite du travail est planifiée dans [`plan-reprise-2026-08-04.md`](plan-reprise-2026-08-04.md).
+
+### Corrigé
+
+| #    | Problème                                                                     | Commit    |
+| ---- | ---------------------------------------------------------------------------- | --------- |
+| P0-1 | `[ADRESSE]` / `[TÉLÉPHONE]` sur 18 pages                                     | `91a692c` |
+| P1-1 | `socialLinks` administrable mais jamais rendu, faux liens Header et Footer   | `91a692c` |
+| P1-2 | Stega cassait horaires et événements en prévisualisation                     | `91a692c` |
+| P1-3 | Galerie `/friperie` : 7 cadres vides non administrables                      | `8bfa7ca` |
+| P1-4 | 5 images éditoriales de `/nos-services` sans champ Sanity                    | `8bfa7ca` |
+| P1-5 | Photo d'architecture de `/notre-paroisse` sans champ Sanity                  | `8bfa7ca` |
+| P2-3 | Champs orphelins `regularSchedule` / `lastReviewedAt`                        | `8bfa7ca` |
+| P2-4 | Brouillon vide `drafts.servicesPage`                                         | `8bfa7ca` |
+| P2-8 | 4 illustrations de l'accueil non administrables                              | `8bfa7ca` |
+| P2-9 | `© 2026Paroisse` — espace manquant                                           | `91a692c` |
+| —    | Build de production refuse désormais le drapeau de prévisualisation (exit 1) | `91a692c` |
+| —    | Les 6 images de premier écran restantes, hors périmètre de l'audit           | `d6aac9f` |
+
+Deux défauts non listés par l'audit ont été trouvés en corrigeant :
+
+- **`drafts.servicesPage` n'était pas inoffensif.** La prévisualisation lit les brouillons en priorité : ce brouillon figé masquait le document publié et montrait à l'éditrice une page Nos services sans aucune illustration.
+- **Une catégorie d'événement était écartée entière** quand son illustration était inexploitable — un visuel manquant emportait le titre et le résumé. Le visuel est devenu facultatif (`d6aac9f`).
+
+### Décidé autrement qu'au rapport
+
+- **§ 5 — les heros restent locaux.** Décision renversée le 3 août : plus aucune image visible du site public n'est un fichier du dépôt. Restent locaux le logo et l'image de `/verification`.
+- **§ 4 — crédits visibles sous les images de chapitre.** Les notes de provenance non confirmées (« page source exacte à archiver ») sont passées dans `rightsNote`, qui n'est jamais rendu. Aucun crédit n'est affiché tant qu'il n'est pas confirmé.
+
+### Non corrigé — en attente d'un arbitrage
+
+| #     | Problème                                                                                      | Ce qui manque                                                                            |
+| ----- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| P0-2  | 4 annonceurs publiés `active` alors que leur note dit « à confirmer avant toute publication » | Décision de l'utilisatrice. Trois sont des élus réels, avec téléphone et courriel.       |
+| P1-7  | Crédits photographiques absents                                                               | Nom de la photographe des vues de l'église.                                              |
+| P2-12 | Statut IA de `parish-life-marian-artwork.jpg`                                                 | Non déterminé. Laissé non coché; aucune mention publique automatique (décision validée). |
+
+### Non corrigé — planifié
+
+P0-3 (pages légales) → lot 4. P0-4 (hébergement, webhook, Studio) → lot 6.
+P1-8 (`robots.txt`), P2-1 (SEO par page), P2-2 (`noindex` de trois pages), P2-11 (Open Graph, sitemap, JSON-LD) → lot 3.
+P1-9 (mention des illustrations IA) → traité par la décision 5 : le champ reste interne, aucune mention n'est ajoutée automatiquement.
+P3-1 à P3-6 → lot 7.
+
+---
+
 ## 1. Verdict général
 
 **Presque complète — avec deux exceptions structurelles.**
