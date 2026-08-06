@@ -174,29 +174,51 @@ image, plus trois lectures de source). 305 tests verts. Le HTML de `dist` a ét�
 inspecté page par page : 10 canoniques indexables, 8 en `noindex`, `og:url`
 égal à la canonique partout.
 
-### Étape 4 — Découvrabilité (à faire)
+### Étape 4 — Découvrabilité ✅
 
-**Registre de routes** : une liste unique, une entrée par route générée, disant
-si elle est indexable. `BaseLayout` y lit la balise `robots`, `sitemap.xml` y
-lit qui entre. Aujourd'hui l'information est éparpillée dans neuf fichiers, et
-rien n'empêche une page d'être à la fois au sitemap et en `noindex`.
+**Registre de routes** (`src/lib/seo/routes.ts`) : une entrée par route
+produite, avec son indexabilité, sa canonique éventuelle, le document Sanity
+qui la date, et — pour les pages fermées — la raison de sa fermeture.
+`canonicalPath` et `noIndex` ont **quitté** `PageSeo` et les neuf fichiers où
+ils traînaient (`src/data/*.ts`, cinq `.astro`). Un test refuse que ces deux
+mots réapparaissent ailleurs que dans le registre.
 
-**`sitemap.xml`** : point d'entrée Astro plutôt que `@astrojs/sitemap`, pour
-qu'il lise le registre au lieu de deviner. `lastmod` depuis `_updatedAt` de
-Sanity; ni `priority` ni `changefreq`, ignorés par Google. Barres obliques
-finales identiques à celles des canoniques.
+Dix-huit routes : dix publiques, huit fermées. Les raisons d'ouverture de
+`/friperie`, `/contact` et `/nos-annonceurs` ont suivi le déménagement plutôt
+que d'être perdues.
 
-**`robots.txt`** : autorise tout, plus la ligne `Sitemap:` absolue. Pas de
-`Disallow` sur les pages fermées — il empêcherait Google de lire leur `noindex`.
+**`sitemap.xml`** : point d'entrée Astro, qui lit `indexableRoutes()`.
+`lastmod` depuis `_updatedAt`, par une requête filtrée sur `defined(seo.title)`
+plutôt que sur une liste d'identifiants recopiée du registre — deux listes à
+tenir finissent par diverger. Ni `priority` ni `changefreq`.
 
-**JSON-LD** : `WebSite`, `PlaceOfWorship` (nom, adresse, téléphone depuis
-`siteSettings`), et `Event` pour les activités dont les champs suffisent. Les
-heures du secrétariat ne sont pas publiées en `openingHours` : le champ est du
-texte libre, et un horaire mal formaté vaut moins que pas d'horaire.
+**`robots.txt`** : `Allow: /` et la ligne `Sitemap:` absolue. Aucun `Disallow`,
+puisqu'il empêcherait Google de lire le `noindex` des pages fermées. Un
+environnement de prévisualisation, lui, ferme tout.
 
-**Vérification** : chaque route réellement générée apparaît une fois et une
-seule dans le sitemap; aucune page n'est simultanément au sitemap et en
-`noindex`; XML valide; JSON-LD passé au validateur.
+**JSON-LD** : `WebSite` + `PlaceOfWorship` sur l'accueil, `PlaceOfWorship` sur
+`/contact`, `PlaceOfWorship` + `Event` sur `/evenements`. Un seul `@graph` par
+page, pour qu'une activité puisse désigner la paroisse par identifiant au lieu
+de recopier son adresse. Règle tenue partout : **un champ absent est omis**,
+jamais rempli d'une valeur plausible — pas d'`openingHours` (texte libre), pas
+de courriel non confirmé, pas d'`Event` sans nom ni date, pas d'`Offer` sans
+prix. Les activités **passées** n'entrent pas : un événement décrit comme tel
+reste dans les résultats longtemps après avoir eu lieu.
+
+**Vérification** : `scripts/check-built-seo.mjs`, lancé par `pnpm validate`
+après le build, lit `dist/` et non le code. Il vérifie que chaque page produite
+est au registre et réciproquement, que chaque page publique apparaît une fois
+et une seule au plan de site, qu'aucune page n'est à la fois au plan de site et
+en `noindex`, que les canoniques, le plan de site et `robots.txt` disent la
+même origine, que le XML est équilibré et échappé, et que chaque bloc JSON-LD
+se relit.
+
+Le contrôle a été **mis à l'épreuve** en cassant `dist/` de trois façons — une
+page fermée glissée au plan de site, une page publique retirée, une canonique
+sans barre finale. Les trois ont été détectées, avec le message qui nomme la
+page. Sortie normale : « 18 pages produites, 10 au plan de site, 8 fermées. »
+
+Tests : `tests/seo-discoverability.test.mjs` (22 tests). 327 tests verts.
 
 ## Lot 4 — Pages légales
 
@@ -347,9 +369,16 @@ haut pour les annonceurs.
 ## Défaut connu, non corrigé
 
 Le document `parishEvent` du pèlerinage au Sanctuaire Notre-Dame-du-Cap porte un
-**espace en trop au début de son titre**. Il part déjà dans le HTML et partira
-dans le JSON-LD de l'étape 4. Un `set` d'une ligne suffit : proposé le
-2026-08-06, pas tranché.
+**espace en trop au début de son titre**. Valeur vérifiée dans le jeu de données
+le 2026-08-06 : `" Pèlerinage au Sanctuaire Notre-Dame-du-Cap"`.
+
+**Correction de ce qui était écrit ici** : il ne part **pas** dans le HTML.
+`normalizeSanityParishEvents` passe chaque titre par `cleanString`, qui le
+`trim()`. Vérifié dans `dist/` : aucune occurrence du titre précédée d'un
+espace. Le JSON-LD le nettoie aussi, par la même précaution.
+
+Reste donc un défaut **de saisie**, visible seulement dans le Studio. Un `set`
+d'une ligne suffit : proposé le 2026-08-06, pas tranché.
 
 ## Livrable attendu à la fin
 

@@ -1388,3 +1388,19 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     }
   }
 `);
+
+/**
+ * Date de dernière modification des documents de page, pour le `lastmod` du
+ * plan de site.
+ *
+ * Le filtre porte sur la présence d'un bloc de référencement plutôt que sur une
+ * liste d'identifiants recopiée du registre de routes : deux listes à tenir à
+ * jour finissent par diverger, et celle qui diverge en silence est celle que
+ * personne ne relit. Seuls les documents de page portent `seo`.
+ */
+export const PAGE_UPDATED_AT_QUERY = defineQuery(`
+  *[defined(seo.title)]{
+    _id,
+    _updatedAt
+  }
+`);

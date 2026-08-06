@@ -19,7 +19,6 @@ export function buildServicesPageData(
     seo: {
       title: 'Nos services',
       description: `Découvrez les sacrements, les démarches, les services de prière et la location de salle proposés par la ${SITE_NAME}.`,
-      canonicalPath: '/nos-services/',
     },
     hero: {
       eyebrow: 'Accueil et accompagnement',

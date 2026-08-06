@@ -100,14 +100,6 @@ export function buildAdvertisersPageSource(
       title: 'Nos annonceurs',
       description:
         'Découvrez comment les contributions publicitaires peuvent soutenir les communications et la mission de la Paroisse Saint-René-Goupil.',
-      canonicalPath: '/nos-annonceurs/',
-      // Indexable depuis le 6 août 2026, sur décision de l'utilisatrice.
-      // À savoir : les quatre fiches publiées portent le téléphone et le
-      // courriel de personnes réelles, et leur propre note de révision dit
-      // « à confirmer avant toute publication ». Ces coordonnées deviennent
-      // donc indexables. Le réglage `settings.showAdvertisers` permet de
-      // masquer les fiches sans refermer la page.
-      noIndex: false,
     },
     hero: {
       eyebrow: 'Soutenir notre mission',

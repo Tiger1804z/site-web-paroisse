@@ -11,19 +11,39 @@ import {
   getPastParishEvents,
   getUpcomingParishEvents,
 } from '@/lib/content/getParishEvents';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
+import { eventsGraph } from '@/lib/seo/pageGraphs';
 
 const buildTime = new Date();
-const [eventsPageData, eventSettings, upcomingEvents, pastEvents] =
-  await Promise.all([
-    getEventsPageData(),
-    getEventsPageSettings(),
-    getUpcomingParishEvents(buildTime),
-    getPastParishEvents(buildTime),
-  ]);
+const [
+  eventsPageData,
+  eventSettings,
+  upcomingEvents,
+  pastEvents,
+  siteSettings,
+] = await Promise.all([
+  getEventsPageData(),
+  getEventsPageSettings(),
+  getUpcomingParishEvents(buildTime),
+  getPastParishEvents(buildTime),
+  getSiteSettings(),
+]);
+
+/**
+ * Seules les activités à venir entrent dans les données structurées. Une
+ * activité passée décrite comme un événement reste dans les résultats de
+ * recherche bien après avoir eu lieu, et y envoie des gens.
+ */
+const structuredData = eventsGraph(
+  siteSettings,
+  upcomingEvents,
+  '/evenements/',
+);
 ---
 
 <BaseLayout
   seo={eventsPageData.seo}
+  jsonLd={structuredData}
   pageClass="events-page"
   headerVariant="light"
 >

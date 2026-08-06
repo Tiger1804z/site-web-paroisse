@@ -3,6 +3,8 @@ import Footer from '@/components/layout/Footer.astro';
 import Header from '@/components/layout/Header.astro';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { buildDocumentHead, type TitleOrder } from '@/lib/seo/documentHead';
+import { jsonLdGraph, type JsonLdNode } from '@/lib/seo/jsonLd';
+import { routeFor } from '@/lib/seo/routes';
 import { SITE_URL } from '@/lib/seo/siteUrl';
 import { SITE_NAME } from '@/lib/site';
 import type { PageSeo } from '@/types/seo';
@@ -35,6 +37,11 @@ interface Props {
   headerVariant?: 'light' | 'transparent';
   footerVariant?: 'default' | 'compact';
   redirectTo?: string;
+  /**
+   * Données structurées propres à la page. Vide sur la plupart d'entre elles :
+   * on ne décrit à un moteur que ce qu'on sait décrire.
+   */
+  jsonLd?: readonly JsonLdNode[];
 }
 
 const {
@@ -44,7 +51,11 @@ const {
   headerVariant = 'light',
   footerVariant = 'default',
   redirectTo,
+  jsonLd = [],
 } = Astro.props;
+
+// L'indexation et l'adresse canonique viennent du registre, jamais du contenu.
+const route = routeFor(Astro.url.pathname);
 
 // Image de partage générale, servie aux pages qui n'ont pas la leur. Le nom de
 // la paroisse, lui, reste la constante locale : en prévisualisation, une
@@ -54,13 +65,23 @@ const siteSettings = await getSiteSettings();
 
 const head = buildDocumentHead({
   seo,
+  route,
   siteName: SITE_NAME,
   siteUrl: SITE_URL,
-  pathname: Astro.url.pathname,
   siteShareImage: siteSettings.shareImage,
   titleOrder,
   previewing: visualEditingEnabled,
 });
+
+/**
+ * Le graphe est sérialisé ici plutôt que dans le gabarit : `<` est échappé
+ * pour qu'un texte contenant `</script>` — un titre d'événement, une
+ * description — ne referme pas la balise.
+ */
+const structuredData =
+  jsonLd.length > 0
+    ? JSON.stringify(jsonLdGraph(jsonLd)).replace(/</g, '\\u003c')
+    : null;
 ---
 
 <!doctype html>
@@ -100,6 +121,16 @@ const head = buildDocumentHead({
          vignette doit être dite. */
     }
     <meta name="twitter:card" content={head.twitterCard} />
+
+    {
+      structuredData && (
+        <script
+          type="application/ld+json"
+          set:html={structuredData}
+          is:inline
+        />
+      )
+    }
 
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

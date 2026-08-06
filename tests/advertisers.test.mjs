@@ -7,6 +7,7 @@ import {
   selectAdvertisers,
 } from '../src/lib/advertisers/advertisers.ts';
 import { siteSettingsData } from '../src/data/siteSettings.ts';
+import { findRoute } from '../src/lib/seo/routes.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 
@@ -122,9 +123,13 @@ test('l’ancienne route est noindex et canonique', () => {
     'utf8',
   );
 
-  assert.match(aliasPage, /canonicalPath: '\/nos-annonceurs\/'/);
   assert.match(aliasPage, /redirectTo="\/nos-annonceurs\/"/);
-  assert.match(aliasPage, /noIndex: true/);
+
+  // Depuis l'étape 4 du lot SEO, l'indexation et la canonique se lisent au
+  // registre de routes, pas dans la page.
+  const route = findRoute('/merci-a-nos-annonceurs/');
+  assert.equal(route?.indexable, false);
+  assert.equal(route?.canonicalPath, '/nos-annonceurs/');
 });
 
 test('la page reste utile sans annonceur confirmé', () => {

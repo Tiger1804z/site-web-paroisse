@@ -4,13 +4,14 @@ import type { SanityRenderableImage } from '@/types/sanityImage';
  * Référencement d'une page, tel que les composants le reçoivent.
  *
  * Une seule forme pour les dix pages : avant ce module, sept pages déclaraient
- * chacune la sienne, dont quatre variantes différentes selon qu'elles portaient
- * ou non `canonicalPath` et `noIndex`.
+ * chacune la sienne, dont quatre variantes différentes.
  *
- * Trois champs viennent de Sanity — titre, description, image de partage. Les
- * deux derniers viennent du code et ne sont saisissables nulle part : une
- * adresse canonique fausse ou un `noindex` posé par erreur ne se voient pas
- * dans le Studio, et se paient en pages disparues des résultats de recherche.
+ * Ce que l'éditrice contrôle, et rien d'autre : titre, description, image de
+ * partage. L'adresse canonique et l'interdiction d'indexation ont quitté ce
+ * contrat pour le registre de routes (`src/lib/seo/routes.ts`) — elles ne sont
+ * saisissables nulle part, parce qu'une canonique fausse ou un `noindex` posé
+ * par erreur ne se voient pas dans une interface d'édition et se paient en
+ * pages disparues des résultats de recherche.
  */
 export interface PageSeo {
   readonly title: string;
@@ -23,8 +24,4 @@ export interface PageSeo {
    * aucune image du tout. Aucune image inventée pour remplir l'espace.
    */
   readonly shareImage?: SanityRenderableImage;
-  /** Adresse canonique, quand la page en impose une. Décision de code. */
-  readonly canonicalPath?: string;
-  /** Interdiction d'indexation. Décision de code. */
-  readonly noIndex?: boolean;
 }

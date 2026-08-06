@@ -1,5 +1,7 @@
 import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
+import type { SiteRoute } from './routes.ts';
+import { absoluteUrl } from './urls.ts';
 
 /**
  * Tout ce que le `<head>` d'une page contient de référencement, calculé
@@ -20,12 +22,15 @@ export type TitleOrder = 'page-first' | 'site-first';
 export interface DocumentHeadInput {
   /** Référencement de la page, déjà composé par son normalizer. */
   readonly seo: PageSeo;
+  /**
+   * Entrée du registre pour cette page : elle décide de l'indexation et de
+   * l'adresse canonique. Ces deux-là ne viennent jamais du contenu.
+   */
+  readonly route: SiteRoute;
   /** Nom officiel de la paroisse, tel qu'il apparaît dans le titre. */
   readonly siteName: string;
   /** Origine publique, sans barre oblique finale. */
   readonly siteUrl: string;
-  /** Chemin réellement servi, quand la page n'impose pas de canonique. */
-  readonly pathname: string;
   /** Image de partage générale, servie aux pages qui n'ont pas la leur. */
   readonly siteShareImage?: SanityRenderableImage;
   readonly titleOrder?: TitleOrder;
@@ -74,32 +79,6 @@ const LAST_RESORT_DESCRIPTION = 'Site Web de la Paroisse Saint-René-Goupil.';
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
-}
-
-/**
- * Ramène un chemin à la forme que le site sert réellement : une barre au
- * début, une barre à la fin.
- *
- * Astro produit des dossiers (`contact/index.html`), donc l'adresse servie est
- * `/contact/`. Une canonique écrite `/contact` désignerait une autre adresse
- * aux yeux de Google — et c'est le genre d'écart qui divise une page en deux
- * dans l'index. Une seule fonction décide, ici, pour les canoniques comme pour
- * le plan de site de l'étape suivante.
- */
-export function normalizeRoutePath(pathname: string): string {
-  const trimmed = pathname.trim();
-  const withoutIndex = trimmed.replace(/index\.html?$/i, '');
-  const withLeadingSlash = withoutIndex.startsWith('/')
-    ? withoutIndex
-    : `/${withoutIndex}`;
-  const collapsed = withLeadingSlash.replace(/\/{2,}/g, '/');
-
-  return collapsed.endsWith('/') ? collapsed : `${collapsed}/`;
-}
-
-/** Compose une adresse absolue à partir de l'origine et d'un chemin. */
-export function absoluteUrl(siteUrl: string, pathname: string): string {
-  return `${siteUrl.replace(/\/$/, '')}${normalizeRoutePath(pathname)}`;
 }
 
 /**
@@ -161,9 +140,9 @@ function composeTitle(
 
 export function buildDocumentHead({
   seo,
+  route,
   siteName,
   siteUrl,
-  pathname,
   siteShareImage,
   titleOrder = 'page-first',
   previewing = false,
@@ -175,7 +154,7 @@ export function buildDocumentHead({
   // Une canonique explicite l'emporte : c'est ainsi que les trois anciennes
   // adresses renvoient leur autorité à la page qui les remplace. Sans elle, la
   // page se déclare canonique d'elle-même, ce qui est le cas courant.
-  const canonicalUrl = absoluteUrl(siteUrl, seo.canonicalPath ?? pathname);
+  const canonicalUrl = absoluteUrl(siteUrl, route.canonicalPath ?? route.path);
 
   const image = resolveShareImage(siteUrl, seo.shareImage, siteShareImage);
 
@@ -183,7 +162,7 @@ export function buildDocumentHead({
     title,
     description,
     canonicalUrl,
-    ...(seo.noIndex || previewing ? { robots: 'noindex, nofollow' } : {}),
+    ...(!route.indexable || previewing ? { robots: 'noindex, nofollow' } : {}),
     openGraph: {
       type: 'website',
       title,

@@ -31,4 +31,16 @@ export default [
       },
     },
   },
+  {
+    // Les scripts de build et de vérification s'exécutent sous Node, hors du
+    // bundle servi au navigateur : les globales de la plateforme y sont
+    // légitimes.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
 ];

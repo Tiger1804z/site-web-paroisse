@@ -5,11 +5,6 @@ export const thriftStorePageData = {
   seo: {
     title: 'Friperie Au Coin de l’Entraide',
     description: `La friperie Au Coin de l’Entraide, au sous-sol de la ${SITE_NAME} : vêtements et articles pour la maison, dans le respect et la confidentialité.`,
-    canonicalPath: '/friperie/',
-    // Indexable depuis le 29 juillet 2026 : nom, horaires, emplacement et
-    // téléphone sont réels, et les visuels sont sous licence. Une personne qui
-    // cherche une friperie dans le quartier doit pouvoir trouver cette page.
-    noIndex: false,
   },
   hero: {
     eyebrow: 'Friperie paroissiale',

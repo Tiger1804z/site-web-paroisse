@@ -5,12 +5,18 @@ import ContactMain from '@/components/sections/contact/ContactMain.astro';
 import ContactMethods from '@/components/sections/contact/ContactMethods.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getContactPageData } from '@/lib/content/getContactPageData';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
+import { parishGraph } from '@/lib/seo/pageGraphs';
 
-const contactPageData = await getContactPageData();
+const [contactPageData, siteSettings] = await Promise.all([
+  getContactPageData(),
+  getSiteSettings(),
+]);
 ---
 
 <BaseLayout
   seo={contactPageData.seo}
+  jsonLd={parishGraph(siteSettings)}
   pageClass="contact-page"
   headerVariant="light"
 >

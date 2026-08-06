@@ -17,6 +17,7 @@ import {
 import { getHomePageData } from '@/lib/content/getHomePageData';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { getWeeklyMasses } from '@/lib/content/getMassSchedule';
+import { siteIdentityGraph } from '@/lib/seo/pageGraphs';
 
 const buildTime = new Date();
 const homePage = await getHomePageData();
@@ -33,6 +34,7 @@ const weeklyMasses = await getWeeklyMasses();
 
 <BaseLayout
   seo={homePage.seo}
+  jsonLd={siteIdentityGraph(siteSettings)}
   titleOrder="site-first"
   pageClass="home-page"
   headerVariant="transparent"

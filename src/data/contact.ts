@@ -97,10 +97,6 @@ export function buildContactPageData(
       title: 'Contact',
       description:
         'Consultez la page Contact de la Paroisse Saint-René-Goupil et préparez votre demande au secrétariat.',
-      // Indexable depuis le 6 août 2026. Une paroisse introuvable sur une
-      // recherche « contact » est un défaut, pas une protection : la page
-      // n'affiche que les coordonnées publiques du secrétariat.
-      noIndex: false,
     },
     hero: {
       eyebrow: 'Communication',

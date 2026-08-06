@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
+import { findRoute } from '../src/lib/seo/routes.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 
@@ -64,7 +65,9 @@ test('les informations pratiques relevées sont publiées', () => {
 });
 
 test('la page est indexable par les moteurs de recherche', () => {
-  assert.match(thriftStoreSource, /noIndex: false/);
+  // La décision vit au registre de routes depuis l'étape 4 du lot SEO, plus
+  // dans le repli local de la page.
+  assert.equal(findRoute('/friperie/')?.indexable, true);
 });
 
 test('les conditions de dons restent non publiées', () => {

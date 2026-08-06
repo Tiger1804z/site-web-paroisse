@@ -38,7 +38,7 @@ export function getStaticPaths() {
 const { title, description } = Astro.props as PlaceholderPage;
 ---
 
-<BaseLayout seo={{ title, description, noIndex: true }} headerVariant="light">
+<BaseLayout seo={{ title, description }} headerVariant="light">
   <section
     class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
     aria-labelledby="placeholder-title"

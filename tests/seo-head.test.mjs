@@ -2,11 +2,8 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
-import {
-  absoluteUrl,
-  buildDocumentHead,
-  normalizeRoutePath,
-} from '../src/lib/seo/documentHead.ts';
+import { buildDocumentHead } from '../src/lib/seo/documentHead.ts';
+import { absoluteUrl, normalizeRoutePath } from '../src/lib/seo/urls.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 const read = (relativePath) =>
@@ -18,7 +15,7 @@ const SITE_URL = 'https://exemple.ca';
 const base = {
   siteName: SITE_NAME,
   siteUrl: SITE_URL,
-  pathname: '/contact/',
+  route: { path: '/contact/', indexable: true },
 };
 
 const seo = {
@@ -78,8 +75,12 @@ test('la canonique est absolue et décrit l’adresse servie', () => {
 test('une canonique déclarée l’emporte sur l’adresse servie', () => {
   const head = buildDocumentHead({
     ...base,
-    pathname: '/sacrements/',
-    seo: { ...seo, canonicalPath: '/nos-services/' },
+    route: {
+      path: '/sacrements/',
+      indexable: false,
+      canonicalPath: '/nos-services/',
+    },
+    seo,
   });
 
   assert.equal(head.canonicalUrl, 'https://exemple.ca/nos-services/');
@@ -115,8 +116,16 @@ test('l’origine ne colle jamais deux barres au chemin', () => {
   );
 });
 
+/**
+ * L'indexation vient du registre, jamais du contenu. Un titre ou une
+ * description saisis dans le Studio ne peuvent pas fermer une page.
+ */
 test('une page fermée à l’indexation le dit', () => {
-  const head = buildDocumentHead({ ...base, seo: { ...seo, noIndex: true } });
+  const head = buildDocumentHead({
+    ...base,
+    route: { path: '/verification/', indexable: false },
+    seo,
+  });
 
   assert.equal(head.robots, 'noindex, nofollow');
 });
@@ -219,17 +228,12 @@ test('aucune page ne contourne l’objet avec ses propres attributs', () => {
   for (const file of pageFiles()) {
     const tag = baseLayoutTag(read(`src/pages/${file}`)) ?? '';
 
-    for (const attribute of ['title=', 'description=', 'canonicalPath=']) {
+    for (const attribute of ['title=', 'description=']) {
       assert.ok(
         !tag.includes(attribute),
         `${file} passe encore \`${attribute}\` à BaseLayout : deux façons de dire la même chose finissent par diverger.`,
       );
     }
-
-    assert.ok(
-      !/^\s*noIndex\s*$/m.test(tag),
-      `${file} passe encore \`noIndex\` à BaseLayout.`,
-    );
   }
 });
 
