@@ -123,23 +123,56 @@ vérifient que chaque requête projette `seo` et que chaque normalizer l'appelle
 C'est la panne trouvée par l'audit — champ complet au schéma, jamais projeté,
 tests verts — et aucun test unitaire ne la voit.
 
-### Étape 3 — Rendu (à faire)
+### Étape 3 — Rendu ✅
 
-Centraliser le `<head>` dans `BaseLayout` : titre, description, canonique
-absolue, Open Graph, `og:image`, type, nom du site, locale, robots.
+`src/lib/seo/documentHead.ts` compose tout le référencement du `<head>`, et
+`BaseLayout` ne fait plus qu'écrire des balises. Le calcul est sorti du
+`.astro` pour une raison précise : un fichier `.astro` ne se teste pas sous
+`node --test`, et les règles de repli sont exactement ce qu'un test doit voir.
 
-**Fallbacks** : titre absent → titre de page + nom de la paroisse; description
-absente → introduction de la page; image absente → `siteSettings.shareImage`;
-absente aussi → aucune image, jamais une image de remplissage.
+`BaseLayout` prend désormais **un seul objet `seo`** au lieu de quatre
+attributs. Les dix pages branchées sur Sanity passent le bloc de leur
+normalizer; les trois anciennes adresses, `/404` et `/verification` l'écrivent
+à la main — elles n'ont pas de document.
 
-**Domaine non confirmé.** Ne pas l'inventer. Variable `SITE_URL`. Le build de
-production doit échouer bruyamment s'il manque, sans casser le développement
-local — sur le modèle du verrou déjà posé sur `pnpm build`. Documenter les
-variables et la procédure.
+Rendu sur les 18 pages : titre, description, canonique **absolue**, `robots`,
+`og:type`, `og:title`, `og:description`, `og:url`, `og:site_name`,
+`og:locale` (`fr_CA`), `og:image` + `og:image:alt` quand une image existe, et
+`twitter:card` (grande vignette seulement s'il y a une image).
 
-**Reste à basculer** : `/` et `/horaires` gardent leur titre et leur description
-en dur dans le `.astro`. Les 8 autres pages lisaient déjà `data.seo.*` et sont
-donc branchées sur Sanity depuis l'étape 2.
+**Canonique sur toutes les pages**, plus seulement sur celles qui en
+déclaraient une : sans elle, une page atteignable par deux adresses compte
+deux fois. `normalizeRoutePath` impose une forme unique — barre au début,
+barre à la fin, comme les dossiers qu'Astro publie. L'étape 4 lira la même
+fonction pour le plan de site.
+
+**Nom de la paroisse** : la constante locale `SITE_NAME`, pas la valeur Sanity.
+En prévisualisation, une chaîne venue du Studio porte des caractères stega
+invisibles, et un `<title>` n'est pas un endroit où les laisser entrer.
+
+**`SITE_URL`** (`src/lib/seo/siteUrl.ts`) : origine seule, sans barre finale.
+Absente en développement → `http://localhost:4321`. Absente en production →
+**le build échoue**, message à l'appui. Vérifié en construisant sans la
+variable : `pnpm build:public` sort en erreur. Un build de production qui
+vise `localhost` — c'est le cas de `pnpm validate` — passe, mais le dit à voix
+haute. `.env` étant ignoré par git, la plateforme d'hébergement rencontrera le
+verrou tant que personne n'y aura saisi le domaine.
+
+`/` et `/horaires` ne codent plus leur titre en dur : elles lisent
+`homePage.seo` et `schedulePage.seo`. Le texte est identique — le script de
+peuplement avait repris ces chaînes mot pour mot — mais il vient maintenant du
+Studio.
+
+**Aucune image de partage n'existe encore dans le jeu de données** : les 18
+pages sortent donc sans `og:image`, ce qui est la règle voulue (aucune image
+inventée pour remplir l'espace). Le chemin de rendu est couvert par les tests
+unitaires; il ne produira du HTML que le jour où une image sera déposée. À
+montrer à la secrétaire le 11 août.
+
+Tests : `tests/seo-head.test.mjs` (22 tests — replis, canoniques, robots,
+image, plus trois lectures de source). 305 tests verts. Le HTML de `dist` a été
+inspecté page par page : 10 canoniques indexables, 8 en `noindex`, `og:url`
+égal à la canonique partout.
 
 ### Étape 4 — Découvrabilité (à faire)
 

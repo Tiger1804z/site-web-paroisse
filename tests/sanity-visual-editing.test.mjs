@@ -122,9 +122,16 @@ test('l’île de Visual Editing n’entre pas dans le bundle public', () => {
   );
 });
 
+/**
+ * La règle elle-même est vérifiée sur le comportement dans
+ * `seo-head.test.mjs` : `previewing` ferme la page même quand elle est
+ * indexable. Ce qui se lit ici, c'est le câblage — que le layout transmette
+ * bien le drapeau de prévisualisation au composeur, et qu'il sache écrire la
+ * balise que le composeur lui rend.
+ */
 test('toute page prévisualisée est interdite d’indexation', () => {
-  assert.match(layoutSource, /noIndex \|\| visualEditingEnabled/);
-  assert.match(layoutSource, /name="robots" content="noindex, nofollow"/);
+  assert.match(layoutSource, /previewing: visualEditingEnabled/);
+  assert.match(layoutSource, /name="robots" content=\{head\.robots\}/);
 });
 
 test('chaque document migré sait où il apparaît sur le site', () => {

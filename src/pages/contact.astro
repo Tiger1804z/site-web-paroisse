@@ -10,9 +10,7 @@ const contactPageData = await getContactPageData();
 ---
 
 <BaseLayout
-  title={contactPageData.seo.title}
-  description={contactPageData.seo.description}
-  noIndex={contactPageData.seo.noIndex}
+  seo={contactPageData.seo}
   pageClass="contact-page"
   headerVariant="light"
 >

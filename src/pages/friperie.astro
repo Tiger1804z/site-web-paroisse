@@ -11,10 +11,7 @@ const thriftStorePageData = await getThriftStorePageData();
 ---
 
 <BaseLayout
-  title={thriftStorePageData.seo.title}
-  description={thriftStorePageData.seo.description}
-  canonicalPath={thriftStorePageData.seo.canonicalPath}
-  noIndex={thriftStorePageData.seo.noIndex}
+  seo={thriftStorePageData.seo}
   pageClass="thrift-store-page"
   headerVariant="transparent"
 >

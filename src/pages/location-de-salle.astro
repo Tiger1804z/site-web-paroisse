@@ -3,12 +3,15 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Location de salle"
-  description="La location de salle fait maintenant partie de la page Nos services de la Paroisse Saint-René-Goupil."
-  canonicalPath="/nos-services/"
+  seo={{
+    title: 'Location de salle',
+    description:
+      'La location de salle fait maintenant partie de la page Nos services de la Paroisse Saint-René-Goupil.',
+    canonicalPath: '/nos-services/',
+    noIndex: true,
+  }}
   redirectTo="/nos-services/#location-de-salle"
   headerVariant="light"
-  noIndex
 >
   <section
     class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"

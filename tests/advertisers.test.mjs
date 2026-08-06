@@ -122,9 +122,9 @@ test('l’ancienne route est noindex et canonique', () => {
     'utf8',
   );
 
-  assert.match(aliasPage, /canonicalPath="\/nos-annonceurs\/"/);
+  assert.match(aliasPage, /canonicalPath: '\/nos-annonceurs\/'/);
   assert.match(aliasPage, /redirectTo="\/nos-annonceurs\/"/);
-  assert.match(aliasPage, /\bnoIndex\b/);
+  assert.match(aliasPage, /noIndex: true/);
 });
 
 test('la page reste utile sans annonceur confirmé', () => {

@@ -11,9 +11,7 @@ const servicesPageData = await getServicesPageData();
 ---
 
 <BaseLayout
-  title={servicesPageData.seo.title}
-  description={servicesPageData.seo.description}
-  canonicalPath={servicesPageData.seo.canonicalPath}
+  seo={servicesPageData.seo}
   pageClass="services-page"
   headerVariant="transparent"
 >

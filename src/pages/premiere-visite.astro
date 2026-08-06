@@ -11,8 +11,7 @@ const firstVisitPageData = await getFirstVisitPageData();
 ---
 
 <BaseLayout
-  title={firstVisitPageData.seo.title}
-  description={firstVisitPageData.seo.description}
+  seo={firstVisitPageData.seo}
   pageClass="first-visit-page"
   headerVariant="light"
 >
