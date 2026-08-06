@@ -23,8 +23,15 @@ export const parishLifePageType = defineType({
     {name: 'header', title: 'En-tête', default: true},
     {name: 'groups', title: 'Groupes'},
     {name: 'closing', title: 'Bloc de clôture'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

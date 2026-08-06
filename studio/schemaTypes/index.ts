@@ -38,6 +38,7 @@ import {historyEntryType} from './objects/historyEntryType'
 import {aboutPrincipleType} from './objects/aboutPrincipleType'
 import {architectureFeatureType} from './objects/architectureFeatureType'
 import {architectProfileType} from './objects/architectProfileType'
+import {seoType} from './objects/seoType'
 
 export const schemaTypes = [
   // Documents — données partagées
@@ -59,6 +60,7 @@ export const schemaTypes = [
   contactPageType,
   aboutPageType,
   // Objets réutilisables
+  seoType,
   eventCategoryType,
   eventImageType,
   scheduleEntryType,

@@ -25,8 +25,15 @@ export const advertisersPageType = defineType({
     {name: 'introduction', title: 'Introduction'},
     {name: 'solicitation', title: 'Devenir annonceur'},
     {name: 'settings', title: 'Affichage'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

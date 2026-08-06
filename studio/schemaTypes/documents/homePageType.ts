@@ -33,8 +33,15 @@ export const homePageType = defineType({
     {name: 'interlude', title: 'Prière'},
     {name: 'gallery', title: 'Galerie'},
     {name: 'visit', title: 'Nous joindre'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

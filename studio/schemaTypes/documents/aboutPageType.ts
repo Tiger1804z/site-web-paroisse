@@ -30,8 +30,15 @@ export const aboutPageType = defineType({
     {name: 'architecture', title: 'Architecture'},
     {name: 'architects', title: 'Architectes'},
     {name: 'closing', title: 'Clôture'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

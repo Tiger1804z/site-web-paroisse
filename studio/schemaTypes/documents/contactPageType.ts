@@ -26,8 +26,15 @@ export const contactPageType = defineType({
     {name: 'methods', title: 'Coordonnées'},
     {name: 'location', title: 'Nous trouver'},
     {name: 'form', title: 'Formulaire'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

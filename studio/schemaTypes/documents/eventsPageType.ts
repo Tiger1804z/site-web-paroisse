@@ -18,8 +18,15 @@ export const eventsPageType = defineType({
     {name: 'header', title: 'En-tête', default: true},
     {name: 'categories', title: 'Façons de se rassembler'},
     {name: 'sections', title: 'Sections d’activités'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

@@ -22,8 +22,15 @@ export const thriftStorePageType = defineType({
     {name: 'sections', title: 'Sections'},
     {name: 'gallery', title: 'Galerie'},
     {name: 'closing', title: 'Bloc de clôture'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

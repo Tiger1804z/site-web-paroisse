@@ -20,8 +20,15 @@ export const schedulePageType = defineType({
     {name: 'notice', title: 'Avis'},
     {name: 'aside', title: 'Bandeau et encadré'},
     {name: 'faq', title: 'Questions fréquentes'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
+      group: 'seo',
+    }),
     defineField({
       name: 'hero',
       title: 'En-tête (hero)',

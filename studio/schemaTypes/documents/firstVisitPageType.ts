@@ -26,30 +26,14 @@ export const firstVisitPageType = defineType({
     {name: 'expectations', title: 'La célébration'},
     {name: 'practical', title: 'Informations pratiques'},
     {name: 'faq', title: 'Questions fréquentes'},
-    {name: 'seo', title: 'Référencement'},
+    {name: 'seo', title: 'Google et partages'},
   ],
   fields: [
     defineField({
       name: 'seo',
-      title: 'Référencement',
-      type: 'object',
+      title: 'Apparence sur Google et dans les partages',
+      type: 'seo',
       group: 'seo',
-      description: 'Ce que lisent les moteurs de recherche et les aperçus de partage.',
-      fields: [
-        defineField({
-          name: 'title',
-          title: 'Titre',
-          type: 'string',
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: 'description',
-          title: 'Description',
-          type: 'text',
-          rows: 3,
-          validation: (rule) => rule.required(),
-        }),
-      ],
     }),
     defineField({
       name: 'hero',

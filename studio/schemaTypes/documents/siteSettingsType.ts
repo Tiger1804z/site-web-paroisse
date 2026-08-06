@@ -117,6 +117,13 @@ export const siteSettingsType = defineType({
       description:
         'Informations d’accessibilité (accès, rampe, ascenseur, etc.). Laisser vide tant qu’elles ne sont pas confirmées.',
     }),
+    defineField({
+      name: 'shareImage',
+      title: 'Image de partage par défaut',
+      type: 'eventImage',
+      description:
+        'Image utilisée quand on partage une page qui n’a pas la sienne. Une seule image pour tout le site, corrigée à un seul endroit. Choisir une vue reconnaissable de l’église. Idéalement 1200 pixels sur 630.',
+    }),
 
     defineField({
       name: 'lastReviewedAt',
