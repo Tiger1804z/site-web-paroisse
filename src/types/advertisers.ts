@@ -1,3 +1,4 @@
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 import type { PublicPhone } from '@/types/siteSettings';
 
@@ -53,12 +54,7 @@ export interface Advertiser {
 }
 
 export interface AdvertisersPageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-    readonly canonicalPath: string;
-    readonly noIndex: boolean;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;

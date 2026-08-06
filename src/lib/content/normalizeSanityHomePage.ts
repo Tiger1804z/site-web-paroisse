@@ -7,6 +7,9 @@ import type {
   TitleLines,
 } from '@/types/homePage';
 import type { SanityHomePageResult } from '@/lib/sanity/types';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`.
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -150,6 +153,9 @@ export function normalizeSanityHomePage(
   const visit = raw?.visit;
 
   return {
+    // Sans constructeur d'adresses ici : le getter compose l'image de partage,
+    // comme il compose déjà les diapositives et les illustrations de section.
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo),
     hero: {
       script: cleanString(hero?.script) ?? fallback.hero.script,
       titleLines: cleanTitleLines(hero?.titleLines, fallback.hero.titleLines),

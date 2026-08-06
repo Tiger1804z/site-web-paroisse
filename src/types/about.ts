@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export interface AboutLink {
@@ -140,10 +141,7 @@ export interface AboutClosing {
 }
 
 export interface AboutPageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-  };
+  readonly seo: PageSeo;
   readonly hero: AboutHero;
   readonly introduction: AboutIntroduction;
   readonly history: HistoryTimelineContent;

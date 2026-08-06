@@ -4,6 +4,9 @@ import type {
   ContactSelectField,
 } from '@/types/contact';
 import type { SanityContactPageResult } from '@/lib/sanity/types';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`.
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -86,7 +89,9 @@ export function normalizeSanityContactPage(
   const reasons = normalizeReasons(raw?.form?.reasons);
 
   return {
-    seo: fallback.seo,
+    // Sans constructeur d'adresses ici : cette page n'affiche aucune image,
+    // seule celle du partage en demande un. Le getter la compose.
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,

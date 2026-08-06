@@ -13,6 +13,7 @@ import type { SanitySchedulePageResult } from '@/lib/sanity/types';
 // quel par `node --test`, qui ne résout ni l'alias `@/` ni une extension
 // implicite. L'alias reste réservé aux imports de types, effacés à l'exécution.
 import { cleanString } from '../schedules/schedule-format.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 type RawSchedulePage = NonNullable<SanitySchedulePageResult>;
 
@@ -148,6 +149,9 @@ export function normalizeSanitySchedulePage(
 ): SchedulePageData {
   return {
     ...fallback,
+    // Sans constructeur d'adresses ici : le getter compose l'image de partage,
+    // comme il compose déjà celle du premier écran.
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo),
     hero: normalizeHero(raw?.hero ?? undefined, fallback.hero),
     notice: normalizeNotice(raw?.notice ?? undefined),
     beforeYouVisit: normalizeBeforeYouVisit(

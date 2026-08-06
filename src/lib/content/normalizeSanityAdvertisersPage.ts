@@ -1,5 +1,8 @@
 import type { AdvertisersPageData } from '@/types/advertisers';
 import type { SanityAdvertisersPageResult } from '@/lib/sanity/types';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`.
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -38,7 +41,9 @@ export function normalizeSanityAdvertisersPage(
   const details = cleanList(raw?.solicitation?.details);
 
   return {
-    seo: fallback.seo,
+    // Sans constructeur d'adresses ici : l'image de partage est composée par le
+    // getter, comme celle du premier écran.
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,

@@ -16,6 +16,7 @@ import type { ImageSourceBuilder } from '@/lib/content/normalizeSanityParishEven
 // Chemin relatif et extension explicite : ce module est chargé tel quel par
 // `node --test`, qui ne résout pas l'alias `@/`.
 import { normalizeSanityImage } from './normalizeSanityImage.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 type RawEventsPage = NonNullable<SanityEventsPageResult>;
 type RawCategory = NonNullable<RawEventsPage['categories']>[number];
@@ -155,7 +156,7 @@ export function normalizeSanityEventsPage(
   const heroImage = normalizeSanityImage(raw?.hero?.image, buildSources);
 
   return {
-    seo: fallback.seo,
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo, buildSources),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,

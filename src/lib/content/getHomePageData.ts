@@ -86,8 +86,12 @@ export async function getHomePageData(): Promise<HomePageData> {
     return label && image ? [{ label, image }] : [];
   });
 
+  // L'image de partage suit la même route que les illustrations de section.
+  const shareImage = normalizeSanityImage(raw?.seo?.image, buildSources);
+
   return {
     ...page,
+    seo: { ...page.seo, ...(shareImage ? { shareImage } : {}) },
     hero: { ...page.hero, slides: heroSlides },
     parishLife: { ...page.parishLife, ...sectionImage(raw?.parishLife?.image) },
     services: { ...page.services, ...sectionImage(raw?.services?.image) },

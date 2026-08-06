@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export interface ParishLifeCallToAction {
@@ -74,10 +75,7 @@ export interface ParishLifeFeature {
 }
 
 export interface ParishLifePageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;

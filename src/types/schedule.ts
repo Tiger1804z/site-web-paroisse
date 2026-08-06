@@ -1,3 +1,4 @@
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 export type ScheduleNoticeSeverity = 'info' | 'important' | 'special';
 
@@ -136,6 +137,7 @@ export interface MassScheduleData {
 
 /** Contenu propre à la page `/horaires`, affiché nulle part ailleurs. */
 export interface SchedulePageData {
+  readonly seo: PageSeo;
   readonly hero: ScheduleHero;
   readonly notice?: ScheduleNotice;
   readonly specialCelebrations: readonly SpecialCelebration[];

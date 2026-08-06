@@ -1,4 +1,5 @@
 import type { GalleryItem } from '@/types/gallery';
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 /**
@@ -176,6 +177,7 @@ export interface HomeGalleryContent {
 }
 
 export interface HomePageData {
+  readonly seo: PageSeo;
   readonly hero: HomeHeroContent;
   readonly welcome: HomeWelcomeContent;
   readonly massPreview: HomeMassPreviewContent;

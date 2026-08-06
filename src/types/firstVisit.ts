@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export interface FirstVisitLink {
@@ -101,13 +102,8 @@ export interface FirstVisitFaq {
   readonly items: readonly FirstVisitFaqItem[];
 }
 
-export interface FirstVisitSeo {
-  readonly title: string;
-  readonly description: string;
-}
-
 export interface FirstVisitPageData {
-  readonly seo: FirstVisitSeo;
+  readonly seo: PageSeo;
   readonly hero: FirstVisitHero;
   readonly preparation: VisitPreparation;
   readonly expectations: WhatToExpect;
@@ -164,7 +160,7 @@ export interface PracticalInformationContent {
  * par le même code, donc se comportent pareil.
  */
 export interface FirstVisitPageContent {
-  readonly seo: FirstVisitSeo;
+  readonly seo: PageSeo;
   readonly hero: FirstVisitHero;
   readonly preparation: VisitPreparation;
   readonly expectations: WhatToExpect;

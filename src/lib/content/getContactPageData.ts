@@ -1,5 +1,7 @@
 import { loadQuery } from '@/lib/sanity/preview';
+import { buildRemoteImageSources } from '@/lib/sanity/image';
 import { buildContactPageData } from '@/data/contact';
+import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { CONTACT_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityContactPageResult } from '@/lib/sanity/types';
@@ -34,5 +36,18 @@ export async function getContactPageData(): Promise<ContactPageData> {
   const fallback = buildContactPageData(siteSettings);
   const raw = await fetchContactPageRaw();
 
-  return normalizeSanityContactPage(raw, fallback);
+  const page = normalizeSanityContactPage(raw, fallback);
+
+  // Cette page n'affiche aucune image : son normalizer n'a donc pas de
+  // constructeur d'adresses. Seule l'image de partage en demande un.
+  const shareImage = normalizeSanityImage(raw?.seo?.image, (source) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    ),
+  );
+
+  return {
+    ...page,
+    seo: { ...page.seo, ...(shareImage ? { shareImage } : {}) },
+  };
 }

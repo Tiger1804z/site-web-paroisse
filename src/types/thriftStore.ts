@@ -1,4 +1,5 @@
 import type { GalleryItem } from '@/types/gallery';
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export interface ThriftStoreCallToAction {
@@ -39,12 +40,7 @@ export interface ThriftStoreSection {
 }
 
 export interface ThriftStorePageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-    readonly canonicalPath: string;
-    readonly noIndex: boolean;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;

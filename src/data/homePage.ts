@@ -8,6 +8,14 @@ import type { HomePageData } from '@/types/homePage';
  * que de perdre ses titres.
  */
 export const homePageData = {
+  // Nom de la paroisse écrit en toutes lettres plutôt qu'importé de
+  // `@/lib/site` : `node --test` charge ce module tel quel et ne résout pas
+  // l'alias `@/`. Le texte est celui que `index.astro` publiait.
+  seo: {
+    title: 'Accueil',
+    description:
+      'Découvrez les célébrations, les activités et la vie communautaire de la Paroisse Saint-René-Goupil.',
+  },
   hero: {
     script: 'Bienvenue',
     titleLines: ['Un lieu de foi,', 'de paix et', 'de rencontre.'],

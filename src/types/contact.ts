@@ -1,3 +1,5 @@
+import type { PageSeo } from '@/types/seo';
+
 export type ContactMethodKind = 'address' | 'phone' | 'email' | 'social';
 
 export interface ContactCallToAction {
@@ -84,11 +86,7 @@ export type ContactFormField =
   | ContactCheckboxField;
 
 export interface ContactPageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-    readonly noIndex: boolean;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;

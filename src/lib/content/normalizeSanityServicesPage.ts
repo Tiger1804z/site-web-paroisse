@@ -15,6 +15,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 type RawPage = NonNullable<SanityServicesPageResult>;
 type RawServicesPage = RawPage;
@@ -175,7 +176,7 @@ export function normalizeSanityServicesPage(
   const methods = cleanList(raw?.paymentMethods?.methods);
 
   return {
-    seo: fallback.seo,
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo, buildSources),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,

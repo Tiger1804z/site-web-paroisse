@@ -25,6 +25,13 @@ export const massScheduleData = {
  * getter.
  */
 export const schedulePageData = {
+  // Même raison qu'à l'accueil : ce module est chargé tel quel par
+  // `node --test`. Le texte est celui que `horaires.astro` publiait.
+  seo: {
+    title: 'Horaires et célébrations',
+    description:
+      'Consultez les horaires des messes et les changements liés aux célébrations spéciales de la Paroisse Saint-René-Goupil.',
+  },
   hero: {
     eyebrow: 'Célébrations',
     title: 'Horaires et célébrations',

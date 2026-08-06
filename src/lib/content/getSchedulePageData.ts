@@ -52,8 +52,15 @@ export async function getSchedulePageData(): Promise<SchedulePageView> {
     ),
   );
 
+  const shareImage = normalizeSanityImage(raw?.seo?.image, (source) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    ),
+  );
+
   return {
     ...page,
+    seo: { ...page.seo, ...(shareImage ? { shareImage } : {}) },
     hero: { ...page.hero, ...(heroImage ? { image: heroImage } : {}) },
     faq: page.faq.filter(({ active }) => active),
     ...schedule,

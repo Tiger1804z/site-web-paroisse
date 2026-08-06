@@ -11,6 +11,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 export type { ImageSourceBuilder };
 
@@ -132,7 +133,7 @@ export function normalizeSanityParishLifePage(
   const paragraphs = cleanList(raw?.introduction?.paragraphs);
 
   return {
-    seo: fallback.seo,
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo, buildSources),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,

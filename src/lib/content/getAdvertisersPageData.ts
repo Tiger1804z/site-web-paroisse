@@ -81,8 +81,17 @@ export async function getAdvertisersPageData(): Promise<AdvertisersPageData> {
     ),
   );
 
+  // L'image de partage suit la même route que celle du premier écran : le
+  // normalizer n'a pas le constructeur d'adresses du CDN.
+  const shareImage = normalizeSanityImage(rawPage?.seo?.image, (source) =>
+    buildRemoteImageSources(
+      source as Parameters<typeof buildRemoteImageSources>[0],
+    ),
+  );
+
   return {
     ...page,
+    seo: { ...page.seo, ...(shareImage ? { shareImage } : {}) },
     hero: { ...page.hero, ...(heroImage ? { image: heroImage } : {}) },
     advertisers,
     settings: {

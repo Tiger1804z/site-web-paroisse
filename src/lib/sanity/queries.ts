@@ -15,7 +15,25 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     showPublicEmail,
     officeHours,
     parkingInformation,
-    accessibilityInformation
+    accessibilityInformation,
+    shareImage {
+      alt,
+      credit,
+      image {
+        ...,
+        asset->{
+          _id,
+          metadata {
+            lqip,
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            }
+          }
+        }
+      }
+    }
   }
 `);
 
@@ -164,6 +182,28 @@ export const PARISH_EVENTS_QUERY = defineQuery(`
 /** Contenu propre à la page `/evenements` : ni activités datées, ni réglages d’accueil. */
 export const EVENTS_PAGE_QUERY = defineQuery(`
   *[_type == "eventsPage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -248,6 +288,28 @@ export const EVENTS_PAGE_QUERY = defineQuery(`
  */
 export const HOME_PAGE_QUERY = defineQuery(`
   *[_type == "homePage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       script,
       titleLines,
@@ -465,6 +527,28 @@ export const THRIFT_STORE_QUERY = defineQuery(`
 /** Contenu propre à la page `/friperie` : ni heures, ni emplacement, ni téléphone. */
 export const THRIFT_STORE_PAGE_QUERY = defineQuery(`
   *[_type == "thriftStorePage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -570,6 +654,28 @@ export const THRIFT_STORE_PAGE_QUERY = defineQuery(`
  */
 export const SERVICES_PAGE_QUERY = defineQuery(`
   *[_type == "servicesPage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -661,6 +767,28 @@ export const SERVICES_PAGE_QUERY = defineQuery(`
  */
 export const PARISH_LIFE_PAGE_QUERY = defineQuery(`
   *[_type == "parishLifePage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -742,7 +870,25 @@ export const FIRST_VISIT_PAGE_QUERY = defineQuery(`
   *[_type == "firstVisitPage"][0]{
     seo {
       title,
-      description
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     hero {
       eyebrow,
@@ -869,6 +1015,28 @@ export const ADVERTISERS_QUERY = defineQuery(`
  */
 export const ADVERTISERS_PAGE_QUERY = defineQuery(`
   *[_type == "advertisersPage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -927,6 +1095,28 @@ export const ADVERTISERS_PAGE_QUERY = defineQuery(`
  */
 export const CONTACT_PAGE_QUERY = defineQuery(`
   *[_type == "contactPage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -964,6 +1154,28 @@ export const CONTACT_PAGE_QUERY = defineQuery(`
 /** Contenu propre à la page `/horaires` : ni horaires, ni coordonnées. */
 export const SCHEDULE_PAGE_QUERY = defineQuery(`
   *[_type == "schedulePage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,
@@ -1021,6 +1233,28 @@ export const SCHEDULE_PAGE_QUERY = defineQuery(`
  */
 export const ABOUT_PAGE_QUERY = defineQuery(`
   *[_type == "aboutPage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
     hero {
       eyebrow,
       title,

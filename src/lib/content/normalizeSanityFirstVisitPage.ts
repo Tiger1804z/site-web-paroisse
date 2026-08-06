@@ -15,6 +15,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 export type { ImageSourceBuilder };
 
@@ -187,11 +188,7 @@ export function normalizeSanityFirstVisitPage(
       : fallbackFaq;
 
   return {
-    seo: {
-      title: cleanString(raw?.seo?.title) ?? fallback.seo.title,
-      description:
-        cleanString(raw?.seo?.description) ?? fallback.seo.description,
-    },
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo, buildSources),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,

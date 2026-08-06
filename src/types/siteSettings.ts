@@ -1,3 +1,5 @@
+import type { SanityRenderableImage } from '@/types/sanityImage';
+
 export interface PublicAddress {
   readonly street: string;
   readonly city: string;
@@ -56,4 +58,12 @@ export interface PublicContactDetails {
    * afficher qu’annoncer un accès dont personne n’a vérifié la réalité.
    */
   readonly accessibilityLabel?: string;
+  /**
+   * Image de partage du site, servie à toute page qui n’a pas la sienne.
+   *
+   * Absente tant que la paroisse n’en a pas fourni une. Aucune image locale ne
+   * la remplace : partager sans image vaut mieux que partager une image qui
+   * n’a rien à voir avec la page.
+   */
+  readonly shareImage?: SanityRenderableImage;
 }

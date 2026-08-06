@@ -1,3 +1,4 @@
+import type { PageSeo } from '@/types/seo';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export type ServiceSurface = 'ivory' | 'paper' | 'charcoal' | 'burgundy';
@@ -63,11 +64,7 @@ export interface ParishServiceChapter {
 }
 
 export interface ServicesPageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-    readonly canonicalPath: string;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;

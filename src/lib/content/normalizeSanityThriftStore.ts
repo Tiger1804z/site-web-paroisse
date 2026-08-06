@@ -15,6 +15,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 import { normalizeSanityHomeGallery } from './normalizeSanityHomeGallery.ts';
 import { selectGalleryItems } from '../gallery/gallery.ts';
 
@@ -146,7 +147,7 @@ export function normalizeSanityThriftStorePage(
   );
 
   return {
-    seo: fallback.seo,
+    seo: normalizeSanitySeo(rawPage?.seo, fallback.seo, buildSources),
     hero: {
       eyebrow: cleanString(rawPage?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(rawPage?.hero?.title) ?? fallback.hero.title,

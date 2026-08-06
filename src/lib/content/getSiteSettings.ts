@@ -1,4 +1,5 @@
 import { loadQuery } from '@/lib/sanity/preview';
+import { buildRemoteImageSources } from '@/lib/sanity/image';
 import { siteSettingsData } from '@/data/siteSettings';
 import type { PublicContactDetails } from '@/types/siteSettings';
 import { SITE_SETTINGS_QUERY } from '@/lib/sanity/queries';
@@ -24,7 +25,11 @@ export async function getSiteSettings(): Promise<PublicContactDetails> {
 
   try {
     const raw = await loadQuery(SITE_SETTINGS_QUERY);
-    return normalizeSanitySiteSettings(raw, fallback);
+    return normalizeSanitySiteSettings(raw, fallback, (source) =>
+      buildRemoteImageSources(
+        source as Parameters<typeof buildRemoteImageSources>[0],
+      ),
+    );
   } catch (error) {
     console.error(
       '[getSiteSettings] Échec du fetch Sanity — utilisation du fallback local.',

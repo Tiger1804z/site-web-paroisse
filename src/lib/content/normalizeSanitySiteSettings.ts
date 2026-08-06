@@ -1,5 +1,11 @@
 import type { PublicContactDetails, PublicEmail } from '@/types/siteSettings';
 import type { SanitySiteSettingsResult } from '@/lib/sanity/types';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`.
+import {
+  normalizeSanityImage,
+  type ImageSourceBuilder,
+} from './normalizeSanityImage.ts';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -59,10 +65,21 @@ function deriveEmail(
   };
 }
 
+/**
+ * `buildSources` est facultatif : les tests appellent ce normalizer sans, et le
+ * site n'a pas d'image de partage locale à composer. Sans constructeur, le
+ * champ reste absent et les pages partagées n'affichent aucune image plutôt
+ * qu'une adresse construite à moitié.
+ */
 export function normalizeSanitySiteSettings(
   raw: SanitySiteSettingsResult,
   fallback: PublicContactDetails,
+  buildSources?: ImageSourceBuilder,
 ): PublicContactDetails {
+  const shareImage = buildSources
+    ? normalizeSanityImage(raw?.shareImage, buildSources)
+    : undefined;
+
   return {
     organizationName:
       cleanString(raw?.organizationName) ?? fallback.organizationName,
@@ -81,5 +98,6 @@ export function normalizeSanitySiteSettings(
     parkingLabel: cleanString(raw?.parkingInformation) ?? fallback.parkingLabel,
     accessibilityLabel:
       cleanString(raw?.accessibilityInformation) ?? fallback.accessibilityLabel,
+    ...(shareImage ? { shareImage } : {}),
   };
 }

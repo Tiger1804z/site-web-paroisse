@@ -14,6 +14,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
 
 type RawAbout = NonNullable<SanityAboutPageResult>;
 type RawHistoryEntry = NonNullable<
@@ -190,7 +191,7 @@ export function normalizeSanityAboutPage(
   );
 
   return {
-    seo: fallback.seo,
+    seo: normalizeSanitySeo(raw?.seo, fallback.seo, buildSources),
     hero: {
       eyebrow: cleanString(raw?.hero?.eyebrow) ?? fallback.hero.eyebrow,
       title: cleanString(raw?.hero?.title) ?? fallback.hero.title,
