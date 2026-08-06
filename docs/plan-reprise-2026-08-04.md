@@ -1,7 +1,8 @@
 # Plan de reprise — à partir du lot 3
 
-**Écrit le 2026-08-03.** Branche `feature/sanity-content-migration`, tête
-`d6aac9f`, working tree propre, **rien poussé**.
+**Écrit le 2026-08-03, mis à jour le 2026-08-06.** Branche
+`feature/sanity-content-migration`, tête `cf72b98`, working tree propre,
+**rien poussé**.
 
 Ce document porte les décisions déjà validées : elles ne sont pas à redemander.
 Le rapport d'audit (`audit-sanity-2026-07-31.md`) reste la liste des problèmes;
@@ -22,6 +23,21 @@ celui-ci dit dans quel ordre les traiter et ce qui a déjà été tranché.
 dépôt, sauf le logo (marque) et l'image de `/verification` (page interne,
 `noindex`). `pnpm validate` vert : 273 tests, 0 erreur de lint, 0 erreur de
 type, 18 pages construites.
+
+## Fait — lot 3, étapes 1 et 2 sur 4 (2026-08-06)
+
+| Étape | Commit    | Contenu                                                              |
+| ----- | --------- | -------------------------------------------------------------------- |
+| 1     | `d8daee3` | Studio : objet `seo` partagé sur 10 pages, `siteSettings.shareImage` |
+| 2     | `0f2273a` | Contrat : `PageSeo`, projections GROQ, 10 normalizers, 4 getters     |
+| —     | `cf72b98` | `/contact`, `/evenements`, `/nos-annonceurs` rendues indexables      |
+
+`pnpm validate` vert : **283 tests**, 0 lint, 0 type, 18 pages.
+
+Le dataset `production` a été muté deux fois : `seed-seo.ts` (les 10 blocs
+remplis avec le texte déjà publié) et `shorten-thrift-store-seo.ts` (description
+de `/friperie` ramenée de 165 à 158 caractères). Sauvegarde préalable :
+`backups/production-2026-08-05-avant-seo.tar.gz` (gitignorée).
 
 ---
 
@@ -56,42 +72,98 @@ ni images éditoriales.
 **image de partage**. Le code garde canonical, sitemap, robots.txt, noindex,
 Open Graph technique, JSON-LD, URL absolue, fallbacks, validation.
 
+**Interface du Studio** : tout ce qu'on y ajoute doit être compréhensible sans
+aucune notion technique. Pas de jargon dans les intitulés — l'onglet s'appelle
+« Google et partages », pas « SEO ». Chaque champ dit où son texte s'affiche,
+pour qui, et donne un exemple. Les contraintes de longueur sont des
+avertissements, pas des blocages. Un champ obligatoire doit être **rempli à
+l'avance** : personne ne doit ouvrir un onglet neuf et y trouver une erreur
+rouge qu'il n'a pas causée.
+
+**Indexation** (décidé le 2026-08-06) : `/contact`, `/evenements` et
+`/nos-annonceurs` sont **indexables**. Dix pages publiques le sont; huit restent
+fermées et c'est voulu — trois redirections d'anciennes adresses, trois routes
+encore vides, `/verification` et `/404`.
+
+Réserve consignée pour `/nos-annonceurs` : les quatre fiches publiées portent le
+téléphone et le courriel de personnes réelles dont la note de révision dit « à
+confirmer avant toute publication ». Ces coordonnées sont désormais indexables.
+`settings.showAdvertisers` masque les fiches sans refermer la page.
+
 **Réseaux sociaux** : supprimés partout. La paroisse n'a aucune présence
 officielle. À réintroduire plus tard si besoin.
 
 ---
 
-## Lot 3 — SEO complet
+## Lot 3 — SEO complet, en 4 étapes
 
-Objet Sanity réutilisable, noms français dans le Studio : `seoTitle`,
-`seoDescription`, `seoImage`. Ajouté à chaque document de page indexable.
+### Étape 1 — Studio ✅ `d8daee3`
 
-Prévoir limites de longueur, validations utiles, descriptions françaises, image
-facultative, aperçu Studio quand c'est raisonnable.
+Objet `seo` partagé, ajouté aux 10 documents de page indexables, plus
+`siteSettings.shareImage`.
+
+**Écart assumé** : les champs s'appellent `seo.title`, `seo.description` et
+`seo.image`, et non `seoTitle`… comme annoncé plus haut — `/premiere-visite`
+avait déjà des données dans cette forme, renommer aurait coûté une mutation du
+dataset pour rien.
+
+`noIndex` n'est **pas** dans le Studio : décision de code.
+
+### Étape 2 — Contrat ✅ `0f2273a`
+
+`src/types/seo.ts` (`PageSeo`, une forme unique remplaçant sept formes inline),
+`normalizeSanitySeo.ts`, projections GROQ dans les 10 requêtes, 10 normalizers,
+4 getters pour l'image de partage, `tests/sanity-seo.test.mjs`.
+
+`canonicalPath` et `noIndex` restent dans le repli local et traversent le
+normalizer intacts. Ils déménagent au registre de routes à l'étape 4.
+
+Trois des dix tests lisent la **source** plutôt qu'un comportement : ils
+vérifient que chaque requête projette `seo` et que chaque normalizer l'appelle.
+C'est la panne trouvée par l'audit — champ complet au schéma, jamais projeté,
+tests verts — et aucun test unitaire ne la voit.
+
+### Étape 3 — Rendu (à faire)
+
+Centraliser le `<head>` dans `BaseLayout` : titre, description, canonique
+absolue, Open Graph, `og:image`, type, nom du site, locale, robots.
 
 **Fallbacks** : titre absent → titre de page + nom de la paroisse; description
-absente → introduction de la page; image absente → image de partage globale
-(à ajouter dans `siteSettings`, pas un fichier local).
-
-**Frontend** : centraliser la génération des métadonnées dans `BaseLayout` —
-title, description, canonical, Open Graph, image OG, type, nom du site, locale,
-robots. Ajouter `sitemap.xml`, `robots.txt`, JSON-LD `WebSite` et
-`Organization`/`PlaceOfWorship`, données structurées d'événements quand leurs
-champs suffisent.
+absente → introduction de la page; image absente → `siteSettings.shareImage`;
+absente aussi → aucune image, jamais une image de remplissage.
 
 **Domaine non confirmé.** Ne pas l'inventer. Variable `SITE_URL`. Le build de
-production doit dire clairement qu'il manque, sans casser le développement
-local. Documenter les variables et la procédure.
+production doit échouer bruyamment s'il manque, sans casser le développement
+local — sur le modèle du verrou déjà posé sur `pnpm build`. Documenter les
+variables et la procédure.
 
-**Point de départ concret** : aujourd'hui, **seule `/premiere-visite`** a un
-objet `seo` dans Sanity. Les 12 autres pages tirent leur `<title>` d'un objet
-figé dans `src/data/*.ts`, ou — pour `/` et `/horaires` — d'une chaîne écrite
-dans le fichier `.astro`. Chercher `seo: fallback.seo` dans les normalizers :
-c'est la trace exacte à remplacer.
+**Reste à basculer** : `/` et `/horaires` gardent leur titre et leur description
+en dur dans le `.astro`. Les 8 autres pages lisaient déjà `data.seo.*` et sont
+donc branchées sur Sanity depuis l'étape 2.
 
-**À réexaminer au passage** : `/contact`, `/evenements` et `/nos-annonceurs`
-sont `noindex` alors qu'ils sont dans la navigation. Décision à prendre page par
-page.
+### Étape 4 — Découvrabilité (à faire)
+
+**Registre de routes** : une liste unique, une entrée par route générée, disant
+si elle est indexable. `BaseLayout` y lit la balise `robots`, `sitemap.xml` y
+lit qui entre. Aujourd'hui l'information est éparpillée dans neuf fichiers, et
+rien n'empêche une page d'être à la fois au sitemap et en `noindex`.
+
+**`sitemap.xml`** : point d'entrée Astro plutôt que `@astrojs/sitemap`, pour
+qu'il lise le registre au lieu de deviner. `lastmod` depuis `_updatedAt` de
+Sanity; ni `priority` ni `changefreq`, ignorés par Google. Barres obliques
+finales identiques à celles des canoniques.
+
+**`robots.txt`** : autorise tout, plus la ligne `Sitemap:` absolue. Pas de
+`Disallow` sur les pages fermées — il empêcherait Google de lire leur `noindex`.
+
+**JSON-LD** : `WebSite`, `PlaceOfWorship` (nom, adresse, téléphone depuis
+`siteSettings`), et `Event` pour les activités dont les champs suffisent. Les
+heures du secrétariat ne sont pas publiées en `openingHours` : le champ est du
+texte libre, et un horaire mal formaté vaut moins que pas d'horaire.
+
+**Vérification** : chaque route réellement générée apparaît une fois et une
+seule dans le sitemap; aucune page n'est simultanément au sitemap et en
+`noindex`; XML valide; JSON-LD passé au validateur.
 
 ## Lot 4 — Pages légales
 
@@ -208,22 +280,47 @@ build public, de `noindex` accidentel, validation HTML et données structurées.
 
 ---
 
+## Ordre de travail révisé (2026-08-06)
+
+L'ordre initial était 3 → 4 → 5 → 6 → 7 → 8 → 9. Les lots 5 et 6 sont ceux qui
+butent le plus sur ce qui manque, et ne servent à rien avant le domaine. Le lot
+8 et la checklist, eux, ne dépendent de personne et sont exactement la matière
+de la rencontre du 11 août : les apporter débloque les lots 4, 5, 6 et 8 d'un
+coup.
+
+**Ordre proposé** : étapes 3 et 4 du lot 3 → lot 8 + checklist → lot 7 →
+lot 4 (légales) → lot 5 → lot 6 → lot 9.
+
 ## Décisions encore ouvertes
 
-Ces points **bloquent** ou demandent un arbitrage. Aucun n'a été tranché.
+Ces points **bloquent** ou demandent un arbitrage.
 
-| Sujet                             | Ce qui manque                                                                                                                                                               |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Domaine final                     | Non choisi. Ne pas l'inventer.                                                                                                                                              |
-| Adresse `From` vérifiée           | Pas `videotron.ca`. Dépend du domaine.                                                                                                                                      |
-| Accès Cloudflare                  | Externe.                                                                                                                                                                    |
-| Secrets Resend / Turnstile        | Externes. Ne pas en créer.                                                                                                                                                  |
-| Responsable de la confidentialité | Nom définitif, pour la politique.                                                                                                                                           |
-| Durée de conservation             | Valeur officielle, pour la politique.                                                                                                                                       |
-| Crédits photographiques           | Nom de la photographe des vues de l'église.                                                                                                                                 |
-| **Statut des 4 annonceurs**       | Publiés `active` alors que leur note dit « à confirmer avant toute publication ». Trois sont des élus réels, avec téléphone et courriel. **Non corrigé faute d'arbitrage.** |
-| Statut IA d'une illustration      | `parish-life-marian-artwork.jpg` : non déterminé, laissé non coché.                                                                                                         |
+**Tranché le 2026-08-06** : l'indexation de `/contact`, `/evenements` et
+`/nos-annonceurs` — les trois sont ouvertes. Voir la réserve consignée plus
+haut pour les annonceurs.
+
+| Sujet                             | Ce qui manque                                                                                                                                                                                                               |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Domaine final                     | Non choisi. Ne pas l'inventer.                                                                                                                                                                                              |
+| Adresse `From` vérifiée           | Pas `videotron.ca`. Dépend du domaine.                                                                                                                                                                                      |
+| Accès Cloudflare                  | Externe.                                                                                                                                                                                                                    |
+| Secrets Resend / Turnstile        | Externes. Ne pas en créer.                                                                                                                                                                                                  |
+| Responsable de la confidentialité | Nom définitif, pour la politique.                                                                                                                                                                                           |
+| Durée de conservation             | Valeur officielle, pour la politique.                                                                                                                                                                                       |
+| Crédits photographiques           | Nom de la photographe des vues de l'église.                                                                                                                                                                                 |
+| **Statut des 4 annonceurs**       | Publiés `active` alors que leur note dit « à confirmer avant toute publication ». Trois sont des élus réels, avec téléphone et courriel. **Non corrigé faute d'arbitrage — et la page est indexable depuis le 2026-08-06.** |
+| Statut IA d'une illustration      | `parish-life-marian-artwork.jpg` : non déterminé, laissé non coché.                                                                                                                                                         |
+
+## Défaut connu, non corrigé
+
+Le document `parishEvent` du pèlerinage au Sanctuaire Notre-Dame-du-Cap porte un
+**espace en trop au début de son titre**. Il part déjà dans le HTML et partira
+dans le JSON-LD de l'étape 4. Un `set` d'une ligne suffit : proposé le
+2026-08-06, pas tranché.
 
 ## Livrable attendu à la fin
 
 Une checklist claire des actions à faire avec la secrétaire **le 11 août**.
+Elle n'existe pas encore. Bon candidat pour la rencontre : lui montrer l'onglet
+« Google et partages », utilisable seulement une fois l'étape 3 terminée — un
+champ modifiable dont le site ne lit rien serait pire que pas de champ.
