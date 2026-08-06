@@ -102,35 +102,47 @@ Rien d'obligatoire. C'est du confort pour la suite.
 
 ---
 
-## Ce qu'aucune photo ne réglera
+## Hors de portée d'un appareil photo
 
-Deux dossiers restent ouverts après le 11, et ils demandent une réponse de la
-paroisse plutôt qu'un appareil photo.
-
-### Les huit illustrations historiques
+### Les huit illustrations historiques — rien à corriger
 
 La page `/notre-paroisse` raconte l'histoire de 1959 à aujourd'hui avec **huit
-illustrations générées par intelligence artificielle** — faute d'images
-d'époque. Elles sont déclarées comme telles dans leur fiche, et la page le dit
-au lecteur.
+illustrations générées par intelligence artificielle**, faute d'images d'époque.
 
-**À demander :** la paroisse possède-t-elle des photographies d'archives? La
-construction (1963-1964), l'inauguration, les anciens curés, les
-transformations des années 1990. Chaque photo d'archive remplacerait une
-illustration inventée par un document réel.
+**Ce n'est pas un défaut, et il n'y a rien à réparer.** Vérifié dans le site
+produit : chaque illustration porte sa légende, visible par le lecteur, sous
+l'image.
 
-### Les deux pèlerinages
+| Légende affichée                                           | Images |
+| ---------------------------------------------------------- | -----: |
+| « Illustration artistique — non documentaire »             |      8 |
+| « Repère documentaire — photographie prise dans l'église » |      1 |
+
+Le site déclare donc lui-même que ces images n'attestent rien. Et une image
+générée n'a pas d'ayant droit tiers : aucun crédit à obtenir, aucune permission
+à demander.
+
+**Ce qui reste possible, si l'occasion se présente :** demander à la paroisse
+si elle possède des **photographies d'archives** — la construction (1963-1964),
+l'inauguration, les anciens curés, les transformations des années 1990. Une
+vraie photo du chantier vaudrait mieux qu'une illustration inventée, même
+honnêtement étiquetée. C'est une amélioration, pas une correction. Si la
+réponse est non, la page reste bonne telle quelle.
+
+### Les deux pèlerinages — décidé
 
 Quatre images montrent la **basilique Sainte-Anne-de-Beaupré** et le
 **sanctuaire Notre-Dame-du-Cap**. Ce sont des bâtiments appartenant à d'autres
 institutions, et la provenance des fichiers est inconnue — l'une est une vue
 aérienne, une autre est datée de 2011 dans ses métadonnées.
 
-Trois issues possibles :
+**Décision prise :** les remplacer par des images libres de droits, trouvées
+dans une banque d'images. Pas besoin d'y aller.
 
-1. photos prises lors du prochain pèlerinage — la meilleure;
-2. images officielles des deux sanctuaires, qui en diffusent pour la presse;
-3. retirer les images : la fiche d'activité fonctionne sans.
+Une seule précaution au moment du dépôt : inscrire la source dans la note de
+provenance, sous la forme déjà utilisée ailleurs sur le site —
+« Pixabay, image 428607, Content License ». Le site ne l'affiche jamais; elle
+sert à répondre, dans deux ans, à la question « d'où vient cette photo? ».
 
 ---
 

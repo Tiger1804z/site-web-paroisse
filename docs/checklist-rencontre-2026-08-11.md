@@ -136,17 +136,16 @@ place le 11.
 Une fois de vraies photos déposées, la question des crédits disparaît pour ces
 emplacements : l'auteur est connu et l'autorisation aussi.
 
-**Ce qui ne se règle pas en photographiant** — à demander à la paroisse :
+**Une question facultative**, si l'occasion se présente : la paroisse
+possède-t-elle des **photographies d'archives** — la construction (1963-1964),
+l'inauguration, les anciens curés? La page d'histoire est illustrée par huit
+images générées par intelligence artificielle, chacune étiquetée « Illustration
+artistique — non documentaire » sous l'image. Rien à corriger là : c'est
+déclaré, c'est honnête, et aucune permission n'est en jeu. De vraies archives
+rendraient simplement la page meilleure.
 
-- **des archives photographiques.** Huit illustrations de la page « Notre
-  paroisse » racontent l'histoire de 1959 à aujourd'hui et sont générées par
-  intelligence artificielle, faute d'images d'époque. La paroisse a-t-elle des
-  photos anciennes de la construction, de l'inauguration, des curés?
-- **les photos des deux pèlerinages** (Sainte-Anne-de-Beaupré,
-  Notre-Dame-du-Cap) : ce sont des bâtiments appartenant à d'autres
-  institutions, et la provenance des fichiers est inconnue. À remplacer par des
-  images officiellement libres, ou par des photos prises lors du prochain
-  pèlerinage.
+Les images des deux pèlerinages seront remplacées par des photos libres de
+droits — décidé, rien à demander.
 
 ### 2.4 L'accord des quatre annonceurs
 
@@ -218,12 +217,15 @@ dans l'interface, en deux minutes. Bon deuxième exercice après la description.
 
 ## 3. Ce qui reste bloqué si on ne repart avec rien
 
-| Sans…                        | On ne peut pas faire             |
-| ---------------------------- | -------------------------------- |
-| l'accès au domaine           | la mise en ligne, le formulaire  |
-| le responsable + la durée    | la politique de confidentialité  |
-| l'accord des annonceurs      | trancher entre garder et masquer |
-| les archives photographiques | remplacer les 8 illustrations IA |
+| Sans…                     | On ne peut pas faire             |
+| ------------------------- | -------------------------------- |
+| l'accès au domaine        | la mise en ligne, le formulaire  |
+| le responsable + la durée | la politique de confidentialité  |
+| l'accord des annonceurs   | trancher entre garder et masquer |
+
+Trois blocages, pas plus. Les images ne sont pas dans cette liste : les photos
+se prennent le jour même, celles des pèlerinages se remplacent par des images
+libres de droits, et la page d'histoire est correcte telle quelle.
 
 Le travail qui **ne dépend de personne** et peut continuer entretemps : le
 nettoyage du code et du jeu de données, la préparation du formulaire de contact
@@ -237,7 +239,7 @@ chose à ne pas laisser traîner** : le 14 octobre arrive vite.
 
 ## 4. À imprimer, si utile
 
-Cinq questions, dans l'ordre d'importance :
+Quatre questions qui comptent :
 
 1. **Le domaine `paroissesaintrenegoupil.com` se renouvelle-t-il tout seul le
    14 octobre?** Sinon, qui s'en occupe?
@@ -246,8 +248,10 @@ Cinq questions, dans l'ordre d'importance :
    y a-t-il une entente écrite?
 4. Qui est le responsable de la protection des renseignements personnels, et
    combien de temps garde-t-on les messages reçus?
-5. La paroisse a-t-elle des **photos d'archives** — construction, inauguration,
-   anciens curés?
+
+Et une cinquième, facultative : la paroisse a-t-elle des **photos d'archives**
+— construction, inauguration, anciens curés? Ça améliorerait la page
+d'histoire, sans rien débloquer.
 
 Et deux choses à rapporter :
 
