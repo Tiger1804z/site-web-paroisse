@@ -10,17 +10,15 @@ Rien ici n'exige de connaissance technique de la part de la secrétaire.
 
 ## En un coup d'œil
 
-Quatre réponses débloquent presque tout le reste :
+| À obtenir                                     | Ce que ça débloque                                    | Urgence                |
+| --------------------------------------------- | ----------------------------------------------------- | ---------------------- |
+| **Qui détient `paroissesaintrenegoupil.com`** | La mise en ligne, le formulaire de contact            | **avant le 14 oct.**   |
+| **Photos du vrai lieu** (à prendre sur place) | Une dizaine d'images génériques à remplacer           | le jour même           |
+| **L'accord des 4 annonceurs**                 | Une page qui affichera leurs coordonnées publiquement | avant la mise en ligne |
+| **Responsable de la confidentialité + durée** | La politique de confidentialité                       | avant la mise en ligne |
 
-| Réponse à obtenir                         | Ce qu'elle débloque                                   |
-| ----------------------------------------- | ----------------------------------------------------- |
-| **L'adresse du site** (le nom de domaine) | La mise en ligne, le formulaire de contact, Google    |
-| **Les accès d'hébergement** (Cloudflare)  | La mise en ligne                                      |
-| **Le nom de la photographe**              | 20 images qui attendent leur crédit                   |
-| **L'accord des 4 annonceurs**             | Une page qui affichera leurs coordonnées publiquement |
-
-Deux d'entre elles ne coûtent qu'une décision. Les deux autres demandent un
-appel à quelqu'un.
+> **Le domaine existe déjà** — il n'y a rien à choisir. Voir 2.1 : il **expire
+> le 14 octobre 2026**, et c'est le seul vrai compte à rebours du dossier.
 
 ---
 
@@ -53,15 +51,12 @@ Conséquence, une fois le site en ligne : quand quelqu'un partagera un lien sur
 Facebook ou dans un courriel, **il n'y aura aucune image**. Juste un titre et
 une ligne de texte. C'est ce qui fait qu'un lien passe inaperçu.
 
-Le code est prêt : dès qu'une image est déposée, elle sert à toutes les pages.
-Une page peut ensuite avoir la sienne si on veut.
+Ce qu'il faut : **une photo, une seule**, horizontale et large (l'idéal est
+environ 1200 × 630 pixels). La façade de l'église conviendrait — et elle fait
+partie des prises de vue prévues le 11.
 
-Ce qu'il faut : **une photo, une seule**, de préférence horizontale et large
-(l'idéal est environ 1200 × 630 pixels). La façade de l'église conviendrait.
-Elle peut être déposée pendant la rencontre, en deux minutes.
-
-> Aucune image n'a été choisie à sa place. Le site n'affiche pas d'image de
-> remplissage : mieux vaut aucune image qu'une image qui n'a rien à voir.
+Une fois déposée, elle sert à toutes les pages, une page pouvant ensuite avoir
+la sienne. La secrétaire peut la changer elle-même quand elle veut.
 
 ### 1.3 Corriger un titre mal saisi
 
@@ -78,61 +73,80 @@ qu'on y est.
 
 Aucune de ces réponses ne peut être devinée. Rien n'a été inventé à leur place.
 
-### 2.1 L'adresse du site (bloque le plus de choses)
+### 2.1 Le domaine — il existe déjà, et il expire bientôt
 
-**Le nom de domaine n'est pas choisi.** Tant qu'il ne l'est pas :
+La paroisse possède **`paroissesaintrenegoupil.com`**, qui sert son site
+actuel. Relevé au registre public le 2026-08-06 :
 
-- le site ne peut pas être mis en ligne;
-- Google ne peut pas être averti de l'adresse des pages;
-- le formulaire de contact ne peut pas envoyer de courriel — l'expéditeur doit
-  venir d'un domaine vérifié, et `videotron.ca` ne convient pas.
+|              |                             |
+| ------------ | --------------------------- |
+| Enregistré   | 2023-10-14                  |
+| **Expire**   | **2026-10-14**              |
+| Serveurs DNS | `ADNS1/2/3.DOMAINEPLUS.NET` |
 
-Le code est prêt et attend une seule variable. Un site construit sans elle
-échoue volontairement, plutôt que de publier des adresses fausses.
+**Il n'y a donc aucun nom à choisir.** On garde celui-là : c'est l'adresse que
+les gens connaissent, elle a de l'historique et des liens entrants. En prendre
+un autre jetterait tout ça.
 
-**Question à poser :** la paroisse a-t-elle déjà un nom de domaine? Si oui,
-lequel, et qui en détient le compte? Sinon, quel nom veut-elle?
+Deux questions, et la première est un compte à rebours :
 
-### 2.2 Les accès d'hébergement
+1. **Le renouvellement du 14 octobre est-il automatique?** Sinon, qui le fait?
+   Un domaine expiré se fait racheter très vite, et le récupérer coûte cher
+   quand c'est encore possible.
+2. **Qui détient le compte chez Domaine Plus** (le fournisseur des serveurs
+   DNS)? Il faudra y modifier deux ou trois lignes pour diriger le domaine
+   vers le nouveau site. C'est l'affaire de cinq minutes — mais il faut
+   l'accès.
 
-Le site sera hébergé chez Cloudflare. Il faut :
+### 2.2 L'hébergement
 
-- un compte, ou l'accès à celui qui existe;
-- le droit d'y créer le projet et d'y saisir la configuration.
+Le nouveau site sera hébergé chez Cloudflare, et **c'est toi qui t'en occupes**
+— la secrétaire n'a rien à y faire, c'est justement le partage prévu : elle
+édite le contenu, la technique reste de ton côté.
 
-**Question à poser :** qui, dans la paroisse, détient ou peut créer ce compte?
+Une seule précaution, qui n'est pas technique : **créer le compte avec une
+adresse courriel de la paroisse**, et t'y ajouter comme administrateur. Si un
+jour tu passes à autre chose, la paroisse garde la main sur son site sans
+dépendre de ta boîte de courriel. Gratuit à faire maintenant, pénible à
+rattraper plus tard.
 
-### 2.3 Les crédits photographiques
+**Rien à demander à la paroisse ici**, sauf peut-être une adresse courriel
+officielle pour ouvrir le compte.
 
-**50 images du site portent une note interne sur leur provenance.** Ces notes
-ne sont **jamais affichées** — elles servent à savoir ce qu'on a le droit de
-publier. Répartition réelle :
+### 2.3 Les images — prises de vue sur place
 
-| Situation                                                | Nombre | Action                    |
-| -------------------------------------------------------- | -----: | ------------------------- |
-| Provenance réglée (domaine public, Pixabay, IA déclarée) |     20 | rien à faire              |
-| Page source à archiver, licence connue                   |      3 | travail interne           |
-| **Attend une réponse humaine**                           | **27** | **à demander le 11 août** |
+Les images actuelles sont **provisoires**. C'est précisément pour ça qu'elles
+sont dans Sanity : elles se remplacent sans toucher au code, et sans
+développeur.
 
-Les 27 se regroupent en **cinq questions**, pas 27 :
+Sur les 50 emplacements, **23 ne montrent pas la Paroisse Saint-René-Goupil** —
+des images de banque, des illustrations, ou des photos d'autres lieux. Les plus
+visibles :
 
-| #   | Question                                                                                                                                                               | Images |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----: |
-| 1   | **Quel est le nom de la photographe?** Photos prises dans l'église par une proche, avec son autorisation. La note dit explicitement « nom à inscrire dans le crédit ». |     11 |
-| 2   | **Qui a pris les photos de l'église?** Leur note renvoie à la paroisse. C'est peut-être la même personne qu'en 1 — à confirmer, pas à supposer.                        |      9 |
-| 3   | **Le nom de la mère de l'administratrice du site** (page Première visite), qui a autorisé sa photo.                                                                    |      1 |
-| 4   | **Deux illustrations de l'accueil** : générées par intelligence artificielle ou non? D'où viennent-elles? Sans réponse, aucun crédit ne peut être écrit.               |      2 |
-| 5   | **Les images de deux activités** : fournies avec le projet, auteur et licence inconnus. L'une est datée de 2011.                                                       |      4 |
+- les **trois images de la friperie** sont des photos génériques de vêtements
+  sur un portant. Le vrai local est au sous-sol de l'église;
+- l'illustration de la section « services » de l'accueil est une **façade de
+  cathédrale à Florence**;
+- les lampions de l'accueil viennent d'une banque d'images.
 
-Si les questions 1 et 2 ont la même réponse — ce qui est probable — **une seule
-information règle 20 des 27 lignes**.
+**La liste complète, emplacement par emplacement, est dans
+`docs/prises-de-vue-2026-08-11.md`.** C'est le document à avoir en main sur
+place le 11.
 
-En attendant : aucun crédit inventé, aucun texte « à confirmer » affiché,
-aucune image retirée. Le site est correct tel quel; c'est la **traçabilité** qui
-manque.
+Une fois de vraies photos déposées, la question des crédits disparaît pour ces
+emplacements : l'auteur est connu et l'autorisation aussi.
 
-> Le rapport détaillé, image par image, est le prochain livrable. Il n'attend
-> pas ces réponses pour être écrit.
+**Ce qui ne se règle pas en photographiant** — à demander à la paroisse :
+
+- **des archives photographiques.** Huit illustrations de la page « Notre
+  paroisse » racontent l'histoire de 1959 à aujourd'hui et sont générées par
+  intelligence artificielle, faute d'images d'époque. La paroisse a-t-elle des
+  photos anciennes de la construction, de l'inauguration, des curés?
+- **les photos des deux pèlerinages** (Sainte-Anne-de-Beaupré,
+  Notre-Dame-du-Cap) : ce sont des bâtiments appartenant à d'autres
+  institutions, et la provenance des fichiers est inconnue. À remplacer par des
+  images officiellement libres, ou par des photos prises lors du prochain
+  pèlerinage.
 
 ### 2.4 L'accord des quatre annonceurs
 
@@ -174,12 +188,12 @@ garde-t-on les demandes reçues?
 
 Le destinataire est confirmé : `paroissergoupil@videotron.ca`.
 
-Ce qui manque, c'est l'adresse **expéditrice**. Elle doit venir du domaine du
-site, une fois celui-ci choisi — un fournisseur de courriel refuse d'envoyer au
+Ce qui manque, c'est l'adresse **expéditrice**. Elle devra venir de
+`paroissesaintrenegoupil.com` — un fournisseur de courriel refuse d'envoyer au
 nom d'un domaine qu'il ne peut pas vérifier, et les messages finiraient dans
 les indésirables.
 
-Rien à décider maintenant : cette réponse découle du domaine.
+Rien à décider maintenant : ça découle de l'accès au domaine (2.1).
 
 ### 2.7 Les horaires — une vérification
 
@@ -204,18 +218,20 @@ dans l'interface, en deux minutes. Bon deuxième exercice après la description.
 
 ## 3. Ce qui reste bloqué si on ne repart avec rien
 
-| Sans…                     | On ne peut pas faire             |
-| ------------------------- | -------------------------------- |
-| le domaine                | la mise en ligne, le formulaire  |
-| les accès Cloudflare      | la mise en ligne                 |
-| le responsable + la durée | la politique de confidentialité  |
-| les noms des photographes | fermer le dossier des crédits    |
-| l'accord des annonceurs   | trancher entre garder et masquer |
+| Sans…                        | On ne peut pas faire             |
+| ---------------------------- | -------------------------------- |
+| l'accès au domaine           | la mise en ligne, le formulaire  |
+| le responsable + la durée    | la politique de confidentialité  |
+| l'accord des annonceurs      | trancher entre garder et masquer |
+| les archives photographiques | remplacer les 8 illustrations IA |
 
 Le travail qui **ne dépend de personne** et peut continuer entretemps : le
-rapport détaillé des crédits, le nettoyage du code et du jeu de données, la
-préparation du formulaire de contact et de la configuration d'hébergement — tout
-sauf le geste final de mise en ligne.
+nettoyage du code et du jeu de données, la préparation du formulaire de contact
+et de la configuration d'hébergement — tout sauf le geste final de mise en
+ligne.
+
+Et si le renouvellement du domaine n'est pas réglé le 11, **c'est la seule
+chose à ne pas laisser traîner** : le 14 octobre arrive vite.
 
 ---
 
@@ -223,12 +239,18 @@ sauf le geste final de mise en ligne.
 
 Cinq questions, dans l'ordre d'importance :
 
-1. Quel sera le nom de domaine du site, et qui détient le compte?
-2. Qui a, ou peut créer, le compte Cloudflare?
-3. Quel est le nom de la photographe, et est-ce la même qui a photographié
-   l'église?
-4. Les quatre annonceurs ont-ils donné leur accord pour être publiés?
-5. Qui est le responsable de la protection des renseignements personnels, et
+1. **Le domaine `paroissesaintrenegoupil.com` se renouvelle-t-il tout seul le
+   14 octobre?** Sinon, qui s'en occupe?
+2. **Qui détient le compte chez Domaine Plus**, où pointent les serveurs DNS?
+3. Les quatre annonceurs ont-ils donné leur accord pour être publiés, et
+   y a-t-il une entente écrite?
+4. Qui est le responsable de la protection des renseignements personnels, et
    combien de temps garde-t-on les messages reçus?
+5. La paroisse a-t-elle des **photos d'archives** — construction, inauguration,
+   anciens curés?
 
-Et une chose à rapporter : **une photo horizontale pour les partages.**
+Et deux choses à rapporter :
+
+- les **photos prises sur place** (liste dans
+  `docs/prises-de-vue-2026-08-11.md`);
+- une **photo horizontale de la façade**, qui servira aux partages de liens.
