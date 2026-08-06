@@ -15,18 +15,6 @@ export function getStaticPaths() {
       description:
         'Galerie — route réservée pendant que la sélection photographique demeure intégrée à l’accueil.',
     },
-    {
-      slug: 'politique-de-confidentialite',
-      title: 'Politique de confidentialité',
-      description:
-        'Politique de confidentialité — contenu temporaire en attente de rédaction.',
-    },
-    {
-      slug: 'mentions-legales',
-      title: 'Mentions légales',
-      description:
-        'Mentions légales — contenu temporaire en attente de rédaction.',
-    },
   ] as const satisfies readonly PlaceholderPage[];
 
   return placeholderPages.map((page) => ({

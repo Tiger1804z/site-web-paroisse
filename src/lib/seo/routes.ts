@@ -36,6 +36,15 @@ export interface SiteRoute {
    * site. Absent pour les pages qui n'ont pas de contenu éditorial.
    */
   readonly documentId?: string;
+  /**
+   * Page dont le texte vit dans le dépôt, pas dans le Studio.
+   *
+   * Les pages légales décrivent le fonctionnement technique du site : elles
+   * doivent changer dans le même commit que le code qu'elles décrivent. Elles
+   * entrent donc au plan de site sans `lastmod`, faute de document Sanity à
+   * interroger — une date absente vaut mieux qu'une date fausse.
+   */
+  readonly contentInCode?: true;
   /** Pourquoi la page est fermée. Documentation, jamais rendue. */
   readonly closedBecause?: string;
 }
@@ -84,24 +93,25 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
     closedBecause: 'Ancienne adresse, remplacée par /nos-annonceurs/.',
   },
 
-  // Trois routes réservées, dont le contenu n'est pas écrit. Une page vide
-  // indexée dit au moteur que le site en a une — et cette impression reste
-  // longtemps après que la page a été remplie.
+  // Les deux pages légales sont écrites dans le dépôt : elles décrivent le
+  // fonctionnement technique du site, pas la vie de la paroisse. Publiques —
+  // une politique de confidentialité qu'un moteur ne peut pas trouver ne sert
+  // à personne.
+  {
+    path: '/politique-de-confidentialite/',
+    indexable: true,
+    contentInCode: true,
+  },
+  { path: '/mentions-legales/', indexable: true, contentInCode: true },
+
+  // Route réservée, dont le contenu n'est pas écrit. Une page vide indexée dit
+  // au moteur que le site en a une — et cette impression reste longtemps après
+  // que la page a été remplie.
   {
     path: '/galerie/',
     indexable: false,
     closedBecause:
       'Route réservée : la sélection photographique vit à l’accueil.',
-  },
-  {
-    path: '/mentions-legales/',
-    indexable: false,
-    closedBecause: 'Contenu en attente de rédaction.',
-  },
-  {
-    path: '/politique-de-confidentialite/',
-    indexable: false,
-    closedBecause: 'Contenu en attente de rédaction.',
   },
 
   {

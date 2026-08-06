@@ -43,13 +43,24 @@ test('aucun chemin n’est enregistré deux fois', () => {
 /**
  * Sans document, une page publique entre au plan de site sans date de
  * modification : le moteur ne sait pas si elle a changé depuis sa dernière
- * visite.
+ * visite. La seule dispense est explicite — une page dont le texte vit dans le
+ * dépôt n'a aucun document à interroger.
  */
 test('chaque page publique nomme le document qui la date', () => {
   for (const route of indexableRoutes()) {
     assert.ok(
-      route.documentId,
-      `« ${route.path} » est publique mais ne nomme aucun document Sanity.`,
+      route.documentId || route.contentInCode,
+      `« ${route.path} » est publique mais ne nomme aucun document Sanity, et ne déclare pas son texte dans le dépôt.`,
+    );
+  }
+});
+
+/** La dispense doit rester une exception nommée, pas un défaut commode. */
+test('une page ne peut pas à la fois nommer un document et s’en dispenser', () => {
+  for (const route of SITE_ROUTES) {
+    assert.ok(
+      !(route.documentId && route.contentInCode),
+      `« ${route.path} » déclare son texte dans le dépôt tout en nommant ${route.documentId}.`,
     );
   }
 });
