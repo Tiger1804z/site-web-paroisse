@@ -78,8 +78,8 @@ export const THIRD_PARTY_SERVICES = [
   },
 ] as const;
 
-/** Dernière révision du contenu de ces pages. À modifier quand le texte change. */
-export const LEGAL_PAGES_UPDATED_ON = '2026-08-06';
-
-/** Date affichée en toutes lettres. */
+/**
+ * Dernière révision du contenu de ces pages, telle qu'elle s'affiche.
+ * À modifier quand le texte change.
+ */
 export const LEGAL_PAGES_UPDATED_LABEL = '6 août 2026';

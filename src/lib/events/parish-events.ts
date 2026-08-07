@@ -79,7 +79,7 @@ export function getParishEventTemporalStatus(
   return startTimestamp === nowTimestamp ? 'ongoing' : 'past';
 }
 
-export function withParishEventTemporalStatus(
+function withParishEventTemporalStatus(
   event: ParishEvent,
   now: Date,
 ): ParishEventWithTemporalStatus {
@@ -89,7 +89,7 @@ export function withParishEventTemporalStatus(
   };
 }
 
-export function isPublicParishEvent(event: ParishEvent): boolean {
+function isPublicParishEvent(event: ParishEvent): boolean {
   return (
     event.showOnWebsite &&
     (event.publicationStatus === 'published' ||

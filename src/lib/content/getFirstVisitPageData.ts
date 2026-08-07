@@ -8,7 +8,7 @@ import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { resolvePracticalInformation } from '@/lib/content/resolvePracticalInformation';
 import type { FirstVisitPageData } from '@/types/firstVisit';
 
-export async function fetchFirstVisitPageRaw(): Promise<SanityFirstVisitPageResult> {
+async function fetchFirstVisitPageRaw(): Promise<SanityFirstVisitPageResult> {
   try {
     return await loadQuery(FIRST_VISIT_PAGE_QUERY);
   } catch (error) {

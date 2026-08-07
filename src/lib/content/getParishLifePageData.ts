@@ -6,7 +6,7 @@ import type { SanityParishLifePageResult } from '@/lib/sanity/types';
 import { normalizeSanityParishLifePage } from '@/lib/content/normalizeSanityParishLifePage';
 import type { ParishLifePageData } from '@/types/parishLife';
 
-export async function fetchParishLifePageRaw(): Promise<SanityParishLifePageResult> {
+async function fetchParishLifePageRaw(): Promise<SanityParishLifePageResult> {
   try {
     return await loadQuery(PARISH_LIFE_PAGE_QUERY);
   } catch (error) {

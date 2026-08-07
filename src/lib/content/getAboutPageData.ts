@@ -6,7 +6,7 @@ import type { SanityAboutPageResult } from '@/lib/sanity/types';
 import { normalizeSanityAboutPage } from '@/lib/content/normalizeSanityAboutPage';
 import type { AboutPageData } from '@/types/about';
 
-export async function fetchAboutPageRaw(): Promise<SanityAboutPageResult> {
+async function fetchAboutPageRaw(): Promise<SanityAboutPageResult> {
   try {
     return await loadQuery(ABOUT_PAGE_QUERY);
   } catch (error) {

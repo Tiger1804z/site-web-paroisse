@@ -14,7 +14,7 @@ import type { Advertiser, AdvertisersPageData } from '@/types/advertisers';
  * Sanity. La secrétaire retire une fiche en la passant à « Inactif », sans
  * changement de code.
  */
-export const advertisersData = [
+const advertisersData = [
   {
     id: 'buffet-marina',
     name: 'Buffet Marina',

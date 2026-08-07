@@ -7,7 +7,7 @@ import type { SanityServicesPageResult } from '@/lib/sanity/types';
 import { normalizeSanityServicesPage } from '@/lib/content/normalizeSanityServicesPage';
 import type { ServicesPageData } from '@/types/services';
 
-export async function fetchServicesPageRaw(): Promise<SanityServicesPageResult> {
+async function fetchServicesPageRaw(): Promise<SanityServicesPageResult> {
   try {
     return await loadQuery(SERVICES_PAGE_QUERY);
   } catch (error) {

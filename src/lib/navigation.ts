@@ -34,7 +34,7 @@ export const primaryNavigation = [
   { label: 'Événements', href: '/evenements' },
 ] as const satisfies readonly NavigationItem[];
 
-export const informationRouteDefinitions = [
+const informationRouteDefinitions = [
   { label: 'Friperie', href: '/friperie', active: true },
   { label: 'Location de salle', href: '/location-de-salle', active: false },
   { label: 'Galerie', href: '/galerie', active: false },
@@ -45,13 +45,6 @@ export const informationRouteDefinitions = [
 export const informationNavigation = informationRouteDefinitions.filter(
   ({ active }) => active,
 );
-
-export function isInformationRoutePublic(href: SitePath): boolean {
-  return (
-    informationRouteDefinitions.find((item) => item.href === href)?.active ??
-    false
-  );
-}
 
 export const firstVisitNavigation = {
   label: 'Première visite',

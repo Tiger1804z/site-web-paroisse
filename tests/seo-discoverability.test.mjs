@@ -131,6 +131,61 @@ test('l’indexation ne se décide plus ailleurs que dans le registre', () => {
 });
 
 /* -------------------------------------------------------------------------
+ * Le menu et le registre ne peuvent pas diverger
+ * ------------------------------------------------------------------------- */
+
+/**
+ * `navigation.ts` tient la liste de ce qui s'affiche dans les menus,
+ * `routes.ts` celle de ce qui existe et de ce qui est public. Deux listes des
+ * mêmes routes : sans garde, il suffit d'une route renommée d'un côté pour que
+ * le menu pointe dans le vide, et rien ne le signale.
+ */
+const navigation = await import('../src/lib/navigation.ts');
+
+const NAVIGATION_LINKS = [
+  ...navigation.primaryNavigation,
+  ...navigation.informationNavigation,
+  ...navigation.legalNavigation,
+  navigation.firstVisitNavigation,
+  navigation.scheduleNavigation,
+];
+
+test('chaque lien de menu mène à une route qui existe', () => {
+  for (const { label, href } of NAVIGATION_LINKS) {
+    assert.ok(
+      findRoute(href),
+      `« ${label} » pointe vers ${href}, absente du registre de routes.`,
+    );
+  }
+});
+
+/** Un menu qui mène à une page fermée à l'indexation est une incohérence. */
+test('aucun lien de menu ne mène à une page fermée', () => {
+  for (const { label, href } of NAVIGATION_LINKS) {
+    assert.equal(
+      findRoute(href)?.indexable,
+      true,
+      `« ${label} » est au menu mais ${href} est fermée à l’indexation.`,
+    );
+  }
+});
+
+test('chaque chemin déclaré par le type SitePath existe au registre', () => {
+  const source = read('src/lib/navigation.ts');
+  const union = /export type SitePath =([\s\S]*?);/.exec(source)?.[1] ?? '';
+  const paths = [...union.matchAll(/'([^']+)'/g)].map((match) => match[1]);
+
+  assert.ok(paths.length > 0, 'SitePath est introuvable.');
+
+  for (const path of paths) {
+    assert.ok(
+      findRoute(path),
+      `SitePath déclare « ${path} », que le registre ne connaît pas.`,
+    );
+  }
+});
+
+/* -------------------------------------------------------------------------
  * Plan de site et robots.txt
  * ------------------------------------------------------------------------- */
 

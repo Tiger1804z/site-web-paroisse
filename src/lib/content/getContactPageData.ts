@@ -8,7 +8,7 @@ import type { SanityContactPageResult } from '@/lib/sanity/types';
 import { normalizeSanityContactPage } from '@/lib/content/normalizeSanityContactPage';
 import type { ContactPageData } from '@/types/contact';
 
-export async function fetchContactPageRaw(): Promise<SanityContactPageResult> {
+async function fetchContactPageRaw(): Promise<SanityContactPageResult> {
   try {
     return await loadQuery(CONTACT_PAGE_QUERY);
   } catch (error) {

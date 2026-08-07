@@ -13,4 +13,3 @@ import { siteSettingsData } from '@/data/siteSettings';
  * est acceptable en attendant.
  */
 export const SITE_NAME = siteSettingsData.organizationName;
-export const SITE_DESCRIPTOR = 'Paroisse catholique';

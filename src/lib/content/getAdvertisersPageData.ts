@@ -16,7 +16,7 @@ import { normalizeSanityAdvertisersPage } from '@/lib/content/normalizeSanityAdv
 import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
 import type { AdvertisersPageData } from '@/types/advertisers';
 
-export async function fetchAdvertisersPageRaw(): Promise<SanityAdvertisersPageResult> {
+async function fetchAdvertisersPageRaw(): Promise<SanityAdvertisersPageResult> {
   try {
     return await loadQuery(ADVERTISERS_PAGE_QUERY);
   } catch (error) {
@@ -34,7 +34,7 @@ export async function fetchAdvertisersPageRaw(): Promise<SanityAdvertisersPageRe
  * Une collection vide est une réponse : la paroisse n'a aucun annonceur. Un
  * échec de requête n'en est pas une, et laisse le repli local reprendre la main.
  */
-export async function fetchAdvertisersRaw(): Promise<SanityAdvertisersResult | null> {
+async function fetchAdvertisersRaw(): Promise<SanityAdvertisersResult | null> {
   try {
     return await loadQuery(ADVERTISERS_QUERY);
   } catch (error) {

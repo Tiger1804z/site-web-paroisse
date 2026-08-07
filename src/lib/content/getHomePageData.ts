@@ -19,7 +19,7 @@ import type { HomePageData } from '@/types/homePage';
  */
 const GALLERY_LIMIT = 12;
 
-export async function fetchHomePageRaw(): Promise<SanityHomePageResult> {
+async function fetchHomePageRaw(): Promise<SanityHomePageResult> {
   try {
     return await loadQuery(HOME_PAGE_QUERY);
   } catch (error) {

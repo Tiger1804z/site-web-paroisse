@@ -12,7 +12,7 @@ import type {
 } from '@/lib/sanity/types';
 import { normalizeSanityThriftStorePage } from '@/lib/content/normalizeSanityThriftStore';
 
-export async function fetchThriftStorePageRaw(): Promise<SanityThriftStorePageResult> {
+async function fetchThriftStorePageRaw(): Promise<SanityThriftStorePageResult> {
   try {
     return await loadQuery(THRIFT_STORE_PAGE_QUERY);
   } catch (error) {
@@ -24,7 +24,7 @@ export async function fetchThriftStorePageRaw(): Promise<SanityThriftStorePageRe
   }
 }
 
-export async function fetchThriftStoreRaw(): Promise<SanityThriftStoreResult> {
+async function fetchThriftStoreRaw(): Promise<SanityThriftStoreResult> {
   try {
     return await loadQuery(THRIFT_STORE_QUERY);
   } catch (error) {
