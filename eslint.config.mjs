@@ -8,7 +8,7 @@ export default [
     ignores: [
       '.astro/**',
       '**/.sanity/**',
-      'dist/**',
+      '**/dist/**',
       'node_modules/**',
       'reference/**',
       'coverage/**',

@@ -11,6 +11,13 @@ l’architecture Événements et l’audit documentaire du site existant. Il val
 Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité
 automatisée, la CI et la préservation de l’export Figma Make.
 
+Sanity est maintenant la source éditoriale des pages migrées et le Studio
+autonome se trouve dans `studio/`. Le résumé détaillé et à jour des routes,
+replis locaux, contenus publiés et limites connues est maintenu dans
+[`docs/PROJECT_CURRENT_STATE.md`](docs/PROJECT_CURRENT_STATE.md); les notes de
+tickets plus bas décrivent l’historique de construction et peuvent donc parler
+au futur d’éléments désormais livrés.
+
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
 [docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
@@ -33,10 +40,9 @@ légèrement plus généreux, métadonnées harmonisées, CTA de 52 px, navigati
 traitement photographique commun, une cadence de 7,6 secondes, un fondu de
 1,25 seconde et une carte « Prochaines messes » bourgogne plutôt que blanche.
 
-Les autres pages complètes, le CMS, les formulaires connectés et le déploiement
-ne sont pas encore implémentés. L’adresse et le téléphone publics sont
-confirmés et partagés; les horaires, dates, courriel public et autres
-informations opérationnelles demeurent masqués ou à confirmer.
+Le CMS et ses replis statiques sont intégrés. Les formulaires connectés et le
+déploiement ne sont pas encore implémentés. Plusieurs horaires, dates, crédits
+photo et informations opérationnelles demeurent à confirmer avant publication.
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
 de contenu local typé et sa future connexion à Sanity sont expliqués dans
@@ -132,6 +138,7 @@ n’est ajouté.
 - TypeScript strict;
 - React 19 uniquement pour les composants qui nécessitent une hydratation ou facilitent une migration;
 - Tailwind CSS 4 par le plugin Vite officiel;
+- Sanity Studio 6, GROQ typé et Visual Editing pour le contenu éditorial;
 - pnpm 11 géré par Corepack;
 - ESLint et Prettier;
 - GitHub Actions pour la validation continue.
@@ -172,16 +179,19 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 
 ## Commandes
 
-| Commande            | Rôle                                                  |
-| ------------------- | ----------------------------------------------------- |
-| `pnpm dev`          | Démarre le serveur de développement.                  |
-| `pnpm build`        | Génère le site statique dans `dist/`.                 |
-| `pnpm preview`      | Sert localement le dernier build.                     |
-| `pnpm check`        | Vérifie les composants Astro et les types TypeScript. |
-| `pnpm lint`         | Exécute ESLint sans accepter d’avertissement.         |
-| `pnpm format`       | Formate les fichiers pris en charge par Prettier.     |
-| `pnpm format:check` | Vérifie le format sans modifier les fichiers.         |
-| `pnpm validate`     | Enchaîne format, lint, check et build.                |
+| Commande                  | Rôle                                                      |
+| ------------------------- | --------------------------------------------------------- |
+| `pnpm dev`                | Démarre le serveur de développement.                      |
+| `pnpm build`              | Génère le site selon le mode de prévisualisation actif.   |
+| `pnpm build:public`       | Génère le site public statique dans `dist/`.              |
+| `pnpm preview`            | Sert localement le dernier build.                         |
+| `pnpm check`              | Vérifie les composants Astro et les types TypeScript.     |
+| `pnpm lint`               | Exécute ESLint sans accepter d’avertissement.             |
+| `pnpm format`             | Formate les fichiers pris en charge par Prettier.         |
+| `pnpm format:check`       | Vérifie le format sans modifier les fichiers.             |
+| `pnpm sanity:typegen`     | Régénère les types des schémas et requêtes Sanity.        |
+| `pnpm validate`           | Enchaîne format, lint, types, tests, build public et SEO. |
+| `pnpm --dir studio build` | Génère le Studio statique dans `studio/dist/`.            |
 
 ## Structure
 
@@ -207,6 +217,9 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 │   ├── scripts/             # JavaScript client natif et ciblé
 │   ├── styles/
 │   └── types/
+├── studio/                  # Studio Sanity autonome et schémas
+├── scripts/                 # Build public et contrôles de sortie
+├── tests/                   # Tests Node du contenu, du rendu et du SEO
 └── package.json
 ```
 
@@ -250,7 +263,13 @@ coordonnées doivent être confirmés par la paroisse avant publication.
 
 ## Variables d’environnement
 
-Aucune variable d’environnement n’est requise à ce stade. Ne créez pas de secret fictif et ne commitez jamais de fichier `.env`. Si une variable devient nécessaire, documentez uniquement son nom et son rôle dans un futur `.env.example`, sans valeur sensible.
+Copier `.env.example` vers un fichier `.env` local ignoré par Git. Le projet ID
+et le dataset Sanity sont publics. `SITE_URL` doit contenir l’origine finale
+pour tout build destiné au déploiement; la validation locale peut utiliser
+`http://localhost:4321`. Le jeton `SANITY_API_READ_TOKEN` est serveur seulement
+et requis uniquement pour un environnement de prévisualisation avec brouillons.
+Ne jamais committer sa valeur ni activer
+`PUBLIC_SANITY_VISUAL_EDITING_ENABLED` dans le build public.
 
 ## Validation
 
@@ -290,7 +309,6 @@ header translucide et fait de `/nos-services/` la route canonique. Les choix
 - migration complète des routes encore listées comme placeholders dans
   `REMAINING_ROUTES_AUDIT.md`;
 - contenu définitif;
-- CMS;
 - formulaires backend et courriels;
 - réservation de salle;
 - authentification;

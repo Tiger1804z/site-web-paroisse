@@ -1,13 +1,12 @@
 # État actuel du projet
 
-Dernière mise à jour : 31 juillet 2026 — fin de la migration de contenu vers
-Sanity (accueil et Notre paroisse).
+Dernière mise à jour : 18 août 2026 — préparation de la promotion de la
+migration Sanity vers la production.
 
-> **Branche poussée, pas fusionnée.** `feature/sanity-content-migration` porte
-> la prévisualisation éditoriale (Visual Editing) et les migrations de Nos
-> services, Vie paroissiale, Première visite, Nos annonceurs, Contact, l’accueil
-> entier et Notre paroisse. Elle est publiée sur `origin`; `main` ne l’a pas
-> encore reçue.
+La migration comprend la prévisualisation éditoriale (Visual Editing) et les
+contenus de Nos services, Vie paroissiale, Première visite, Nos annonceurs,
+Contact, l’accueil entier et Notre paroisse. L’historique Git demeure la source
+de vérité pour son état de promotion entre les branches.
 
 ## Pages principales
 
@@ -50,10 +49,11 @@ Sanity (accueil et Notre paroisse).
   et motifs du formulaire lus depuis le document Sanity `contactPage`. Les
   heures du secrétariat, le stationnement et l’accessibilité s’y affichent
   désormais, lus dans `siteSettings`;
-- `/nos-annonceurs/` : page complète `noindex`; les quatre fiches historiques
-  sont publiées et lues depuis la collection Sanity `advertiser`, le contenu de
-  page depuis `advertisersPage`. Aucun portrait n’est repris, et le champ image
-  de chaque fiche reste vide tant qu’un logo n’est pas téléversé;
+- `/nos-annonceurs/` : page complète et indexable, incluse dans le sitemap; les
+  quatre fiches historiques sont publiées et lues depuis la collection Sanity
+  `advertiser`, le contenu de page depuis `advertisersPage`. Aucun portrait
+  n’est repris, et le champ image de chaque fiche reste vide tant qu’un logo
+  n’est pas téléversé;
 - `/galerie/` : placeholder `noindex`, volontairement absent de la navigation.
 
 ## Contact et coordonnées publiques
@@ -180,9 +180,9 @@ La page affiche l’introduction et le bloc « Devenir annonceur » même sans
 annonceur actif : la case « Afficher la liste » autorise la section, elle ne la
 remplit pas, et une grille vide ne s’affiche jamais. Le téléphone du secrétariat
 vient de `siteSettings`; aucun tarif, espace disponible ou formulaire
-publicitaire n’est inventé. La page reste `noindex` : les ententes, les
-coordonnées, les fonctions des élus et les logos restent à revoir avec la
-secrétaire le 10 août 2026 ou après son retour.
+publicitaire n’est inventé. La page est volontairement indexable et incluse
+dans le sitemap. La publication des quatre fiches actives et de leurs
+coordonnées actuelles est approuvée pour la mise en production.
 
 ## Contenus en attente
 
@@ -197,7 +197,7 @@ secrétaire le 10 août 2026 ou après son retour.
 - horaires, procédures pastorales et données temporelles à réviser;
 - décision future sur l’utilité d’une page Galerie complète et enrichissement
   des crédits photographiques;
-- confirmation des annonceurs, ententes, coordonnées, logos et droits;
+- ajout éventuel de logos d’annonceurs lorsque leurs droits seront documentés;
 - photographies réelles du local de la friperie et conditions de dons;
 - **nom de la photographe** à inscrire dans le crédit des quatre photographies
   de l’église publiées sur la Vie paroissiale, et de celle de Première visite.
