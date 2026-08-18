@@ -1,0 +1,132 @@
+---
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { SanityRenderableImage } from '@/types/sanityImage';
+
+export type EditorialImageVariant =
+  'arch' | 'landscape' | 'organic' | 'oval' | 'portrait-offset';
+
+/**
+ * Cadre éditorial : une image du Studio, dans une forme choisie par le code.
+ *
+ * La forme est un choix de composition, pas un choix éditorial — elle reste
+ * donc une propriété du composant. Le cadrage, lui, suit le point focal posé
+ * dans le Studio : `RemoteImage` le traduit en `object-position`, ce qui rend
+ * l'ancienne propriété `objectPosition` inutile.
+ *
+ * Le crédit ne s'affiche que s'il existe. Tant qu'une photographie n'a pas de
+ * crédit confirmé, la légende n'apparaît pas — mieux vaut rien qu'un
+ * espace réservé.
+ */
+interface Props {
+  image: SanityRenderableImage;
+  /** Chaîne vide pour une image décorative, quand le texte voisin dit déjà tout. */
+  alt?: string;
+  variant?: EditorialImageVariant;
+  class?: string;
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  image,
+  alt,
+  variant = 'landscape',
+  class: className,
+  sizes = '(min-width: 64rem) 40vw, 100vw',
+  loading = 'lazy',
+} = Astro.props;
+---
+
+<figure
+  class:list={['editorial-image', `editorial-image--${variant}`, className]}
+>
+  <div class="editorial-image__media">
+    <RemoteImage image={image} alt={alt} sizes={sizes} loading={loading} />
+  </div>
+  {image.credit && <figcaption>{image.credit}</figcaption>}
+</figure>
+
+<style>
+  .editorial-image {
+    position: relative;
+    margin: 0;
+  }
+
+  .editorial-image__media {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-paper);
+    isolation: isolate;
+  }
+
+  .editorial-image__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--duration-media) var(--ease-editorial);
+  }
+
+  .editorial-image:hover .editorial-image__media :global(img) {
+    scale: var(--motion-scale-hover);
+  }
+
+  .editorial-image--landscape .editorial-image__media {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-subtle);
+  }
+
+  .editorial-image--arch .editorial-image__media {
+    aspect-ratio: 4 / 5;
+    border-radius: 50% 50% 0.25rem 0.25rem / 31% 31% 0.25rem 0.25rem;
+  }
+
+  .editorial-image--organic .editorial-image__media {
+    aspect-ratio: 5 / 4;
+    border-radius: 2.25rem 8rem 2.5rem 6rem;
+  }
+
+  .editorial-image--oval .editorial-image__media {
+    aspect-ratio: 4 / 5;
+    border-radius: 50%;
+  }
+
+  .editorial-image--portrait-offset {
+    padding: 0 0 1rem 1rem;
+  }
+
+  .editorial-image--portrait-offset::before {
+    position: absolute;
+    inset: 1rem 1rem 0 0;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 55%, transparent);
+    content: '';
+  }
+
+  .editorial-image--portrait-offset .editorial-image__media {
+    aspect-ratio: 4 / 5;
+  }
+
+  .editorial-image figcaption {
+    max-width: 34rem;
+    margin-top: 0.75rem;
+    color: var(--color-muted);
+    font-size: var(--font-size-micro);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 30rem) {
+    .editorial-image--organic .editorial-image__media {
+      border-radius: 1.5rem 4.5rem 1.75rem 3.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .editorial-image__media :global(img) {
+      transition: none;
+    }
+
+    .editorial-image:hover .editorial-image__media :global(img) {
+      scale: 1;
+    }
+  }
+</style>

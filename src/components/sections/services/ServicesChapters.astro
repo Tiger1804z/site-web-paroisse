@@ -1,0 +1,398 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import EditorialImageFrame, {
+  type EditorialImageVariant,
+} from '@/components/ui/EditorialImageFrame.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type {
+  ParishServiceChapter,
+  ServiceSurface,
+  ServicesPageData,
+} from '@/types/services';
+
+interface Props {
+  chapters: ServicesPageData['chapters'];
+}
+
+const { chapters } = Astro.props;
+
+/**
+ * La forme du cadre suit le traitement visuel choisi par l'éditrice.
+ *
+ * `surface` est déjà une liste fermée que le Studio propose; la forme qui va
+ * avec est une décision de composition et reste donc ici. Un champ de plus dans
+ * le Studio demanderait à l'éditrice de trancher une question de design.
+ */
+const FRAME_BY_SURFACE: Readonly<
+  Record<ServiceSurface, EditorialImageVariant>
+> = {
+  ivory: 'portrait-offset',
+  paper: 'landscape',
+  charcoal: 'organic',
+  burgundy: 'arch',
+};
+
+// L'ordre du tableau fait foi — celui du Studio comme celui du repli local.
+const orderedChapters = chapters;
+
+const visibleServices = (chapter: ParishServiceChapter) =>
+  chapter.services.filter((service) => service.active);
+---
+
+<div class="services-chapters">
+  {
+    orderedChapters.map((chapter) => (
+      <section
+        id={chapter.id}
+        class:list={[
+          'services-chapter',
+          `services-chapter--${chapter.surface}`,
+        ]}
+        aria-labelledby={`${chapter.id}-title`}
+      >
+        <Container>
+          <div
+            class:list={[
+              'services-chapter__introduction',
+              { 'services-chapter__introduction--with-image': chapter.image },
+            ]}
+          >
+            <div data-motion-reveal>
+              <Eyebrow
+                tone={
+                  chapter.surface === 'charcoal' ||
+                  chapter.surface === 'burgundy'
+                    ? 'light'
+                    : 'default'
+                }
+              >
+                {chapter.eyebrow}
+              </Eyebrow>
+              <h2 id={`${chapter.id}-title`}>{chapter.title}</h2>
+              <p>{chapter.introduction}</p>
+            </div>
+
+            {chapter.image && (
+              <EditorialImageFrame
+                class="services-chapter__image"
+                image={chapter.image}
+                variant={FRAME_BY_SURFACE[chapter.surface]}
+                sizes="(min-width: 64rem) 32vw, 86vw"
+              />
+            )}
+          </div>
+
+          <div class="services-chapter__list" data-motion-stagger>
+            {visibleServices(chapter).map((service, index) => (
+              <article
+                id={service.id}
+                class="service-entry"
+                data-size={index === 0 ? 'featured' : 'standard'}
+                data-motion-item
+              >
+                <div class="service-entry__heading">
+                  <span aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <h3>{service.title}</h3>
+                </div>
+
+                <p class="service-entry__summary">{service.summary}</p>
+
+                {service.details && service.details.length > 0 && (
+                  <dl class="service-entry__details">
+                    {service.details.map((item) => (
+                      <div>
+                        <dt>{item.label}</dt>
+                        <dd>{item.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
+                {service.steps && service.steps.length > 0 && (
+                  <div class="service-entry__steps">
+                    <h4>Premiers repères</h4>
+                    <ol>
+                      {service.steps.map((step) => (
+                        <li>{step}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {service.note && (
+                  <p class="service-entry__note">{service.note}</p>
+                )}
+
+                {service.cta && (
+                  <Button
+                    href={service.cta.href}
+                    variant={
+                      chapter.surface === 'charcoal' ||
+                      chapter.surface === 'burgundy'
+                        ? 'light'
+                        : 'secondary'
+                    }
+                  >
+                    {service.cta.label}
+                  </Button>
+                )}
+              </article>
+            ))}
+          </div>
+        </Container>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .services-chapter {
+    scroll-margin-top: calc(var(--header-height) + 1rem);
+    padding-block: clamp(5rem, 8vw, 8rem);
+  }
+
+  .services-chapter--ivory {
+    background: var(--color-ivory);
+    color: var(--color-charcoal);
+  }
+
+  .services-chapter--paper {
+    background: var(--color-paper);
+    color: var(--color-charcoal);
+  }
+
+  .services-chapter--charcoal {
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .services-chapter--burgundy {
+    background: var(--color-burgundy-dark);
+    color: var(--color-ivory);
+  }
+
+  .services-chapter__introduction {
+    max-width: 49rem;
+    margin-bottom: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .services-chapter__introduction--with-image {
+    display: grid;
+    max-width: none;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .services-chapter h2 {
+    max-width: 48rem;
+    margin: 0.75rem 0 0;
+    color: inherit;
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 2.2rem + 2.25vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .services-chapter__introduction p {
+    max-width: 43rem;
+    margin: 1.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .services-chapter--charcoal .services-chapter__introduction p,
+  .services-chapter--burgundy .services-chapter__introduction p {
+    color: color-mix(in srgb, var(--color-ivory) 74%, transparent);
+  }
+
+  .services-chapter__image {
+    width: min(100%, 25rem);
+    margin-inline: auto;
+  }
+
+  .services-chapter--charcoal .services-chapter__image :global(figcaption),
+  .services-chapter--burgundy .services-chapter__image :global(figcaption) {
+    color: color-mix(in srgb, var(--color-ivory) 56%, transparent);
+  }
+
+  .services-chapter__list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .service-entry {
+    scroll-margin-top: calc(var(--header-height) + 1.5rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  }
+
+  .services-chapter--paper .service-entry {
+    background: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+  }
+
+  .services-chapter--charcoal .service-entry,
+  .services-chapter--burgundy .service-entry {
+    background: color-mix(in srgb, var(--color-ivory) 5%, transparent);
+  }
+
+  .service-entry__heading {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: start;
+    gap: 0.5rem;
+  }
+
+  .service-entry__heading > span {
+    padding-top: 0.45rem;
+    color: var(--color-gold);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .service-entry h3 {
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.55rem + 0.75vw, 2.35rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .service-entry__summary {
+    max-width: 45rem;
+    margin: 1.25rem 0 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .services-chapter--charcoal .service-entry__summary,
+  .services-chapter--burgundy .service-entry__summary {
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+  }
+
+  .service-entry__details {
+    display: grid;
+    gap: 0;
+    margin: 1.75rem 0 0;
+  }
+
+  .service-entry__details > div {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 0.9rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 24%, transparent);
+  }
+
+  .service-entry dt {
+    color: var(--color-wood);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .services-chapter--charcoal .service-entry dt,
+  .services-chapter--burgundy .service-entry dt {
+    color: var(--color-gold);
+  }
+
+  .service-entry dd {
+    margin: 0;
+    color: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .service-entry__steps {
+    margin-top: 1.75rem;
+    padding: 1.25rem;
+    background: color-mix(in srgb, var(--color-paper) 62%, transparent);
+  }
+
+  .services-chapter--charcoal .service-entry__steps,
+  .services-chapter--burgundy .service-entry__steps {
+    background: rgb(245 243 238 / 6%);
+  }
+
+  .service-entry__steps h4 {
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-body);
+    font-size: var(--font-size-meta);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .service-entry__steps ol {
+    display: grid;
+    gap: 0.65rem;
+    margin: 1rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .service-entry__steps li {
+    padding-left: 0.35rem;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .services-chapter--charcoal .service-entry__steps li,
+  .services-chapter--burgundy .service-entry__steps li {
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+  }
+
+  .service-entry__note {
+    margin: 1.5rem 0 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-gold);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .services-chapter--charcoal .service-entry__note,
+  .services-chapter--burgundy .service-entry__note {
+    color: color-mix(in srgb, var(--color-ivory) 64%, transparent);
+  }
+
+  .service-entry :global(.ui-button) {
+    margin-top: 1.75rem;
+  }
+
+  @media (min-width: 48rem) {
+    .services-chapter__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-entry[data-size='featured']:nth-last-child(n + 3) {
+      grid-column: span 2;
+    }
+
+    .service-entry__details > div {
+      grid-template-columns: minmax(8rem, 0.34fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .services-chapter__introduction--with-image {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
+      gap: clamp(4rem, 8vw, 8rem);
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .service-entry :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,7 +1,15 @@
 import arrivalImage from '@/assets/images/paroisse/eglise-exterieur-accessibilite-01.webp';
 import { SITE_NAME } from '@/lib/site';
-import type { FirstVisitPageData } from '@/types/firstVisit';
+import type { FirstVisitPageContent } from '@/types/firstVisit';
 
+/**
+ * Repli local de la page Première visite.
+ *
+ * Sert quand Sanity ne répond pas. Les lignes d'informations pratiques n'y
+ * portent aucune valeur d'adresse ou de téléphone : elles désignent leur source
+ * comme le fait le document Sanity, et le getter les résout contre les
+ * coordonnées de la paroisse. Un seul endroit à corriger, ici comme là-bas.
+ */
 export const firstVisitPageData = {
   seo: {
     title: 'Première visite',
@@ -25,34 +33,27 @@ export const firstVisitPageData = {
         title: 'Vérifier l’horaire',
         description:
           'Consultez la page Horaires avant votre déplacement, particulièrement lors des fêtes et des célébrations spéciales.',
-        status: 'temporary',
       },
       {
         id: 'preparer-arrivee',
         numberLabel: '02',
         title: 'Préparer son arrivée',
         description:
-          'L’adresse exacte, les indications d’entrée et les repères utiles seront publiés après leur confirmation par la paroisse.',
-        note: '[ADRESSE À CONFIRMER]',
-        status: 'to-confirm',
+          'Deux entrées principales : l’une sur la rue Denis-Papin, l’autre sur la rue Parc René-Goupil. L’adresse complète est indiquée plus bas, dans les informations pratiques.',
       },
       {
         id: 'stationnement-transport',
         numberLabel: '03',
         title: 'Stationnement et transport',
         description:
-          'Communiquez avec le secrétariat si vous souhaitez vérifier les options disponibles avant votre venue.',
-        note: '[INFORMATION DE STATIONNEMENT À CONFIRMER]',
-        status: 'to-confirm',
+          'L’église n’a pas de stationnement réservé. Le stationnement se fait dans les rues avoisinantes — Denis-Papin, Parc René-Goupil et 25e Avenue — et la disponibilité varie selon le jour et l’heure.',
       },
       {
         id: 'entree-accessibilite',
         numberLabel: '04',
         title: 'Entrée et accessibilité',
         description:
-          'Les accès, les installations et les possibilités d’accompagnement doivent encore être confirmés.',
-        note: '[INFORMATION D’ACCESSIBILITÉ À CONFIRMER]',
-        status: 'to-confirm',
+          'Une rampe d’accès donne sur la rue Parc René-Goupil. Si vous avez un besoin particulier, communiquez avec le secrétariat avant votre venue.',
       },
       {
         id: 'prendre-place',
@@ -60,7 +61,6 @@ export const firstVisitPageData = {
         title: 'Prendre place librement',
         description:
           'Sauf indication donnée sur place, vous pouvez choisir une place disponible et vous installer calmement.',
-        status: 'temporary',
       },
       {
         id: 'participer-rythme',
@@ -68,7 +68,6 @@ export const firstVisitPageData = {
         title: 'Participer à son rythme',
         description:
           'Il n’est pas nécessaire de connaître les chants ou les prières. Vous pouvez écouter, observer et participer selon votre aisance.',
-        status: 'temporary',
       },
     ],
   },
@@ -108,48 +107,23 @@ export const firstVisitPageData = {
     eyebrow: 'Nous trouver',
     title: 'Informations pratiques',
     items: [
-      {
-        id: 'adresse',
-        label: 'Adresse',
-        value: '[ADRESSE À CONFIRMER]',
-        confirmationRequired: true,
-        futureSource: 'site-settings',
-      },
-      {
-        id: 'stationnement',
-        label: 'Stationnement',
-        value: '[INFORMATION DE STATIONNEMENT À CONFIRMER]',
-        confirmationRequired: true,
-        futureSource: 'page',
-      },
+      { id: 'adresse', label: 'Adresse', source: 'address' },
+      { id: 'stationnement', label: 'Stationnement', source: 'parking' },
       {
         id: 'entree',
         label: 'Entrée',
-        value: '[INFORMATION À CONFIRMER]',
-        confirmationRequired: true,
-        futureSource: 'page',
+        source: 'pageText',
+        value:
+          'Deux entrées principales : l’une sur la rue Denis-Papin, l’autre sur la rue Parc René-Goupil.',
       },
-      {
-        id: 'accessibilite',
-        label: 'Accessibilité',
-        value: '[INFORMATION D’ACCESSIBILITÉ À CONFIRMER]',
-        confirmationRequired: true,
-        futureSource: 'page',
-      },
-      {
-        id: 'telephone',
-        label: 'Téléphone',
-        value: '[TÉLÉPHONE À CONFIRMER]',
-        confirmationRequired: true,
-        futureSource: 'site-settings',
-      },
+      { id: 'accessibilite', label: 'Accessibilité', source: 'accessibility' },
+      { id: 'telephone', label: 'Téléphone', source: 'phone' },
       {
         id: 'horaires',
         label: 'Horaires',
-        value: 'Consulter la page Horaires',
-        href: '/horaires/',
-        confirmationRequired: false,
-        futureSource: 'page',
+        source: 'internalLink',
+        linkLabel: 'Consulter la page Horaires',
+        linkTarget: 'schedule',
       },
     ],
     primaryCta: {
@@ -161,6 +135,7 @@ export const firstVisitPageData = {
       href: '/contact/',
     },
     image: {
+      kind: 'image',
       image: arrivalImage,
       alt: 'Vue extérieure de l’église, de la pelouse et d’une longue allée bordée de garde-corps',
       caption:
@@ -212,8 +187,8 @@ export const firstVisitPageData = {
         id: 'accessibilite',
         question: 'Le bâtiment est-il accessible?',
         answer:
-          'Les informations précises sur les accès et les installations ne sont pas encore confirmées. Communiquez avec le secrétariat avant votre visite pour vérifier votre besoin particulier.',
+          'Une rampe d’accès donne sur la rue Parc René-Goupil. Les détails sur les installations intérieures ne sont pas encore confirmés : communiquez avec le secrétariat avant votre visite pour vérifier votre besoin particulier.',
       },
     ],
   },
-} as const satisfies FirstVisitPageData;
+} as const satisfies FirstVisitPageContent;

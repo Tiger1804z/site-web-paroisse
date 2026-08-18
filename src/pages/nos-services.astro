@@ -1,0 +1,29 @@
+---
+import MotionController from '@/components/motion/MotionController.astro';
+import ServicesChapters from '@/components/sections/services/ServicesChapters.astro';
+import ServicesClosing from '@/components/sections/services/ServicesClosing.astro';
+import ServicesDirectory from '@/components/sections/services/ServicesDirectory.astro';
+import ServicesHero from '@/components/sections/services/ServicesHero.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getServicesPageData } from '@/lib/content/getServicesPageData';
+
+const servicesPageData = await getServicesPageData();
+---
+
+<BaseLayout
+  seo={servicesPageData.seo}
+  pageClass="services-page"
+  headerVariant="transparent"
+>
+  <ServicesHero hero={servicesPageData.hero} />
+  <ServicesDirectory
+    notice={servicesPageData.notice}
+    chapters={servicesPageData.chapters}
+  />
+  <ServicesChapters chapters={servicesPageData.chapters} />
+  <ServicesClosing
+    paymentMethods={servicesPageData.paymentMethods}
+    finalCta={servicesPageData.finalCta}
+  />
+  <MotionController />
+</BaseLayout>

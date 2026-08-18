@@ -3,19 +3,25 @@ import { Image } from 'astro:assets';
 import Container from '@/components/ui/Container.astro';
 import Button from '@/components/ui/Button.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-import type { PracticalInformation as PracticalInformationContent } from '@/types/firstVisit';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { PracticalInformation as PracticalInformationData } from '@/types/firstVisit';
 
 interface Props {
-  information: PracticalInformationContent;
+  information: PracticalInformationData;
 }
 
 const { information } = Astro.props;
-const imageStyle = information.image
-  ? [
-      `--practical-image-position-desktop: ${information.image.desktopPosition ?? 'center'}`,
-      `--practical-image-position-mobile: ${information.image.mobilePosition ?? information.image.desktopPosition ?? 'center'}`,
-    ].join('; ')
-  : undefined;
+const visual = information.image;
+
+// Une image téléversée porte son propre point focal, appliqué par `RemoteImage`.
+// Les positions écrites à la main ne concernent que les fichiers du projet.
+const imageStyle =
+  visual?.kind === 'image'
+    ? [
+        `--practical-image-position-desktop: ${visual.desktopPosition ?? 'center'}`,
+        `--practical-image-position-mobile: ${visual.mobilePosition ?? visual.desktopPosition ?? 'center'}`,
+      ].join('; ')
+    : undefined;
 ---
 
 <section
@@ -65,19 +71,24 @@ const imageStyle = information.image
       </div>
 
       {
-        information.image ? (
+        visual ? (
           <figure class="practical-information__figure" style={imageStyle}>
-            <Image
-              src={information.image.image}
-              alt={information.image.alt}
-              widths={[640, 960, 1280]}
-              sizes="(min-width: 64rem) 42vw, 100vw"
-              loading="lazy"
-              decoding="async"
-            />
-            {information.image.caption && (
-              <figcaption>{information.image.caption}</figcaption>
+            {visual.kind === 'image' ? (
+              <Image
+                src={visual.image}
+                alt={visual.alt}
+                widths={[640, 960, 1280]}
+                sizes="(min-width: 64rem) 42vw, 100vw"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <RemoteImage
+                image={visual.image}
+                sizes="(min-width: 64rem) 42vw, 100vw"
+              />
             )}
+            {visual.caption && <figcaption>{visual.caption}</figcaption>}
           </figure>
         ) : (
           <div
@@ -146,7 +157,7 @@ const imageStyle = information.image
 
   .practical-information__item dt {
     color: var(--color-gold);
-    font-size: 0.625rem;
+    font-size: var(--font-size-micro);
     font-weight: 600;
     letter-spacing: 0.2em;
     line-height: 1.4;
@@ -186,17 +197,25 @@ const imageStyle = information.image
     overflow: hidden;
   }
 
-  .practical-information__figure img {
+  /*
+    `:global` parce que l'image peut venir de `RemoteImage`, dont la balise
+    porte sa propre portée de styles. Sans cela, la règle ne l'atteindrait pas
+    et l'image déborderait de son cadre.
+
+    Une image téléversée impose son point focal en style en ligne, qui l'emporte
+    sur la variable ci-dessous — réservée aux fichiers du projet.
+  */
+  .practical-information__figure > :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: var(--practical-image-position-mobile);
+    object-position: var(--practical-image-position-mobile, center);
   }
 
   .practical-information__figure figcaption {
     padding: 0.75rem 1rem;
     color: var(--color-muted);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     line-height: 1.5;
   }
 
@@ -215,7 +234,7 @@ const imageStyle = information.image
 
   .practical-information__placeholder p {
     margin: 0.75rem 0 0;
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
   }
 
   @media (min-width: 40rem) and (max-width: 63.999rem) {
@@ -230,8 +249,8 @@ const imageStyle = information.image
       gap: 3rem;
     }
 
-    .practical-information__figure img {
-      object-position: var(--practical-image-position-desktop);
+    .practical-information__figure > :global(img) {
+      object-position: var(--practical-image-position-desktop, center);
     }
   }
 </style>

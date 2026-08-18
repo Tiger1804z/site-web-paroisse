@@ -7,6 +7,7 @@ import {
 } from '@/lib/navigation';
 import BrandLogo from '@/components/ui/BrandLogo.astro';
 import { SITE_NAME } from '@/lib/site';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
 
 interface Props {
   variant?: 'default' | 'compact';
@@ -14,6 +15,7 @@ interface Props {
 
 const { variant = 'default' } = Astro.props;
 const currentYear = new Date().getFullYear();
+const siteSettings = await getSiteSettings();
 ---
 
 <footer id="pied-de-page" class="site-footer" data-variant={variant}>
@@ -30,11 +32,6 @@ const currentYear = new Date().getFullYear();
           Un lieu de foi, de paix et de rencontre ouvert à tous, au cœur de
           notre communauté québécoise.
         </p>
-        <div class="site-footer__socials" aria-label="Réseaux sociaux">
-          <span title="Lien Facebook à confirmer">Facebook</span>
-          <span aria-hidden="true">·</span>
-          <span title="Lien YouTube à confirmer">YouTube</span>
-        </div>
       </div>
 
       <nav
@@ -69,22 +66,21 @@ const currentYear = new Date().getFullYear();
       <div class="site-footer__contact">
         <p class="site-footer__heading">Coordonnées</p>
         <address>
-          <p>[ADRESSE]</p>
-          <p>[TÉLÉPHONE]</p>
-          <p>[COURRIEL]</p>
-          <div class="site-footer__office">
-            <p class="site-footer__office-label">Secrétariat</p>
-            <p>[HEURES DU SECRÉTARIAT]</p>
-          </div>
+          <p>{siteSettings.address.street}</p>
+          <p>
+            {siteSettings.address.city}, {siteSettings.address.province}{' '}
+            {siteSettings.address.postalCode}
+          </p>
+          <a href={siteSettings.phone.href}>{siteSettings.phone.display}</a>
+          <a href={siteSettings.directionsUrl} target="_blank" rel="noreferrer">
+            Obtenir l’itinéraire
+          </a>
         </address>
       </div>
     </div>
 
     <div class="site-footer__legal">
-      <p>
-        © {currentYear}
-        {SITE_NAME}. Tous droits réservés.
-      </p>
+      <p>© {currentYear} {SITE_NAME}. Tous droits réservés.</p>
       <div class="site-footer__legal-links">
         {
           legalNavigation.map((item, index) => (
@@ -94,8 +90,6 @@ const currentYear = new Date().getFullYear();
             </>
           ))
         }
-        <span aria-hidden="true">·</span>
-        <span>Conception : [NOM DU RESPONSABLE]</span>
       </div>
     </div>
   </div>
@@ -123,7 +117,10 @@ const currentYear = new Date().getFullYear();
     </svg>
     <span>Horaires</span>
   </a>
-  <a href="/contact" aria-label="Consulter les coordonnées pour appeler">
+  <a
+    href={siteSettings.phone.href}
+    aria-label={`Appeler au ${siteSettings.phone.display}`}
+  >
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
@@ -140,7 +137,12 @@ const currentYear = new Date().getFullYear();
     </svg>
     <span>Appeler</span>
   </a>
-  <a href="/contact" aria-label="Consulter l’adresse et l’itinéraire">
+  <a
+    href={siteSettings.directionsUrl}
+    target="_blank"
+    rel="noreferrer"
+    aria-label="Obtenir l’itinéraire vers la paroisse"
+  >
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
@@ -191,7 +193,7 @@ const currentYear = new Date().getFullYear();
   .site-footer__heading,
   .site-footer__office-label {
     color: var(--color-gold);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -201,16 +203,8 @@ const currentYear = new Date().getFullYear();
     max-width: 20rem;
     margin: 0;
     color: color-mix(in srgb, var(--color-ivory) 65%, transparent);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     line-height: 1.7;
-  }
-
-  .site-footer__socials {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    color: color-mix(in srgb, var(--color-ivory) 60%, transparent);
-    font-size: 0.875rem;
   }
 
   .site-footer__heading {
@@ -232,7 +226,7 @@ const currentYear = new Date().getFullYear();
   .site-footer__links a,
   .site-footer__legal a {
     color: color-mix(in srgb, var(--color-ivory) 65%, transparent);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     text-decoration: none;
     transition: color var(--duration-short) var(--ease-editorial);
   }
@@ -246,9 +240,20 @@ const currentYear = new Date().getFullYear();
     display: grid;
     gap: 0.75rem;
     color: color-mix(in srgb, var(--color-ivory) 65%, transparent);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     font-style: normal;
     line-height: 1.6;
+  }
+
+  .site-footer__contact address a {
+    width: fit-content;
+    color: inherit;
+    text-underline-offset: 0.22em;
+    transition: color var(--duration-short) var(--ease-editorial);
+  }
+
+  .site-footer__contact address a:hover {
+    color: var(--color-ivory);
   }
 
   .site-footer__contact p {
@@ -273,7 +278,7 @@ const currentYear = new Date().getFullYear();
     border-top: 1px solid
       color-mix(in srgb, var(--color-ivory) 10%, transparent);
     color: color-mix(in srgb, var(--color-ivory) 60%, transparent);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
   }
 
   .site-footer__legal p {
@@ -315,7 +320,7 @@ const currentYear = new Date().getFullYear();
     justify-content: center;
     gap: 0.25rem;
     color: var(--color-ivory);
-    font-size: 0.625rem;
+    font-size: var(--font-size-micro);
     letter-spacing: 0.025em;
     text-decoration: none;
     transition: color var(--duration-short) var(--ease-editorial);
@@ -347,7 +352,7 @@ const currentYear = new Date().getFullYear();
     }
   }
 
-  @media (min-width: 82rem) {
+  @media (min-width: 80rem) {
     .mobile-quick-actions {
       display: none;
     }

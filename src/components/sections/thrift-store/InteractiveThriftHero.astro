@@ -1,0 +1,398 @@
+---
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { ThriftStorePageData } from '@/types/thriftStore';
+
+interface Props {
+  hero: ThriftStorePageData['hero'];
+}
+
+const { hero } = Astro.props;
+const lensClipId = 'thrift-store-hero-lens-clip';
+---
+
+<section
+  class="thrift-hero"
+  data-thrift-hero
+  data-lens-active="false"
+  aria-labelledby="thrift-hero-title"
+>
+  <svg
+    class="thrift-hero__lens-definition"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      <clipPath id={lensClipId} clipPathUnits="userSpaceOnUse">
+        <path data-organic-lens-clip-path></path>
+      </clipPath>
+    </defs>
+  </svg>
+
+  <div class="thrift-hero__slides" aria-hidden="true">
+    {
+      hero.slides.map((visual, index) => (
+        <div
+          class="thrift-hero__slide"
+          data-hero-slide
+          data-active={index === 0 ? 'true' : 'false'}
+        >
+          <RemoteImage
+            image={visual.image}
+            alt=""
+            sizes="100vw"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'low'}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <div
+    class="thrift-hero__reveals"
+    data-reveal-stack
+    aria-hidden="true"
+    style={`clip-path: url(#${lensClipId}); -webkit-clip-path: url(#${lensClipId});`}
+  >
+    {
+      hero.slides.map((visual, index) => (
+        <div
+          class="thrift-hero__reveal"
+          data-organic-lens-layer
+          data-active={index === 1 ? 'true' : 'false'}
+        >
+          <RemoteImage
+            image={visual.image}
+            alt=""
+            sizes="100vw"
+            data-organic-lens-image
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="thrift-hero__scrim" aria-hidden="true"></div>
+  <svg
+    class="thrift-hero__lens-outline"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path class="thrift-hero__lens-outline-path" data-organic-lens-outline-path
+    ></path>
+  </svg>
+  <span
+    class="thrift-hero__lens-metric"
+    data-organic-lens-metric
+    aria-hidden="true"></span>
+
+  <div class="site-container thrift-hero__content">
+    <p class="thrift-hero__eyebrow">{hero.eyebrow}</p>
+    <h1 id="thrift-hero-title">{hero.title}</h1>
+    <p class="thrift-hero__introduction">{hero.introduction}</p>
+  </div>
+
+  {
+    hero.slides.length > 1 && (
+      <div
+        class="thrift-hero__indicators"
+        role="group"
+        aria-label="Choisir l’image du hero"
+      >
+        {hero.slides.map((visual, index) => (
+          <button
+            type="button"
+            aria-label={`Afficher l’image ${index + 1} sur ${hero.slides.length} : ${visual.label}`}
+            aria-pressed={index === 0 ? 'true' : 'false'}
+            data-hero-indicator
+          >
+            <span aria-hidden="true" />
+          </button>
+        ))}
+      </div>
+    )
+  }
+</section>
+
+<script>
+  import { initializeHeroSlideshow } from '@/scripts/hero-slideshow';
+  import { initializeOrganicHeroLens } from '@/scripts/organic-hero-lens';
+
+  document
+    .querySelectorAll<HTMLElement>('[data-thrift-hero]')
+    .forEach((hero) => {
+      if (hero.dataset.initialized === 'true') return;
+      hero.dataset.initialized = 'true';
+
+      const slideCount = hero.querySelectorAll('[data-hero-slide]').length;
+      const lensController = initializeOrganicHeroLens(hero, {
+        cycleOnMovement: false,
+        initialImageIndex: 1,
+      });
+
+      initializeHeroSlideshow(hero, {
+        // La loupe révèle l'image suivante, jamais celle déjà affichée.
+        onSelect: (index) =>
+          lensController?.setActiveImage((index + 1) % slideCount),
+      });
+    });
+</script>
+
+<style>
+  .thrift-hero {
+    --lens-size: clamp(9.375rem, 15vw, 15.625rem);
+
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    min-height: clamp(38rem, 84svh, 54rem);
+    align-items: end;
+    overflow: hidden;
+    contain: paint;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .thrift-hero__slides,
+  .thrift-hero__slide,
+  .thrift-hero__reveals,
+  .thrift-hero__reveal,
+  .thrift-hero__scrim,
+  .thrift-hero__lens-definition,
+  .thrift-hero__lens-outline {
+    position: absolute;
+    inset: 0;
+  }
+
+  .thrift-hero__slides {
+    z-index: -4;
+  }
+
+  .thrift-hero__slide {
+    opacity: 0;
+    transition: opacity 1250ms var(--motion-ease-cinematic);
+  }
+
+  .thrift-hero__slide[data-active='true'] {
+    opacity: 1;
+  }
+
+  .thrift-hero__slide :global(img),
+  .thrift-hero__reveal :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thrift-hero__slide :global(img) {
+    object-position: 52% center;
+  }
+
+  .thrift-hero__reveals {
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms var(--motion-ease-standard);
+    will-change: opacity;
+  }
+
+  .thrift-hero[data-lens-active='true'] .thrift-hero__reveals {
+    opacity: 1;
+  }
+
+  .thrift-hero__reveal {
+    opacity: 0;
+    transition: opacity 360ms var(--motion-ease-standard);
+  }
+
+  .thrift-hero__reveal[data-active='true'] {
+    opacity: 1;
+  }
+
+  .thrift-hero__reveal :global(img) {
+    object-position: center;
+  }
+
+  .thrift-hero__scrim {
+    z-index: -2;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(28 25 24 / 78%) 0%,
+        rgb(28 25 24 / 52%) 48%,
+        rgb(28 25 24 / 24%) 100%
+      ),
+      linear-gradient(0deg, rgb(28 25 24 / 62%) 0%, transparent 64%);
+    pointer-events: none;
+  }
+
+  .thrift-hero__lens-definition {
+    z-index: -5;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .thrift-hero__lens-outline {
+    z-index: 1;
+    display: none;
+    opacity: 0;
+    overflow: visible;
+    pointer-events: none;
+    transition: opacity 160ms var(--motion-ease-standard);
+  }
+
+  .thrift-hero__lens-outline-path {
+    fill: none;
+    stroke: rgb(245 243 238 / 24%);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0.85rem 1.25rem rgb(28 25 24 / 16%));
+  }
+
+  .thrift-hero[data-lens-active='true'] .thrift-hero__lens-outline {
+    opacity: 1;
+  }
+
+  .thrift-hero__lens-metric {
+    position: absolute;
+    width: var(--lens-size);
+    height: 1px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .thrift-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding-top: calc(var(--header-height) + 5rem);
+    padding-bottom: clamp(5rem, 10vh, 8rem);
+  }
+
+  .thrift-hero__eyebrow {
+    margin: 0 0 1rem;
+    color: color-mix(in srgb, var(--color-gold) 88%, var(--color-ivory));
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .thrift-hero h1 {
+    max-width: 48rem;
+    margin: 0;
+    color: var(--color-ivory);
+    font-family: var(--font-display);
+    font-size: clamp(3.75rem, calc(2.6rem + 4.8vw), 7.5rem);
+    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .thrift-hero__introduction {
+    max-width: 39rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+    font-size: clamp(1.075rem, calc(1rem + 0.35vw), 1.3rem);
+    line-height: 1.7;
+    text-shadow: 0 1px 1rem rgb(28 25 24 / 38%);
+  }
+
+  .thrift-hero__indicators {
+    position: absolute;
+    z-index: 2;
+    bottom: 1rem;
+    left: var(--gutter-page);
+    display: flex;
+    align-items: center;
+  }
+
+  .thrift-hero__indicators button {
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-ivory);
+    cursor: pointer;
+  }
+
+  .thrift-hero__indicators span {
+    width: 0.375rem;
+    height: 0.375rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    transition:
+      width var(--duration-short) var(--ease-editorial),
+      background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .thrift-hero__indicators button[aria-pressed='true'] span {
+    width: 1.5rem;
+    border-radius: 0;
+    background: currentColor;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .thrift-hero__lens-outline {
+      display: block;
+    }
+  }
+
+  @media (max-width: 47.999rem) {
+    .thrift-hero {
+      min-height: 42rem;
+    }
+
+    .thrift-hero__slide :global(img) {
+      object-position: 62% center;
+    }
+
+    .thrift-hero__indicators {
+      left: 0.5rem;
+    }
+
+    .thrift-hero__scrim {
+      background:
+        linear-gradient(
+          0deg,
+          rgb(28 25 24 / 80%) 0%,
+          rgb(28 25 24 / 46%) 62%,
+          rgb(28 25 24 / 32%) 100%
+        ),
+        linear-gradient(90deg, rgb(28 25 24 / 28%), transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .thrift-hero__reveals,
+    .thrift-hero__lens-definition,
+    .thrift-hero__lens-outline,
+    .thrift-hero__lens-metric,
+    .thrift-hero__indicators {
+      display: none;
+      transition: none;
+    }
+
+    /* Une seule image, sans fondu : le script arrête aussi la rotation. */
+    .thrift-hero__slide {
+      display: none;
+      transition: none;
+    }
+
+    .thrift-hero__slide:first-child {
+      display: block;
+      opacity: 1;
+    }
+  }
+</style>

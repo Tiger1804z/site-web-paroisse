@@ -69,10 +69,19 @@ Import effectué le 26 juillet 2026 depuis les fichiers fournis localement par
 le client. Les copies de production conservent les empreintes des sources.
 Elles ne documentent aucune date ou programmation actuelle.
 
-| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                              |
-| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ----------------------------------------------------------------------- |
-| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Visuel fourni; ne confirme ni lieu, ni artiste, ni événement réel.      |
-| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Visuel fourni; ne confirme ni célébration, ni date, ni décor permanent. |
+Origine confirmée par le client le 30 juillet 2026 : **les deux visuels sont
+générés par intelligence artificielle**. Ils illustrent des façons de se
+rassembler, ils ne témoignent d’aucune scène réelle. La case « Image générée par
+intelligence artificielle » doit rester cochée sur les documents Sanity
+correspondants.
+
+| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                                           |
+| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------ |
+| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Générée par IA; ne confirme ni lieu, ni artiste, ni événement réel.                  |
+| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Générée par IA; ne confirme ni célébration, ni date, ni décor permanent de l’église. |
+
+Ces deux fichiers restent hors de la galerie documentaire : `isPublishable`
+(`src/lib/gallery/gallery.ts`) écarte toute image générée par IA.
 
 Astro génère les variantes responsives au build. Les PNG sources ne sont pas
 dupliqués en copies WebP dans le dépôt.
@@ -113,6 +122,192 @@ Les photographies montrent l'architecture et le décor intérieur; elles ne
 documentent pas les groupes eux-mêmes. Les textes alternatifs restent donc
 factuels et ne prétendent pas montrer une activité ou ses membres.
 
+## Prototypes Friperie — S1-T10, retirés le 29 juillet 2026
+
+> **Ces quatre fichiers ont été supprimés du dépôt.** Aucune licence de
+> publication n'avait pu être établie : un actif iStock sans preuve d'achat, deux
+> photographies de reportage de Permanent Style et un fichier sans provenance.
+> Ils sont remplacés par des images Pixabay (section suivante). L'inspection
+> ci-dessous est conservée comme trace de la décision.
+
+Statut commun à l'époque :
+
+> PROTOTYPE TEMPORAIRE — DROITS À CONFIRMER
+
+| Fichier de production                  | Format réel          | Dimensions et orientation |          Poids | SHA-256                                                            | Contenu et qualité                                                                                | Métadonnées et provenance                                                                                                                                                                                                       | Usage S1-T10                               |
+| -------------------------------------- | -------------------- | ------------------------- | -------------: | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `leather-jacket-temporary.jpg`         | JPEG sRGB            | 580 × 387 px, paysage     |  39 024 octets | `6399e1705dd999373d464c20e6d6b7e3a15901bbe8a007aa50d11cef3ea98dc1` | Détail serré d'une veste en suède brun; netteté correcte, définition modeste pour un plein cadre. | Canon EOS 5D Mark III, prise de vue 14 juin 2019, Lightroom; le nom renvoie à Rifugio Leather. Un article Permanent Style sur Rifugio crédite Jamie Ferguson, mais la correspondance exacte et la licence ne sont pas prouvées. | Révélation 1 uniquement.                   |
+| `clothing-rack-primary-temporary.jpeg` | JPEG sRGB progressif | 2986 × 1994 px, paysage   | 663 312 octets | `654d24799c6df71406db69c3255c02f15e77fd7793c0294ffbdfb135309f8389` | Main prenant un vêtement brun sur un portant; bonne définition, arrière-plan doux, aucun visage.  | Aucune métadonnée EXIF/IPTC/XMP. Le nom `fast-fashion2.jpeg` est réutilisé sur des sites tiers, sans permettre d'identifier l'auteur ou la licence d'origine.                                                                   | Hero principal temporaire et révélation 2. |
+| `vintage-rack-temporary.jpg`           | JPEG sRGB            | 580 × 464 px, paysage     | 102 472 octets | `a8fddeee0f1b77e48f3d56489d2e6c5400bf4609b958c79288e212aec66c406f` | Portant dense de vestes vintage; bonne matière et couleurs, définition modeste.                   | Nikon D850, prise de vue 15 avril 2021; auteur et droits XMP/IPTC : `ALEX NATT`. Le fichier correspond au reportage Permanent Style « Hang-Up Vintage ». Aucune licence de réutilisation confirmée.                             | Révélation 3 uniquement.                   |
+| `blue-rack-temporary.webp`             | WebP sRGB            | 2121 × 1414 px, paysage   | 489 882 octets | `2591ce983775ecb800b6ae1c3550dfc829edbd61c49d22a26ae0d2d8596311cf` | Chemises bleues et claires sur cintres en bois; bonne définition et lumière vive.                 | Aucun auteur ou droit exploitable dans les métadonnées. Le nom identifie vraisemblablement l'actif iStock `688127540`; preuve d'achat et licence absentes.                                                                      | Révélation 4 uniquement.                   |
+
+Astro produit des variantes WebP responsives. L'image principale est la seule
+chargée en priorité; les révélations sont de faible priorité et décodées avant
+l'activation de la lentille.
+
+Ces images :
+
+- ne représentent pas la vraie friperie;
+- ne sont pas présentées comme des photographies de la paroisse;
+- maintiennent `/friperie/` en `noindex`;
+- devront toutes être remplacées par les photographies réelles planifiées dans
+  [`THRIFT_STORE_PHOTO_SHOT_LIST.md`](./THRIFT_STORE_PHOTO_SHOT_LIST.md);
+- ne permettent pas de retirer `noindex` même en l'absence de filigrane.
+
+## Visuels Friperie — remplacement du 29 juillet 2026
+
+Import depuis les fichiers fournis par l’utilisateur, issus de Pixabay. La
+Content License de Pixabay autorise l’usage commercial sans attribution; le
+crédit est conservé dans la donnée par choix éditorial, pas par obligation.
+
+| Fichier de production      | Source fournie                         | Dimensions           |          Poids | Auteur identifié par le nom | Contenu                                                           | Usage                  |
+| -------------------------- | -------------------------------------- | -------------------- | -------------: | --------------------------- | ----------------------------------------------------------------- | ---------------------- |
+| `hoodies-rack-pixabay.jpg` | `jarmoluk-sweatshirts-428607_1920.jpg` | 1920 × 1271, paysage | 508 499 octets | jarmoluk                    | Chandails à capuchon colorés serrés sur un portant; aucun visage. | Hero, première image.  |
+| `yarn-ball-pixabay.jpg`    | `stocksnap-yarn-2583976_1920.jpg`      | 1920 × 1280, paysage | 462 673 octets | StockSnap                   | Pelote de laine et bobines de fil, faible profondeur de champ.    | Hero, deuxième image.  |
+| `winter-boots-pixabay.jpg` | `stocksnap-fashion-2587909_1920.jpg`   | 1920 × 1280, paysage | 349 655 octets | StockSnap                   | Bottes de cuir portées avec un jean; jambes non identifiables.    | Hero, troisième image. |
+
+Ce qui change et ce qui ne change pas :
+
+- **la question des droits est réglée** — plus aucun visuel `rights-unverified`
+  sur le site, et le statut passe à `confirmed`;
+- **ce sont des visuels thématiques**, choisis pour l’univers du vêtement. Ils
+  ne sont jamais légendés comme des photographies du local, et aucun texte de la
+  page ne le laisse entendre;
+- **`/friperie/` reste `noindex`** — ce n’étaient pas les droits qui bloquaient
+  seuls, mais aussi les informations pratiques non confirmées.
+
+Empreintes SHA-256 :
+
+```
+95bc9708f77fef910feb075a74caab99defed6c45bc971cca25bb10ce91699b1  hoodies-rack-pixabay.jpg
+ec2fc870d80cdebe0552a40f7c503dc37317bb22bd20c4b9674f4494f056a5e9  yarn-ball-pixabay.jpg
+3b3eebe0a3d15903f63f542ce3a3464b618906aeadcf09441e39a0b69f835a2b  winter-boots-pixabay.jpg
+```
+
+## Visuels éditoriaux Accueil et Nos services — S1-T11
+
+Import effectué le 27 juillet 2026 depuis les fichiers fournis par
+l’utilisateur. Les originaux dans `Downloads` n’ont pas été modifiés. Aucun des
+sept fichiers ne contient de watermark visible, de texte publicitaire ou de
+métadonnée EXIF/IPTC/XMP exploitable. Les inscriptions grecques de l’icône et
+le texte architectural du détail d’église font partie des œuvres photographiées
+et ne sont pas des filigranes.
+
+| Fichier de production               | Source fournie                                     | Format réel | Dimensions            |            Poids | Auteur identifié par le nom | Contenu et qualité                                                               | Licence et provenance                                                                                         | Usage                                                                                        |
+| ----------------------------------- | -------------------------------------------------- | ----------- | --------------------- | ---------------: | --------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `parish-life-marian-artwork.jpg`    | `charlvera-mary-8580421_1920.jpg`                  | JPEG RGB    | 1920 × 1920, carré    |   869 359 octets | CharlVera                   | Œuvre mariale bleue de style aquarelle numérique, nette, non documentaire.       | Utilisation libre déclarée par l’utilisateur; profil Pixabay retrouvé, mais page source exacte à archiver.    | Arrière-plan obligatoire de « Vivre la paroisse », sous overlay sombre.                      |
+| `mother-of-perpetual-help-icon.jpg` | `teotea-mother-of-perpetual-help-1060612_1920.jpg` | JPEG RGB    | 1519 × 1920, portrait | 1 639 871 octets | teotea                      | Reproduction détaillée de l’icône de Notre-Dame du Perpétuel Secours.            | Page Pixabay exacte retrouvée; Pixabay Content License. Attribution conservée dans la donnée et l’inventaire. | Chapitre Sacrements et initiation de Nos services.                                           |
+| `marian-stained-glass-ai.png`       | `popmelon-ai-generated-8393898_1920.png`           | PNG RGB     | 1920 × 1920, carré    | 5 942 478 octets | popmelon                    | Illustration générée par IA imitant un vitrail marial; très détaillée et propre. | Utilisation libre déclarée par l’utilisateur; auteur Pixabay plausible, page source exacte à confirmer.       | Inventoriée, non utilisée : concurrence visuelle avec le vitrail vivant et statut IA.        |
+| `church-facade-editorial.jpg`       | `tsn71-church-6972322_1920.jpg`                    | JPEG RGB    | 1920 × 1082, paysage  |   809 874 octets | TSN71                       | Détail architectural et mosaïque de Santa Maria del Fiore; bonne netteté.        | Série Pixabay et profil TSN71 retrouvés sous Pixabay Content License; URL exacte du fichier à archiver.       | Arche éditoriale de l’aperçu des services; alt indiquant Florence, jamais Saint-René-Goupil. |
+| `flight-into-egypt-painting.jpg`    | `robertcheaib-virgin-mary-1263016_1920.jpg`        | JPEG RGB    | 1635 × 1920, portrait |   722 285 octets | Robert Cheaib               | Photographie d’une peinture de la fuite en Égypte, chaude et bien définie.       | Utilisation libre déclarée par l’utilisateur; profil Pixabay retrouvé, page source exacte à confirmer.        | Inventoriée, non utilisée : aucun chapitre actuel ne justifie cette scène précise.           |
+| `marian-color-artwork.jpg`          | `jossy_justino-mary-5886426_1920.jpg`              | JPEG RGB    | 1494 × 1920, portrait |   856 738 octets | Jossy_Justino               | Illustration mariale colorée et stylisée, bonne définition, non documentaire.    | Profil Pixabay retrouvé et usage gratuit déclaré par l’auteur; page source exacte à confirmer.                | Inventoriée, non utilisée : palette trop vive pour les sections actuelles.                   |
+| `candles-prayer.jpg`                | `robertcheaib-candles-3786857_1920.jpg`            | JPEG RGB    | 1920 × 1280, paysage  |   216 484 octets | Robert Cheaib               | Lampions sur fond sombre, bonne lumière et profondeur, sans personne.            | Utilisation libre déclarée par l’utilisateur; profil Pixabay retrouvé, page source exacte à confirmer.        | Interlude spirituel de l’accueil et chapitre Prière et mémoire.                              |
+
+Empreintes SHA-256 :
+
+- `parish-life-marian-artwork.jpg` :
+  `2341c93a6080242c23e476fb8b66b95389072f6d6ea699cbd112db7015bc1369`;
+- `mother-of-perpetual-help-icon.jpg` :
+  `7d91066f7d5932bf08390ffaa5f11d7a81ae74fe43b07665a3ba131e8281e438`;
+- `marian-stained-glass-ai.png` :
+  `074e1d8a99594a432834f4382cbe148e17649975d4729d98a002e63f332a115a`;
+- `church-facade-editorial.jpg` :
+  `79ecfddd12a500ec88698c12f47161f152ee48d88bdc48e28d413ed655fea94f`;
+- `flight-into-egypt-painting.jpg` :
+  `8f1ae9cfe7eba0c248dc56a72dae0cc72d37dedde1f79a9f37de716dcca1b19c`;
+- `marian-color-artwork.jpg` :
+  `e74d075079b9e5d0b008eda8ff97c67f1cbb48ee1bca9de40f756d9f237040a8`;
+- `candles-prayer.jpg` :
+  `4eec84547a9127c1b37fa99f55f46ed296801e7c8b3b6856ad965429df5cf0a8`.
+
+La mention « libre d’utilisation » vient de l’utilisateur et, pour les pages
+exactes retrouvées, de Pixabay. Elle ne signifie pas « domaine public ».
+L’équipe doit archiver chaque URL et une preuve de licence avant le déploiement
+public. Les œuvres générées ou décoratives ne documentent ni les locaux, ni les
+statues, ni les événements de la paroisse.
+
+Astro génère des variantes WebP responsives. Les visuels sont chargés
+paresseusement sous la ligne de flottaison; les sources lourdes, dont le PNG IA
+de 5,94 Mo, ne sont pas envoyées directement aux visiteurs.
+
+### Hero rotatif de Nos services
+
+Trois images additionnelles fournies le même jour remplacent la photographie
+unique du hero. Elles sont des illustrations externes et ne montrent pas la
+Paroisse Saint-René-Goupil. Toutes contiennent des personnes; aucune identité
+n’est publiée et leur usage demeure conditionné au dossier de licence de la
+plateforme.
+
+| Fichier de production        | Source fournie                                | Format réel | Dimensions et orientation |          Poids | Auteur identifiable  | Contenu et qualité                                                                | Métadonnées, watermark et droits                                                                                                              | Usage                                                         |
+| ---------------------------- | --------------------------------------------- | ----------- | ------------------------- | -------------: | -------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `baptism-ceremony.jpg`       | `664072-baptism-577957_1920.jpg`              | JPEG RGB    | 1920 × 1272, paysage      | 584 819 octets | Identifiant `664072` | Geste de baptême en plan rapproché; bonne netteté et cadrage horizontal.          | Aucun EXIF/IPTC/XMP, watermark ou texte parasite. Pixabay déclaré par l’utilisateur; page et licence exactes à archiver avant publication.    | Première image et image prioritaire du hero Nos services.     |
+| `wedding-silhouette.jpg`     | `pexels-wedding-1850074_1920.jpg`             | JPEG RGB    | 1280 × 1920, portrait     | 296 629 octets | Pexels               | Couple marié en silhouette noir et blanc; bonne qualité, fort contraste vertical. | Aucun EXIF/IPTC/XMP, watermark ou texte parasite. Source Pixabay `wedding-couple-bride-marriage-1850074`, Pixabay Content License à archiver. | Deuxième image du hero; recadrage contrôlé et voile renforcé. |
+| `first-communion-candle.jpg` | `tobiaswahl-first-communion-4941732_1920.jpg` | JPEG RGB    | 1920 × 1280, paysage      | 457 885 octets | Tobias C. Wahl       | Enfant tenant un cierge de première communion; mise au point nette sur la flamme. | Aucun EXIF/IPTC/XMP, watermark ou texte parasite. Auteur et provenance Pixabay recoupés; preuve de licence de la page exacte à archiver.      | Troisième image du hero Nos services.                         |
+
+Empreintes SHA-256 :
+
+- `baptism-ceremony.jpg` :
+  `49ccf7ec99c85ed34134e09fffd9d0eaa50e4f66e717b6e434f737d88c48178f`;
+- `wedding-silhouette.jpg` :
+  `637b83cc73daae6aab5c6627e4f379820bcbea0eb9a7eed7af9e5060f1da5c76`;
+- `first-communion-candle.jpg` :
+  `f73c70c4a22e21a7ff2aaaaf26095553d342baa5a922a3511ff417d055f70915`.
+
+La première image est prioritaire; les deux autres sont transformées en
+variantes responsives par `astro:assets` et chargées en faible priorité. Les
+textes alternatifs les décrivent comme des images d’illustration. Leur présence
+ne constitue pas une preuve d’une célébration tenue dans la paroisse.
+
+### Mini-galerie de l’accueil — S1-T12
+
+La sélection publique se limite actuellement à six photographies réelles du
+projet : `autel-decor-rouge-01.jpg`,
+`eglise-exterieur-clochers-01.webp`, `croix-verre-entree-01.webp`,
+`autel-fleurs-blanches-01.jpg`,
+`interieur-eglise-decoration-01.webp` et
+`eglise-exterieur-identification-01.webp`. Aucune ne montre une personne
+reconnaissable. La source `src/data/gallery.ts` porte pour chacune un titre,
+une description factuelle, un alt, une provenance et un état de publication.
+
+Les mêmes fichiers alimentent le carrousel et sa lightbox; `astro:assets`
+produit les variantes responsives et WebP plein écran sans modifier les
+originaux. Les images IA, externes, temporaires de Friperie et les vues avec
+personnes sont exclues. La page Galerie autonome est différée et la route
+technique reste un placeholder `noindex`.
+
+## Hero illustré de Vie paroissiale — ajout S1-T13
+
+Inspection effectuée le 27 juillet 2026 à partir des trois fichiers fournis
+par l’utilisateur. Les originaux de `Downloads` n’ont pas été modifiés. Aucun
+filigrane, texte parasite ou champ EXIF/IPTC/XMP exploitable n’a été relevé.
+Ces images sont éditoriales et ne documentent ni un événement, ni des
+paroissiens, ni les locaux de Saint-René-Goupil.
+
+| Fichier de production                        | Source fournie                              | Format réel | Dimensions et orientation |            Poids | Auteur identifiable | Contenu et qualité                                                                                  | Statut et usage                                                                                                       |
+| -------------------------------------------- | ------------------------------------------- | ----------- | ------------------------- | ---------------: | ------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `tylijura-church-gathering-illustration.jpg` | `tylijura-church-10169468_1920.jpg`         | JPEG RGB    | 1920 × 1920, carré        | 1 206 514 octets | Tylijura            | Illustration stylisée de personnes rassemblées à l’entrée d’une église; bonne définition.           | Première image du hero. Nature IA non confirmée; illustration non documentaire, source et licence exactes à archiver. |
+| `alanajordan-worship-ai.jpg`                 | `alanajordan-ai-generated-8928626_1920.jpg` | JPEG RGB    | 1156 × 1920, portrait     |   551 888 octets | Alanajordan         | Illustration monochrome d’une femme chantant ou priant entourée d’une communauté; bonne définition. | Deuxième image. Générée par IA selon le nom du fichier; personnages fictifs, source et licence exactes à archiver.    |
+| `tylijura-children-workshop-ai.png`          | `tylijura-ai-generated-9618451_1920.png`    | PNG RGB     | 1920 × 1280, paysage      | 3 636 289 octets | Tylijura            | Illustration colorée d’enfants dans un atelier créatif; définition élevée.                          | Troisième image. Générée par IA selon le nom du fichier; personnages fictifs, source et licence exactes à archiver.   |
+
+Empreintes SHA-256 :
+
+- `tylijura-church-gathering-illustration.jpg` :
+  `92e83730d943b9dbe6d118553f84256957a1f8edd96beccd41fdec8fcd17dbd2`;
+- `alanajordan-worship-ai.jpg` :
+  `712c3a59cbd6c101aa1aa03f3433450dfad44848a36fad4df4e6d618c3b23554`;
+- `tylijura-children-workshop-ai.png` :
+  `6373c34bd4254cda55269490885817603516f2e2736d7096365ab68438dfa1f5`.
+
+Le hero conserve une seule copie plein cadre de chaque illustration. Le format
+horizontal impose un recadrage contrôlé des sources carrée et portrait, sans
+déformation, second plan ou zoom animé. Les variantes responsives produites
+par `astro:assets` empêchent l’envoi direct du PNG original de 3,64 Mo aux
+visiteurs.
+
+La déclaration de disponibilité vient de l’utilisateur. Elle ne constitue pas
+une preuve de licence archivée. Les URL sources et les conditions applicables
+doivent être conservées avant la livraison publique.
+
 ## Règles
 
 - Confirmer les droits du photographe pour tous les fichiers avant publication.
@@ -120,3 +315,26 @@ factuels et ne prétendent pas montrer une activité ou ses membres.
 - L’absence de personne visible ne constitue pas une autorisation de publication.
 - Ne pas déduire une date liturgique ou un événement précis des noms historiques.
 - Documenter toute future compression, conversion ou variante; ne jamais remplacer les sources.
+
+## Visuels historiques des annonceurs — S1-T13
+
+Les quatre fichiers servis par l’ancienne page ont été téléchargés dans un
+dossier temporaire, inspectés, puis supprimés. Aucun n’a été ajouté aux assets
+de production.
+
+| Visuel                | Format et dimensions |          Poids | Personne            | Contenu intégré                                        | Provenance et droits                                                      | Usage                                                                      |
+| --------------------- | -------------------- | -------------: | ------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Bandeau « Publicité » | JPEG, 1250 × 350 px  |  23 737 octets | Non                 | Mot « PUBLICITÉ » et composition colorée               | Google Sites; auteur et licence absents                                   | Exclu; le hero utilise une photographie réelle déjà approuvée pour le site |
+| Frantz Benjamin       | JPEG, 1050 × 736 px  | 141 799 octets | Oui, reconnaissable | Portrait, fonction, coordonnées et logo institutionnel | Google Sites; Picasa dans les métadonnées, droits et consentement absents | Exclu                                                                      |
+| Josué Corvil          | PNG, 570 × 320 px    | 119 782 octets | Oui, reconnaissable | Portrait, fonction, coordonnées et signature Montréal  | Google Sites; aucun crédit exploitable, droits et consentement absents    | Exclu                                                                      |
+| Patricia Lattanzio    | JPEG, 816 × 458 px   |  56 531 octets | Oui, reconnaissable | Portrait, fonction et coordonnées                      | Google Sites; aucun crédit exploitable, droits et consentement absents    | Exclu                                                                      |
+
+L’absence de filigrane visible ne vaut pas permission. Aucun hotlink Google
+Sites, faux logo ou logo généré n’est utilisé. Un logo officiel doit être
+demandé à chaque annonceur confirmé. L’audit détaillé se trouve dans
+[`ADVERTISERS_CONTENT_AUDIT.md`](./ADVERTISERS_CONTENT_AUDIT.md).
+
+Le hero de `/nos-annonceurs/` réutilise
+`eglise-exterieur-clochers-01.webp`, photographie documentaire de la paroisse
+déjà marquée `approved-for-site` dans la source de la mini-galerie. Aucun
+portrait n’y apparaît.

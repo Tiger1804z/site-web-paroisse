@@ -4,20 +4,45 @@ Site Web de production de la Paroisse Saint-René-Goupil, une paroisse catholiqu
 
 ## Statut actuel
 
-Le dépôt contient la fondation technique, le système de design, le layout global, les pages Accueil, Horaires, Notre paroisse, Première visite, Sacrements et services et Vie paroissiale migrées depuis Figma, ainsi que l’architecture Événements fusionnée dans S1-T07 et l’audit documentaire du site existant. Il valide Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité automatisée, la CI et la préservation de l’export Figma Make.
+Le dépôt contient la fondation technique, le système de design, le layout
+global, les pages Accueil, Horaires, Notre paroisse, Première visite, Nos
+services, Vie paroissiale, Friperie et Contact, ainsi que
+l’architecture Événements et l’audit documentaire du site existant. Il valide
+Astro, TypeScript strict, React en îlots, Tailwind CSS 4, la qualité
+automatisée, la CI et la préservation de l’export Figma Make.
+
+Sanity est maintenant la source éditoriale des pages migrées et le Studio
+autonome se trouve dans `studio/`. Le résumé détaillé et à jour des routes,
+replis locaux, contenus publiés et limites connues est maintenu dans
+[`docs/PROJECT_CURRENT_STATE.md`](docs/PROJECT_CURRENT_STATE.md); les notes de
+tickets plus bas décrivent l’historique de construction et peuvent donc parler
+au futur d’éléments désormais livrés.
 
 Le logo officiel approuvé est préservé et intégré au header, au menu mobile, au
 footer et aux favicons. Ses variantes et restrictions sont documentées dans
 [docs/BRAND_ASSETS.md](docs/BRAND_ASSETS.md).
 
 Un système de mouvement léger est appliqué aux pages pilotes Accueil, Notre
-paroisse et Sacrements. Il repose sur CSS, un observateur partagé pour les
-révélations et un observateur ciblé pour la chronologie, sans listener scroll
-continu ni dépendance. Le vitrail vivant est intégré une seule fois à
-l’accueil. Les règles de performance et d’accessibilité sont documentées dans
+paroisse et Nos services. Il repose sur CSS, un observateur partagé pour les
+révélations et un observateur ciblé pour la chronologie, sans boucle
+d’animation continue ni dépendance. S1-T11 ajoute à la section Histoire une
+ambiance progressive de « lumières de salle » : le décor s’assombrit, la
+timeline reste la scène lisible et le header conserve son propre niveau de
+lumière ambiante. Le hero de Notre paroisse reste une scène statique sans
+lentille, avec le traitement cinématographique de Nos services. Le vitrail
+vivant est intégré une seule fois à l’accueil. Les règles de performance et
+d’accessibilité sont documentées dans
 [docs/MOTION_SYSTEM.md](docs/MOTION_SYSTEM.md).
 
-Les autres pages complètes, le CMS, les formulaires connectés et le déploiement ne sont pas encore implémentés. Les horaires, dates et coordonnées visibles sur l’accueil demeurent des placeholders. Les valeurs trouvées sur le site existant sont documentées, mais ne sont pas considérées comme confirmées.
+Le même ticket affine discrètement la lisibilité globale : corps de texte
+légèrement plus généreux, métadonnées harmonisées, CTA de 52 px, navigation de
+15 px et header transparent plus stable. Le hero d’accueil emploie un
+traitement photographique commun, une cadence de 7,6 secondes, un fondu de
+1,25 seconde et une carte « Prochaines messes » bourgogne plutôt que blanche.
+
+Le CMS et ses replis statiques sont intégrés. Les formulaires connectés et le
+déploiement ne sont pas encore implémentés. Plusieurs horaires, dates, crédits
+photo et informations opérationnelles demeurent à confirmer avant publication.
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
 de contenu local typé et sa future connexion à Sanity sont expliqués dans
@@ -34,24 +59,78 @@ récit demeure entièrement disponible en HTML, y compris sans JavaScript. Son
 architecture est décrite dans
 [docs/IMMERSIVE_HISTORY_TIMELINE.md](docs/IMMERSIVE_HISTORY_TIMELINE.md).
 
-La route `/premiere-visite/` utilise une source locale
-`FirstVisitPageData`. Les coordonnées, le stationnement et les détails
-d’accessibilité restent explicitement à confirmer. La séparation entre le futur
-document `firstVisitPage` et les réglages globaux `siteSettings` est expliquée
-dans
+La route `/premiere-visite/` utilise une source locale `FirstVisitPageData`.
+L’adresse et le téléphone sont confirmés globalement; le stationnement et les
+détails d’accessibilité restent explicitement à confirmer. La séparation entre
+le futur document `firstVisitPage` et les réglages globaux `siteSettings` est
+expliquée dans
 [docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md](docs/ASTRO_SANITY_FIRST_VISIT_PREPARATION.md).
 
-La route `/sacrements/` utilise `SacramentsPageData`. Les slugs préparent de
-futures pages détaillées, mais aucun lien ni fichier `[slug].astro` n’est créé
-tant que le contenu n’est pas validé. Le futur flux `sacramentsPage`,
-références, documents `sacrament` et `getStaticPaths()` est documenté dans
-[docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md](docs/ASTRO_SANITY_SACRAMENTS_PREPARATION.md).
+La route canonique `/nos-services/` utilise `ServicesPageData`, une source
+locale et un getter. Elle regroupe les sacrements, démarches administratives,
+intentions, célébrations, moyens de paiement et location de salle. Les tarifs
+et dates publiés pour 2026 portent une date de révision et doivent être
+reconfirmés périodiquement. Son hero alterne les illustrations Baptême,
+Mariage et Première communion, avec une lentille révélant la prochaine image.
+`/sacrements/` et `/location-de-salle/` restent des alias statiques `noindex`
+vers la route canonique.
 
 La route `/vie-paroissiale/` utilise `ParishLifePageData`. Les quatre groupes
 de la maquette restent identifiés comme contenus à confirmer : aucune activité,
 fréquence, personne responsable ou coordonnée fictive n'est publiée. La source
 locale, le getter et les composants Astro préparent un futur document
-`parishLifePage` sans dépendre du CMS.
+`parishLifePage` sans dépendre du CMS. Son hero plein cadre alterne trois
+illustrations éditoriales non documentaires avec une lentille révélant la
+suivante, sans zoom animé ni second plan.
+
+La route `/friperie/` utilise `ThriftStorePageData`, une source locale et un
+getter. Son hero Astro possède une lentille progressive en JavaScript natif et
+réutilise `AnimatedClothingRack`; aucun React ou package n'est ajouté. Les
+quatre visuels sont des prototypes temporaires aux droits non confirmés et les
+six cadres de galerie attendent de vraies photographies prises à l'église. La
+page reste `noindex` tant que les images, horaires, conditions de dons et
+coordonnées responsables ne sont pas validés. Voir
+[docs/FIGMA_THRIFT_STORE_MAPPING.md](docs/FIGMA_THRIFT_STORE_MAPPING.md) et
+[docs/THRIFT_STORE_PHOTO_SHOT_LIST.md](docs/THRIFT_STORE_PHOTO_SHOT_LIST.md).
+
+Le même contrôleur de lentille organique est branché au hero d'accueil. Il y
+révèle toujours la prochaine photographie de la boucle sans modifier le
+contenu, les CTA ou le comportement statique sur tactile et reduced motion.
+
+La page Galerie complète est différée à la demande de l’utilisateur :
+`/galerie/` reste un placeholder `noindex` absent des menus. L’accueil conserve
+une sélection de six photographies réelles sans personnes reconnaissables,
+issue de `GalleryItem`. Son carrousel centré possède un cadre éditorial, une
+légende qui suit l’image active et une lightbox `<dialog>` accessible. Les
+images IA, prototypes Friperie et illustrations externes en sont exclus.
+
+La route `/contact/` restaure le frontend S1-T09 : adresse, téléphone, carte
+OpenStreetMap et formulaire avec validation locale et honeypot. Le submit est
+neutralisé, aucun faux succès n’existe et aucune donnée n’est transmise.
+L’adresse, le téléphone, la carte et l’itinéraire proviennent de
+`src/data/siteSettings.ts` et alimentent aussi l’accueil, le footer et Nos
+services. Le courriel public et les heures du secrétariat restent masqués.
+
+La route `/nos-annonceurs/` utilise une source locale typée, un filtre de
+publication et des composants Astro dédiés. Les quatre placements trouvés sur
+l’ancien site sont `confirmation-required` et ne sont pas affichés tant que la
+secrétaire n’a pas confirmé les ententes, coordonnées, textes, logos et droits.
+La page reste néanmoins complète grâce à son introduction et au bloc « Devenir
+annonceur », qui réutilise le téléphone global. Elle demeure `noindex`.
+`/merci-a-nos-annonceurs/` conserve la compatibilité historique comme alias
+statique. Voir
+[docs/ADVERTISERS_CONTENT_AUDIT.md](docs/ADVERTISERS_CONTENT_AUDIT.md).
+
+Feuillets paroissiaux est bloqué et différé : aucun PDF réel n'est disponible.
+La route placeholder `/feuillets-paroissiaux/` reste `noindex`, mais sa
+promotion est masquée du desktop, du mobile, du footer, de l'accueil et
+d'Horaires depuis la source canonique de navigation. La décision sera revue
+avec la secrétaire le 10 août 2026 ou après son retour.
+
+Le frontend S1-T09 est intégré par S1-T12, mais sa porte de livraison demeure
+inchangée : le système d’envoi réel doit encore être choisi et validé. Aucun
+endpoint, SMTP, fournisseur transactionnel, secret ou fonction serverless
+n’est ajouté.
 
 ## Stack
 
@@ -59,6 +138,7 @@ locale, le getter et les composants Astro préparent un futur document
 - TypeScript strict;
 - React 19 uniquement pour les composants qui nécessitent une hydratation ou facilitent une migration;
 - Tailwind CSS 4 par le plugin Vite officiel;
+- Sanity Studio 6, GROQ typé et Visual Editing pour le contenu éditorial;
 - pnpm 11 géré par Corepack;
 - ESLint et Prettier;
 - GitHub Actions pour la validation continue.
@@ -99,16 +179,19 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 
 ## Commandes
 
-| Commande            | Rôle                                                  |
-| ------------------- | ----------------------------------------------------- |
-| `pnpm dev`          | Démarre le serveur de développement.                  |
-| `pnpm build`        | Génère le site statique dans `dist/`.                 |
-| `pnpm preview`      | Sert localement le dernier build.                     |
-| `pnpm check`        | Vérifie les composants Astro et les types TypeScript. |
-| `pnpm lint`         | Exécute ESLint sans accepter d’avertissement.         |
-| `pnpm format`       | Formate les fichiers pris en charge par Prettier.     |
-| `pnpm format:check` | Vérifie le format sans modifier les fichiers.         |
-| `pnpm validate`     | Enchaîne format, lint, check et build.                |
+| Commande                  | Rôle                                                      |
+| ------------------------- | --------------------------------------------------------- |
+| `pnpm dev`                | Démarre le serveur de développement.                      |
+| `pnpm build`              | Génère le site selon le mode de prévisualisation actif.   |
+| `pnpm build:public`       | Génère le site public statique dans `dist/`.              |
+| `pnpm preview`            | Sert localement le dernier build.                         |
+| `pnpm check`              | Vérifie les composants Astro et les types TypeScript.     |
+| `pnpm lint`               | Exécute ESLint sans accepter d’avertissement.             |
+| `pnpm format`             | Formate les fichiers pris en charge par Prettier.         |
+| `pnpm format:check`       | Vérifie le format sans modifier les fichiers.             |
+| `pnpm sanity:typegen`     | Régénère les types des schémas et requêtes Sanity.        |
+| `pnpm validate`           | Enchaîne format, lint, types, tests, build public et SEO. |
+| `pnpm --dir studio build` | Génère le Studio statique dans `studio/dist/`.            |
 
 ## Structure
 
@@ -134,6 +217,9 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 │   ├── scripts/             # JavaScript client natif et ciblé
 │   ├── styles/
 │   └── types/
+├── studio/                  # Studio Sanity autonome et schémas
+├── scripts/                 # Build public et contrôles de sortie
+├── tests/                   # Tests Node du contenu, du rendu et du SEO
 └── package.json
 ```
 
@@ -162,8 +248,8 @@ médias. Les documents de référence sont :
 - [matrice de migration](docs/CONTENT_MIGRATION_MATRIX.md);
 - [questions de confirmation](docs/PARISH_CONTENT_CONFIRMATION.md).
 
-Le sitemap reste une proposition. Le header, le footer et
-`src/lib/navigation.ts` ne doivent pas être modifiés avant sa validation. Les
+Le sitemap reste une mémoire évolutive. Le header, le footer et les menus
+partagent `src/lib/navigation.ts`, qui constitue leur source canonique. Les
 horaires, tarifs, capacités, personnes, événements, inscriptions, annonceurs et
 coordonnées doivent être confirmés par la paroisse avant publication.
 
@@ -177,7 +263,13 @@ coordonnées doivent être confirmés par la paroisse avant publication.
 
 ## Variables d’environnement
 
-Aucune variable d’environnement n’est requise à ce stade. Ne créez pas de secret fictif et ne commitez jamais de fichier `.env`. Si une variable devient nécessaire, documentez uniquement son nom et son rôle dans un futur `.env.example`, sans valeur sensible.
+Copier `.env.example` vers un fichier `.env` local ignoré par Git. Le projet ID
+et le dataset Sanity sont publics. `SITE_URL` doit contenir l’origine finale
+pour tout build destiné au déploiement; la validation locale peut utiliser
+`http://localhost:4321`. Le jeton `SANITY_API_READ_TOKEN` est serveur seulement
+et requis uniquement pour un environnement de prévisualisation avec brouillons.
+Ne jamais committer sa valeur ni activer
+`PUBLIC_SANITY_VISUAL_EDITING_ENABLED` dans le build public.
 
 ## Validation
 
@@ -201,11 +293,22 @@ S1-T07 est fusionné : les catégories et les événements datés alimentent
 `/evenements/` et « Prochaines activités » depuis une source unique. La route
 Événements reste `noindex` jusqu'à sa validation éditoriale finale.
 
+S1-T10 migre Friperie en page dédiée `noindex` et reporte Feuillets sans
+supprimer sa route. Le prochain travail sur Feuillets dépend de la décision et
+des documents réels, pas d'une priorité visuelle de la maquette.
+
+S1-T11 enrichit le rythme de l’accueil, transforme « Vivre la paroisse » en
+scène photographique, centre la galerie dans un carrousel manuel, maintient le
+header translucide et fait de `/nos-services/` la route canonique. Les choix
+éditoriaux et les données temporelles sont détaillés dans
+[docs/HOMEPAGE_EDITORIAL_RHYTHM.md](docs/HOMEPAGE_EDITORIAL_RHYTHM.md) et
+[docs/SERVICES_CONTENT_AUDIT.md](docs/SERVICES_CONTENT_AUDIT.md).
+
 ## Volontairement non implémenté
 
-- migration complète des routes encore listées dans `REMAINING_ROUTES_AUDIT.md`;
+- migration complète des routes encore listées comme placeholders dans
+  `REMAINING_ROUTES_AUDIT.md`;
 - contenu définitif;
-- CMS;
 - formulaires backend et courriels;
 - réservation de salle;
 - authentification;

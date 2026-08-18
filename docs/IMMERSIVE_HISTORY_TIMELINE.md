@@ -111,11 +111,36 @@ va du haut du viewport jusqu’à son ratio, plutôt qu’une bande très étroi
 un défilement rapide ne peut donc pas sauter le déclenchement.
 
 Les observateurs reçoivent des événements seulement aux franchissements de
-leurs zones. Il n’existe aucun listener `scroll` exécuté à chaque pixel, aucune
-boucle `requestAnimationFrame` et aucun calcul continu. Deux
-`requestAnimationFrame` ponctuels laissent le navigateur peindre l’état initial
-avant de commencer l’observation; ils ne constituent pas une boucle
-d’animation.
+leurs zones. Deux `requestAnimationFrame` ponctuels laissent le navigateur
+peindre l’état initial avant de commencer l’observation; ils ne constituent
+pas une boucle d’animation.
+
+## Ambiance « lumières de salle » — S1-T11
+
+L’effet de cinéma ne modifie pas le hero de Notre paroisse. Il commence
+seulement lorsque le haut de la chronologie entre dans le viewport :
+
+1. l’intensité monte avec une courbe `smoothstep` entre 92 % et 34 % du
+   viewport;
+2. un voile fixe atteint au maximum 90 % de son dégradé sombre et vignetté;
+3. la chronologie passe sur un plan supérieur et conserve ses couleurs, son
+   texte et ses images;
+4. le header reste au premier plan, mais sa luminosité descend progressivement
+   jusqu’à 56 % pour évoquer une lumière ambiante;
+5. l’intensité redescend lorsque l’épilogue franchit la zone comprise entre
+   82 % et 22 % du viewport.
+
+Les plans `55`, `56` et `60` appartiennent respectivement au voile, à la
+chronologie active et au header. Cette séparation corrige le défaut où les
+images et textes de la timeline pouvaient passer par-dessus la navigation
+fixe.
+
+L’ambiance doit connaître la progression globale, contrairement aux
+observateurs de chapitres. Elle utilise donc un listener `scroll` passif et un
+listener `resize`, qui demandent au plus une frame ponctuelle. Il n’existe
+aucune boucle rAF persistante. Le contrôleur annule la frame éventuelle et
+retire ses listeners à `pagehide` ou `astro:before-swap`; il remet aussi
+l’intensité à zéro lorsque l’onglet devient caché.
 
 ## Propriétés animées
 
@@ -161,8 +186,8 @@ laissé à `opacity: 0`.
 Avec `prefers-reduced-motion: reduce`, le script n’active pas le mode
 scrollytelling. Les images et chapitres restent dans un état stable dans le flux
 normal. Les transitions, translations et légers changements d’échelle sont
-neutralisés, mais la ligne, les numéros, les textes et les distinctions de
-provenance restent présents.
+neutralisés et le voile d’ambiance est masqué, mais la ligne, les numéros, les
+textes et les distinctions de provenance restent présents.
 
 ## Images et performance
 

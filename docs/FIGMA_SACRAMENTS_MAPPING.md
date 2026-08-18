@@ -1,5 +1,10 @@
 # Cartographie Figma — Sacrements et services
 
+> **Cartographie historique S1-T06.** S1-T11 conserve cette maquette comme
+> source de structure, mais élargit volontairement la page en « Nos services »
+> à `/nos-services/`. Le mapping actuel et les données temporelles sont
+> documentés dans `SERVICES_CONTENT_AUDIT.md`.
+
 ## Méthode
 
 La route simulée `sacrements` de

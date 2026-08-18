@@ -60,6 +60,17 @@ Ces visuels ne servent pas de preuve d’un événement, d’un lieu, d’une da
 d’une programmation. Les textes alternatifs décrivent uniquement ce qui est
 visible.
 
+**Origine, confirmée par le client le 30 juillet 2026 : les deux PNG sont
+générés par intelligence artificielle.** Ils illustrent une façon de se
+rassembler, jamais une scène réelle de l’église. Conséquences tenues :
+
+- la case « Image générée par intelligence artificielle » est cochée sur les
+  catégories correspondantes du document Sanity `eventsPage`;
+- les textes alternatifs restent purement descriptifs, sans affirmer qu’un
+  concert ou une célébration a eu lieu;
+- ces fichiers n’entrent pas dans la galerie documentaire — `isPublishable`
+  (`src/lib/gallery/gallery.ts`) refuse les images générées par IA.
+
 ## SVG de production
 
 Les trois illustrations sont écrites comme composants Astro :

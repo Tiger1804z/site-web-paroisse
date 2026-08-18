@@ -1,0 +1,148 @@
+---
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import Container from '@/components/ui/Container.astro';
+import type { AdvertisersPageData } from '@/types/advertisers';
+
+interface Props {
+  hero: AdvertisersPageData['hero'];
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="advertisers-hero" aria-labelledby="advertisers-hero-title">
+  {
+    hero.image && (
+      <RemoteImage
+        class="advertisers-hero__image"
+        image={hero.image}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )
+  }
+  <div class="advertisers-hero__overlay" aria-hidden="true"></div>
+  <div class="advertisers-hero__line" aria-hidden="true"></div>
+
+  <Container class="advertisers-hero__container">
+    <div class="advertisers-hero__content">
+      <p class="advertisers-hero__eyebrow type-eyebrow">{hero.eyebrow}</p>
+      <h1 id="advertisers-hero-title">{hero.title}</h1>
+      <p class="advertisers-hero__introduction">{hero.introduction}</p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .advertisers-hero {
+    position: relative;
+    display: grid;
+    min-height: clamp(32rem, 70svh, 46rem);
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .advertisers-hero__image,
+  .advertisers-hero__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .advertisers-hero__image {
+    z-index: -3;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: advertisers-hero-drift 20s var(--motion-ease-cinematic) both;
+  }
+
+  .advertisers-hero__overlay {
+    z-index: -2;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(28 25 24 / 86%) 0%,
+        rgb(46 16 25 / 64%) 48%,
+        rgb(28 25 24 / 44%) 100%
+      ),
+      linear-gradient(to top, rgb(28 25 24 / 66%), transparent 55%);
+  }
+
+  .advertisers-hero__line {
+    position: absolute;
+    z-index: -1;
+    right: clamp(1.25rem, 8vw, 8rem);
+    bottom: 0;
+    width: 1px;
+    height: 38%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--color-gold) 76%, transparent)
+    );
+  }
+
+  .advertisers-hero__container {
+    display: flex;
+    min-height: inherit;
+    align-items: flex-end;
+    padding-top: calc(var(--header-height) + 4rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .advertisers-hero__content {
+    max-width: 45rem;
+  }
+
+  .advertisers-hero__eyebrow {
+    margin: 0 0 1rem;
+    color: var(--color-gold);
+  }
+
+  .advertisers-hero h1 {
+    margin: 0;
+    color: var(--color-ivory);
+    font-size: clamp(3.25rem, calc(2.35rem + 3.75vw), 6rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+  }
+
+  .advertisers-hero__introduction {
+    max-width: 39rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+    font-size: clamp(1.0625rem, calc(1rem + 0.28vw), 1.25rem);
+    line-height: 1.75;
+  }
+
+  @keyframes advertisers-hero-drift {
+    from {
+      scale: 1;
+    }
+    to {
+      scale: var(--motion-scale-cinematic);
+    }
+  }
+
+  @media (max-width: 47.999rem) {
+    .advertisers-hero {
+      min-height: 35rem;
+    }
+
+    .advertisers-hero__overlay {
+      background:
+        linear-gradient(to right, rgb(28 25 24 / 78%), rgb(46 16 25 / 52%)),
+        linear-gradient(to top, rgb(28 25 24 / 76%), transparent 65%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .advertisers-hero__image {
+      animation: none;
+    }
+  }
+</style>

@@ -1,4 +1,6 @@
-import heroImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
+import worshipAiImage from '@/assets/images/parish-life/hero/alanajordan-worship-ai.jpg';
+import childrenWorkshopAiImage from '@/assets/images/parish-life/hero/tylijura-children-workshop-ai.png';
+import churchGatheringImage from '@/assets/images/parish-life/hero/tylijura-church-gathering-illustration.jpg';
 import marguilliersImage from '@/assets/images/paroisse/autel-decor-violet-01.jpg';
 import youngPeopleImage from '@/assets/images/paroisse/autel-eclairage-rose-01.jpg';
 import ladiesImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
@@ -16,13 +18,44 @@ export const parishLifePageData = {
     title: 'Vivre la paroisse',
     introduction:
       'Découvrez les rencontres, les célébrations et les initiatives qui tissent des liens dans notre communauté.',
-    image: {
-      kind: 'image',
-      image: heroImage,
-      alt: 'Vue intérieure de l’église avec l’autel et un décor rouge',
-      desktopPosition: 'center 50%',
-      mobilePosition: 'center 50%',
-    },
+    images: [
+      {
+        kind: 'image',
+        image: churchGatheringImage,
+        alt: 'Illustration artistique de personnes rassemblées à l’entrée d’une église; scène non documentaire',
+        label: 'Une communauté rassemblée',
+        desktopPosition: 'center 48%',
+        mobilePosition: 'center 48%',
+        documentary: false,
+        generationStatus: 'unconfirmed',
+        credit:
+          'Image fournie par l’utilisateur; auteur indiqué « Tylijura » dans le nom du fichier, source et licence exactes à archiver.',
+      },
+      {
+        kind: 'image',
+        image: worshipAiImage,
+        alt: 'Illustration artistique monochrome d’une femme chantant entourée d’une communauté; personnes fictives',
+        label: 'Le chant et la prière',
+        desktopPosition: 'center 43%',
+        mobilePosition: 'center 38%',
+        documentary: false,
+        generationStatus: 'ai-generated',
+        credit:
+          'Image générée par IA fournie par l’utilisateur; auteur indiqué « Alanajordan » dans le nom du fichier, source et licence exactes à archiver.',
+      },
+      {
+        kind: 'image',
+        image: childrenWorkshopAiImage,
+        alt: 'Illustration artistique d’enfants participant à un atelier créatif; personnages fictifs',
+        label: 'Grandir ensemble',
+        desktopPosition: 'center 48%',
+        mobilePosition: 'center 48%',
+        documentary: false,
+        generationStatus: 'ai-generated',
+        credit:
+          'Image générée par IA fournie par l’utilisateur; auteur indiqué « Tylijura » dans le nom du fichier, source et licence exactes à archiver.',
+      },
+    ],
   },
   introduction: {
     eyebrow: 'Vie communautaire',
@@ -56,9 +89,7 @@ export const parishLifePageData = {
         label: 'Demander de l’information',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 1,
     },
     {
       id: 'chorale',
@@ -81,9 +112,7 @@ export const parishLifePageData = {
         label: 'Demander de l’information',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 2,
     },
     {
       id: 'dames-fils-notre-dame',
@@ -106,9 +135,7 @@ export const parishLifePageData = {
         label: 'Demander de l’information',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 3,
     },
     {
       id: 'marguilliers',
@@ -131,9 +158,7 @@ export const parishLifePageData = {
         label: 'Communiquer avec la paroisse',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 4,
     },
   ],
   participation: {

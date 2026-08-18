@@ -1,0 +1,186 @@
+---
+import Button from '@/components/ui/Button.astro';
+import type { ContactPageData } from '@/types/contact';
+
+interface Props {
+  location: ContactPageData['location'];
+}
+
+const { location } = Astro.props;
+---
+
+<section
+  id="nous-trouver"
+  class="contact-location"
+  aria-labelledby="contact-location-title"
+  data-motion-reveal
+>
+  <h2 id="contact-location-title">{location.title}</h2>
+  <div class="contact-location__map">
+    {
+      location.mapEmbedUrl ? (
+        <iframe
+          src={location.mapEmbedUrl}
+          title={location.mapTitle ?? 'Carte de la paroisse'}
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+        />
+      ) : (
+        <div class="contact-location__map-content">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+          >
+            <path
+              d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934a1.125 1.125 0 0 1-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934a1.125 1.125 0 0 1 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <p>Renseignements d’accès en validation</p>
+        </div>
+      )
+    }
+  </div>
+
+  {location.address && <address>{location.address}</address>}
+
+  <p class="contact-location__description">{location.description}</p>
+
+  {
+    location.accessNotes.length > 0 && (
+      <ul class="contact-location__notes">
+        {location.accessNotes.map((note) => (
+          <li>{note}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    location.directionsCta && (
+      <Button
+        href={location.directionsCta.href}
+        variant="secondary"
+        target="_blank"
+      >
+        {location.directionsCta.label}
+      </Button>
+    )
+  }
+</section>
+
+<style>
+  .contact-location h2 {
+    margin: 0 0 1.5rem;
+    color: var(--color-charcoal);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .contact-location__map {
+    position: relative;
+    min-height: 22.5rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1.5rem 3.5rem
+      color-mix(in srgb, var(--color-charcoal) 10%, transparent);
+    background:
+      linear-gradient(
+        135deg,
+        transparent 49.8%,
+        color-mix(in srgb, var(--color-gold) 12%, transparent) 50%,
+        transparent 50.2%
+      ),
+      var(--color-paper);
+  }
+
+  .contact-location__map::after {
+    position: absolute;
+    inset: 0;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    pointer-events: none;
+    content: '';
+  }
+
+  .contact-location__map iframe {
+    display: block;
+    width: 100%;
+    min-height: 22.5rem;
+    border: 0;
+    filter: saturate(0.72) sepia(0.08) contrast(0.96);
+  }
+
+  .contact-location__map-content {
+    display: grid;
+    min-height: 22.5rem;
+    max-width: 18rem;
+    place-items: center;
+    margin-inline: auto;
+    padding: 2rem;
+    color: color-mix(in srgb, var(--color-muted) 66%, transparent);
+    text-align: center;
+  }
+
+  .contact-location__map svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-inline: auto;
+  }
+
+  .contact-location__map p {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    font-style: normal;
+    line-height: 1.65;
+  }
+
+  .contact-location > address {
+    margin: 1.5rem 0 0;
+    color: var(--color-charcoal);
+    font-size: 0.9375rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .contact-location__description {
+    margin: 1.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+
+  .contact-location__notes {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    list-style: none;
+  }
+
+  .contact-location__notes li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .contact-location__notes li::before {
+    position: absolute;
+    top: 0.75em;
+    left: 0;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--color-gold);
+    content: '';
+  }
+
+  .contact-location :global(.ui-button) {
+    margin-top: 1.75rem;
+  }
+</style>

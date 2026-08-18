@@ -1,0 +1,83 @@
+---
+import type { ParishEventImage } from '@/types/parish-events';
+
+interface Props {
+  image: ParishEventImage;
+  sizes: string;
+  /**
+   * Chaîne vide pour une image purement décorative, quand le texte voisin
+   * porte déjà l'information. Par défaut, le texte alternatif saisi dans
+   * le Studio.
+   */
+  alt?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+  /**
+   * Les attributs `data-*` sont transmis tels quels à la balise. Sans cela, un
+   * marqueur comme `data-organic-lens-image` — que le contrôleur de lentille
+   * cherche pour retrouver ses calques — serait silencieusement perdu.
+   */
+  [key: `data-${string}`]: string | boolean | undefined;
+}
+
+const {
+  image,
+  sizes,
+  alt = image.alt,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  class: className,
+  ...rest
+} = Astro.props;
+
+// Le point focal du Studio devient la position de recadrage du navigateur.
+// `object-fit: cover` découpe déjà l'image pour remplir son cadre; sans cette
+// ligne il découpe depuis le centre, et le choix de l'éditrice est ignoré.
+const objectPosition = image.focalPoint
+  ? `${(image.focalPoint.x * 100).toFixed(2)}% ${(image.focalPoint.y * 100).toFixed(2)}%`
+  : undefined;
+
+const inlineStyle = [
+  objectPosition ? `object-position: ${objectPosition};` : undefined,
+  image.lqip
+    ? `background-image: url(${image.lqip}); background-size: cover; background-position: center;`
+    : undefined,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+{
+  /*
+  Image servie par le CDN de Sanity, déjà recadrée selon le point focal choisi
+  dans le Studio. Les images locales du site continuent de passer par
+  `astro:assets` : elles sont connues au build, celle-ci ne l'est pas.
+
+  `width` et `height` réservent la place avant le chargement, et la vignette
+  floue occupe l'espace en attendant — sans quoi la page saute au moment où
+  l'image arrive.
+*/
+}
+<img
+  class={className}
+  src={image.src}
+  srcset={image.srcSet}
+  sizes={sizes}
+  alt={alt}
+  width={image.width}
+  height={image.height}
+  loading={loading}
+  decoding="async"
+  fetchpriority={fetchpriority}
+  style={inlineStyle || undefined}
+  {...rest}
+/>
+
+<style>
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+</style>

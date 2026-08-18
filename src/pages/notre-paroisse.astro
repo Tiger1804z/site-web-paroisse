@@ -14,8 +14,7 @@ const aboutPageData = await getAboutPageData();
 ---
 
 <BaseLayout
-  title={aboutPageData.seo.title}
-  description={aboutPageData.seo.description}
+  seo={aboutPageData.seo}
   pageClass="about-page"
   headerVariant="transparent"
 >

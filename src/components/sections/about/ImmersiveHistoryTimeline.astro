@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { HistoryImageKind, HistoryTimelineContent } from '@/types/about';
 
 interface Props {
@@ -10,12 +10,25 @@ interface Props {
 
 const { history } = Astro.props;
 
+// La légende reste écrite dans le code : c'est une déclaration du site sur ce
+// qu'il montre, pas un texte à réécrire. Le Studio choisit laquelle s'applique.
 const imageKindLabels = {
   'ai-illustration': 'Illustration artistique — non documentaire',
   'documentary-photo': 'Repère documentaire — photographie prise dans l’église',
   'current-photo': 'Photographie actuelle',
 } satisfies Record<HistoryImageKind, string>;
+
+// Le compte se lit dans la liste : écrire « Neuf repères » en dur mentirait dès
+// qu'un repère serait ajouté ou retiré dans le Studio.
+const chaptersLabel = `${history.entries.length} repères de l’histoire paroissiale`;
 ---
+
+<div
+  class="history-timeline__mood-veil"
+  data-history-mood-veil
+  aria-hidden="true"
+>
+</div>
 
 <section
   class="history-timeline section-block"
@@ -46,7 +59,7 @@ const imageKindLabels = {
     })();
   </script>
 
-  <Container>
+  <Container class="history-timeline__container">
     <header class="history-timeline__header">
       <Eyebrow tone="light">{history.eyebrow}</Eyebrow>
       <h2 id="history-timeline-title" class="history-timeline__title type-h2">
@@ -61,10 +74,7 @@ const imageKindLabels = {
       </aside>
     </header>
 
-    <ol
-      class="history-timeline__chapters"
-      aria-label="Neuf repères de l’histoire paroissiale"
-    >
+    <ol class="history-timeline__chapters" aria-label={chaptersLabel}>
       {
         history.entries.map((entry, index) => (
           <li class="history-timeline__chapter-item">
@@ -78,7 +88,6 @@ const imageKindLabels = {
               data-history-chapter
               data-history-index={index}
               data-history-image-kind={entry.imageKind}
-              data-history-editorial-status={entry.editorialStatus}
             >
               <span
                 class="history-timeline__trigger"
@@ -88,7 +97,7 @@ const imageKindLabels = {
 
               <div class="history-timeline__axis" aria-hidden="true">
                 <span class="history-timeline__marker">
-                  {entry.stepNumber.toString().padStart(2, '0')}
+                  {(index + 1).toString().padStart(2, '0')}
                 </span>
               </div>
 
@@ -132,24 +141,25 @@ const imageKindLabels = {
                 </div>
               </div>
 
-              <figure
-                class:list={[
-                  'history-timeline__figure',
-                  `history-timeline__figure--${entry.imageKind}`,
-                ]}
-              >
-                <Image
-                  src={entry.image}
-                  alt={entry.imageAlt}
-                  widths={[360, 540, 720, 900]}
-                  sizes="(min-width: 64rem) 42vw, calc(100vw - 5rem)"
-                  format="webp"
-                  quality={88}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <figcaption>{imageKindLabels[entry.imageKind]}</figcaption>
-              </figure>
+              {/*
+                Sans illustration — Sanity muet au build — le repère garde son
+                texte et perd son cadre. Un `figure` vide vaudrait moins que
+                rien : il laisserait un trou dans la chronologie.
+              */}
+              {entry.image && (
+                <figure
+                  class:list={[
+                    'history-timeline__figure',
+                    `history-timeline__figure--${entry.imageKind}`,
+                  ]}
+                >
+                  <RemoteImage
+                    image={entry.image}
+                    sizes="(min-width: 64rem) 42vw, calc(100vw - 5rem)"
+                  />
+                  <figcaption>{imageKindLabels[entry.imageKind]}</figcaption>
+                </figure>
+              )}
             </article>
           </li>
         ))
@@ -202,8 +212,13 @@ const imageKindLabels = {
     color: var(--color-ivory);
   }
 
+  .history-timeline[data-history-mood-active] {
+    z-index: 56;
+  }
+
   .history-timeline::before {
     position: absolute;
+    z-index: 0;
     inset: 0;
     background-image: linear-gradient(
       90deg,
@@ -213,6 +228,34 @@ const imageKindLabels = {
     );
     content: '';
     pointer-events: none;
+  }
+
+  .history-timeline__mood-veil {
+    --history-mood-intensity: 0;
+
+    position: fixed;
+    z-index: 55;
+    inset: 0;
+    background:
+      radial-gradient(
+        ellipse at 50% 46%,
+        rgb(12 8 9 / 12%) 12%,
+        rgb(8 6 7 / 48%) 68%,
+        rgb(4 3 3 / 88%) 100%
+      ),
+      linear-gradient(rgb(9 6 7 / 30%), rgb(9 6 7 / 48%));
+    opacity: calc(var(--history-mood-intensity) * 0.9);
+    pointer-events: none;
+    transition: opacity 140ms linear;
+  }
+
+  :global(.history-timeline__container) {
+    position: relative;
+    z-index: 1;
+  }
+
+  :global(html[data-history-house-lights]) .history-timeline__mood-veil {
+    will-change: opacity;
   }
 
   .history-timeline__header {
@@ -253,7 +296,7 @@ const imageKindLabels = {
 
   .history-timeline__disclosure p {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-ui);
     line-height: 1.65;
   }
 
@@ -374,7 +417,7 @@ const imageKindLabels = {
     border-radius: 50%;
     background: var(--color-charcoal);
     color: var(--color-gold);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0.08em;
@@ -463,7 +506,7 @@ const imageKindLabels = {
   .history-timeline__body {
     margin-top: 1rem;
     color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.75;
   }
 
@@ -472,13 +515,13 @@ const imageKindLabels = {
     gap: 0.2rem;
     margin-top: 1.5rem;
     color: color-mix(in srgb, var(--color-ivory) 56%, transparent);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
     line-height: 1.55;
   }
 
   .history-timeline__source span {
     color: var(--color-gold);
-    font-size: 0.625rem;
+    font-size: var(--font-size-micro);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -487,7 +530,7 @@ const imageKindLabels = {
   .history-timeline__entry-disclosure {
     margin-top: 0.75rem;
     color: color-mix(in srgb, var(--color-ivory) 58%, transparent);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     font-style: italic;
     line-height: 1.6;
   }
@@ -562,7 +605,7 @@ const imageKindLabels = {
   .history-timeline__figure figcaption {
     padding: 0.75rem 0.875rem;
     color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-micro);
     line-height: 1.5;
   }
 
@@ -723,6 +766,10 @@ const imageKindLabels = {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .history-timeline__mood-veil {
+      display: none;
+    }
+
     .history-timeline__axis::after,
     .history-timeline__marker,
     .history-timeline__chapter-meta,

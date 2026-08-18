@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Button from '@/components/ui/Button.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { ParishLifeFeature as ParishLifeFeatureData } from '@/types/parishLife';
 
 interface Props {
@@ -9,10 +10,17 @@ interface Props {
 }
 
 const { feature, index } = Astro.props;
-const imageStyle = [
-  `--feature-image-position-desktop: ${feature.visual.desktopPosition ?? 'center'}`,
-  `--feature-image-position-mobile: ${feature.visual.mobilePosition ?? feature.visual.desktopPosition ?? 'center'}`,
-].join('; ');
+const { visual } = feature;
+
+// Une image téléversée porte son propre point focal, appliqué par `RemoteImage`.
+// Les positions écrites à la main ne concernent que les fichiers du projet.
+const imageStyle =
+  visual.kind === 'image'
+    ? [
+        `--feature-image-position-desktop: ${visual.desktopPosition ?? 'center'}`,
+        `--feature-image-position-mobile: ${visual.mobilePosition ?? visual.desktopPosition ?? 'center'}`,
+      ].join('; ')
+    : undefined;
 ---
 
 <article
@@ -24,14 +32,23 @@ const imageStyle = [
   data-motion-reveal
 >
   <div class="parish-life-feature__media" style={imageStyle}>
-    <Image
-      src={feature.visual.image}
-      alt={feature.visual.alt}
-      widths={[480, 720, 960, 1280]}
-      sizes="(min-width: 64rem) 50vw, 100vw"
-      loading="lazy"
-      decoding="async"
-    />
+    {
+      visual.kind === 'image' ? (
+        <Image
+          src={visual.image}
+          alt={visual.alt}
+          widths={[480, 720, 960, 1280]}
+          sizes="(min-width: 64rem) 50vw, 100vw"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <RemoteImage
+          image={visual.image}
+          sizes="(min-width: 64rem) 50vw, 100vw"
+        />
+      )
+    }
     <span class="parish-life-feature__badge">Groupe à confirmer</span>
   </div>
 
@@ -158,7 +175,7 @@ const imageStyle = [
     padding: 0;
     gap: 0.5rem;
     color: var(--color-charcoal);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui);
     line-height: 1.55;
     list-style: none;
   }

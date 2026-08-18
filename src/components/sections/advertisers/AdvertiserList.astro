@@ -1,0 +1,224 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { Advertiser } from '@/types/advertisers';
+
+interface Props {
+  advertisers: readonly Advertiser[];
+}
+
+const { advertisers } = Astro.props;
+
+const initialsFor = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('');
+---
+
+<section class="advertiser-list" aria-labelledby="advertiser-list-title">
+  <Container>
+    <div class="advertiser-list__heading" data-motion-reveal>
+      <p class="type-eyebrow">Avec gratitude</p>
+      <h2 id="advertiser-list-title">Les annonceurs de la paroisse</h2>
+      <p>
+        Les présences ci-dessous sont des placements publicitaires distincts du
+        contenu éditorial de la paroisse.
+      </p>
+    </div>
+
+    <div class="advertiser-list__grid" data-motion-stagger>
+      {
+        advertisers.map((advertiser) => (
+          <article class="advertiser-card" data-motion-item>
+            <div class="advertiser-card__identity">
+              {advertiser.logo ? (
+                <RemoteImage
+                  image={advertiser.logo}
+                  sizes="(min-width: 64rem) 18rem, 70vw"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="advertiser-card__monogram" aria-hidden="true">
+                  {initialsFor(advertiser.name)}
+                </div>
+              )}
+            </div>
+
+            <div class="advertiser-card__content">
+              {advertiser.category && <p>{advertiser.category}</p>}
+              <h3>{advertiser.name}</h3>
+              {advertiser.description && <p>{advertiser.description}</p>}
+
+              {(advertiser.address || advertiser.phone || advertiser.email) && (
+                <address>
+                  {advertiser.address?.lines.map((line) => (
+                    <span>{line}</span>
+                  ))}
+                  {advertiser.phone && (
+                    <a href={advertiser.phone.href}>
+                      {advertiser.phone.display}
+                    </a>
+                  )}
+                  {advertiser.email && (
+                    <a href={advertiser.email.href}>
+                      {advertiser.email.display}
+                    </a>
+                  )}
+                </address>
+              )}
+
+              {advertiser.website && (
+                <Button
+                  href={advertiser.website}
+                  variant="secondary"
+                  target="_blank"
+                  rel="sponsored noopener noreferrer"
+                >
+                  Visiter le site de l’annonceur
+                </Button>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .advertiser-list {
+    padding-block: clamp(5rem, 8vw, 8rem);
+    background: var(--color-ivory);
+  }
+
+  .advertiser-list__heading {
+    max-width: 42rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .advertiser-list__heading > p:first-child {
+    margin: 0 0 0.75rem;
+    color: var(--color-wood);
+  }
+
+  .advertiser-list__heading h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.5rem, calc(2rem + 2vw), 4rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .advertiser-list__heading > p:last-child {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .advertiser-list__grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .advertiser-card {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: var(--color-surface);
+  }
+
+  .advertiser-card__identity {
+    display: grid;
+    min-height: 15rem;
+    place-items: center;
+    padding: 2rem;
+    background:
+      radial-gradient(
+        circle at 50% 42%,
+        color-mix(in srgb, var(--color-gold) 12%, transparent),
+        transparent 55%
+      ),
+      var(--color-paper);
+  }
+
+  .advertiser-card__identity :global(img) {
+    width: min(100%, 18rem);
+    max-height: 12rem;
+    object-fit: contain;
+  }
+
+  .advertiser-card__monogram {
+    color: color-mix(in srgb, var(--color-burgundy) 82%, transparent);
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 9vw, 7rem);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .advertiser-card__content {
+    align-self: center;
+    padding: clamp(2rem, 5vw, 4rem);
+  }
+
+  .advertiser-card__content > p:first-child {
+    margin: 0 0 0.65rem;
+    color: var(--color-wood);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .advertiser-card h3 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2rem, calc(1.7rem + 1.2vw), 3rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .advertiser-card h3 + p {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .advertiser-card address {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1.5rem;
+    color: var(--color-muted);
+    font-style: normal;
+    line-height: 1.6;
+  }
+
+  .advertiser-card address a {
+    width: fit-content;
+    color: var(--color-burgundy);
+  }
+
+  .advertiser-card :global(.ui-button) {
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 64rem) {
+    .advertiser-list__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .advertiser-card:only-child {
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(18rem, 0.72fr) minmax(0, 1.28fr);
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .advertiser-card :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

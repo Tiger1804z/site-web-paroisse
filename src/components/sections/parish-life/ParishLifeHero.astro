@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
 import type { ParishLifePageData } from '@/types/parishLife';
 
 interface Props {
@@ -8,113 +10,516 @@ interface Props {
 }
 
 const { hero } = Astro.props;
-const heroStyle = [
-  `--parish-life-hero-position-desktop: ${hero.image.desktopPosition ?? 'center'}`,
-  `--parish-life-hero-position-mobile: ${hero.image.mobilePosition ?? hero.image.desktopPosition ?? 'center'}`,
-].join('; ');
+const lensClipId = 'parish-life-hero-organic-lens-clip';
 ---
 
 <section
   class="parish-life-hero"
-  style={heroStyle}
   aria-labelledby="parish-life-hero-title"
+  data-parish-life-hero
+  data-lens-active="false"
 >
-  <Image
-    class="parish-life-hero__image"
-    src={hero.image.image}
-    alt={hero.image.alt}
-    widths={[640, 960, 1280, 1600, 1920]}
-    sizes="100vw"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-  />
+  <div class="parish-life-hero__media" aria-hidden="true">
+    {
+      hero.images.map((slide, index) => (
+        <div
+          class="parish-life-hero__slide"
+          data-parish-life-hero-slide
+          data-active={index === 0 ? 'true' : 'false'}
+          style={[
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`
+              : '',
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-mobile: ${slide.mobilePosition ?? slide.desktopPosition ?? 'center'}`
+              : '',
+          ]
+            .filter(Boolean)
+            .join('; ')}
+        >
+          {slide.kind === 'image' ? (
+            <Image
+              src={slide.image}
+              alt=""
+              widths={[640, 960, 1280, 1600, 1920]}
+              sizes="(min-width: 768px) 68vw, 100vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchpriority={index === 0 ? 'high' : 'low'}
+              quality={78}
+            />
+          ) : (
+            <RemoteImage
+              image={slide.image}
+              alt=""
+              sizes="(min-width: 768px) 68vw, 100vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : 'low'}
+            />
+          )}
+        </div>
+      ))
+    }
+  </div>
+
+  <svg
+    class="parish-life-hero__lens-definition"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      <clipPath id={lensClipId} clipPathUnits="userSpaceOnUse">
+        <path data-organic-lens-clip-path></path>
+      </clipPath>
+    </defs>
+  </svg>
+
+  <div
+    class="parish-life-hero__reveals"
+    aria-hidden="true"
+    style={`clip-path: url(#${lensClipId}); -webkit-clip-path: url(#${lensClipId});`}
+  >
+    {
+      hero.images.map((slide, index) => (
+        <div
+          class="parish-life-hero__reveal"
+          data-organic-lens-layer
+          data-active={index === 1 ? 'true' : 'false'}
+          style={[
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`
+              : '',
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-mobile: ${slide.mobilePosition ?? slide.desktopPosition ?? 'center'}`
+              : '',
+          ]
+            .filter(Boolean)
+            .join('; ')}
+        >
+          {slide.kind === 'image' ? (
+            <Image
+              src={slide.image}
+              alt=""
+              widths={[640, 960, 1280, 1600, 1920]}
+              sizes="(min-width: 768px) 68vw, 100vw"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              quality={78}
+              data-organic-lens-image
+            />
+          ) : (
+            <RemoteImage
+              image={slide.image}
+              alt=""
+              sizes="(min-width: 768px) 68vw, 100vw"
+              data-organic-lens-image
+            />
+          )}
+        </div>
+      ))
+    }
+  </div>
+
   <div class="parish-life-hero__overlay" aria-hidden="true"></div>
+  <svg
+    class="parish-life-hero__lens-outline"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      class="parish-life-hero__lens-outline-path"
+      data-organic-lens-outline-path></path>
+  </svg>
+  <span
+    class="parish-life-hero__lens-metric"
+    data-organic-lens-metric
+    aria-hidden="true"></span>
 
   <Container class="parish-life-hero__container">
     <div class="parish-life-hero__content">
-      <p class="parish-life-hero__eyebrow type-script-accent">
-        {hero.eyebrow}
-      </p>
-      <h1 id="parish-life-hero-title" class="parish-life-hero__title">
-        {hero.title}
-      </h1>
-      <p class="parish-life-hero__introduction">{hero.introduction}</p>
+      <Eyebrow tone="light">{hero.eyebrow}</Eyebrow>
+      <h1 id="parish-life-hero-title">{hero.title}</h1>
+      <p>{hero.introduction}</p>
     </div>
   </Container>
+
+  <div
+    class="parish-life-hero__indicators"
+    role="group"
+    aria-label="Choisir l’image du hero"
+  >
+    {
+      hero.images.map((slide, index) => (
+        <button
+          type="button"
+          aria-label={`Afficher l’image ${index + 1} sur ${hero.images.length} : ${slide.label}`}
+          aria-pressed={index === 0 ? 'true' : 'false'}
+          data-parish-life-hero-indicator
+        >
+          <span aria-hidden="true" />
+        </button>
+      ))
+    }
+  </div>
 </section>
+
+<script>
+  import { initializeOrganicHeroLens } from '@/scripts/organic-hero-lens';
+
+  document
+    .querySelectorAll<HTMLElement>('[data-parish-life-hero]')
+    .forEach((hero) => {
+      if (hero.dataset.initialized === 'true') return;
+      hero.dataset.initialized = 'true';
+
+      const slides = Array.from(
+        hero.querySelectorAll<HTMLElement>('[data-parish-life-hero-slide]'),
+      );
+      const indicators = Array.from(
+        hero.querySelectorAll<HTMLButtonElement>(
+          '[data-parish-life-hero-indicator]',
+        ),
+      );
+      const reducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      );
+      const lensController = initializeOrganicHeroLens(hero, {
+        cycleOnMovement: false,
+        initialImageIndex: 1,
+      });
+      let activeIndex = 0;
+      let rotationTimer: number | undefined;
+
+      const stopRotation = () => {
+        if (rotationTimer === undefined) return;
+        window.clearInterval(rotationTimer);
+        rotationTimer = undefined;
+      };
+
+      const selectSlide = (index: number) => {
+        activeIndex = index;
+        slides.forEach((slide, slideIndex) => {
+          slide.dataset.active = String(slideIndex === index);
+        });
+        indicators.forEach((indicator, indicatorIndex) => {
+          indicator.setAttribute(
+            'aria-pressed',
+            String(indicatorIndex === index),
+          );
+        });
+        lensController?.setActiveImage((index + 1) % slides.length);
+      };
+
+      const startRotation = () => {
+        stopRotation();
+        if (reducedMotion.matches || document.hidden || slides.length < 2) {
+          return;
+        }
+        rotationTimer = window.setInterval(() => {
+          selectSlide((activeIndex + 1) % slides.length);
+        }, 7600);
+      };
+
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          selectSlide(index);
+          startRotation();
+        });
+      });
+
+      reducedMotion.addEventListener('change', () => {
+        if (reducedMotion.matches) {
+          stopRotation();
+          selectSlide(0);
+          return;
+        }
+        startRotation();
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stopRotation();
+          return;
+        }
+        startRotation();
+      });
+
+      window.addEventListener('pagehide', stopRotation, { once: true });
+      startRotation();
+    });
+</script>
 
 <style>
   .parish-life-hero {
+    --lens-size: clamp(9.375rem, 15vw, 15.625rem);
+
     position: relative;
-    display: grid;
-    height: 45svh;
-    min-height: 21.25rem;
-    overflow: hidden;
     isolation: isolate;
+    display: flex;
+    min-height: clamp(38rem, 72svh, 52rem);
+    align-items: flex-end;
+    overflow: hidden;
     background: var(--color-charcoal);
+    color: var(--color-ivory);
   }
 
-  .parish-life-hero__image,
-  .parish-life-hero__overlay {
+  .parish-life-hero__media,
+  .parish-life-hero__overlay,
+  .parish-life-hero__slide,
+  .parish-life-hero__lens-definition,
+  .parish-life-hero__reveals,
+  .parish-life-hero__reveal,
+  .parish-life-hero__lens-outline {
     position: absolute;
     inset: 0;
   }
 
-  .parish-life-hero__image {
-    z-index: -2;
+  .parish-life-hero__media {
+    z-index: 0;
+  }
+
+  .parish-life-hero__slide {
+    opacity: 0;
+    transition: opacity 1250ms var(--motion-ease-cinematic);
+  }
+
+  .parish-life-hero__slide[data-active='true'] {
+    z-index: 1;
+    opacity: 1;
+  }
+
+  .parish-life-hero__slide :global(img),
+  .parish-life-hero__reveal :global(img) {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: var(--parish-life-hero-position-mobile);
   }
 
+  .parish-life-hero__slide :global(img) {
+    filter: brightness(0.9) contrast(1.04) saturate(0.88) sepia(0.012);
+  }
+
   .parish-life-hero__overlay {
-    z-index: -1;
-    background: linear-gradient(
-      to bottom,
-      rgb(28 25 24 / 60%),
-      rgb(28 25 24 / 76%)
-    );
+    z-index: 3;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(16 16 16 / 91%) 0%,
+        rgb(23 21 21 / 76%) 42%,
+        rgb(28 27 26 / 43%) 72%,
+        rgb(28 27 26 / 28%) 100%
+      ),
+      linear-gradient(0deg, rgb(16 16 16 / 82%), transparent 68%);
+  }
+
+  .parish-life-hero__lens-definition {
+    z-index: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .parish-life-hero__reveals {
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms var(--motion-ease-standard);
+    will-change: opacity;
+  }
+
+  .parish-life-hero[data-lens-active='true'] .parish-life-hero__reveals {
+    opacity: 1;
+  }
+
+  .parish-life-hero__reveal {
+    opacity: 0;
+    transition: opacity 360ms var(--motion-ease-standard);
+  }
+
+  .parish-life-hero__reveal[data-active='true'] {
+    opacity: 1;
+  }
+
+  .parish-life-hero__reveal :global(img) {
+    filter: brightness(0.91) contrast(1.05) saturate(0.94) sepia(0.008);
+  }
+
+  .parish-life-hero__lens-outline {
+    z-index: 4;
+    display: none;
+    opacity: 0;
+    overflow: visible;
+    pointer-events: none;
+    transition: opacity 160ms var(--motion-ease-standard);
+  }
+
+  .parish-life-hero__lens-outline-path {
+    fill: none;
+    stroke: rgb(245 243 238 / 28%);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0.85rem 1.25rem rgb(28 25 24 / 22%));
+  }
+
+  .parish-life-hero[data-lens-active='true'] .parish-life-hero__lens-outline {
+    opacity: 1;
+  }
+
+  .parish-life-hero__lens-metric {
+    position: absolute;
+    width: var(--lens-size);
+    height: 1px;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .parish-life-hero__container {
-    display: flex;
-    min-height: inherit;
-    align-items: flex-end;
-    padding-top: 3rem;
-    padding-bottom: 3.5rem;
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    padding-block: calc(var(--header-height) + 5rem) clamp(4rem, 8vw, 7rem);
   }
 
   .parish-life-hero__content {
-    max-width: 45rem;
+    width: 100%;
+    min-width: 0;
+    max-width: 47rem;
   }
 
-  .parish-life-hero__eyebrow {
-    margin: 0 0 0.5rem;
-    color: color-mix(in srgb, var(--color-ivory) 62%, transparent);
-  }
-
-  .parish-life-hero__title {
-    margin: 0;
+  .parish-life-hero h1 {
+    max-width: 44rem;
+    margin: 0.8rem 0 0;
     color: var(--color-ivory);
-    font-size: clamp(2.75rem, calc(2.17rem + 2.42vw), 3.75rem);
+    font-size: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
     font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.015em;
+    line-height: 0.98;
+    text-shadow: 0 0.25rem 1.5rem rgb(10 7 8 / 48%);
   }
 
-  .parish-life-hero__introduction {
-    max-width: 34rem;
-    margin: 0.75rem 0 0;
-    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
-    font-size: clamp(1rem, calc(0.954rem + 0.19vw), 1.125rem);
-    line-height: 1.7;
+  .parish-life-hero__content > p {
+    max-width: 40rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 92%, transparent);
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.75;
+    text-shadow: 0 0.15rem 0.85rem rgb(10 7 8 / 58%);
+  }
+
+  .parish-life-hero__indicators {
+    position: absolute;
+    z-index: 6;
+    right: var(--gutter-page);
+    bottom: clamp(2rem, 4vw, 3.5rem);
+    display: flex;
+    align-items: center;
+  }
+
+  .parish-life-hero__indicators button {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-ivory);
+    cursor: pointer;
+    place-items: center;
+  }
+
+  .parish-life-hero__indicators span {
+    width: 0.375rem;
+    height: 0.375rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    transition:
+      width var(--duration-short) var(--ease-editorial),
+      background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .parish-life-hero__indicators button[aria-pressed='true'] span {
+    width: 1.5rem;
+    border-radius: 0;
+    background: currentColor;
   }
 
   @media (min-width: 48rem) {
-    .parish-life-hero__image {
+    .parish-life-hero__slide :global(img),
+    .parish-life-hero__reveal :global(img) {
       object-position: var(--parish-life-hero-position-desktop);
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .parish-life-hero {
+      min-height: 34rem;
+    }
+
+    .parish-life-hero__overlay {
+      background:
+        linear-gradient(0deg, rgb(15 15 15 / 92%), transparent 92%),
+        rgb(24 23 23 / 55%);
+    }
+
+    .parish-life-hero__indicators {
+      right: auto;
+      bottom: 1.25rem;
+      left: var(--gutter-page);
+    }
+
+    .parish-life-hero h1 {
+      max-width: 21rem;
+      font-size: clamp(2.75rem, 12vw, 3.5rem);
+      line-height: 1.02;
+    }
+
+    .parish-life-hero__content > p {
+      max-width: 21rem;
+      margin-top: 1.2rem;
+      font-size: 1.0625rem;
+      line-height: 1.65;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .parish-life-hero__lens-outline {
+      display: block;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .parish-life-hero__lens-definition,
+    .parish-life-hero__reveals,
+    .parish-life-hero__lens-outline,
+    .parish-life-hero__lens-metric {
+      display: none;
+      transition: none;
+    }
+
+    .parish-life-hero__slide {
+      display: none;
+      transition: none;
+    }
+
+    .parish-life-hero__slide:first-child {
+      display: block;
+      opacity: 1;
+    }
+
+    .parish-life-hero__slide :global(img) {
+      animation: none;
+      scale: 1;
+    }
+
+    .parish-life-hero__indicators {
+      display: none;
     }
   }
 </style>

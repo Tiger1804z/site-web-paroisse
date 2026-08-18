@@ -1,4 +1,7 @@
+import type { PageSeo } from '@/types/seo';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 import type { ImageMetadata } from 'astro';
+import type { ParishEventImage } from '@/types/parish-events';
 
 export type EventCategoryKind =
   'cultural' | 'liturgical' | 'community' | 'mutual-aid';
@@ -30,8 +33,19 @@ export interface EventGenerationsChainVisual {
   readonly accessibleLabel: string;
 }
 
+/**
+ * Image téléversée dans Sanity, par opposition à `EventImageVisual` qui reste
+ * un fichier du projet. Les deux coexistent pendant la migration : le hero de
+ * la page est encore local, les catégories viennent du CMS.
+ */
+export interface EventRemoteImageVisual {
+  readonly kind: 'remote-image';
+  readonly image: ParishEventImage;
+}
+
 export type EventVisual =
   | EventImageVisual
+  | EventRemoteImageVisual
   | EventClothingRackVisual
   | EventCommunityMealVisual
   | EventGenerationsChainVisual;
@@ -42,7 +56,12 @@ export interface EventCategory {
   readonly title: string;
   readonly summary: string;
   readonly category: EventCategoryKind;
-  readonly visual: EventVisual;
+  /**
+   * Facultatif. Une catégorie sans visuel exploitable reste une carte lisible :
+   * son titre et son résumé suffisent. Le cadre ne se réserve pas une place
+   * qu'il ne remplira pas.
+   */
+  readonly visual?: EventVisual;
   readonly featured: boolean;
   readonly active: boolean;
   readonly confirmationRequired: boolean;
@@ -50,15 +69,16 @@ export interface EventCategory {
 }
 
 export interface EventsPageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly image: EventImageVisual;
+    /**
+     * Photographie du premier écran, facultative. Sans elle, l'en-tête garde son
+     * fond sombre : le titre reste lisible, aucun cadre vide n'apparaît.
+     */
+    readonly image?: SanityRenderableImage;
   };
   readonly overview: {
     readonly eyebrow: string;

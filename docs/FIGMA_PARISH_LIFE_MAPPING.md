@@ -25,6 +25,21 @@ publiés comme des faits actuels.
 | CTA final    | dernier `section`                                     | Fond bourgogne, contenu étroit centré, accent manuscrit, H2, texte, bouton ivoire      | « Ensemble », « Vous souhaitez vous impliquer? »           | —                            | `ParishLifeParticipation.astro`                           | 80 px verticaux; bouton tactile de 48 px minimum    | Le CTA utilise la vraie route `/contact/`, actuellement disponible comme placeholder technique.                                                  |
 | Mouvement    | hover d'image dans `VieParoissiale.tsx`               | Zoom au survol sur 700 ms                                                              | Purement décoratif                                         | médias des chapitres         | Système `data-motion-*` existant                          | Révélations désactivées avec reduced motion         | Les reveals restent une amélioration progressive; le contenu est visible sans JavaScript.                                                        |
 
+### Divergence du hero ajoutée pendant S1-T13
+
+À la demande de l’utilisateur, le hero statique du Figma est remplacé par
+trois illustrations éditoriales en boucle. Le fondu dure 1,25 seconde et
+chaque image demeure 7,6 secondes. La lentille organique révèle toujours la
+suivante. Les illustrations ne sont pas documentaires et ne représentent ni
+les paroissiens, ni les activités réelles, ni l’intérieur de
+Saint-René-Goupil.
+
+Le cadrage conserve une seule copie plein cadre de l’image. Il n’existe ni
+second plan flou, ni parallax, ni zoom continu; les points focaux limitent le
+recadrage des formats carré et portrait. Sur tactile, la boucle subsiste mais
+la lentille est absente; avec reduced motion ou sans JavaScript, la première
+illustration reste statique et lisible.
+
 ## Images correspondantes
 
 Les cinq fichiers Figma existent déjà dans `src/assets/images/paroisse/` avec
@@ -38,9 +53,11 @@ les mêmes pixels et les noms de production suivants :
 | `20210331_183200_-_Copy.jpg` | `autel-fleurs-blanches-01.jpg`         | 4624 × 3468 | 3 942 531 octets | Chapitre 3  |
 | `20210319_184417_-_Copy.jpg` | `autel-decor-violet-01.jpg`            | 4624 × 3468 | 5 010 030 octets | Chapitre 4  |
 
-Toutes sont des photographies intérieures sans personne visible. Les fichiers
-source ne sont ni copiés ni modifiés; `astro:assets` produira les variantes
-responsives au build.
+Toutes sont des photographies intérieures sans personne visible. Elles restent
+utilisées dans les quatre chapitres. Le hero utilise désormais les trois
+illustrations externes inventoriées dans `IMAGE_INVENTORY.md`. Les fichiers
+source ne sont ni modifiés ni servis directement; `astro:assets` produit les
+variantes responsives au build.
 
 ## Contenu et frontière CMS
 

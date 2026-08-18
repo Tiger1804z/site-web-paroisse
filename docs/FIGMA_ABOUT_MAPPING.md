@@ -27,8 +27,13 @@ une grande section étrangère au prototype.
 été remplacée après comparaison visuelle par
 `eglise-exterieur-identification-01.webp`. Cette photographie sans personne
 évite le panneau de signalisation très présent dans le cadrage large, tout en
-conservant l’église comme sujet principal. Aucun style ou rapport de composition
-n’a été modifié.
+conservant l’église comme sujet principal.
+
+**Raffinement S1-T13 :** le hero conserve cette photographie unique et la
+composition du Figma, mais adopte l’étalonnage charbon, le voile directionnel,
+la profondeur typographique et le zoom cinématographique discret de Nos
+services. Il ne possède ni lentille, ni rotation, ni particules. Reduced motion
+supprime le zoom et le contenu reste complet sans JavaScript.
 
 ## Ce qui relève du design
 

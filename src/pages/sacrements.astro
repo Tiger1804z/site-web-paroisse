@@ -1,32 +1,44 @@
 ---
-import MotionController from '@/components/motion/MotionController.astro';
-import GeneralProcess from '@/components/sections/sacraments/GeneralProcess.astro';
-import SacramentsExplorer from '@/components/sections/sacraments/SacramentsExplorer.astro';
-import SacramentsFaq from '@/components/sections/sacraments/SacramentsFaq.astro';
-import SacramentsHero from '@/components/sections/sacraments/SacramentsHero.astro';
-import SacramentsNotice from '@/components/sections/sacraments/SacramentsNotice.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getSacramentsPageData } from '@/lib/content/getSacramentsPageData';
-
-const sacramentsPageData = await getSacramentsPageData();
 ---
 
 <BaseLayout
-  title={sacramentsPageData.seo.title}
-  description={sacramentsPageData.seo.description}
-  pageClass="sacraments-page"
+  seo={{
+    title: 'Nos services',
+    description:
+      'Cette ancienne adresse mène maintenant à la page Nos services de la Paroisse Saint-René-Goupil.',
+  }}
+  redirectTo="/nos-services/"
   headerVariant="light"
 >
-  <SacramentsHero hero={sacramentsPageData.hero} />
-  <SacramentsNotice notice={sacramentsPageData.notice} />
-  <SacramentsExplorer items={sacramentsPageData.overview.items} />
-  <GeneralProcess process={sacramentsPageData.generalProcess} />
-  <SacramentsFaq faq={sacramentsPageData.faq} />
-  <MotionController />
+  <section
+    class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
+    aria-labelledby="legacy-route-title"
+  >
+    <div class="mx-auto max-w-[1280px] px-5 md:px-10 lg:px-20">
+      <div class="max-w-[680px]">
+        <p
+          class="mb-4 text-[0.75rem] font-semibold tracking-[0.2em] text-wood uppercase"
+        >
+          Adresse mise à jour
+        </p>
+        <h1
+          id="legacy-route-title"
+          class="font-display text-[3rem] leading-[1.05] font-semibold text-charcoal md:text-[4.25rem]"
+        >
+          Sacrements devient Nos services
+        </h1>
+        <p class="mt-6 max-w-[38rem] text-lg leading-relaxed text-muted">
+          Les sacrements, les démarches et les services paroissiaux sont
+          maintenant réunis dans une page plus complète.
+        </p>
+        <a
+          class="mt-10 inline-flex min-h-12 items-center bg-burgundy px-6 py-3 text-sm font-semibold tracking-wide text-ivory"
+          href="/nos-services/"
+        >
+          Continuer vers Nos services
+        </a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
-
-<style>
-  :global(body.sacraments-page .site-main--light) {
-    padding-top: 0;
-  }
-</style>

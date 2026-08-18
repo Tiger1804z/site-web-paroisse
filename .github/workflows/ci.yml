@@ -20,6 +20,16 @@ jobs:
     timeout-minutes: 15
     env:
       ASTRO_TELEMETRY_DISABLED: 1
+      PUBLIC_SANITY_PROJECT_ID: xo2ahvjo
+      PUBLIC_SANITY_DATASET: production
+      # Build de vérification, jamais déployé : `pnpm validate` construit le
+      # site pour le contrôler. Sans cette variable, le verrou de
+      # `src/lib/seo/siteUrl.ts` ferait échouer l'étape — c'est son rôle, mais
+      # ici la sortie ne part nulle part. Le build signale de lui-même qu'une
+      # origine `localhost` ne doit pas être publiée.
+      #
+      # La vraie adresse se saisit dans la plateforme d'hébergement, pas ici.
+      SITE_URL: http://localhost:4321
 
     steps:
       - name: Récupérer le dépôt
@@ -52,6 +62,9 @@ jobs:
 
       - name: Installer les dépendances
         run: pnpm install --frozen-lockfile
+
+      - name: Générer les types Sanity (TypeGen)
+        run: pnpm sanity:typegen
 
       - name: Valider
         run: pnpm validate

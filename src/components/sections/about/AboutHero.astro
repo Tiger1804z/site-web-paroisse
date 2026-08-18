@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
-import AmbientHero from '@/components/motion/AmbientHero.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
 import type { AboutHero as AboutHeroContent } from '@/types/about';
 
 interface Props {
@@ -9,38 +9,29 @@ interface Props {
 }
 
 const { hero } = Astro.props;
-const heroStyle = [
-  `--about-hero-position-desktop: ${hero.image.desktopPosition ?? 'center'}`,
-  `--about-hero-position-mobile: ${hero.image.mobilePosition ?? hero.image.desktopPosition ?? 'center'}`,
-].join('; ');
 ---
 
-<section
-  class="about-hero"
-  style={heroStyle}
-  aria-labelledby="about-hero-title"
->
-  <Image
-    class="about-hero__image"
-    src={hero.image.image}
-    alt={hero.image.alt}
-    widths={[640, 960, 1280, 1600, 1920]}
-    sizes="100vw"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-  />
+<section class="about-hero" aria-labelledby="about-hero-title">
+  {
+    hero.image && (
+      <RemoteImage
+        class="about-hero__image"
+        image={hero.image}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )
+  }
   <div class="about-hero__overlay" aria-hidden="true"></div>
-  <AmbientHero class="about-hero__ambient" particles={6} />
-  <div class="about-hero__beam" aria-hidden="true"></div>
 
   <Container class="about-hero__container">
     <div class="about-hero__content">
-      <p class="about-hero__eyebrow type-script-accent">{hero.eyebrow}</p>
-      <h1 id="about-hero-title" class="about-hero__title type-display">
+      <Eyebrow tone="light">{hero.eyebrow}</Eyebrow>
+      <h1 id="about-hero-title" class="about-hero__title">
         {hero.title}
       </h1>
-      <p class="about-hero__introduction type-body-large">
+      <p class="about-hero__introduction">
         {hero.introduction}
       </p>
     </div>
@@ -51,15 +42,15 @@ const heroStyle = [
   .about-hero {
     position: relative;
     display: grid;
-    min-height: max(34rem, 70svh);
+    min-height: clamp(34rem, 64svh, 47rem);
     overflow: hidden;
     isolation: isolate;
     background: var(--color-charcoal);
+    color: var(--color-ivory);
   }
 
   .about-hero__image,
-  .about-hero__overlay,
-  .about-hero__beam {
+  .about-hero__overlay {
     position: absolute;
     inset: 0;
   }
@@ -70,8 +61,9 @@ const heroStyle = [
     height: 100%;
     object-fit: cover;
     object-position: var(--about-hero-position-mobile);
+    filter: brightness(0.9) contrast(1.055) saturate(0.84) sepia(0.045);
     animation: about-hero-cinematic var(--motion-duration-cinematic)
-      var(--motion-ease-cinematic) infinite alternate;
+      var(--motion-ease-cinematic) both;
   }
 
   .about-hero__overlay {
@@ -79,98 +71,91 @@ const heroStyle = [
     background:
       linear-gradient(
         90deg,
-        rgb(28 25 24 / 70%) 0%,
-        rgb(28 25 24 / 42%) 48%,
-        rgb(28 25 24 / 18%) 100%
+        rgb(20 16 17 / 92%) 0%,
+        rgb(40 17 24 / 82%) 42%,
+        rgb(28 25 24 / 48%) 72%,
+        rgb(28 25 24 / 35%) 100%
       ),
-      linear-gradient(
-        180deg,
-        rgb(28 25 24 / 58%) 0%,
-        rgb(28 25 24 / 18%) 42%,
-        rgb(28 25 24 / 76%) 100%
-      );
-  }
-
-  .about-hero__beam {
-    z-index: -1;
-    left: 50%;
-    width: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      color-mix(in srgb, var(--color-ivory) 10%, transparent),
-      transparent
-    );
-  }
-
-  :global(.about-hero__ambient) {
-    z-index: -1;
+      linear-gradient(0deg, rgb(20 16 17 / 84%), transparent 68%);
   }
 
   .about-hero__container {
     display: flex;
     min-height: inherit;
     align-items: flex-end;
-    padding-top: calc(var(--header-height) + 3rem);
-    padding-bottom: 4rem;
+    padding-block: calc(var(--header-height) + 5rem) clamp(4rem, 8vw, 7rem);
   }
 
   .about-hero__content {
-    max-width: 56rem;
-  }
-
-  .about-hero__eyebrow {
-    margin: 0 0 0.75rem;
-    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
+    width: 100%;
+    min-width: 0;
+    max-width: 47rem;
   }
 
   .about-hero__title {
-    max-width: 52rem;
-    margin: 0;
+    max-width: 44rem;
+    margin: 0.8rem 0 0;
     color: var(--color-ivory);
+    font-size: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    text-shadow: 0 0.25rem 1.5rem rgb(10 7 8 / 48%);
   }
 
   .about-hero__introduction {
-    max-width: 34rem;
-    margin: 1rem 0 0;
-    color: color-mix(in srgb, var(--color-ivory) 76%, transparent);
+    max-width: 40rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 92%, transparent);
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.75;
+    text-shadow: 0 0.15rem 0.85rem rgb(10 7 8 / 58%);
   }
 
   @media (min-width: 48rem) {
-    .about-hero {
-      min-height: max(38rem, 70svh);
-    }
-
     .about-hero__image {
       object-position: var(--about-hero-position-desktop);
     }
-
-    .about-hero__container {
-      padding-bottom: 4.5rem;
-    }
   }
 
-  @media (min-width: 64rem) {
-    .about-hero__container {
-      padding-bottom: 5rem;
+  @media (max-width: 47.99rem) {
+    .about-hero {
+      min-height: 34rem;
+    }
+
+    .about-hero__overlay {
+      background:
+        linear-gradient(0deg, rgb(20 16 17 / 94%), transparent 92%),
+        rgb(35 14 21 / 66%);
+    }
+
+    .about-hero__title {
+      max-width: 21rem;
+      font-size: clamp(2.75rem, 12vw, 3.5rem);
+      line-height: 1.02;
+    }
+
+    .about-hero__introduction {
+      max-width: 21rem;
+      margin-top: 1.2rem;
+      font-size: 1.0625rem;
+      line-height: 1.65;
     }
   }
 
   @keyframes about-hero-cinematic {
     from {
-      transform: scale(1) translate3d(0, 0, 0);
+      scale: 1;
     }
 
     to {
-      transform: scale(var(--motion-scale-cinematic))
-        translate3d(0.25rem, -0.2rem, 0);
+      scale: 1.022;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .about-hero__image {
       animation: none;
-      transform: none;
+      scale: 1;
     }
   }
 </style>

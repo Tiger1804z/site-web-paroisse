@@ -3,7 +3,7 @@ import type { SchedulePeriod } from '@/types/schedule';
 
 interface Props {
   period: SchedulePeriod;
-  lastUpdatedLabel: string;
+  lastUpdatedLabel?: string;
 }
 
 const { period, lastUpdatedLabel } = Astro.props;
@@ -52,24 +52,26 @@ const { period, lastUpdatedLabel } = Astro.props;
         <p class="schedule-list__empty">Horaires à confirmer.</p>
       )}
 
-      <p class="regular-schedule__updated">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          width="14"
-          height="14"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <span>Dernière mise à jour : {lastUpdatedLabel}</span>
-      </p>
+      {lastUpdatedLabel && (
+        <p class="regular-schedule__updated">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Dernière mise à jour : {lastUpdatedLabel}</span>
+        </p>
+      )}
     </section>
   )
 }
@@ -134,7 +136,7 @@ const { period, lastUpdatedLabel } = Astro.props;
 
   .schedule-list__note {
     color: var(--color-muted);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
     line-height: 1.5;
     letter-spacing: 0.025em;
   }
@@ -167,7 +169,7 @@ const { period, lastUpdatedLabel } = Astro.props;
 
   .schedule-list li small {
     color: var(--color-muted);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
   }
 
   .schedule-list__empty {
@@ -183,7 +185,7 @@ const { period, lastUpdatedLabel } = Astro.props;
     align-items: center;
     margin: 0.75rem 0 0;
     color: var(--color-muted);
-    font-size: 0.75rem;
+    font-size: var(--font-size-meta);
     line-height: 1.5;
   }
 

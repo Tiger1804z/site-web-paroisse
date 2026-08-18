@@ -1,0 +1,34 @@
+---
+import InteractiveThriftHero from '@/components/sections/thrift-store/InteractiveThriftHero.astro';
+import ThriftStoreClosingCta from '@/components/sections/thrift-store/ThriftStoreClosingCta.astro';
+import ThriftStoreGallery from '@/components/sections/thrift-store/ThriftStoreGallery.astro';
+import ThriftStoreIntroduction from '@/components/sections/thrift-store/ThriftStoreIntroduction.astro';
+import ThriftStoreReuseSection from '@/components/sections/thrift-store/ThriftStoreReuseSection.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getThriftStorePageData } from '@/lib/content/getThriftStorePageData';
+
+const thriftStorePageData = await getThriftStorePageData();
+---
+
+<BaseLayout
+  seo={thriftStorePageData.seo}
+  pageClass="thrift-store-page"
+  headerVariant="transparent"
+>
+  <InteractiveThriftHero hero={thriftStorePageData.hero} />
+  <ThriftStoreIntroduction
+    introduction={thriftStorePageData.introduction}
+    practicalInformation={thriftStorePageData.practicalInformation}
+  />
+  {
+    thriftStorePageData.sections.map((section) => (
+      <ThriftStoreReuseSection section={section} />
+    ))
+  }
+  {
+    thriftStorePageData.gallery.items.length > 0 && (
+      <ThriftStoreGallery gallery={thriftStorePageData.gallery} />
+    )
+  }
+  <ThriftStoreClosingCta closing={thriftStorePageData.closing} />
+</BaseLayout>

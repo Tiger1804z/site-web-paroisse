@@ -1,0 +1,148 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { ServicesPageData } from '@/types/services';
+
+interface Props {
+  paymentMethods: ServicesPageData['paymentMethods'];
+  finalCta: ServicesPageData['finalCta'];
+}
+
+const { paymentMethods, finalCta } = Astro.props;
+---
+
+<section class="services-closing" aria-labelledby="services-closing-title">
+  <Container>
+    <div class="services-closing__layout">
+      <div class="services-closing__payments" data-motion-reveal>
+        <p class="services-closing__eyebrow">Informations pratiques</p>
+        <h2>{paymentMethods.title}</h2>
+        <p>{paymentMethods.description}</p>
+        <ul aria-label="Modes de paiement">
+          {paymentMethods.methods.map((method) => <li>{method}</li>)}
+        </ul>
+        <span>
+          Données 2026 — confirmation périodique requise auprès du secrétariat.
+        </span>
+      </div>
+
+      <div class="services-closing__cta" data-motion-reveal>
+        <p class="services-closing__eyebrow">Secrétariat</p>
+        <h2 id="services-closing-title">{finalCta.title}</h2>
+        <p>{finalCta.description}</p>
+        <Button href={finalCta.primary.href} variant="light">
+          {finalCta.primary.label}
+        </Button>
+        <a class="services-closing__phone" href={finalCta.phone.href}>
+          {finalCta.phone.display}
+        </a>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .services-closing {
+    padding-block: clamp(5rem, 8vw, 8rem);
+    background: var(--color-ivory);
+  }
+
+  .services-closing__layout {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .services-closing__payments,
+  .services-closing__cta {
+    padding: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .services-closing__payments {
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: var(--color-paper);
+  }
+
+  .services-closing__cta {
+    background: var(--color-charcoal);
+    color: var(--color-ivory);
+  }
+
+  .services-closing__eyebrow {
+    margin: 0 0 0.75rem !important;
+    color: var(--color-gold) !important;
+    font-size: var(--font-size-micro) !important;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .services-closing h2 {
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.6rem + 1.7vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.06;
+  }
+
+  .services-closing__payments > p:not(.services-closing__eyebrow),
+  .services-closing__cta > p:not(.services-closing__eyebrow) {
+    max-width: 36rem;
+    margin: 1.25rem 0 0;
+    color: var(--color-muted);
+    line-height: 1.75;
+  }
+
+  .services-closing__cta > p:not(.services-closing__eyebrow) {
+    color: color-mix(in srgb, var(--color-ivory) 70%, transparent);
+  }
+
+  .services-closing__payments ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin: 1.75rem 0 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .services-closing__payments li {
+    padding: 0.6rem 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--color-burgundy) 25%, transparent);
+    color: var(--color-burgundy);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .services-closing__payments > span {
+    color: var(--color-wood);
+    font-size: var(--font-size-meta);
+  }
+
+  .services-closing__cta :global(.ui-button) {
+    margin-top: 2rem;
+  }
+
+  .services-closing__phone {
+    display: block;
+    width: fit-content;
+    margin-top: 1.25rem;
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration-thickness: 1px;
+  }
+
+  @media (min-width: 64rem) {
+    .services-closing__layout {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .services-closing__cta :global(.ui-button) {
+      width: 100%;
+    }
+  }
+</style>

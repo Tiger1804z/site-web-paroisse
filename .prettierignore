@@ -1,4 +1,5 @@
 .astro/
+.sanity/
 dist/
 node_modules/
 coverage/
@@ -6,3 +7,6 @@ reference/
 pnpm-lock.yaml
 src/assets/images/
 public/
+
+# Fichier généré par Sanity TypeGen
+src/lib/sanity/sanity.types.ts

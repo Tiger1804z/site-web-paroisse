@@ -1,0 +1,106 @@
+---
+import Container from '@/components/ui/Container.astro';
+import type { AdvertisersPageData } from '@/types/advertisers';
+
+interface Props {
+  introduction: AdvertisersPageData['introduction'];
+}
+
+const { introduction } = Astro.props;
+---
+
+<section
+  class="advertisers-introduction"
+  aria-labelledby="advertisers-introduction-title"
+>
+  <Container>
+    <div class="advertisers-introduction__layout">
+      <div data-motion-reveal>
+        <p class="advertisers-introduction__eyebrow type-eyebrow">
+          {introduction.eyebrow}
+        </p>
+        <h2 id="advertisers-introduction-title">{introduction.title}</h2>
+      </div>
+
+      <div class="advertisers-introduction__copy" data-motion-reveal>
+        {introduction.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        <aside class="advertisers-introduction__disclosure">
+          <span aria-hidden="true"></span>
+          <p>{introduction.disclosure}</p>
+        </aside>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .advertisers-introduction {
+    padding-block: clamp(5rem, 9vw, 8.5rem);
+    background: var(--color-paper);
+  }
+
+  .advertisers-introduction__layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .advertisers-introduction__eyebrow {
+    margin: 0 0 1rem;
+    color: var(--color-wood);
+  }
+
+  .advertisers-introduction h2 {
+    max-width: 35rem;
+    margin: 0;
+    color: var(--color-charcoal);
+    font-size: clamp(2.5rem, calc(2rem + 2.1vw), 4.25rem);
+    font-weight: 600;
+    line-height: 1.05;
+  }
+
+  .advertisers-introduction__copy {
+    max-width: 40rem;
+  }
+
+  .advertisers-introduction__copy > p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.85;
+  }
+
+  .advertisers-introduction__copy > p + p {
+    margin-top: 1rem;
+  }
+
+  .advertisers-introduction__disclosure {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+  }
+
+  .advertisers-introduction__disclosure span {
+    height: 1px;
+    margin-top: 0.7rem;
+    background: var(--color-gold);
+  }
+
+  .advertisers-introduction__disclosure p {
+    margin: 0;
+    color: var(--color-wood);
+    font-size: var(--font-size-ui);
+    line-height: 1.7;
+  }
+
+  @media (min-width: 64rem) {
+    .advertisers-introduction__layout {
+      grid-template-columns: minmax(0, 0.9fr) minmax(24rem, 0.8fr);
+      align-items: start;
+      justify-content: space-between;
+      gap: clamp(5rem, 10vw, 10rem);
+    }
+  }
+</style>

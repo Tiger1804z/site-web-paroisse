@@ -1,5 +1,4 @@
-import type { ImageMetadata } from 'astro';
-
+import type { SanityRenderableImage } from '@/types/sanityImage';
 export const PARISH_EVENT_TIME_ZONE = 'America/Toronto' as const;
 
 export type ParishEventCategory =
@@ -16,13 +15,14 @@ export type ParishEventPublicationStatus = 'draft' | 'published' | 'cancelled';
 
 export type ParishEventTemporalStatus = 'upcoming' | 'ongoing' | 'past';
 
-export interface ParishEventImage {
-  readonly image: ImageMetadata;
-  readonly alt: string;
-  readonly credit?: string;
-  readonly caption?: string;
-  readonly rightsNote?: string;
-}
+/**
+ * Image téléversée dans Sanity et servie par son CDN.
+ *
+ * Contrairement aux images locales, elle n'est pas connue au build : on ne
+ * manipule donc pas un objet `astro:assets` mais une adresse déjà recadrée
+ * selon le point focal choisi par l'éditrice.
+ */
+export type ParishEventImage = SanityRenderableImage;
 
 export interface ParishEventCallToAction {
   readonly label: string;

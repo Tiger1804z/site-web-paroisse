@@ -1,62 +1,118 @@
 ---
-import { Image } from 'astro:assets';
-import redAltarImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
-import floralAltarImage from '@/assets/images/paroisse/autel-fleurs-blanches-01.jpg';
-import violetAltarImage from '@/assets/images/paroisse/interieur-eglise-decor-violet-01.jpg';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import AmbientHero from '@/components/motion/AmbientHero.astro';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
+import {
+  formatTimeLabel,
+  WEEKDAY_LABELS,
+} from '@/lib/schedules/schedule-format.ts';
+import type { HomeHeroContent } from '@/types/homePage';
+import type { WeeklyMassEntry } from '@/types/schedule';
 
-const heroSlides = [
-  {
-    image: redAltarImage,
-    alt: 'Vue intérieure symétrique de l’autel avec une décoration rouge',
-    desktopPosition: 'center 46%',
-    mobilePosition: 'center 45%',
-    label: 'Autel avec décoration rouge',
-  },
-  {
-    image: violetAltarImage,
-    alt: 'Vue intérieure symétrique de l’autel avec une décoration violette',
-    desktopPosition: 'center 45%',
-    mobilePosition: 'center 44%',
-    label: 'Autel avec décoration violette',
-  },
-  {
-    image: floralAltarImage,
-    alt: 'Vue intérieure symétrique de l’autel entouré de fleurs blanches',
-    desktopPosition: 'center 45%',
-    mobilePosition: 'center 44%',
-    label: 'Autel entouré de fleurs blanches',
-  },
-] as const;
+interface Props {
+  content: HomeHeroContent;
+  masses?: readonly WeeklyMassEntry[];
+}
+
+const { content, masses = [] } = Astro.props;
+
+// Rendu serveur : l'horaire hebdomadaire complet, sans prétendre calculer la
+// prochaine messe. Le script client remplace ensuite liste et titre.
+const scheduleRows = masses.map((mass) => ({
+  id: mass.id,
+  dayLabel: WEEKDAY_LABELS[mass.weekday],
+  timeLabel: formatTimeLabel(mass.time) ?? mass.time,
+}));
+
+// `</script>` ne peut pas surgir d'un titre saisi dans Sanity et rompre le bloc.
+const massesPayload = JSON.stringify(masses).replaceAll('<', '\\u003c');
+
+const heroSlides = content.slides;
+
+const lensClipId = 'home-hero-organic-lens-clip';
 ---
 
-<section class="home-hero" aria-labelledby="home-hero-title" data-home-hero>
+<section
+  class="home-hero"
+  aria-labelledby="home-hero-title"
+  data-home-hero
+  data-lens-active="false"
+>
   <div class="home-hero__media">
     {
       heroSlides.map((slide, index) => (
         <div
           class="home-hero__slide"
-          data-home-hero-slide
+          data-hero-slide
           data-active={index === 0 ? 'true' : 'false'}
           aria-hidden={index === 0 ? 'false' : 'true'}
-          style={`--hero-position-desktop: ${slide.desktopPosition}; --hero-position-mobile: ${slide.mobilePosition};`}
         >
-          <Image
-            src={slide.image}
-            alt={slide.alt}
-            widths={[640, 960, 1360, 1920]}
+          <RemoteImage
+            image={slide.image}
             sizes="100vw"
             loading={index === 0 ? 'eager' : 'lazy'}
-            decoding="async"
             fetchpriority={index === 0 ? 'high' : 'low'}
           />
         </div>
       ))
     }
   </div>
+
+  <svg
+    class="home-hero__lens-definition"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      <clipPath id={lensClipId} clipPathUnits="userSpaceOnUse">
+        <path data-organic-lens-clip-path></path>
+      </clipPath>
+    </defs>
+  </svg>
+
   <div class="home-hero__overlay" aria-hidden="true"></div>
+
+  <div
+    class="home-hero__reveals"
+    aria-hidden="true"
+    style={`clip-path: url(#${lensClipId}); -webkit-clip-path: url(#${lensClipId});`}
+  >
+    {
+      heroSlides.map((slide, index) => (
+        <div
+          class="home-hero__reveal"
+          data-organic-lens-layer
+          data-active={index === 1 ? 'true' : 'false'}
+        >
+          <RemoteImage
+            image={slide.image}
+            alt=""
+            sizes="100vw"
+            data-organic-lens-image
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <svg
+    class="home-hero__lens-outline"
+    width="100%"
+    height="100%"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path class="home-hero__lens-outline-path" data-organic-lens-outline-path
+    ></path>
+  </svg>
+  <span
+    class="home-hero__lens-metric"
+    data-organic-lens-metric
+    aria-hidden="true"></span>
+
   <AmbientHero class="home-hero__ambient" particles={7} />
   <div class="home-hero__beams" aria-hidden="true">
     <span></span>
@@ -66,50 +122,79 @@ const heroSlides = [
 
   <Container class="home-hero__content">
     <div class="home-hero__copy">
-      <p class="type-script-accent home-hero__script">Bienvenue</p>
+      <p class="type-script-accent home-hero__script">{content.script}</p>
+      {
+        /*
+        Une ligne de titre par entrée, séparées par un retour à la ligne. Le
+        Studio ne saisit jamais de HTML : les coupures typographiques passent
+        par la structure, pas par du balisage collé dans une chaîne.
+      */
+      }
       <h1 id="home-hero-title" class="type-display-xl">
-        Un lieu de foi,<br />
-        de paix et<br />
-        de rencontre.
+        {
+          content.titleLines.map((line, index) => (
+            <>
+              {index > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
       </h1>
       <p class="type-body-large home-hero__introduction">
-        Bienvenue à la Paroisse Saint-René-Goupil. Découvrez nos célébrations,
-        nos activités et la vie de notre communauté.
+        {content.introduction}
       </p>
       <div class="home-hero__actions">
-        <Button href="/horaires" variant="light">Voir les horaires</Button>
+        <Button href="/horaires" variant="light">
+          {content.primaryCtaLabel}
+        </Button>
         <Button href="/notre-paroisse" variant="dark">
-          Découvrir la paroisse
+          {content.secondaryCtaLabel}
         </Button>
       </div>
     </div>
   </Container>
 
-  <aside class="home-hero__schedule" aria-labelledby="hero-schedule-title">
-    <p id="hero-schedule-title" class="home-hero__schedule-label">
-      Prochaines messes
+  <aside
+    class="home-hero__schedule"
+    aria-labelledby="hero-schedule-title"
+    data-upcoming-masses
+  >
+    <p
+      id="hero-schedule-title"
+      class="home-hero__schedule-label"
+      data-upcoming-masses-title
+    >
+      {content.scheduleTitle}
     </p>
-    <dl class="home-hero__schedule-list">
-      <div>
-        <dt>Samedi</dt>
-        <dd>[HEURE]</dd>
-      </div>
-      <div>
-        <dt>Dimanche</dt>
-        <dd>[HEURE]</dd>
-      </div>
-      <div>
-        <dt>Dimanche</dt>
-        <dd>[HEURE]</dd>
-      </div>
-    </dl>
+    {
+      scheduleRows.length > 0 ? (
+        <dl class="home-hero__schedule-list" data-upcoming-masses-list>
+          {scheduleRows.map((row) => (
+            <div>
+              <dt>{row.dayLabel}</dt>
+              <dd>{row.timeLabel}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p class="home-hero__schedule-empty">Horaires à confirmer.</p>
+      )
+    }
     <a class="home-hero__schedule-link" href="/horaires">
-      Consulter tous les horaires
+      {content.scheduleLinkLabel}
       <span aria-hidden="true">→</span>
     </a>
-    <p class="home-hero__schedule-note">
-      Horaires sujets à changement lors des célébrations spéciales.
-    </p>
+    <p class="home-hero__schedule-note">{content.scheduleNote}</p>
+    {
+      scheduleRows.length > 0 && (
+        <script
+          is:inline
+          type="application/json"
+          data-upcoming-masses-data
+          set:html={massesPayload}
+        />
+      )
+    }
   </aside>
 
   <div
@@ -123,7 +208,7 @@ const heroSlides = [
           type="button"
           aria-label={`Afficher l’image ${index + 1} sur ${heroSlides.length} : ${slide.label}`}
           aria-pressed={index === 0 ? 'true' : 'false'}
-          data-home-hero-indicator
+          data-hero-indicator
         >
           <span aria-hidden="true" />
         </button>
@@ -152,76 +237,39 @@ const heroSlides = [
 </section>
 
 <script>
+  import { initializeHeroSlideshow } from '@/scripts/hero-slideshow';
+  import { initializeOrganicHeroLens } from '@/scripts/organic-hero-lens';
+  import { initializeUpcomingMassesCards } from '@/scripts/upcoming-masses-card';
+
+  initializeUpcomingMassesCards();
+
   document.querySelectorAll<HTMLElement>('[data-home-hero]').forEach((hero) => {
     if (hero.dataset.initialized === 'true') return;
     hero.dataset.initialized = 'true';
 
-    const slides = Array.from(
-      hero.querySelectorAll<HTMLElement>('[data-home-hero-slide]'),
-    );
-    const indicators = Array.from(
-      hero.querySelectorAll<HTMLButtonElement>('[data-home-hero-indicator]'),
-    );
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let activeIndex = 0;
-    let rotationTimer: number | undefined;
-
-    const stopRotation = () => {
-      if (rotationTimer !== undefined) {
-        window.clearInterval(rotationTimer);
-        rotationTimer = undefined;
-      }
-    };
-
-    const selectSlide = (index: number) => {
-      activeIndex = index;
-      slides.forEach((slide, slideIndex) => {
-        const isActive = slideIndex === index;
-        slide.dataset.active = String(isActive);
-        slide.setAttribute('aria-hidden', String(!isActive));
-      });
-      indicators.forEach((indicator, indicatorIndex) => {
-        indicator.setAttribute(
-          'aria-pressed',
-          String(indicatorIndex === index),
-        );
-      });
-    };
-
-    const startRotation = () => {
-      stopRotation();
-      if (reducedMotion.matches || slides.length < 2) return;
-      rotationTimer = window.setInterval(() => {
-        selectSlide((activeIndex + 1) % slides.length);
-      }, 8000);
-    };
-
-    indicators.forEach((indicator, index) => {
-      indicator.addEventListener('click', () => {
-        selectSlide(index);
-        startRotation();
-      });
+    const slideCount = hero.querySelectorAll('[data-hero-slide]').length;
+    const lensController = initializeOrganicHeroLens(hero, {
+      cycleOnMovement: false,
+      initialImageIndex: 1,
     });
 
-    reducedMotion.addEventListener('change', () => {
-      if (reducedMotion.matches) {
-        stopRotation();
-        selectSlide(0);
-      } else {
-        startRotation();
-      }
+    initializeHeroSlideshow(hero, {
+      // La loupe montre toujours l'image suivante, jamais celle déjà affichée.
+      onSelect: (index) =>
+        lensController?.setActiveImage((index + 1) % slideCount),
     });
-
-    window.addEventListener('pagehide', stopRotation, { once: true });
-    startRotation();
   });
 </script>
 
 <style>
   .home-hero {
+    --lens-size: clamp(9.375rem, 15vw, 15.625rem);
+
     position: relative;
+    isolation: isolate;
     min-height: 100svh;
     overflow: hidden;
+    contain: paint;
     background: var(--color-charcoal);
     color: var(--color-ivory);
   }
@@ -234,7 +282,7 @@ const heroSlides = [
 
   .home-hero__slide {
     opacity: 0;
-    transition: opacity var(--motion-duration-slow) var(--ease-editorial);
+    transition: opacity 1250ms var(--motion-ease-cinematic);
   }
 
   .home-hero__slide[data-active='true'] {
@@ -246,12 +294,84 @@ const heroSlides = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: var(--hero-position-mobile);
+    filter: brightness(0.93) contrast(1.055) saturate(0.88) sepia(0.035);
   }
 
   .home-hero__slide[data-active='true'] :global(img) {
     animation: home-hero-zoom var(--motion-duration-cinematic)
       var(--motion-ease-cinematic) both;
+  }
+
+  .home-hero__lens-definition,
+  .home-hero__reveals,
+  .home-hero__reveal,
+  .home-hero__lens-outline {
+    position: absolute;
+    inset: 0;
+  }
+
+  .home-hero__lens-definition {
+    z-index: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .home-hero__reveals {
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms var(--motion-ease-standard);
+    will-change: opacity;
+  }
+
+  .home-hero[data-lens-active='true'] .home-hero__reveals {
+    opacity: 1;
+  }
+
+  .home-hero__reveal {
+    opacity: 0;
+    transition: opacity 360ms var(--motion-ease-standard);
+  }
+
+  .home-hero__reveal[data-active='true'] {
+    opacity: 1;
+  }
+
+  .home-hero__reveal :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.93) contrast(1.055) saturate(0.88) sepia(0.035);
+  }
+
+  .home-hero__lens-outline {
+    z-index: 3;
+    display: none;
+    opacity: 0;
+    overflow: visible;
+    pointer-events: none;
+    transition: opacity 160ms var(--motion-ease-standard);
+  }
+
+  .home-hero__lens-outline-path {
+    fill: none;
+    stroke: rgb(245 243 238 / 24%);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0.85rem 1.25rem rgb(28 25 24 / 16%));
+  }
+
+  .home-hero[data-lens-active='true'] .home-hero__lens-outline {
+    opacity: 1;
+  }
+
+  .home-hero__lens-metric {
+    position: absolute;
+    width: var(--lens-size);
+    height: 1px;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   @keyframes home-hero-zoom {
@@ -260,7 +380,7 @@ const heroSlides = [
     }
 
     to {
-      scale: var(--motion-scale-cinematic);
+      scale: 1.022;
     }
   }
 
@@ -275,16 +395,16 @@ const heroSlides = [
     background:
       linear-gradient(
         to right,
-        rgb(28 25 24 / 74%) 0%,
-        rgb(28 25 24 / 52%) 44%,
-        rgb(28 25 24 / 18%) 78%,
-        rgb(28 25 24 / 12%) 100%
+        rgb(28 25 24 / 76%) 0%,
+        rgb(28 25 24 / 55%) 44%,
+        rgb(28 25 24 / 23%) 78%,
+        rgb(28 25 24 / 17%) 100%
       ),
       linear-gradient(
         to bottom,
-        rgb(28 25 24 / 34%),
-        rgb(28 25 24 / 10%) 48%,
-        rgb(28 25 24 / 58%)
+        rgb(28 25 24 / 39%),
+        rgb(28 25 24 / 14%) 48%,
+        rgb(28 25 24 / 62%)
       );
   }
 
@@ -373,19 +493,21 @@ const heroSlides = [
     bottom: 3rem;
     display: none;
     width: 16.25rem;
-    padding: 1.5rem;
-    border: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
-    background: color-mix(in srgb, var(--color-ivory) 97%, transparent);
-    color: var(--color-charcoal);
-    box-shadow: var(--shadow-elevated);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    padding: 1.625rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+    background:
+      linear-gradient(rgb(255 255 255 / 2%), transparent),
+      color-mix(in srgb, var(--color-burgundy-dark) 94%, var(--color-charcoal));
+    color: var(--color-ivory);
+    box-shadow: 0 1.25rem 3.5rem rgb(12 8 9 / 32%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 
   .home-hero__schedule-label {
     margin: 0 0 1rem;
-    color: var(--color-wood);
-    font-size: 0.6875rem;
+    color: color-mix(in srgb, var(--color-gold) 88%, var(--color-ivory));
+    font-size: var(--font-size-micro);
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -401,7 +523,8 @@ const heroSlides = [
     justify-content: space-between;
     gap: 1rem;
     padding-block: 0.75rem;
-    border-bottom: 1px solid var(--color-paper);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-ivory) 14%, transparent);
   }
 
   .home-hero__schedule-list div:first-child {
@@ -420,19 +543,27 @@ const heroSlides = [
 
   .home-hero__schedule-list dd {
     margin: 0;
-    color: var(--color-burgundy);
-    font-size: 0.875rem;
+    color: color-mix(in srgb, var(--color-rose) 76%, var(--color-ivory));
+    font-size: var(--font-size-ui);
     font-weight: 700;
+  }
+
+  .home-hero__schedule-empty {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    line-height: 1.4;
   }
 
   .home-hero__schedule-link {
     display: inline-flex;
-    min-height: 3rem;
+    min-height: 3.25rem;
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.75rem;
-    color: var(--color-burgundy);
-    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--color-gold) 84%, var(--color-ivory));
+    font-size: var(--font-size-meta);
     font-weight: 700;
     letter-spacing: 0.025em;
     text-decoration: none;
@@ -448,9 +579,9 @@ const heroSlides = [
 
   .home-hero__schedule-note {
     margin: 0;
-    color: var(--color-muted);
-    font-size: 0.625rem;
-    line-height: 1.35;
+    color: color-mix(in srgb, var(--color-ivory) 64%, transparent);
+    font-size: var(--font-size-micro);
+    line-height: 1.5;
   }
 
   .home-hero__scroll {
@@ -520,8 +651,8 @@ const heroSlides = [
   }
 
   @media (min-width: 48rem) {
-    .home-hero__slide :global(img) {
-      object-position: var(--hero-position-desktop);
+    .home-hero__slide :global(img),
+    .home-hero__reveal :global(img) {
     }
 
     .home-hero__schedule {
@@ -541,7 +672,21 @@ const heroSlides = [
     }
   }
 
+  @media (hover: hover) and (pointer: fine) {
+    .home-hero__lens-outline {
+      display: block;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .home-hero__lens-definition,
+    .home-hero__reveals,
+    .home-hero__lens-outline,
+    .home-hero__lens-metric {
+      display: none;
+      transition: none;
+    }
+
     .home-hero__slide {
       display: none;
       transition: none;

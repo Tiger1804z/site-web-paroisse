@@ -2,7 +2,8 @@
 
 ## Statut
 
-Proposition documentaire du 25 juillet 2026. Elle compare :
+Proposition documentaire initiale du 25 juillet 2026, actualisée le 27 juillet
+2026 pour la route canonique Nos services. Elle compare :
 
 - la navigation du site existant;
 - les pages prévues dans l’export Figma;
@@ -24,7 +25,7 @@ Accueil
 │   └── Galerie
 ├── Célébrer
 │   ├── Horaires
-│   ├── Sacrements et services
+│   ├── Nos services
 │   ├── Catéchèse
 │   └── Événements
 ├── Activités
@@ -33,10 +34,11 @@ Accueil
 │   ├── Concerts et activités
 │   └── Friperie
 └── Informations
-    ├── Feuillets paroissiaux
     ├── Merci à nos annonceurs
-    ├── Location de salle
     └── Contact
+
+Nos services
+└── Location de salle [section intégrée]
 
 Pages de détail potentielles
 ├── Baptême
@@ -52,26 +54,28 @@ Pages de détail potentielles
 
 ## Routes candidates
 
-| Page                    | Route candidate                          | Statut recommandé                 | Justification                                                                       |
-| ----------------------- | ---------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- |
-| Accueil                 | `/`                                      | Obligatoire; migrée               | Page Figma déjà livrée dans S1-T02.                                                 |
-| Notre paroisse          | `/notre-paroisse/`                       | Obligatoire                       | Reçoit l’histoire et l’architecture actuellement placées sur l’ancien accueil.      |
-| Première visite         | `/premiere-visite/`                      | Obligatoire                       | Besoin Figma; rassure et centralise arrivée, entrée, accessibilité et déroulement.  |
-| Vie paroissiale         | `/vie-paroissiale/`                      | Obligatoire                       | Présentation des groupes et de l’engagement.                                        |
-| Soutien à la communauté | `/soutien-communaute/`                   | Secondaire, à confirmer           | Ne justifie une page autonome que si l’offre dépasse la friperie.                   |
-| Galerie                 | `/galerie/`                              | Obligatoire                       | Besoin Figma; médias avec droits confirmés uniquement.                              |
-| Horaires                | `/horaires/`                             | Obligatoire                       | Priorité éditoriale et prochaine migration S1-T03.                                  |
-| Sacrements et services  | `/sacrements/`                           | Obligatoire                       | Remplace la page héritée « Nos services » et oriente vers les démarches.            |
-| Catéchèse               | `/catechese/`                            | Obligatoire                       | Sépare le contenu durable des campagnes annuelles d’inscription.                    |
-| Événements              | `/evenements/`                           | Obligatoire                       | Liste actuelle et archives gérées par statut/date.                                  |
-| Groupes                 | `/vie-paroissiale/#groupes` initialement | Fusion recommandée                | Évite une page trop mince; détails futurs si du contenu confirmé existe.            |
-| Pèlerinages             | `/pelerinages/`                          | Secondaire                        | Programme distinct du site ancien, mais toutes les sorties sont volatiles.          |
-| Concerts et activités   | `/evenements/?type=concert` initialement | Fusion recommandée                | Une catégorie d’événement évite une liste statique dupliquée.                       |
-| Friperie                | `/friperie/`                             | Obligatoire                       | Mission durable et informations pratiques spécifiques.                              |
-| Feuillets paroissiaux   | `/feuillets-paroissiaux/`                | Obligatoire                       | Besoin Figma et futur contenu documentaire, absent du site ancien.                  |
-| Merci à nos annonceurs  | `/annonceurs/`                           | Obligatoire dans le futur sitemap | Programme publicitaire du feuillet; statut actif de chaque partenariat à confirmer. |
-| Location de salle       | `/location-de-salle/`                    | Obligatoire                       | Information et demande, jamais réservation instantanée.                             |
-| Contact                 | `/contact/`                              | Obligatoire                       | Coordonnées validées, secrétariat et futurs motifs de contact.                      |
+| Page                    | Route candidate                          | Statut recommandé                 | Justification                                                                                              |
+| ----------------------- | ---------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Accueil                 | `/`                                      | Obligatoire; migrée               | Page Figma déjà livrée dans S1-T02.                                                                        |
+| Notre paroisse          | `/notre-paroisse/`                       | Obligatoire                       | Reçoit l’histoire et l’architecture actuellement placées sur l’ancien accueil.                             |
+| Première visite         | `/premiere-visite/`                      | Obligatoire                       | Besoin Figma; rassure et centralise arrivée, entrée, accessibilité et déroulement.                         |
+| Vie paroissiale         | `/vie-paroissiale/`                      | Obligatoire                       | Présentation des groupes et de l’engagement.                                                               |
+| Soutien à la communauté | `/soutien-communaute/`                   | Secondaire, à confirmer           | Ne justifie une page autonome que si l’offre dépasse la friperie.                                          |
+| Galerie                 | `/galerie/`                              | Obligatoire                       | Besoin Figma; médias avec droits confirmés uniquement.                                                     |
+| Horaires                | `/horaires/`                             | Obligatoire                       | Priorité éditoriale et prochaine migration S1-T03.                                                         |
+| Nos services            | `/nos-services/`                         | Obligatoire; canonique            | Regroupe sacrements, démarches, prière, mémoire, paiements et location de salle.                           |
+| Ancien Sacrements       | `/sacrements/`                           | Alias `noindex`                   | Compatibilité statique vers `/nos-services/`; aucune seconde page indexable.                               |
+| Catéchèse               | `/catechese/`                            | Obligatoire                       | Sépare le contenu durable des campagnes annuelles d’inscription.                                           |
+| Événements              | `/evenements/`                           | Obligatoire                       | Liste actuelle et archives gérées par statut/date.                                                         |
+| Groupes                 | `/vie-paroissiale/#groupes` initialement | Fusion recommandée                | Évite une page trop mince; détails futurs si du contenu confirmé existe.                                   |
+| Pèlerinages             | `/pelerinages/`                          | Secondaire                        | Programme distinct du site ancien, mais toutes les sorties sont volatiles.                                 |
+| Concerts et activités   | `/evenements/?type=concert` initialement | Fusion recommandée                | Une catégorie d’événement évite une liste statique dupliquée.                                              |
+| Friperie                | `/friperie/`                             | Obligatoire                       | Mission durable et informations pratiques spécifiques.                                                     |
+| Feuillets paroissiaux   | —                                        | Retiré                            | Décision du 29 juillet 2026 : aucune page Web de feuillets PDF. Route, navigation et composants supprimés. |
+| Merci à nos annonceurs  | `/annonceurs/`                           | Obligatoire dans le futur sitemap | Programme publicitaire à confirmer le 11 août 2026; statut actif de chaque partenariat à confirmer.        |
+| Location de salle       | `/nos-services/#location-de-salle`       | Section canonique                 | Tarifs et disponibilités communiqués par le secrétariat; jamais de réservation instantanée.                |
+| Ancienne location       | `/location-de-salle/`                    | Alias `noindex`                   | Compatibilité statique vers la section canonique.                                                          |
+| Contact                 | `/contact/`                              | Obligatoire                       | Coordonnées validées, secrétariat et futurs motifs de contact.                                             |
 
 Les accents sont évités dans les nouvelles URL. Les anciennes URL accentuées
 devront recevoir des redirections lorsque le domaine sera migré.
@@ -82,14 +86,13 @@ devront recevoir des redirections lorsque le domaine sera migré.
 - Notre paroisse;
 - Première visite;
 - Horaires;
-- Sacrements et services;
+- Nos services;
 - Catéchèse;
 - Vie paroissiale;
 - Événements;
-- Feuillets paroissiaux;
 - Friperie;
 - Merci à nos annonceurs;
-- Location de salle;
+- Location de salle, comme section de Nos services;
 - Galerie;
 - Contact.
 
@@ -103,7 +106,7 @@ promouvoir au premier niveau.
 - détails d’événements;
 - fiches de groupes;
 - filtres Pèlerinages et Concerts;
-- archives d’événements et de feuillets;
+- archives d’événements;
 - politique de confidentialité;
 - mentions légales;
 - page d’erreur;
@@ -131,7 +134,6 @@ promouvoir au premier niveau.
 - détail d’un événement;
 - détail d’un groupe;
 - détail d’un annonceur uniquement si sa valeur éditoriale est démontrée;
-- archives par année des feuillets;
 - section ou page élargie de soutien communautaire.
 
 ## Pages à ne pas reproduire telles quelles
@@ -148,16 +150,17 @@ promouvoir au premier niveau.
 
 ## Principes de navigation à valider
 
-1. Horaires reste accessible directement dans le header et sur mobile.
-2. Catéchèse doit être trouvable depuis Célébrer et Sacrements.
+1. Horaires reste accessible directement dans le header et sur mobile, sans
+   CTA redondant à droite du header.
+2. Catéchèse doit être trouvable depuis Nos services.
 3. Friperie peut apparaître dans Activités et être reliée depuis Soutien.
-4. Merci à nos annonceurs appartient à Informations, près des feuillets.
-5. Location de salle est une demande d’information, pas une action de
-   réservation.
+4. Merci à nos annonceurs appartient à Informations.
+5. Location de salle est une section de Nos services et une demande
+   d’information, pas une action de réservation.
 6. Pèlerinages et Concerts peuvent être des vues éditoriales d’une même
    collection d’événements.
-7. Aucun changement de `src/lib/navigation.ts` ne sera effectué avant
-   validation de cette structure.
+7. `src/lib/navigation.ts` est la source canonique partagée du desktop, du
+   mobile et du footer.
 
 ## Modèles de contenu futurs
 
@@ -226,4 +229,6 @@ dans ce ticket.
 | Autorisation d’utilisation du logo | Preuve ou référence interne.                                    |
 
 Le CTA futur sera **Devenir annonceur**. Il pourra ouvrir le formulaire de
-contact prérempli avec le motif **Publicité dans le feuillet paroissial**.
+contact prérempli avec le motif **Publicité dans les communications
+paroissiales**. Le support exact reste à confirmer le 11 août 2026 : le feuillet
+papier et le programme publicitaire ne sont pas encore vérifiés.

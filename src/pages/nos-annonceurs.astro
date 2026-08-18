@@ -1,0 +1,31 @@
+---
+import MotionController from '@/components/motion/MotionController.astro';
+import AdvertiserList from '@/components/sections/advertisers/AdvertiserList.astro';
+import AdvertisersHero from '@/components/sections/advertisers/AdvertisersHero.astro';
+import AdvertisersIntroduction from '@/components/sections/advertisers/AdvertisersIntroduction.astro';
+import BecomeAdvertiser from '@/components/sections/advertisers/BecomeAdvertiser.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getAdvertisersPageData } from '@/lib/content/getAdvertisersPageData';
+
+const page = await getAdvertisersPageData();
+---
+
+<BaseLayout
+  seo={page.seo}
+  pageClass="advertisers-page"
+  headerVariant="transparent"
+>
+  <AdvertisersHero hero={page.hero} />
+  <AdvertisersIntroduction introduction={page.introduction} />
+  {
+    page.settings.showAdvertisers && (
+      <AdvertiserList advertisers={page.advertisers} />
+    )
+  }
+  {
+    page.settings.showSolicitation && (
+      <BecomeAdvertiser solicitation={page.solicitation} />
+    )
+  }
+  <MotionController />
+</BaseLayout>

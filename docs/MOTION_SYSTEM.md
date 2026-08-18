@@ -8,9 +8,10 @@ aucune interaction. Les effets sont plus lents que les interactions de
 l’utilisateur : un bouton répond en quelques centaines de millisecondes,
 tandis qu’une lumière de hero évolue sur plusieurs dizaines de secondes.
 
-S1-T06.5 applique ce système uniquement à l’Accueil, Notre paroisse et
-Sacrements et services. Horaires, Première visite, les FAQ et les futurs
-formulaires restent volontairement sobres.
+Le système partagé est utilisé uniquement là où un mouvement soutient une
+intention éditoriale : Accueil, Notre paroisse, Nos services et Vie
+paroissiale. Horaires, Première visite, les FAQ et les futurs formulaires
+restent volontairement sobres.
 
 ## Tokens
 
@@ -86,7 +87,9 @@ Avec `prefers-reduced-motion: reduce` :
 - les translations et dérives cinématographiques sont supprimées;
 - la lumière et les particules ambiantes disparaissent;
 - le hero de l’accueil reste sur sa première image;
+- le hero de Vie paroissiale reste sur sa première illustration;
 - le vitrail reste complet et statique, sans poussière, grain ni parallaxe;
+- la liste « Vivre la paroisse » est immédiatement visible, sans translation;
 - les changements d’état fonctionnels, le focus et la navigation restent
   disponibles.
 
@@ -112,6 +115,78 @@ Il n’existe :
 `will-change` est limité à l’état court précédant un reveal. Le contrôleur
 cesse d’observer chaque cible révélée. Les héros n’animent qu’une photographie
 utile; sur l’accueil, seule la diapositive active reçoit le zoom principal.
+
+## Révélation de « Vivre la paroisse »
+
+La section photographique réutilise `MotionController.astro` et le même
+`IntersectionObserver`. Le titre apparaît d’abord, puis les quatre lignes de
+groupes de haut en bas. Chaque ligne utilise une transition de 480 ms, un
+décalage vertical de 14 px et un stagger de 80 ms. Une fois révélée, elle reste
+visible.
+
+L’image de fond, l’overlay et les séparateurs ne sont pas animés. Il n’existe
+ni lentille, ni carrousel, ni parallaxe dans cette section. Le HTML est visible
+par défaut; JavaScript ne fait que choisir le moment de la transition.
+
+## Header translucide
+
+Le passage de l’état supérieur à l’état défilé anime seulement les couleurs,
+la bordure et l’ombre. Le header conserve une surface translucide aux deux
+états; le blur augmente après défilement sans animer la géométrie. Un fallback
+CSS plus opaque garantit la lisibilité si `backdrop-filter` n’est pas pris en
+charge. `prefers-reduced-motion` supprime la transition, sans modifier le
+contraste ni le fonctionnement du menu.
+
+## Hero de Nos services
+
+Le hero réutilise le contrôleur de lentille organique de l’accueil. La
+photographie principale change toutes les 7,6 secondes avec un fondu de 1,25
+seconde et un zoom maximal de 1,022. La lentille révèle toujours l’image
+suivante; elle ne crée ni trail ni copie persistante. Le `requestAnimationFrame`
+n’existe que pendant un déplacement ou la fermeture de la lentille, puis
+s’arrête.
+
+Le contrôleur prépare les images de révélation après le premier rendu, se
+désactive sur pointer coarse, nettoie ses observateurs à la sortie de page et
+réagit à l’onglet masqué. Avec reduced motion, la première photographie reste
+statique et la lentille, les indicateurs et le zoom sont absents.
+
+## Heroes de Notre paroisse et Vie paroissiale
+
+Le hero de Notre paroisse conserve une photographie unique et n’utilise ni
+lentille, ni rotation, ni particules. Son étalonnage charbon, son voile
+directionnel, sa profondeur typographique et son zoom unique maximal de 1,022
+reprennent le langage cinématographique de Nos services sans ajouter une
+interaction concurrente à la timeline. Avec reduced motion, l’image reste
+entièrement statique.
+
+Vie paroissiale alterne trois illustrations toutes les 7,6 secondes avec un
+fondu de 1,25 seconde. La lentille révèle toujours l’illustration suivante et
+réutilise `src/scripts/organic-hero-lens.ts`; aucun second contrôleur de
+pointeur n’est créé. Chaque illustration occupe un seul plan plein cadre, sans
+zoom animé; les formats carré et portrait utilisent un point focal contrôlé
+plutôt qu’une déformation ou une duplication. Sur mobile, la lentille est
+désactivée par les capacités `pointer: coarse` ou l’absence de survol.
+
+Sans JavaScript, la première illustration et tous les textes HTML restent
+visibles. Avec reduced motion, la rotation, les indicateurs, la lentille et les
+transitions sont retirés. Le timer s’arrête lorsque l’onglet est masqué et la
+boucle `requestAnimationFrame` de la lentille ne vit que pendant le geste et
+sa fermeture.
+
+## Galerie centrée de l’accueil
+
+La galerie n’utilise aucun autoplay. Les flèches, les touches gauche/droite ou
+un geste tactile modifient un index et laissent CSS interpoler `transform` et
+`opacity` sur 760 ms, avec saturation et luminosité atténuées sur les plans
+secondaires. Une image domine au centre, deux voisines sont intermédiaires et
+deux images plus petites ferment la composition. Sa légende se croise
+brièvement sur 260 ms et reste synchronisée avec l’index.
+
+La lightbox `<dialog>` n’ajoute aucun zoom de scène : elle ouvre une variante
+WebP optimisée, répond aux flèches et à Échap, puis restitue le focus. Sans
+JavaScript, la liste reste une bande horizontale défilable et les images sont
+des liens directs; avec reduced motion, les changements sont instantanés.
 
 ## Le vitrail vivant de la communauté
 
@@ -195,9 +270,24 @@ Le script n’utilise pas le reveal générique et les chapitres n’emploient p
 Trois observateurs spécialisés lisent le même déclencheur de 1 px : la ligne à
 78 % du viewport, le repère actif et la période à 70 %, puis la révélation
 irréversible à 62 %. La ligne guide ainsi le regard avant l’apparition du
-contenu. Il n’existe aucun listener `scroll` ni animation JavaScript continue.
-Deux frames ponctuelles garantissent que l’état initial a été peint avant
-l’observation.
+contenu. Deux frames ponctuelles garantissent que l’état initial a été peint
+avant l’observation.
+
+S1-T11 ajoute une ambiance « salle de théâtre » strictement limitée à cette
+section. Un voile fixe assombrit progressivement ce qui entoure la chronologie
+pendant que la section elle-même reste au-dessus, comme une scène éclairée. Le
+header demeure au premier plan et sa luminosité descend séparément jusqu’à
+56 %, ce qui empêche les chapitres de traverser visuellement la navigation.
+L’intensité monte avec un `smoothstep` entre 92 % et 34 % du viewport, reste
+stable pendant les chapitres, puis redescend entre 82 % et 22 % à l’approche de
+l’épilogue.
+
+Ce contrôleur d’ambiance possède un listener `scroll` passif et un listener
+`resize`. Ils ne font aucun travail directement : ils regroupent les mises à
+jour dans un unique `requestAnimationFrame` ponctuel et ne maintiennent aucune
+boucle continue. Les listeners et la frame éventuelle sont nettoyés à
+`pagehide` et `astro:before-swap`; un passage de l’onglet en arrière-plan remet
+l’ambiance à zéro.
 
 À partir de 1024 px, chaque article alterne son image et son texte autour d’un
 axe central. Il n’existe aucun panneau partagé : les neuf images restent dans
@@ -208,8 +298,9 @@ Les transitions utilisent `opacity` de 0 à 1, `translate3d`, une échelle
 lente de 1400 ms; le texte commence 150 ms après l’image. Le marqueur inline
 pré-paint n’est ajouté que lorsque JavaScript, `IntersectionObserver` et la
 préférence de mouvement le permettent. Reduced motion conserve la structure,
-mais retire l’accentuation active et toutes les transitions. Le détail se
-trouve dans
+mais retire l’accentuation active, le voile d’ambiance et toutes les
+transitions. Sans JavaScript, le voile reste transparent et tout le récit reste
+visible. Le détail se trouve dans
 [`IMMERSIVE_HISTORY_TIMELINE.md`](./IMMERSIVE_HISTORY_TIMELINE.md).
 
 ## Règles d’utilisation
@@ -265,3 +356,55 @@ contenu est visible. Avec reduced motion, le contrôleur appelle son état final
 et les transitions décoratives sont ramenées à une durée négligeable par la
 stratégie globale. Aucun script, observer ou listener supplémentaire n'est
 créé pour cette page.
+
+## Lentilles organiques des héros — S1-T10
+
+`src/scripts/organic-hero-lens.ts` centralise l'amélioration progressive
+inspirée du principe visuel du hero Patreon. Une seule ouverture masquée révèle
+une couche visuelle derrière l'image principale. Friperie et le hero d'accueil
+l’ont inauguré pendant S1-T10; Nos services et Vie paroissiale le réutilisent
+ensuite avec la règle « révéler l’image suivante ».
+
+La vidéo de référence fournie le 27 juillet 2026 précise le mouvement : la
+fenêtre n'est pas un disque fixe. Elle naît au début du geste, gonfle avec
+l'énergie du pointeur, s'étire légèrement dans sa direction, accuse un retard
+court, puis se résorbe lorsque le mouvement cesse. Le diamètre maximal reste
+`clamp(150px, 15vw, 250px)`.
+
+Un listener `pointermove` passif, attaché uniquement au hero, mesure la
+distance, la vitesse et la direction. Une seule boucle `requestAnimationFrame`
+interpole la position à `0.13`, la croissance à `0.17` et le retrait à
+`0.105`. Douze points, deux harmoniques discrètes et des courbes quadratiques
+produisent le tracé SVG organique. La forme se referme après 105 ms sans
+mouvement réel; elle ne demeure donc pas comme une vignette flottante.
+
+Sur Friperie, les quatre révélations avancent dans un ordre fixe après 180 px
+de distance cumulée et au moins 560 ms de mouvement. Sur l'accueil, la lentille
+révèle toujours la prochaine image de la boucle : 1 révèle 2, 2 révèle 3 et 3
+révèle 1, y compris après une sélection manuelle. L'opacité des révélations se
+croise sur 360 ms. L'ouverture SVG continue de suivre le pointeur pendant le
+fondu : ni le hero complet ni son texte ne disparaissent.
+
+Le script :
+
+- conserve les images en faible priorité dans le HTML, puis les promeut vers
+  `eager` et les décode pendant un temps d'inactivité ou au premier geste;
+- refuse d'afficher la lentille tant que les quatre images ne sont pas prêtes;
+- recalcule la géométrie avec `ResizeObserver`;
+- laisse la forme se résorber à `pointerleave`, mais l'annule immédiatement
+  lorsque l'onglet est caché;
+- nettoie listeners, observer, idle callback et frame à `pagehide` ou
+  `astro:before-swap`.
+
+Le hero coupe naturellement la forme à ses bords avec `overflow: hidden` :
+elle peut atteindre un coin comme dans la référence sans provoquer de
+débordement horizontal. La couche révélée reste sous le texte HTML, mais
+au-dessus du voile sombre afin de garder ses couleurs perceptibles.
+
+La lentille n'existe que pour `(hover: hover)`, `(pointer: fine)` et
+`prefers-reduced-motion: no-preference`. Sur mobile, tablette tactile, reduced
+motion et sans JavaScript, le hero reste une image statique complète. Le texte
+HTML, la navigation et les CTA ne dépendent jamais de l'effet.
+
+Cette interaction est du code de présentation. Un futur CMS ne contrôlera ni
+le masque, ni les seuils, ni le rAF, ni la séquence.
