@@ -68,3 +68,17 @@ jobs:
 
       - name: Valider
         run: pnpm validate
+
+      - name: Valider l’environnement de prévisualisation
+        env:
+          # Jeton FACTICE, et c'est le point : le build de prévisualisation ne
+          # prérend aucune page, donc il n'adresse aucune requête à Sanity. Ce
+          # jeton ne peut rien lire. Il sert uniquement de traceur —
+          # `check-preview-bundle.mjs` vérifie que sa valeur exacte se trouve
+          # dans le paquet serveur et dans AUCUN fichier servi au navigateur.
+          #
+          # Sans jeton, ce contrôle refuse de s'exécuter plutôt que de passer au
+          # vert sans rien prouver.
+          SANITY_API_READ_TOKEN: skCANARIJETONFACTICEDECONTROLEDEFUITE0000000000
+          PUBLIC_SANITY_STUDIO_URL: http://localhost:3333
+        run: pnpm validate:preview
