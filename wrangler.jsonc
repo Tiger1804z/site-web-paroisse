@@ -1,0 +1,23 @@
+{
+  // Configuration Cloudflare Workers de l'ENVIRONNEMENT DE PRÉVISUALISATION.
+  //
+  // Ce fichier ne concerne que `pnpm build:preview`. Le site public est
+  // statique, déployé sur Cloudflare Pages, et ne charge jamais l'adaptateur
+  // Cloudflare : rien ici ne le regarde.
+  //
+  // L'adaptateur écrit lui-même le reste de la configuration dans
+  // `dist/server/wrangler.json` — point d'entrée, dossier d'assets, liaisons.
+  // On ne déclare donc ici que ce qu'il ne peut pas deviner : le nom du
+  // Worker, qui décide de l'adresse `*.workers.dev` attribuée.
+  //
+  // Sans ce fichier, le nom serait déduit du `name` de `package.json`
+  // (`site-web-paroisse`) — celui-là même que porte déjà le projet Pages du
+  // Studio. Deux produits Cloudflare distincts, donc aucun conflit technique,
+  // mais deux ressources homonymes dans un tableau de bord sont une confusion
+  // qu'on paie un jour.
+  //
+  // JAMAIS DE SECRET ICI. Ce fichier est versionné. `SANITY_API_READ_TOKEN` se
+  // saisit dans les variables d'environnement du Worker, côté Cloudflare.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "paroisse-preview",
+}

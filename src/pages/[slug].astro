@@ -7,8 +7,18 @@ interface PlaceholderPage {
   description: string;
 }
 
-export function getStaticPaths() {
-  const placeholderPages = [
+/**
+ * Routes réservées : une adresse existe, son contenu n'est pas écrit.
+ *
+ * Exportée, et déclarée en fonction. Ce n'est pas un détail de style : Astro
+ * sort `getStaticPaths()` du frontmatter pour l'appeler pendant le build, et
+ * déplace tout le reste du frontmatter DANS le composant. Seuls les `export`
+ * demeurent au niveau du module, donc seuls eux sont visibles depuis
+ * `getStaticPaths()`. Sans `export`, le build public échoue sur
+ * « placeholderPages is not defined ».
+ */
+export function placeholderPages() {
+  return [
     {
       slug: 'galerie',
       title: 'Galerie',
@@ -16,14 +26,38 @@ export function getStaticPaths() {
         'Galerie — route réservée pendant que la sélection photographique demeure intégrée à l’accueil.',
     },
   ] as const satisfies readonly PlaceholderPage[];
+}
 
-  return placeholderPages.map((page) => ({
+export function getStaticPaths() {
+  return placeholderPages().map((page) => ({
     params: { slug: page.slug },
     props: page,
   }));
 }
 
-const { title, description } = Astro.props as PlaceholderPage;
+/**
+ * Deux chemins d'arrivée, selon la topologie du build.
+ *
+ * Site public (`output: 'static'`) : Astro appelle `getStaticPaths()`, connaît
+ * la liste des adresses à produire, et passe les données de la page en props.
+ * C'est le cas d'aujourd'hui, inchangé.
+ *
+ * Prévisualisation (`output: 'server'`) : plus rien n'est prérendu, donc
+ * `getStaticPaths()` est ignoré — Astro le signale au build. La route devient
+ * un attrape-tout : n'importe quel `/quelque-chose/` arrive ici, sans props.
+ * Sans la recherche ci-dessous, la page s'afficherait avec un titre vide, et
+ * une adresse inexistante répondrait 200 au lieu de 404.
+ */
+const page =
+  (Astro.props as Partial<PlaceholderPage>).slug === undefined
+    ? placeholderPages().find((entry) => entry.slug === Astro.params.slug)
+    : (Astro.props as PlaceholderPage);
+
+if (!page) {
+  return new Response(null, { status: 404 });
+}
+
+const { title, description } = page;
 ---
 
 <BaseLayout seo={{ title, description }} headerVariant="light">
