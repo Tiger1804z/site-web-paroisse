@@ -1,0 +1,394 @@
+---
+import Container from '@/components/ui/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  CONTACT_FORM_SENDS_MESSAGES,
+  LEGAL_PAGES_UPDATED_LABEL,
+  PRIVACY_OFFICER_ROLE,
+  RETENTION_STATEMENT,
+  THIRD_PARTY_SERVICES,
+} from '@/data/legal';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
+
+const settings = await getSiteSettings();
+
+/**
+ * Le courriel n'apparaît que s'il est confirmé — le contrat porte déjà cette
+ * distinction. Sans lui, la page dirige vers le téléphone plutôt que vers une
+ * adresse dont personne n'a vérifié qu'elle est relevée.
+ */
+const email = settings.email;
+---
+
+<BaseLayout
+  seo={{
+    title: 'Politique de confidentialité',
+    description: `Ce que la ${settings.organizationName} fait des renseignements transmis par son site Web, et comment demander leur retrait.`,
+  }}
+  pageClass="legal-page"
+  headerVariant="light"
+>
+  <article class="legal">
+    <Container size="reading">
+      <header class="legal__header">
+        <p class="type-eyebrow">Renseignements personnels</p>
+        <h1 class="type-h1">Politique de confidentialité</h1>
+        <p class="type-body-large legal__lede">
+          Cette page explique ce que le site de la {settings.organizationName} fait
+          des renseignements que vous lui transmettez. Elle décrit le fonctionnement
+          réel du site, pas un modèle général.
+        </p>
+        <p class="legal__updated">
+          Dernière mise à jour : {LEGAL_PAGES_UPDATED_LABEL}
+        </p>
+      </header>
+
+      <section class="legal__summary" aria-labelledby="resume">
+        <h2 id="resume" class="type-h3">En bref</h2>
+        <ul>
+          <li>Le site n’utilise <strong>aucun témoin (cookie)</strong>.</li>
+          <li>
+            Il ne mesure pas votre navigation et n’emploie <strong
+              >aucun outil de statistiques</strong
+            >.
+          </li>
+          <li>
+            Il n’y a <strong>aucun compte à créer</strong> et
+            <strong>aucune base de données</strong> de visiteurs.
+          </li>
+          <li>
+            Le seul endroit où vous pouvez transmettre des renseignements est le
+            <strong>formulaire de la page Contact</strong>.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="responsable">
+        <h2 id="responsable" class="type-h2">Qui est responsable</h2>
+        <dl class="legal__facts">
+          <div>
+            <dt>Responsable</dt>
+            <dd>{PRIVACY_OFFICER_ROLE}</dd>
+          </div>
+        </dl>
+        <p>Pour toute question ou demande à ce sujet :</p>
+        <ul>
+          {
+            email && (
+              <li>
+                par courriel, à <a href={email.href}>{email.display}</a>
+              </li>
+            )
+          }
+          <li>
+            par téléphone, au <a href={settings.phone.href}
+              >{settings.phone.display}</a
+            >
+          </li>
+          <li>par la poste, au {settings.address.formatted}</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="formulaire">
+        <h2 id="formulaire" class="type-h2">Le formulaire de contact</h2>
+
+        {
+          !CONTACT_FORM_SENDS_MESSAGES && (
+            <p class="legal__notice">
+              <strong>L’envoi en ligne n’est pas encore activé.</strong> Le
+              formulaire vérifie aujourd’hui que les champs sont bien remplis,
+              dans votre navigateur, et n’envoie rien. Aucun renseignement ne
+              quitte votre appareil. La suite de cette section décrit ce qui se
+              produira lorsque l’envoi sera mis en service.
+            </p>
+          )
+        }
+
+        <h3 class="type-h4">Ce qui est demandé</h3>
+        <ul>
+          <li><strong>Le motif</strong> de votre demande;</li>
+          <li><strong>votre nom</strong>;</li>
+          <li><strong>votre courriel</strong>, pour pouvoir vous répondre;</li>
+          <li>
+            <strong>votre téléphone</strong>, facultatif — uniquement si vous
+            préférez être rappelé;
+          </li>
+          <li><strong>votre message</strong>.</li>
+        </ul>
+        <p>
+          Une case à cocher vous demande d’accepter que ces renseignements
+          servent à répondre à votre demande. Sans cette acceptation, le
+          formulaire ne s’envoie pas.
+        </p>
+
+        <h3 class="type-h4">À quoi ils servent</h3>
+        <p>
+          À répondre à votre demande, et à rien d’autre. Vos renseignements ne
+          sont ni vendus, ni échangés, ni utilisés pour vous envoyer des
+          communications que vous n’avez pas demandées.
+        </p>
+
+        <h3 class="type-h4">Où ils vont</h3>
+        <p>
+          Le message est transmis par courriel au secrétariat de la paroisse. Il
+          n’est enregistré dans aucune base de données : le site ne conserve
+          rien de ce que vous écrivez. Un service d’envoi de courriel achemine
+          le message, puis celui-ci vit dans la boîte de courriel de la
+          paroisse, comme n’importe quel autre courriel.
+        </p>
+
+        <h3 class="type-h4">Contre les envois automatisés</h3>
+        <p>
+          Le formulaire comporte des protections contre les messages envoyés par
+          des robots — un champ invisible laissé vide par un humain, et une
+          vérification anti-pourriel. Ces protections examinent la manière dont
+          le formulaire est rempli, pas la personne qui le remplit.
+        </p>
+      </section>
+
+      <section aria-labelledby="pas">
+        <h2 id="pas" class="type-h2">Ce que le site ne fait pas</h2>
+        <p>
+          Cette liste a été établie en examinant le site produit, le
+          {LEGAL_PAGES_UPDATED_LABEL}.
+        </p>
+        <ul>
+          <li>
+            <strong>Aucun témoin (cookie).</strong> Le site n’en dépose aucun, et
+            ne vous demande donc rien à ce sujet.
+          </li>
+          <li>
+            <strong>Aucun outil de mesure d’audience.</strong> Ni Google Analytics,
+            ni équivalent. Personne ne compte vos pages vues.
+          </li>
+          <li>
+            <strong>Aucun pisteur publicitaire</strong>, aucun bouton de réseau
+            social, aucune régie publicitaire.
+          </li>
+          <li>
+            <strong>Aucun compte, aucun mot de passe, aucun profil.</strong>
+          </li>
+          <li>
+            <strong>Aucune conservation dans le site.</strong> Les pages sont fabriquées
+            à l’avance et livrées telles quelles; elles n’écrivent rien vous concernant.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="tiers">
+        <h2 id="tiers" class="type-h2">Ce que votre navigateur contacte</h2>
+        <p>
+          Afficher une page demande à votre navigateur de récupérer des
+          fichiers. Ces fournisseurs voient donc votre adresse IP, comme pour
+          tout site Web. Voici la liste complète, et rien d’autre ne s’y ajoute
+          :
+        </p>
+        <dl class="legal__services">
+          {
+            THIRD_PARTY_SERVICES.map((service) => (
+              <div>
+                <dt>{service.name}</dt>
+                <dd>
+                  {service.what} <span class="legal__when">{service.when}</span>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p>
+          Le site propose aussi des liens vers des cartes routières et vers les
+          sites de ses annonceurs. <strong
+            >Ces liens ne contactent personne tant que vous ne cliquez pas
+            dessus.</strong
+          > Une fois le lien suivi, vous quittez ce site, et c’est la politique du
+          site visité qui s’applique.
+        </p>
+      </section>
+
+      <section aria-labelledby="duree">
+        <h2 id="duree" class="type-h2">Combien de temps c’est conservé</h2>
+        <p>{RETENTION_STATEMENT}</p>
+        <p>
+          Vous pouvez demander la suppression de votre message à tout moment,
+          sans avoir à vous justifier.
+        </p>
+      </section>
+
+      <section aria-labelledby="droits">
+        <h2 id="droits" class="type-h2">Vos droits</h2>
+        <p>Vous pouvez demander en tout temps :</p>
+        <ul>
+          <li>
+            <strong>de consulter</strong> les renseignements que la paroisse détient
+            à votre sujet;
+          </li>
+          <li>
+            <strong>de les corriger</strong>, s’ils sont inexacts ou incomplets;
+          </li>
+          <li><strong>de les faire supprimer</strong>.</li>
+        </ul>
+        <p>
+          Il suffit d’écrire{' '}
+          {
+            email ? (
+              <>
+                à <a href={email.href}>{email.display}</a>
+              </>
+            ) : (
+              <>au secrétariat</>
+            )
+          }{' '}
+          ou de téléphoner au <a href={settings.phone.href}
+            >{settings.phone.display}</a
+          >. La paroisse répond dans un délai raisonnable, et au plus tard dans
+          les trente jours.
+        </p>
+      </section>
+
+      <section aria-labelledby="plainte">
+        <h2 id="plainte" class="type-h2">
+          Si la réponse ne vous satisfait pas
+        </h2>
+        <p>
+          Vous pouvez vous adresser à la <strong
+            >Commission d’accès à l’information du Québec</strong
+          >, l’organisme public chargé de la protection des renseignements
+          personnels. Ses coordonnées et sa procédure de plainte sont publiées
+          sur son site.
+        </p>
+      </section>
+
+      <section aria-labelledby="modifications">
+        <h2 id="modifications" class="type-h2">Modifications</h2>
+        <p>
+          Cette page changera si le fonctionnement du site change — par exemple
+          le jour où l’envoi du formulaire sera activé. La date de mise à jour,
+          en haut de page, indique la dernière révision.
+        </p>
+      </section>
+    </Container>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-block: 8rem 6rem;
+    background: var(--color-ivory);
+  }
+
+  .legal__header {
+    margin-bottom: 3.5rem;
+  }
+
+  .legal__lede {
+    margin-top: 1.5rem;
+    color: var(--color-muted);
+  }
+
+  .legal__updated {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  .legal :global(section) {
+    margin-top: 3rem;
+  }
+
+  .legal :global(h2) {
+    margin-bottom: 1.25rem;
+  }
+
+  .legal :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal :global(p),
+  .legal :global(li) {
+    line-height: 1.7;
+    color: var(--color-charcoal);
+  }
+
+  .legal :global(p + p) {
+    margin-top: 1rem;
+  }
+
+  .legal :global(ul) {
+    margin-top: 1rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  .legal :global(li + li) {
+    margin-top: 0.5rem;
+  }
+
+  .legal :global(a) {
+    color: var(--color-burgundy);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .legal__summary {
+    margin-top: 0;
+    padding: 1.75rem 2rem;
+    border-left: 3px solid var(--color-burgundy);
+    background: color-mix(in srgb, var(--color-burgundy) 4%, transparent);
+  }
+
+  .legal__notice {
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--color-wood);
+    background: color-mix(in srgb, var(--color-wood) 8%, transparent);
+  }
+
+  .legal__facts {
+    margin-bottom: 1.5rem;
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .legal__facts dt {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .legal__facts dd {
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+
+  .legal__services {
+    margin-top: 1.25rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .legal__services dt {
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+
+  .legal__services dd {
+    margin-top: 0.25rem;
+    line-height: 1.7;
+    color: var(--color-charcoal);
+  }
+
+  .legal__when {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  @media (min-width: 48rem) {
+    .legal {
+      padding-block: 10rem 8rem;
+    }
+  }
+</style>

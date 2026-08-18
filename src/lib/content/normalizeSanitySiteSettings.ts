@@ -1,5 +1,11 @@
 import type { PublicContactDetails, PublicEmail } from '@/types/siteSettings';
-import type { SanitySiteSettingsDocument } from '@/lib/sanity/types';
+import type { SanitySiteSettingsResult } from '@/lib/sanity/types';
+// Chemin relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout pas l'alias `@/`.
+import {
+  normalizeSanityImage,
+  type ImageSourceBuilder,
+} from './normalizeSanityImage.ts';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -26,7 +32,7 @@ function derivePhone(
 }
 
 function deriveAddress(
-  rawAddress: SanitySiteSettingsDocument['address'],
+  rawAddress: NonNullable<SanitySiteSettingsResult>['address'],
   fallback: PublicContactDetails['address'],
 ): PublicContactDetails['address'] {
   const street = cleanString(rawAddress?.street) ?? fallback.street;
@@ -59,10 +65,21 @@ function deriveEmail(
   };
 }
 
+/**
+ * `buildSources` est facultatif : les tests appellent ce normalizer sans, et le
+ * site n'a pas d'image de partage locale à composer. Sans constructeur, le
+ * champ reste absent et les pages partagées n'affichent aucune image plutôt
+ * qu'une adresse construite à moitié.
+ */
 export function normalizeSanitySiteSettings(
-  raw: SanitySiteSettingsDocument | null,
+  raw: SanitySiteSettingsResult,
   fallback: PublicContactDetails,
+  buildSources?: ImageSourceBuilder,
 ): PublicContactDetails {
+  const shareImage = buildSources
+    ? normalizeSanityImage(raw?.shareImage, buildSources)
+    : undefined;
+
   return {
     organizationName:
       cleanString(raw?.organizationName) ?? fallback.organizationName,
@@ -71,5 +88,16 @@ export function normalizeSanitySiteSettings(
     email: deriveEmail(raw?.publicEmail ?? null, raw?.showPublicEmail ?? null),
     directionsUrl: fallback.directionsUrl,
     map: fallback.map,
+    // Coordonnée globale : la page Horaires, Contact et Première visite
+    // affichent toutes la même valeur, corrigée à un seul endroit.
+    officeHoursLabel:
+      cleanString(raw?.officeHours) ?? fallback.officeHoursLabel,
+    // Faits sur le lieu, pas contenu de page : le champ existait dans le schéma
+    // depuis S1-T14 sans jamais être projeté. C’est Première visite qui les
+    // consomme la première.
+    parkingLabel: cleanString(raw?.parkingInformation) ?? fallback.parkingLabel,
+    accessibilityLabel:
+      cleanString(raw?.accessibilityInformation) ?? fallback.accessibilityLabel,
+    ...(shareImage ? { shareImage } : {}),
   };
 }

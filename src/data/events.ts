@@ -1,6 +1,3 @@
-import heroImage from '@/assets/images/paroisse/autel-decor-rouge-01.jpg';
-import concertImage from '@/assets/images/events/concert-paroissial-01.png';
-import celebrationImage from '@/assets/images/events/grande-celebration-01.png';
 import { SITE_NAME } from '@/lib/site';
 import type { EventsPageData } from '@/types/events';
 
@@ -14,13 +11,6 @@ export const eventsPageData = {
     title: 'Événements',
     introduction:
       'Découvrez les célébrations, initiatives d’entraide et rencontres qui peuvent rythmer la vie de la communauté.',
-    image: {
-      kind: 'image',
-      image: heroImage,
-      imageAlt:
-        'Vue de l’autel décoré de fleurs et de tissus rouges dans l’église',
-      position: 'center 52%',
-    },
   },
   overview: {
     eyebrow: 'Vie paroissiale',
@@ -38,13 +28,6 @@ export const eventsPageData = {
       summary:
         'La paroisse peut accueillir des concerts, des prestations musicales et différentes rencontres culturelles ouvertes à la communauté.',
       category: 'cultural',
-      visual: {
-        kind: 'image',
-        image: concertImage,
-        imageAlt:
-          'Public assis dans une nef pendant un concert avec piano et ensemble à cordes près de l’autel',
-        position: 'center center',
-      },
       featured: true,
       active: true,
       confirmationRequired: true,
@@ -56,13 +39,6 @@ export const eventsPageData = {
       summary:
         'Certaines périodes de l’année donnent lieu à des célébrations liturgiques particulières et à des rassemblements plus solennels.',
       category: 'liturgical',
-      visual: {
-        kind: 'image',
-        image: celebrationImage,
-        imageAlt:
-          'Nef et autel décorés de fleurs blanches pour une célébration solennelle',
-        position: 'center center',
-      },
       featured: false,
       active: true,
       confirmationRequired: true,

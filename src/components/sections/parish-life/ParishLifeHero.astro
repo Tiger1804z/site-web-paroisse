@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import type { ParishLifePageData } from '@/types/parishLife';
@@ -26,20 +27,36 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
           data-parish-life-hero-slide
           data-active={index === 0 ? 'true' : 'false'}
           style={[
-            `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`,
-            `--parish-life-hero-position-mobile: ${slide.mobilePosition ?? slide.desktopPosition ?? 'center'}`,
-          ].join('; ')}
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`
+              : '',
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-mobile: ${slide.mobilePosition ?? slide.desktopPosition ?? 'center'}`
+              : '',
+          ]
+            .filter(Boolean)
+            .join('; ')}
         >
-          <Image
-            src={slide.image}
-            alt=""
-            widths={[640, 960, 1280, 1600, 1920]}
-            sizes="(min-width: 768px) 68vw, 100vw"
-            loading={index === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-            fetchpriority={index === 0 ? 'high' : 'low'}
-            quality={78}
-          />
+          {slide.kind === 'image' ? (
+            <Image
+              src={slide.image}
+              alt=""
+              widths={[640, 960, 1280, 1600, 1920]}
+              sizes="(min-width: 768px) 68vw, 100vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchpriority={index === 0 ? 'high' : 'low'}
+              quality={78}
+            />
+          ) : (
+            <RemoteImage
+              image={slide.image}
+              alt=""
+              sizes="(min-width: 768px) 68vw, 100vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : 'low'}
+            />
+          )}
         </div>
       ))
     }
@@ -71,21 +88,36 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
           data-organic-lens-layer
           data-active={index === 1 ? 'true' : 'false'}
           style={[
-            `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`,
-            `--parish-life-hero-position-mobile: ${slide.mobilePosition ?? slide.desktopPosition ?? 'center'}`,
-          ].join('; ')}
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`
+              : '',
+            slide.kind === 'image'
+              ? `--parish-life-hero-position-mobile: ${slide.mobilePosition ?? slide.desktopPosition ?? 'center'}`
+              : '',
+          ]
+            .filter(Boolean)
+            .join('; ')}
         >
-          <Image
-            src={slide.image}
-            alt=""
-            widths={[640, 960, 1280, 1600, 1920]}
-            sizes="(min-width: 768px) 68vw, 100vw"
-            loading="lazy"
-            decoding="async"
-            fetchpriority="low"
-            quality={78}
-            data-organic-lens-image
-          />
+          {slide.kind === 'image' ? (
+            <Image
+              src={slide.image}
+              alt=""
+              widths={[640, 960, 1280, 1600, 1920]}
+              sizes="(min-width: 768px) 68vw, 100vw"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              quality={78}
+              data-organic-lens-image
+            />
+          ) : (
+            <RemoteImage
+              image={slide.image}
+              alt=""
+              sizes="(min-width: 768px) 68vw, 100vw"
+              data-organic-lens-image
+            />
+          )}
         </div>
       ))
     }

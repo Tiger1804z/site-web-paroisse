@@ -1,4 +1,44 @@
+import type { PageSeo } from '@/types/seo';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 export type ScheduleNoticeSeverity = 'info' | 'important' | 'special';
+
+/**
+ * Jour de la semaine en valeur machine — même union que le schéma Sanity.
+ * Les libellés français en sont dérivés, jamais saisis à la main.
+ */
+export type ScheduleWeekday =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+/**
+ * Célébration hebdomadaire sous forme calculable, en parallèle du contrat
+ * d'affichage `ScheduleEntry` qui, lui, ne porte que des libellés.
+ *
+ * `time` (`HH:mm`) est la seule source de vérité horaire : les minutes se
+ * dérivent avec `parseTimeToMinutes`, elles ne sont jamais stockées.
+ */
+export interface WeeklyMassEntry {
+  readonly id: string;
+  readonly weekday: ScheduleWeekday;
+  readonly time: string;
+  readonly title: string;
+  readonly note?: string;
+}
+
+/** Célébration à venir, résolue par `getUpcomingMasses` pour un instant donné. */
+export interface UpcomingMass extends WeeklyMassEntry {
+  /** Nombre de jours civils jusqu'à la célébration : 0 = aujourd'hui. */
+  readonly dayOffset: number;
+  readonly dayLabel: string;
+  /** « Aujourd'hui », « Demain », sinon le jour de la semaine. */
+  readonly relativeDayLabel: string;
+  readonly timeLabel: string;
+}
 
 export interface ScheduleLink {
   readonly label: string;
@@ -10,7 +50,11 @@ export interface ScheduleHero {
   readonly eyebrow: string;
   readonly title: string;
   readonly introduction: string;
-  readonly imageAlt: string;
+  /**
+   * Photographie du premier écran, facultative. Sans elle, l'en-tête garde son
+   * fond sombre : le titre reste lisible, aucun cadre vide n'apparaît.
+   */
+  readonly image?: SanityRenderableImage;
 }
 
 export interface ScheduleTime {
@@ -56,20 +100,16 @@ export interface BeforeYouVisitContent {
   readonly title: string;
   readonly message: string;
   readonly contactLink: ScheduleLink;
-  readonly bulletinLink: ScheduleLink;
 }
 
 export interface ScheduleSidebarContent {
-  readonly bulletin: {
-    readonly eyebrow: string;
-    readonly title: string;
-    readonly periodLabel: string;
-    readonly link: ScheduleLink;
-    readonly active: boolean;
-  };
   readonly office: {
     readonly eyebrow: string;
-    readonly hoursLabel: string;
+    /**
+     * Vient des coordonnées globales : les mêmes heures servent ailleurs.
+     * Absent tant que la paroisse ne les a pas confirmées.
+     */
+    readonly hoursLabel?: string;
     readonly message: string;
     readonly link: ScheduleLink;
   };
@@ -82,15 +122,33 @@ export interface ScheduleFaqItem {
   readonly active: boolean;
 }
 
-export interface SchedulePageData {
-  readonly hero: ScheduleHero;
-  readonly notice?: ScheduleNotice;
+/**
+ * Horaires des messes — donnée partagée, pas contenu de page.
+ *
+ * Affichée par `/horaires` et par l’accueil : elle vit donc dans son propre
+ * document Sanity, indépendant de toute page.
+ */
+export interface MassScheduleData {
   readonly regularSchedule: SchedulePeriod;
   readonly seasonalSchedules: readonly SchedulePeriod[];
+  /** Absent tant qu’aucune vérification n’a été datée dans Sanity. */
+  readonly lastUpdatedLabel?: string;
+}
+
+/** Contenu propre à la page `/horaires`, affiché nulle part ailleurs. */
+export interface SchedulePageData {
+  readonly seo: PageSeo;
+  readonly hero: ScheduleHero;
+  readonly notice?: ScheduleNotice;
   readonly specialCelebrations: readonly SpecialCelebration[];
   readonly specialCelebrationsEmptyMessage: string;
-  readonly lastUpdatedLabel: string;
   readonly beforeYouVisit: BeforeYouVisitContent;
   readonly sidebar: ScheduleSidebarContent;
   readonly faq: readonly ScheduleFaqItem[];
 }
+
+/**
+ * Ce que la page `/horaires` reçoit réellement : son propre contenu, plus les
+ * horaires partagés, plus les heures du secrétariat injectées dans l’encadré.
+ */
+export interface SchedulePageView extends SchedulePageData, MassScheduleData {}

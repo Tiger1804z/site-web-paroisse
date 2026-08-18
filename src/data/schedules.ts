@@ -1,87 +1,51 @@
-import type { SchedulePageData } from '@/types/schedule';
+import type { MassScheduleData, SchedulePageData } from '@/types/schedule';
 
+/**
+ * Repli des horaires partagés.
+ *
+ * Aucune heure en dur : la source est le document Sanity `massSchedule`. Si le
+ * fetch échoue, la page affiche « Horaires à confirmer » plutôt qu’un gabarit
+ * qui ressemble à une heure.
+ */
+export const massScheduleData = {
+  regularSchedule: {
+    id: 'horaire-regulier',
+    title: 'Horaires réguliers des messes',
+    active: true,
+    entries: [],
+  },
+  seasonalSchedules: [],
+} as const satisfies MassScheduleData;
+
+/**
+ * Repli du contenu propre à la page `/horaires`.
+ *
+ * Les heures du secrétariat n’apparaissent pas ici : ce sont des coordonnées
+ * globales, servies par `siteSettings` et injectées dans l’encadré par le
+ * getter.
+ */
 export const schedulePageData = {
+  // Même raison qu'à l'accueil : ce module est chargé tel quel par
+  // `node --test`. Le texte est celui que `horaires.astro` publiait.
+  seo: {
+    title: 'Horaires et célébrations',
+    description:
+      'Consultez les horaires des messes et les changements liés aux célébrations spéciales de la Paroisse Saint-René-Goupil.',
+  },
   hero: {
     eyebrow: 'Célébrations',
     title: 'Horaires et célébrations',
     introduction:
       'Retrouvez ici les horaires réguliers ainsi que les changements liés aux célébrations spéciales.',
-    imageAlt: 'Vue intérieure symétrique de l’autel avec une décoration rouge',
   },
-  notice: {
-    id: 'horaire-special',
-    title: 'Horaire spécial',
-    message: 'Un changement d’horaire est prévu pour le [DATE].',
-    severity: 'important',
-    active: true,
-    action: {
-      label: 'Consulter les détails',
-      href: '#celebrations-speciales',
-    },
-  },
-  regularSchedule: {
-    id: 'horaire-regulier',
-    title: 'Horaires réguliers des messes',
-    description:
-      'Les heures ci-dessous doivent être confirmées par la paroisse avant publication définitive.',
-    active: true,
-    entries: [
-      {
-        id: 'semaine',
-        dayLabel: 'Messes de semaine',
-        note: 'Information à confirmer',
-        times: [{ label: '[JOURS ET HEURES À CONFIRMER]' }],
-      },
-      {
-        id: 'samedi',
-        dayLabel: 'Samedi',
-        note: 'Vigile du dimanche',
-        times: [{ label: '[HEURE]' }],
-      },
-      {
-        id: 'dimanche',
-        dayLabel: 'Dimanche',
-        note: 'Messes dominicales',
-        times: [{ label: '[HEURE]' }, { label: '[HEURE]' }],
-      },
-    ],
-  },
-  seasonalSchedules: [
-    {
-      id: 'horaire-saisonnier',
-      title: 'Horaire saisonnier',
-      description:
-        'Une version saisonnière des horaires peut être appliquée durant certaines périodes de l’année.',
-      validFromLabel: '[DATE DE DÉBUT]',
-      validUntilLabel: '[DATE DE FIN]',
-      active: true,
-      entries: [
-        {
-          id: 'periode-saisonniere',
-          dayLabel: 'Horaires',
-          times: [{ label: '[INFORMATION À CONFIRMER]' }],
-        },
-      ],
-    },
-  ],
-  specialCelebrations: [
-    {
-      id: 'celebration-speciale-01',
-      title: '[TITRE DE LA CÉLÉBRATION]',
-      dateLabel: '[DATE]',
-      timeLabel: '[HEURE]',
-      note: '[NOTE]',
-    },
-    {
-      id: 'celebration-speciale-02',
-      title: '[TITRE DE LA CÉLÉBRATION]',
-      dateLabel: '[DATE]',
-      timeLabel: '[HEURE]',
-    },
-  ],
+  // Aucun avis par défaut : un encadré ne s’affiche que si la paroisse en
+  // publie un dans Sanity. Un avis gabarit vaut moins que pas d’avis.
+  //
+  // Les célébrations datées relèveront du modèle Événements, pas des horaires :
+  // une même célébration ne peut pas avoir deux sources de vérité.
+  specialCelebrations: [],
   specialCelebrationsEmptyMessage:
     'Aucune célébration spéciale n’est actuellement publiée.',
-  lastUpdatedLabel: '[DATE]',
   beforeYouVisit: {
     title: 'Avant de vous déplacer',
     message:
@@ -90,26 +54,10 @@ export const schedulePageData = {
       label: 'Communiquer avec le secrétariat',
       href: '/contact/',
     },
-    bulletinLink: {
-      label: 'Consulter le feuillet paroissial',
-      href: '/feuillets-paroissiaux/',
-      active: false,
-    },
   },
   sidebar: {
-    bulletin: {
-      eyebrow: 'Cette semaine',
-      title: 'Feuillet paroissial',
-      periodLabel: 'Semaine du [DATE]',
-      link: {
-        label: 'Consulter les feuillets',
-        href: '/feuillets-paroissiaux/',
-      },
-      active: false,
-    },
     office: {
       eyebrow: 'Secrétariat',
-      hoursLabel: '[HEURES DU SECRÉTARIAT]',
       message:
         'Des questions sur les horaires? Communiquez avec le secrétariat pour confirmer avant de vous déplacer.',
       link: {
@@ -130,7 +78,7 @@ export const schedulePageData = {
       id: 'celebrations-speciales',
       question: 'Où sont annoncées les célébrations spéciales?',
       answer:
-        'Les changements confirmés seront annoncés sur cette page et pourront aussi apparaître dans le feuillet paroissial.',
+        'Les changements confirmés seront annoncés sur cette page et dans les communications de la paroisse.',
       active: true,
     },
     {
@@ -139,13 +87,6 @@ export const schedulePageData = {
       answer:
         'Consultez la date de dernière mise à jour ou communiquez avec le secrétariat à partir de la page Contact.',
       active: true,
-    },
-    {
-      id: 'consulter-feuillet',
-      question: 'Où puis-je consulter le feuillet paroissial?',
-      answer:
-        'Les feuillets confirmés seront regroupés dans la section Feuillets paroissiaux.',
-      active: false,
     },
   ],
 } as const satisfies SchedulePageData;

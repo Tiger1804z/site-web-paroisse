@@ -11,10 +11,7 @@ const page = await getAdvertisersPageData();
 ---
 
 <BaseLayout
-  title={page.seo.title}
-  description={page.seo.description}
-  canonicalPath={page.seo.canonicalPath}
-  noIndex={page.seo.noIndex}
+  seo={page.seo}
   pageClass="advertisers-page"
   headerVariant="transparent"
 >

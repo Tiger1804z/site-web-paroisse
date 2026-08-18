@@ -1,36 +1,127 @@
-# Modèle de contenu Sanity prévu
+# Modèle de contenu Sanity
 
-Sanity n’est pas installé. Ce document décrit la frontière future afin que les
-contrats Astro actuels restent stables.
+> **État au 31 juillet 2026 — la migration de contenu est terminée.** Les
+> quatorze documents décrits ici sont en production, et plus aucune page ne lit
+> son contenu depuis un fichier du dépôt. Les sections rédigées avant la
+> migration ont été conservées quand elles expliquent une décision; celles qui
+> annonçaient un modèle différent de ce qui a été construit le disent
+> explicitement. La règle de découpage ci-dessous prime sur toutes.
 
-## `parishLifePage`
+## Règle de découpage : données partagées et pages
 
-Le futur document de page pourra contenir :
+Le Studio est organisé en deux sections, qui reflètent une seule question :
+**combien de pages affichent cette information, et survit-elle à la page?**
 
-- `hero` avec eyebrow, titre, introduction et `images[]`;
-- pour chaque image du hero : média, libellé, texte alternatif, position de
-  recadrage, crédit, caractère documentaire et statut de génération;
-- `introduction` et note éditoriale de confirmation;
-- `features[]` avec identifiant, titre, résumé, points clés, CTA, statut,
-  activation et ordre;
-- `participation` avec accent, titre, description et CTA;
-- images, positions de recadrage et crédits.
+- affichée à deux endroits ou plus, ou vraie indépendamment de toute page →
+  **document partagé**;
+- n’a de sens que sur une page → **document de page**.
 
-Une entrée de `features[]` peut rester un objet intégré, car elle appartient à
-la composition de cette page. Un groupe devrait devenir un document Sanity
-référencé uniquement s'il doit être réutilisé ailleurs, posséder une page
-détaillée ou être relié à des responsables et activités validés.
+Application actuelle :
 
-Sanity contrôlera le contenu, l'ordre et l'activation. Le code Astro conservera
-la grille alternée, les breakpoints, la palette, les reveals, la rotation et la
-lentille du hero, les composants, les règles d'accessibilité et la validation
-du contrat. Le CMS ne pourra pas injecter une durée, un masque, du CSS ou du
-JavaScript.
+| Document          | Section           | Contenu                                                              |
+| ----------------- | ----------------- | -------------------------------------------------------------------- |
+| `siteConfig`\*    | Données partagées | Coordonnées, téléphone, courriel, heures du secrétariat.             |
+| `massSchedule`    | Données partagées | Horaires réguliers et saisonniers, date de vérification.             |
+| `thriftStore`     | Données partagées | Nom, heures, emplacement et téléphone propres à la friperie.         |
+| `parishEvent`     | Collections       | Une activité datée par document, lue par `/evenements` et l’accueil. |
+| `advertiser`      | Collections       | Une fiche d’annonceur par document, lue par `/nos-annonceurs`.       |
+| `homePage`        | Pages             | Toutes les sections de l’accueil, carrousel photographique compris.  |
+| `aboutPage`       | Pages             | Récit, chronologie illustrée, architecture et architectes.           |
+| `contactPage`     | Pages             | Textes de `/contact` et motifs du formulaire. Aucune coordonnée.     |
+| `schedulePage`    | Pages             | Hero, avis, bandeau, textes de l’encadré et FAQ de `/horaires`.      |
+| `eventsPage`      | Pages             | Hero, catégories permanentes et réglages de sections.                |
+| `thriftStorePage` | Pages             | Hero, présentation, sections, textes de galerie et bloc de clôture.  |
+
+\* le type s’appelle `siteSettings` dans le code.
+
+Trois conséquences pratiques :
+
+- les horaires des messes sont lus par `/horaires` **et** par l’accueil, donc
+  ils ne peuvent pas appartenir à une page;
+- les heures du secrétariat sont une coordonnée, pas du contenu de page : elles
+  serviront aussi Contact et Première visite;
+- les collections (événements, annonceurs) restent des collections. Un document
+  de page ne contient jamais une liste d’entités qui ont leur propre cycle de
+  vie.
+
+Aucune référence Sanity ne relie ces documents : la page Astro lit les sources
+dont elle a besoin et les recompose dans son getter. Une jointure GROQ n’aurait
+rien apporté tant qu’il n’existe qu’un seul horaire.
+
+## Images téléversées
+
+Deux systèmes coexistent volontairement pendant la migration.
+
+- **Image locale** — fichier du projet, connu au build, traité par
+  `astro:assets`. C’est encore le cas de tous les heros de page.
+- **Image Sanity** — téléversée par l’éditrice, servie par le CDN, rendue par
+  `RemoteImage.astro`. Le recadrage qu’elle choisit dans le Studio devient un
+  `object-position`, parce que la plupart des cadres du site s’étirent à la
+  hauteur de leur colonne et n’ont pas de format connu à l’avance.
+
+L’objet `eventImage` porte ce qui rend une image publiable : texte alternatif
+**bloquant dès qu’un fichier est déposé**, crédit, note de licence, et deux
+cases — personne reconnaissable, image générée par IA. Ces deux cases
+n’interdisent rien; elles permettent de répondre à la question plus tard, ce
+qui est impossible si l’information n’a jamais été saisie.
+
+Migrer les heros de page demandera un ticket dédié, traitant tous les visuels
+de page ensemble plutôt qu’une page à la fois.
+
+## `parishLifePage` — migré
+
+Document unique, groupes embarqués, pour la même raison que `servicesPage` :
+aucune autre page ne lit ces groupes. Le jour où l'accueil ou une route
+détaillée les affichera, ils deviendront une collection.
+
+Le document contient :
+
+- `hero` — surtitre, titre, introduction;
+- `introduction` — surtitre, titre, paragraphes, note de confirmation;
+- `features[]` (objet `parishGroup`) — ancre, nom, surtitre, description,
+  points saillants, image, libellé du bouton, `active`;
+- `participation` — accent, titre, description, libellé du bouton.
+
+**Les images sont téléversées dans le Studio.** C'est la première page de
+contenu — hors événements — à passer ses visuels dans Sanity. Elle réutilise
+l'objet `eventImage` (fichier, texte alternatif, crédit, note de droits,
+personnes reconnaissables, généré par IA) et le nouvel objet `heroSlide`
+(libellé + image) pour le carrousel d'en-tête.
+
+Deux chemins de rendu coexistent, distingués par `visual.kind` :
+
+- `image` — fichier du projet, optimisé au build par `astro:assets`, recadré par
+  des positions écrites à la main. C'est le **repli**, qui répond même sans
+  Sanity;
+- `remote-image` — fichier du Studio servi par le CDN, recadré par le **point
+  focal** posé par l'éditrice, avec vignette floue pendant le chargement.
+
+Le repli d'un groupe est retrouvé par son ancre. Un groupe sans visuel d'aucun
+côté n'est pas publié : sa carte serait un cadre vide. Les images d'en-tête, en
+revanche, **ne se mélangent pas** — soit le Studio en fournit, soit les fichiers
+du projet prennent le relais en entier; un carrousel moitié CDN, moitié local
+n'aiderait personne à déboguer.
+
+Une image téléversée sans texte alternatif n'est pas publiée, en plus de la
+validation du Studio qui l'exige déjà.
+
+**Les boutons mènent tous à `/contact/`.** Seul leur libellé se saisit; l'adresse
+n'existe pas dans le Studio.
+
+**Champs supprimés en migrant** : le statut éditorial `ParishLifeContentStatus`
+(`to-confirm`, `temporary`, `stable-direction`) — aucun composant ne l'affichait,
+et ce qui reste à confirmer se dit déjà dans le texte, là où la visiteuse le lit
+— et `order`, remplacé par l'ordre du tableau. Le tri correspondant a disparu du
+getter; le filtre sur `active` reste.
+
+Le code Astro conserve la grille alternée, les breakpoints, la palette, les
+reveals, la rotation et la lentille du hero. Le CMS ne peut injecter ni durée,
+ni masque, ni CSS, ni JavaScript.
 
 ```text
 Sanity parishLifePage
-  → GROQ
-  → normalisation
+  → PARISH_LIFE_PAGE_QUERY
+  → normalizeSanityParishLifePage (repli local, images par ancre, CTA dérivé)
   → ParishLifePageData
   → composants Astro existants
   → HTML statique
@@ -132,27 +223,42 @@ couche d’image choisie, validera le fuseau, convertira les CTA et supprimera
 les entrées invalides. Les composants ne connaîtront ni GROQ, ni le client
 Sanity, ni la réponse brute.
 
-## `thriftStorePage`
+## `thriftStore` et `thriftStorePage`
 
-Le futur document de page pourra contenir :
+Migrés. La friperie est coupée en deux selon la règle de découpage.
 
-- hero, eyebrow, titre et introduction;
-- image principale, quatre images de révélation, textes alternatifs, crédits,
-  droits et notes de remplacement;
-- sections avec identifiant, titre, texte, activation et ordre;
-- galerie et sujets photographiques;
-- horaires, emplacement, note de prix et modalités de dons;
-- CTA de contact;
-- note sur les ventes spéciales.
+**`thriftStore`, donnée partagée** — nom, heures d'ouverture, emplacement,
+téléphone. Ce sont des faits vrais indépendamment de la page, et `/contact`
+pourra les afficher sans lire un document de page. Le téléphone de la friperie
+est une ligne distincte de celle du secrétariat : il ne se lit surtout pas dans
+`siteSettings`.
 
-Les champs pratiques devront conserver un statut de confirmation. Une valeur
-non confirmée n'est pas normalisée en contenu public. Les ventes spéciales
-possédant une date restent des documents `parishEvent` et ne sont pas intégrées
-dans `thriftStorePage`.
+**`thriftStorePage`, document de page** — hero (textes), présentation
+(paragraphes, encadré « À noter », bouton), sections, textes de la galerie, bloc
+de clôture avec ses deux boutons.
+
+Deux choix retenus :
+
+- **Un champ vide n'est pas publié.** Le couple `{value, confirmed}` du contrat
+  local a disparu : un renseignement non confirmé n'a de toute façon aucune
+  valeur à afficher, et la case doublait l'information portée par l'absence.
+- **Aucun champ qui ne sort nulle part.** `donationConditions`, `pricingNote` et
+  `specialSalesNote` existaient dans le contrat sans qu'aucun composant les
+  rende — `pricingNote` répétait mot pour mot `introduction.priceNotice`. Ils
+  ont été retirés plutôt que recréés dans le Studio. Les conditions de dons
+  restent non publiées, et la page continue d'inviter à téléphoner avant
+  d'apporter des articles (`tests/thrift-store.test.mjs`).
+
+Les images du hero et les cadres de la galerie **ne sont pas migrés** : ils
+suivront le ticket qui déplacera tous les visuels de page ensemble. La paroisse
+n'a encore aucune photographie du local (`docs/THRIFT_STORE_PHOTO_SHOT_LIST.md`),
+donc un tableau d'images dans le Studio n'aurait aucun utilisateur.
+
+Les ventes spéciales possédant une date restent des documents `parishEvent`.
 
 ```text
-Sanity thriftStorePage
-  → GROQ
+Sanity thriftStorePage + thriftStore
+  → GROQ (deux requêtes, aucune référence entre les documents)
   → normalisation
   → ThriftStorePageData
   → composants Astro existants
@@ -163,35 +269,128 @@ Sanity ne contrôlera pas le masque, le suivi du pointeur, le JavaScript, les
 timings, le SVG `AnimatedClothingRack`, les couleurs, les breakpoints ou les
 tokens de mouvement.
 
-## `servicesPage`
+## `servicesPage` — migré
 
-Le futur document canonique pourra contenir :
+Document unique, sans jumeau « Données partagées ». Les tarifs et les délais
+sont des faits, mais aucune autre page ne les lit : un document partagé sans
+second consommateur serait une abstraction vide. La règle de découpage ne
+s’applique qu’à partir du deuxième consommateur réel.
 
-- hero, introduction, images, textes alternatifs et crédits;
-- catégories et services avec activation et ordre;
-- résumés, procédures et CTA;
-- détails structurés avec statut de confirmation;
-- tarif, année d’application, période, date de révision et exigence de révision
-  périodique;
-- moyens de paiement;
-- section Location de salle et règles confirmées.
+Le document contient :
+
+- `hero` — surtitre, titre, introduction;
+- `notice` — titre, message, mention de révision. **Seul endroit de la page où
+  une date de révision est publiée**;
+- `chapters[]` (objet `serviceChapter`) — ancre, surtitre, titre, introduction,
+  traitement visuel dans une liste fermée (`ivory`, `paper`, `charcoal`,
+  `burgundy`), et ses services;
+- `services[]` (objet `parishService`) — ancre, titre, résumé, `active`,
+  `details[]` (objet `serviceDetail` : intitulé et valeur), `steps[]`, `note`;
+- `paymentMethods` — titre, description, modes acceptés;
+- `finalCta` — titre et description seulement.
+
+**Les ancres sont saisies, pas dérivées de `_key`.** Ce sont des fragments
+d’adresse publique : le sommaire de la page s’en sert, et `/location-de-salle/`
+redirige vers `/nos-services/#location-de-salle`. Une ancre qui bouge casse un
+lien déjà partagé. C’est l’inverse du cas `thriftStorePage`, où la `_key` a
+justement servi à prouver le basculement.
+
+**Trois choses ne sont pas dans le Studio :**
+
+- **le bouton d’appel** — les neuf services renvoient tous au téléphone du
+  secrétariat, lu dans `siteSettings`. Un champ d’adresse dupliquerait la donnée
+  et permettrait de saisir un lien arbitraire;
+- **les cinq images** — trois du hero, deux de chapitres — qui restent des
+  fichiers du projet avec leur cadrage et leur crédit, jusqu’au ticket des
+  visuels de page. Elles se rattachent par l’ancre du chapitre;
+- **l’ordre** — celui du tableau fait foi, dans le Studio comme dans le repli.
+
+**Champs du contrat local supprimés en migrant**, parce qu’aucun composant ne
+les rendait : le bloc de métadonnées de révision entier (`sourceContext`,
+`lastReviewedAt`, `effectiveYear`, `effectivePeriod`, `requiresPeriodicReview`),
+le booléen `confirmed` des renseignements — toujours vrai —, la catégorie de
+service et le champ `order`. Même règle que pour la friperie : ne pas recréer
+dans le Studio un formulaire sans effet.
 
 Une célébration spéciale datée reste un `parishEvent`; elle n’est pas dupliquée
 dans `servicesPage`. La disponibilité d’une salle n’est jamais calculée par le
 CMS et aucune réservation automatique n’est créée.
 
 ```text
-Sanity servicesPage + parishService + siteSettings
-  → GROQ
-  → normalisation et contrôle des dates
+Sanity servicesPage + siteSettings
+  → SERVICES_PAGE_QUERY
+  → normalizeSanityServicesPage (repli local, images locales, CTA dérivé)
   → ServicesPageData
   → composants Astro existants
   → HTML statique
 ```
 
 Sanity ne contrôle ni la lentille du hero, ni sa rotation, ni les formes CSS,
-ni la navigation, ni les redirections. Les valeurs temporelles non révisées
-peuvent être masquées par le normalisateur.
+ni la navigation, ni les redirections.
+
+## `firstVisitPage` — migré
+
+Document unique. Étapes, moments de la célébration et questions fréquentes n’ont
+de sens que sur cette page et n’ont pas de cycle de vie propre : listes
+embarquées, comme aux services et à la vie paroissiale.
+
+Le document contient :
+
+- `seo` — titre et description;
+- `hero` — surtitre, titre, introduction;
+- `preparation` — surtitre, titre, introduction, `steps[]` (objet `visitStep` :
+  numéro affiché, titre, description, note);
+- `expectations` — surtitre, titre, introduction, `items[]` (objet
+  `expectationItem` : titre, description);
+- `practicalInformation` — surtitre, titre, `items[]` (objet
+  `practicalInfoItem`), libellé et destination des deux boutons, image et
+  légende;
+- `faq` — titre et `items[]` (objet `firstVisitFaqItem`).
+
+**Aucun identifiant n’est saisi.** Contrairement aux services, rien ici n’est un
+fragment d’adresse publique : aucune ancre, aucun lien entrant. Les `_key` du
+tableau font office d’identifiants, comme pour `massSchedule`.
+
+### La ligne d’informations pratiques désigne sa source
+
+C’est la particularité de cette page, et l’application la plus nette de la règle
+de découpage. Une adresse, un téléphone, un stationnement, un accès sont des
+faits sur le lieu, vrais indépendamment de la page. La ligne ne les recopie donc
+pas : son champ `source` désigne où le site va lire la valeur.
+
+| `source`        | Valeur lue                              |
+| --------------- | --------------------------------------- |
+| `address`       | `siteSettings.address.formatted`        |
+| `phone`         | `siteSettings.phone.display`            |
+| `parking`       | `siteSettings.parkingInformation`       |
+| `accessibility` | `siteSettings.accessibilityInformation` |
+| `pageText`      | le champ `value` de la ligne            |
+| `internalLink`  | `linkLabel` + destination fermée        |
+
+La résolution vit dans `resolvePracticalInformation()`, appelée par le getter —
+pas dans le normalizer, qui ne connaît pas les coordonnées. Elle s’applique
+**au repli local comme au contenu Sanity** : les deux décrivent leurs lignes de
+la même façon, donc la page se comporte pareil que le CMS réponde ou non.
+
+**Une ligne dont la source est vide n’est pas affichée.** Une paroisse qui n’a
+pas confirmé ses conditions d’accès a plus à perdre à publier un libellé vide,
+ou un texte entre crochets, qu’à taire la ligne le temps de vérifier. Le jour où
+la valeur est saisie dans « Coordonnées de la paroisse », la ligne réapparaît
+seule.
+
+Effet de bord de la migration : l’adresse et le téléphone réels, déjà confirmés
+dans `siteSettings`, remplacent les mentions `[ADRESSE À CONFIRMER]` et
+`[TÉLÉPHONE À CONFIRMER]` que la page affichait aux visiteurs.
+
+**Champs supprimés plutôt que recréés** — 0 rendu chacun, vérifié sur les cinq
+composants : `FirstVisitContentStatus` et `VisitStep.status`,
+`PracticalInformationItem.confirmationRequired`, et `futureSource` avec son type
+`PracticalInformationSource`. Ce dernier annonçait justement la migration qui
+vient d’avoir lieu. Seul `numberLabel` survit : il est rendu dans la pastille.
+
+**Les destinations sont fermées.** Les deux boutons et les lignes `internalLink`
+choisissent dans `LINK_TARGETS` (`schedule`, `contact`, `services`); une valeur
+hors liste fait retomber sur le repli, jamais sur la chaîne saisie.
 
 ## `siteSettings`
 
@@ -211,42 +410,60 @@ Sanity siteSettings
   → GROQ
   → normalisation
   → PublicContactDetails
-  → accueil / Contact / Footer / Nos services
+  → accueil / Contact / Footer / Nos services / Horaires / Première visite
 ```
+
+`parkingInformation` et `accessibilityInformation` ont dormi dans le schéma
+depuis S1-T14 sans figurer dans la projection GROQ : le champ existait, se
+saisissait, et n’atteignait jamais le site. Première visite les a réveillés en
+juillet 2026. C’est la répétition exacte du signal d’alarme `officeHours` —
+**vérifier la projection, pas seulement le schéma**, avant de conclure qu’une
+donnée partagée manque.
 
 Une valeur non confirmée est supprimée par la normalisation. `siteSettings` ne
 contiendra jamais de mot de passe SMTP, destinataire privé, clé API, secret,
 code serveur ou logique d’envoi.
 
-## `galleryItem` pour l’aperçu de l’accueil
+## `homePage` — migré, carrousel compris
 
-La page Galerie complète est différée. Une future collection `galleryItem`
-pourra d’abord administrer la sélection photographique de l’accueil.
+L’accueil est un seul document. Sept sections y sont saisissables : en-tête,
+« Ensemble », aperçu des célébrations, activités, « Vivre la paroisse »,
+services, prière, galerie et « Venez nous rencontrer ».
 
-Chaque `galleryItem` pourra contenir :
+**La galerie n’est pas devenue une collection.** Le modèle prévoyait une
+collection `galleryItem`; le tableau `homePage.gallery.photos` l’a remplacée.
+Une photographie du carrousel n’a pas de cycle de vie propre — elle n’existe
+que dans cette section, et la page Galerie autonome reste différée. Le tableau
+supprime du même coup le champ d’ordre et la case « afficher sur l’accueil » :
+l’ordre de la liste est celui du carrousel, et être dans la liste, c’est être
+visible. Si `/galerie` est un jour reprise, six documents à extraire est un
+script d’une heure — pas une raison de compliquer le Studio aujourd’hui.
 
-- image et texte alternatif obligatoire;
-- titre, description, catégorie et ordre;
-- statut de publication et état des droits;
-- mise en vedette et visibilité sur l’accueil;
-- crédit, source et date de capture facultative;
-- caractère documentaire ou artistique;
-- présence de personnes et consentement confirmé;
-- variante de composition dans une liste contrôlée.
+Quatre raisons de ne pas publier une photographie, rejouées à la lecture même
+si le Studio les empêche déjà : pas de texte alternatif, droits non confirmés,
+image générée par IA, personne reconnaissable sans consentement. Le carrousel,
+ses transitions et sa lightbox restent dans le code Astro.
 
 ```text
-Sanity galleryItem
+homePage.gallery.photos[]
   → GROQ
-  → normalisation droits / alt / consentement
+  → normalizeSanityHomeGallery → GalleryCandidate[]
+  → isGalleryItemPublic (droits / alt / IA / consentement)
   → GalleryItem[]
-  → sélection de l’accueil
 ```
 
-Le CMS ne pourra pas publier une image sans alt, aux droits en attente, ou
-montrant une personne sans consentement. Il ne pourra pas injecter de CSS,
-HTML arbitraire, JavaScript, `clip-path`, ni retirer automatiquement un crédit.
-Le carrousel, ses transitions et sa lightbox restent dans le code Astro. Un
-futur `galleryPage` ne sera préparé que si la route autonome est reprise.
+**Deux listes nomment leur source au lieu de la recopier.** Les groupes de
+« Vivre la paroisse » ne portent qu’un identifiant et une ligne d’accroche : le
+nom est lu dans `parishLifePage`, où le groupe vit. Renommer « Chorale » là-bas
+le renomme ici, et désactiver un groupe le retire des deux pages. Les raccourcis
+vers les services choisissent une destination dans une liste fermée de quatre
+ancres, et le code fabrique l’adresse. Une source inconnue fait disparaître la
+ligne — jamais un lien mort.
+
+Ne sont **pas** dans le document : les coordonnées et les heures de messe, lues
+dans `siteSettings` et `massSchedule`; les adresses des boutons, qui sont des
+routes; les textes d’état vide, qui relèvent du code; et les images des sections
+éditoriales, encore locales jusqu’au ticket des visuels de page.
 
 ## Publication et rebuild
 
@@ -256,35 +473,200 @@ sans modification éditoriale. Le site conservera ainsi une génération
 statique : Astro produit une nouvelle version HTML, puis le navigateur la
 reçoit sans application React de calendrier.
 
-## `advertiser` et `advertisersPage`
+## `advertiser` et `advertisersPage` — migrés
 
-Une future collection `advertiser` pourra contenir :
+Une **collection** et un document de page. Une fiche d’annonceur arrive, se
+confirme, se retire, sans que le reste de la page bouge : c’est la définition
+d’un cycle de vie propre, et donc d’une collection. C’est le seul cas, avec les
+événements, où une liste ne vit pas dans son document de page.
 
-- nom, slug, catégorie et description;
-- adresse, téléphone, courriel et site Web;
-- logo et images avec texte alternatif, crédit et statut de droit;
-- statut éditorial, ordre et mise en avant;
-- dates de début et de fin facultatives;
-- date de dernière confirmation et note interne.
+La collection `advertiser` contient :
 
-Le document `advertisersPage` pourra administrer le hero, l’introduction,
-l’activation de la liste, le bloc « Devenir annonceur » et ses CTA.
+- `name`, `category`, `description`;
+- `addressLines[]`, `phone`, `email`, `website`;
+- `logo` (objet `eventImage` réutilisé);
+- `status`, `order`;
+- `confirmationNote` — note de révision interne.
+
+Le document `advertisersPage` administre `hero`, `introduction` (dont la mention
+de transparence), `solicitation` et `settings`.
 
 ```text
 Sanity advertiser + advertisersPage + siteSettings
   → GROQ
-  → normalisation statut / dates / droits
+  → normalisation + selectAdvertisers()
   → AdvertisersPageData
   → composants Astro existants
 ```
 
-Seuls les annonceurs `active`, non expirés, avec des coordonnées et des droits
-valides seront normalisés pour la publication. Une date de fin nécessitera un
-rebuild périodique selon `America/Toronto`; en l’absence de date réelle, le
-statut éditorial explicite reste la seule source de décision.
+### Le statut est un champ, pas l’état de publication de Sanity
 
-La paroisse pourra ajouter, masquer, réordonner ou mettre à jour une fiche sans
-modifier le code. Le CMS ne contiendra jamais de contrat complet, donnée de
+Un brouillon Sanity veut dire « modification en cours ». Une fiche d’annonceur à
+confirmer n’est pas une modification en cours : c’est une entente dont personne
+n’a encore vérifié qu’elle existe. Confondre les deux ferait disparaître une
+fiche du Studio dès qu’on la corrige.
+
+`status` vaut donc `active`, `confirmation-required`, `draft` ou `inactive`, et
+**seul `active` s’affiche**. Une valeur inconnue retombe sur `draft` : ce que le
+code ne comprend pas ne doit jamais ouvrir la publication.
+
+Les quatre fiches historiques sont `active` depuis le 31 juillet 2026 : elles
+figurent encore sur l’ancien site de la paroisse. Le retrait se fait dans le
+Studio, en passant la fiche à « Inactif ». Voir
+`docs/ADVERTISERS_CONTENT_AUDIT.md`.
+
+Le filtrage n’est **pas** fait en GROQ. `selectAdvertisers()` décide, et il
+décide aussi pour le repli local — les deux origines passent par le même code.
+
+### Trois champs qui ne se saisissent pas deux fois
+
+- le **lien d’appel** est reconstruit à partir des chiffres du téléphone
+  affiché; un numéro qui n’a pas dix chiffres n’obtient pas de lien;
+- le **`mailto:`** est reconstruit à partir de l’adresse; une valeur qui n’est
+  pas une adresse n’en obtient pas;
+- la **note de révision** n’est jamais projetée par la requête : elle sert la
+  secrétaire dans le Studio et n’atteint pas le HTML public.
+
+### La seule adresse de lien saisissable du site
+
+`website` est l’exception assumée à la règle « le CMS ne fournit jamais une
+adresse de lien ». L’adresse d’un annonceur est son contenu à lui, et une page
+de reconnaissance sans lien vers l’annonceur n’a pas de sens. Elle reste tenue
+en laisse : seuls `http` et `https` passent le normalisateur, même si le schéma
+venait à perdre sa validation, et le lien sortant porte
+`rel="sponsored noopener noreferrer"`.
+
+### Champs supprimés plutôt que migrés
+
+Comptés à 0 rendu sur les quatre composants : `featured`, `validFrom`,
+`validUntil`, `lastConfirmedAt`, `images[]`, `website.label`, `slug` et le statut
+de droit du média. Les dates de validité auraient de plus exigé un rebuild
+nocturne pour rien : sans date réelle, le statut explicite est la seule source
+de décision, ce que l’audit disait déjà.
+
+Le `logo` est passé à Sanity, en `SanityRenderableImage` sans variante locale :
+aucun logo n’existe dans le dépôt, et la paroisse pourra en téléverser un sans
+changement de code. Sans logo, la fiche affiche les initiales du nom.
+
+### Piège : un point dans l’identifiant rend le document privé
+
+Les quatre fiches ont d’abord été écrites sous `advertiser.buffet-marina` et
+consorts. Le point place le document dans un **chemin privé** : la CLI porteuse
+d’un jeton les voyait, la lecture publique du build ne les voyait pas. Le site
+se construisait sans erreur et sans annonceur. Identifiants repris en
+`advertiser-buffet-marina`; un test interdit désormais le point.
+
+La paroisse peut ajouter, masquer, réordonner ou mettre à jour une fiche sans
+modifier le code. Le CMS ne contient jamais de contrat complet, donnée de
 paiement, numéro de carte, secret, mot de passe, HTML arbitraire, CSS ou
-JavaScript. Il ne pourra pas publier un visuel sans alt ni retirer un crédit
-obligatoire.
+JavaScript. Il ne peut pas publier un visuel sans alt ni retirer la mention de
+transparence.
+
+## `contactPage` — migré
+
+Document unique. C'est la page où la **règle de découpage rend le plus** : le
+document ne porte que des textes, et **aucune coordonnée**.
+
+Adresse, téléphone, courriel, heures du secrétariat, stationnement,
+accessibilité, carte et lien d'itinéraire viennent tous de `siteSettings`. Ce
+sont des faits sur la paroisse, vrais indépendamment de la page, lus par
+plusieurs pages. Les recopier ici créerait une deuxième vérité à corriger.
+
+Le document contient :
+
+- `hero` — surtitre, titre, introduction;
+- `officeHours` — titre du bloc et note. **L'horaire lui-même n'y est pas**;
+- `methodsFallback` — titre et description affichés quand une coordonnée
+  publique manque encore;
+- `location` — titre, description, `extraNotes[]`;
+- `form` — titre, introduction, `reasons[]` (objet `contactReason`), avis
+  « envoi non activé », libellé du bouton, message de vérification, mention de
+  confidentialité.
+
+### La structure du formulaire n'est pas du contenu
+
+Noms de champs, types, longueurs minimales et maximales, expressions de
+validation, valeurs d'`autocomplete`, messages d'erreur : **rien de tout cela ne
+passe par le CMS**. Le script de validation les lit, et une expression mal
+saisie casserait la page sans que personne le voie. Un test interdit à la
+requête comme au schéma de porter ces champs.
+
+Seule la **liste des motifs** se saisit, parce qu'elle est éditoriale : elle
+suit les services offerts par la paroisse. Le libellé se lit, la clé sert au
+routage futur; renommer un libellé ne doit pas changer un routage, d'où la clé
+saisie plutôt que dérivée. Une liste vide laisse les motifs du code en place.
+
+### Ce que la migration a réparé
+
+Même classe de défaut qu'à Première visite, et trouvée pareillement : des faits
+confirmés dans `siteSettings` que la page ne lisait pas.
+
+- les **heures du secrétariat** n'étaient jamais affichées, et la page disait au
+  visiteur qu'elles étaient « en cours de validation »;
+- le **stationnement** et l'**accessibilité** étaient absents des notes d'accès,
+  que la description annonçait pourtant comme « à confirmer ».
+
+Les trois valeurs existaient depuis le 31 juillet 2026. La page les affiche
+maintenant, et le bloc des heures disparaît tout seul si l'horaire est effacé —
+un titre saisi dans le Studio ne le fait pas apparaître seul, il n'aurait rien à
+montrer.
+
+Le **courriel** suit la même mécanique : sa carte n'existe pas tant qu'il n'est
+pas confirmé et rendu public, et elle apparaîtra seule le jour où il le sera.
+
+### Champs supprimés plutôt que migrés
+
+Comptés à 0 rendu sur les six composants : `ContactContentStatus` en entier,
+`status`, `active` et `order` sur les coordonnées, `active` et `status` sur les
+heures du secrétariat, `status` sur le bloc de localisation. Les coordonnées ne
+sont plus une liste éditoriale à trier et filtrer : elles sont dérivées d'une
+source unique et apparaissent quand la valeur existe. Le tri et le filtre du
+getter ont disparu avec les champs.
+
+```text
+Sanity contactPage + siteSettings
+  → GROQ
+  → normalizeSanityContactPage (textes seulement)
+  → ContactPageData
+  → composants Astro existants
+```
+
+Le `seo`, `noindex` compris, et l'adresse de la politique de confidentialité
+restent des décisions de code : retirer `noindex` suppose qu'un système d'envoi
+et une politique approuvée existent, ce qui n'est pas le cas.
+
+## `aboutPage` — migré, chronologie comprise
+
+La page a été gardée pour la fin : ses neuf repères historiques sont tressés
+avec leurs illustrations, et un repère sans son image est un repère cassé. Les
+**neuf images ont donc suivi leur repère dans Sanity**, alors que l’image du
+hero et celle de la section d’architecture restent des fichiers du dépôt — ce
+sont des visuels de page, réservés au ticket qui les migrera tous.
+
+Conséquence assumée : si Sanity ne répond pas au build, la chronologie garde
+ses textes et perd ses cadres. Une chronologie sans images reste lisible; une
+chronologie disparue effacerait l’histoire du lieu.
+
+Huit des neuf images sont générées par intelligence artificielle, **et la page
+le dit** : chacune porte sa légende « Illustration artistique — non
+documentaire », en plus de l’avertissement général en tête de section. C’est
+l’inverse du choix fait pour les visuels d’événements, où le drapeau IA reste
+un registre éditorial : ici le sujet est historique, et laisser croire à des
+archives serait faux. Le Studio interdit d’ailleurs les deux mensonges
+symétriques — une image déclarée « illustration artistique » doit être cochée
+« générée par IA », et une image cochée « générée par IA » ne peut pas être
+présentée comme une photographie.
+
+Le numéro d’étape n’est plus saisi : il suit l’ordre de la liste, comme les
+groupes de l’accueil. Ajouter un repère au milieu du récit ne demande plus de
+renuméroter les huit autres, et le compte annoncé aux lecteurs d’écran se lit
+dans la liste au lieu d’être écrit « Neuf » en dur.
+
+**Le doute est la valeur par défaut** pour les architectes : une attribution qui
+n’est pas explicitement marquée comme confirmée reste affichée comme à
+confirmer. Les rôles de Roger D’Astous et de Jean-Paul Pothier n’ont jamais été
+validés par la paroisse.
+
+Champs supprimés, aucun rendu : `stepNumber`, `embeddedText`, `editorialStatus`
+(qui atteignait le HTML en attribut `data-*` que personne ne lisait), et les dix
+`status` éditoriaux des sections introduction, principes et architecture.

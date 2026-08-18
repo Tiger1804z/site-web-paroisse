@@ -2,22 +2,37 @@
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-import { isInformationRoutePublic } from '@/lib/navigation';
+import {
+  formatTimeLabel,
+  WEEKDAY_LABELS,
+} from '@/lib/schedules/schedule-format.ts';
+import type { HomeMassPreviewContent } from '@/types/homePage';
+import type { WeeklyMassEntry } from '@/types/schedule';
 
-interface ScheduleRow {
-  day: string;
-  note: string;
-  time: string;
+interface Props {
+  content: HomeMassPreviewContent;
+  masses?: readonly WeeklyMassEntry[];
+  lastUpdatedLabel?: string;
 }
 
-const schedule = [
-  { day: 'Samedi', note: 'Célébration', time: '[HEURE]' },
-  { day: 'Dimanche', note: 'Célébration', time: '[HEURE]' },
-  { day: 'Dimanche', note: 'Célébration', time: '[HEURE]' },
-] as const satisfies readonly ScheduleRow[];
-const showParishBulletinLink = isInformationRoutePublic(
-  '/feuillets-paroissiaux',
-);
+const { content, masses = [], lastUpdatedLabel } = Astro.props;
+
+const schedule = masses.map((mass) => ({
+  id: mass.id,
+  day: WEEKDAY_LABELS[mass.weekday],
+  note: mass.note ?? mass.title,
+  time: formatTimeLabel(mass.time) ?? mass.time,
+}));
+
+// Texte d'attente : il ne s'affiche que si aucune heure n'est publiée, et dit
+// alors le contraire de l'introduction saisie dans le Studio — annoncer des
+// horaires « ci-dessous » sous une liste vide serait faux. Un état dégradé
+// appartient au code, pas au CMS.
+const EMPTY_SCHEDULE_INTRODUCTION =
+  'Les horaires réguliers seront publiés après leur confirmation. Ils peuvent être modifiés lors des fêtes et des célébrations spéciales.';
+
+const introduction =
+  schedule.length > 0 ? content.introduction : EMPTY_SCHEDULE_INTRODUCTION;
 ---
 
 <section
@@ -28,59 +43,66 @@ const showParishBulletinLink = isInformationRoutePublic(
   <Container>
     <div class="mass-schedule__grid">
       <div class="mass-schedule__copy">
-        <Eyebrow tone="light">Célébrations</Eyebrow>
-        <h2 id="mass-schedule-title" class="type-h2">Célébrer avec nous</h2>
-        <p class="type-body">
-          Les horaires réguliers seront publiés après leur confirmation. Ils
-          peuvent être modifiés lors des fêtes et des célébrations spéciales.
-        </p>
+        <Eyebrow tone="light">{content.eyebrow}</Eyebrow>
+        <h2 id="mass-schedule-title" class="type-h2">{content.title}</h2>
+        <p class="type-body">{introduction}</p>
         <div class="mass-schedule__actions">
-          <Button href="/horaires">Voir tous les horaires</Button>
-          {
-            showParishBulletinLink && (
-              <Button href="/feuillets-paroissiaux" variant="dark">
-                Consulter les feuillets
-              </Button>
-            )
-          }
+          <Button href="/horaires">{content.ctaLabel}</Button>
         </div>
       </div>
 
       <div class="mass-schedule__list">
         {
-          schedule.map((item) => (
+          schedule.length > 0 ? (
+            schedule.map((item) => (
+              <div class="mass-schedule__row">
+                <div>
+                  <h3>{item.day}</h3>
+                  <p>{item.note}</p>
+                </div>
+                <span>{item.time}</span>
+              </div>
+            ))
+          ) : (
             <div class="mass-schedule__row">
               <div>
-                <h3>{item.day}</h3>
-                <p>{item.note}</p>
+                <h3>Horaires à confirmer</h3>
+                <p>
+                  Les heures seront publiées dès leur confirmation avec la
+                  paroisse.
+                </p>
               </div>
-              <span>{item.time}</span>
             </div>
-          ))
+          )
         }
         <div class="mass-schedule__special">
           <div>
-            <h3>Célébrations spéciales</h3>
-            <p>Consultez les annonces récentes avant de vous déplacer.</p>
+            <h3>{content.specialTitle}</h3>
+            <p>{content.specialDescription}</p>
           </div>
         </div>
-        <p class="mass-schedule__updated">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-              stroke-linecap="round"
-              stroke-linejoin="round"></path>
-          </svg>
-          Dernière mise à jour&nbsp;: [DATE]
-        </p>
+        {
+          lastUpdatedLabel && (
+            <p class="mass-schedule__updated">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Dernière mise à jour&nbsp;: {lastUpdatedLabel}
+            </p>
+          )
+        }
       </div>
     </div>
   </Container>

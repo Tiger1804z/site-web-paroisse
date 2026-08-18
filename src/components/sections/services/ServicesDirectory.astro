@@ -8,7 +8,9 @@ interface Props {
 }
 
 const { notice, chapters } = Astro.props;
-const orderedChapters = [...chapters].sort((a, b) => a.order - b.order);
+
+// L'ordre du tableau fait foi — celui du Studio comme celui du repli local.
+const orderedChapters = chapters;
 ---
 
 <section class="services-directory" aria-labelledby="services-directory-title">

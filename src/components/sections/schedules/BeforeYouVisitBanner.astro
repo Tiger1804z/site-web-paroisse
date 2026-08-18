@@ -1,12 +1,11 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
-import TextLink from '@/components/ui/TextLink.astro';
 import type { BeforeYouVisitContent } from '@/types/schedule';
 
 interface Props {
   content: BeforeYouVisitContent;
-  lastUpdatedLabel: string;
+  lastUpdatedLabel?: string;
 }
 
 const { content, lastUpdatedLabel } = Astro.props;
@@ -38,23 +37,20 @@ const { content, lastUpdatedLabel } = Astro.props;
       <div class="visit-banner__copy">
         <h2 id="visit-banner-title">{content.title}</h2>
         <p>{content.message}</p>
-        <p class="visit-banner__updated">
-          <span>Dernière mise à jour</span>
-          <strong>{lastUpdatedLabel}</strong>
-        </p>
+        {
+          lastUpdatedLabel && (
+            <p class="visit-banner__updated">
+              <span>Dernière mise à jour</span>
+              <strong>{lastUpdatedLabel}</strong>
+            </p>
+          )
+        }
       </div>
 
       <div class="visit-banner__actions">
         <Button href={content.contactLink.href} variant="secondary">
           {content.contactLink.label}
         </Button>
-        {
-          content.bulletinLink.active !== false && (
-            <TextLink href={content.bulletinLink.href} showRule={false}>
-              {content.bulletinLink.label}
-            </TextLink>
-          )
-        }
       </div>
     </div>
   </Container>

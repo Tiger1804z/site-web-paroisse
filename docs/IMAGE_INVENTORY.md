@@ -69,10 +69,19 @@ Import effectué le 26 juillet 2026 depuis les fichiers fournis localement par
 le client. Les copies de production conservent les empreintes des sources.
 Elles ne documentent aucune date ou programmation actuelle.
 
-| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                              |
-| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ----------------------------------------------------------------------- |
-| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Visuel fourni; ne confirme ni lieu, ni artiste, ni événement réel.      |
-| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Visuel fourni; ne confirme ni célébration, ni date, ni décor permanent. |
+Origine confirmée par le client le 30 juillet 2026 : **les deux visuels sont
+générés par intelligence artificielle**. Ils illustrent des façons de se
+rassembler, ils ne témoignent d’aucune scène réelle. La case « Image générée par
+intelligence artificielle » doit rester cochée sur les documents Sanity
+correspondants.
+
+| Fichier de production       | Format                          |  Dimensions |            Poids | SHA-256                                                            | Contenu observé                         | Précaution                                                                           |
+| --------------------------- | ------------------------------- | ----------: | ---------------: | ------------------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------ |
+| `concert-paroissial-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 285 339 octets | `e8c0456b1f5e1e86d2848c84e629e46bc6fd993b3db1621bdc7b89079b74e361` | Nef, public, piano et ensemble musical. | Générée par IA; ne confirme ni lieu, ni artiste, ni événement réel.                  |
+| `grande-celebration-01.png` | PNG sRGB RGB, sans transparence | 1448 × 1086 | 2 520 226 octets | `0f6da1d721da45774186df53a28e0d9110c387f698355c9aafb475ae6ab50d3f` | Nef et autel ornés de fleurs blanches.  | Générée par IA; ne confirme ni célébration, ni date, ni décor permanent de l’église. |
+
+Ces deux fichiers restent hors de la galerie documentaire : `isPublishable`
+(`src/lib/gallery/gallery.ts`) écarte toute image générée par IA.
 
 Astro génère les variantes responsives au build. Les PNG sources ne sont pas
 dupliqués en copies WebP dans le dépôt.
@@ -113,14 +122,15 @@ Les photographies montrent l'architecture et le décor intérieur; elles ne
 documentent pas les groupes eux-mêmes. Les textes alternatifs restent donc
 factuels et ne prétendent pas montrer une activité ou ses membres.
 
-## Prototypes Friperie — S1-T10
+## Prototypes Friperie — S1-T10, retirés le 29 juillet 2026
 
-Inspection effectuée le 27 juillet 2026. Les quatre copies de production sont
-binaires et leurs hashes correspondent aux fichiers entrants. Elles n'ont pas
-été retouchées. Aucun texte ni filigrane n'est visible dans les pixels, mais
-aucune licence de publication n'est confirmée.
+> **Ces quatre fichiers ont été supprimés du dépôt.** Aucune licence de
+> publication n'avait pu être établie : un actif iStock sans preuve d'achat, deux
+> photographies de reportage de Permanent Style et un fichier sans provenance.
+> Ils sont remplacés par des images Pixabay (section suivante). L'inspection
+> ci-dessous est conservée comme trace de la décision.
 
-Statut commun :
+Statut commun à l'époque :
 
 > PROTOTYPE TEMPORAIRE — DROITS À CONFIRMER
 
@@ -143,6 +153,36 @@ Ces images :
 - devront toutes être remplacées par les photographies réelles planifiées dans
   [`THRIFT_STORE_PHOTO_SHOT_LIST.md`](./THRIFT_STORE_PHOTO_SHOT_LIST.md);
 - ne permettent pas de retirer `noindex` même en l'absence de filigrane.
+
+## Visuels Friperie — remplacement du 29 juillet 2026
+
+Import depuis les fichiers fournis par l’utilisateur, issus de Pixabay. La
+Content License de Pixabay autorise l’usage commercial sans attribution; le
+crédit est conservé dans la donnée par choix éditorial, pas par obligation.
+
+| Fichier de production      | Source fournie                         | Dimensions           |          Poids | Auteur identifié par le nom | Contenu                                                           | Usage                  |
+| -------------------------- | -------------------------------------- | -------------------- | -------------: | --------------------------- | ----------------------------------------------------------------- | ---------------------- |
+| `hoodies-rack-pixabay.jpg` | `jarmoluk-sweatshirts-428607_1920.jpg` | 1920 × 1271, paysage | 508 499 octets | jarmoluk                    | Chandails à capuchon colorés serrés sur un portant; aucun visage. | Hero, première image.  |
+| `yarn-ball-pixabay.jpg`    | `stocksnap-yarn-2583976_1920.jpg`      | 1920 × 1280, paysage | 462 673 octets | StockSnap                   | Pelote de laine et bobines de fil, faible profondeur de champ.    | Hero, deuxième image.  |
+| `winter-boots-pixabay.jpg` | `stocksnap-fashion-2587909_1920.jpg`   | 1920 × 1280, paysage | 349 655 octets | StockSnap                   | Bottes de cuir portées avec un jean; jambes non identifiables.    | Hero, troisième image. |
+
+Ce qui change et ce qui ne change pas :
+
+- **la question des droits est réglée** — plus aucun visuel `rights-unverified`
+  sur le site, et le statut passe à `confirmed`;
+- **ce sont des visuels thématiques**, choisis pour l’univers du vêtement. Ils
+  ne sont jamais légendés comme des photographies du local, et aucun texte de la
+  page ne le laisse entendre;
+- **`/friperie/` reste `noindex`** — ce n’étaient pas les droits qui bloquaient
+  seuls, mais aussi les informations pratiques non confirmées.
+
+Empreintes SHA-256 :
+
+```
+95bc9708f77fef910feb075a74caab99defed6c45bc971cca25bb10ce91699b1  hoodies-rack-pixabay.jpg
+ec2fc870d80cdebe0552a40f7c503dc37317bb22bd20c4b9674f4494f056a5e9  yarn-ball-pixabay.jpg
+3b3eebe0a3d15903f63f542ce3a3464b618906aeadcf09441e39a0b69f835a2b  winter-boots-pixabay.jpg
+```
 
 ## Visuels éditoriaux Accueil et Nos services — S1-T11
 

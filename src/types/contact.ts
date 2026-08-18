@@ -1,5 +1,4 @@
-export type ContactContentStatus =
-  'confirmed' | 'observed-to-confirm' | 'temporary';
+import type { PageSeo } from '@/types/seo';
 
 export type ContactMethodKind = 'address' | 'phone' | 'email' | 'social';
 
@@ -8,6 +7,14 @@ export interface ContactCallToAction {
   readonly href: string;
 }
 
+/**
+ * Une coordonnée affichée sur la page.
+ *
+ * Aucune n'est saisissable dans le Studio : les trois viennent de
+ * « Coordonnées de la paroisse », la source unique. Une coordonnée absente ne
+ * produit pas de carte — c'est ce qui fait apparaître le courriel tout seul le
+ * jour où la paroisse le confirme, sans toucher au code.
+ */
 export interface ContactMethod {
   readonly id: string;
   readonly kind: ContactMethodKind;
@@ -15,17 +22,19 @@ export interface ContactMethod {
   readonly value: string;
   readonly href?: string;
   readonly note?: string;
-  readonly active: boolean;
-  readonly order: number;
-  readonly status: ContactContentStatus;
 }
 
+/**
+ * Heures du secrétariat.
+ *
+ * Le titre et la note se saisissent, l'horaire non : c'est un fait sur la
+ * paroisse, vrai indépendamment de la page, et il sert aussi Horaires et
+ * Première visite. Absent tant que `officeHoursLabel` est vide.
+ */
 export interface ContactOfficeHours {
   readonly title: string;
   readonly schedule: readonly string[];
   readonly note?: string;
-  readonly active: boolean;
-  readonly status: ContactContentStatus;
 }
 
 export type ContactFormFieldName =
@@ -77,11 +86,7 @@ export type ContactFormField =
   | ContactCheckboxField;
 
 export interface ContactPageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-    readonly noIndex: boolean;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;
@@ -100,8 +105,11 @@ export interface ContactPageData {
     readonly mapEmbedUrl?: string;
     readonly mapTitle?: string;
     readonly directionsCta?: ContactCallToAction;
+    /**
+     * Stationnement et accessibilité viennent de `siteSettings`; les notes
+     * saisies dans le Studio les suivent. Une note vide ne produit pas de ligne.
+     */
     readonly accessNotes: readonly string[];
-    readonly status: ContactContentStatus;
   };
   readonly form: {
     readonly title: string;

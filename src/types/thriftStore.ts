@@ -1,85 +1,79 @@
-import type { ImageMetadata } from 'astro';
-
-export type ThriftStoreImageStatus =
-  'confirmed' | 'temporary' | 'placeholder' | 'rights-unverified';
+import type { GalleryItem } from '@/types/gallery';
+import type { PageSeo } from '@/types/seo';
+import type { SanityRenderableImage } from '@/types/sanityImage';
 
 export interface ThriftStoreCallToAction {
   readonly label: string;
   readonly href: string;
 }
 
-export interface ThriftStoreImage {
-  readonly image: ImageMetadata;
-  readonly alt: string;
-  readonly credit?: string;
-  readonly sourceNote: string;
-  readonly status: ThriftStoreImageStatus;
-  readonly replacementNote: string;
+/** Une image du carrousel d'en-tête : un libellé, une image du Studio. */
+export interface ThriftStoreHeroSlide {
+  readonly label: string;
+  readonly image: SanityRenderableImage;
 }
 
-export type ThriftStoreInformationField =
-  | {
-      readonly value: string;
-      readonly confirmed: true;
-    }
-  | {
-      readonly value?: string;
-      readonly confirmed: false;
-    };
+/**
+ * Renseignements pratiques de la friperie.
+ *
+ * Chaque champ est facultatif : une valeur absente n'est pas affichée. Le
+ * couple `{value, confirmed}` d'avant la migration n'apportait rien — un
+ * renseignement non confirmé n'a de toute façon pas de valeur à publier.
+ */
+export interface ThriftStorePracticalInformation {
+  readonly hours?: string;
+  readonly location?: string;
+  /** Ligne propre à la friperie, distincte du secrétariat de la paroisse. */
+  readonly phone?: string;
+  readonly contactCta: ThriftStoreCallToAction;
+}
 
 export interface ThriftStoreSection {
+  /** Sert d'ancre HTML. Vient de la clé Sanity, jamais saisi par l'éditrice. */
   readonly id: string;
   readonly eyebrow: string;
   readonly title: string;
   readonly description: string;
   readonly active: boolean;
-  readonly order: number;
+  /** L'ordre d'affichage est celui du tableau, pas un numéro à tenir à jour. */
   readonly visualKind: 'clothing-rack' | 'none';
 }
 
-export interface ThriftStorePhotoPlaceholder {
-  readonly id: string;
-  readonly subject: string;
-  readonly ratio: '4:3' | '1:1' | '3:4' | '16:9';
-  readonly orientation: 'landscape' | 'portrait' | 'square';
-}
-
 export interface ThriftStorePageData {
-  readonly seo: {
-    readonly title: string;
-    readonly description: string;
-    readonly canonicalPath: string;
-    readonly noIndex: boolean;
-  };
+  readonly seo: PageSeo;
   readonly hero: {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly primaryImage: ThriftStoreImage;
-    readonly revealImages: readonly ThriftStoreImage[];
+    /**
+     * Images du hero, affichées en alternance. La première est rendue par le
+     * serveur; la rotation et la loupe sont des améliorations du navigateur.
+     *
+     * Peut être vide : l'en-tête garde alors son fond sombre.
+     */
+    readonly slides: readonly ThriftStoreHeroSlide[];
   };
   readonly introduction: {
     readonly eyebrow: string;
     readonly title: string;
     readonly paragraphs: readonly string[];
     readonly priceNotice: string;
-    readonly photoPlaceholder: ThriftStorePhotoPlaceholder;
   };
-  readonly practicalInformation: {
-    readonly hours: ThriftStoreInformationField;
-    readonly location: ThriftStoreInformationField;
-    readonly donationConditions: ThriftStoreInformationField;
-    readonly responsibleContact: ThriftStoreInformationField;
-    readonly pricingNote: ThriftStoreInformationField;
-    readonly specialSalesNote: ThriftStoreInformationField;
-    readonly contactCta: ThriftStoreCallToAction;
-  };
+  readonly practicalInformation: ThriftStorePracticalInformation;
   readonly sections: readonly ThriftStoreSection[];
+  /**
+   * Galerie du local.
+   *
+   * Tant qu'aucune photographie publiable n'est déposée, la section entière
+   * disparaît. Les six cadres « photographie réelle prévue » qui occupaient
+   * cette place annonçaient un chantier sur une page publique, et la paroisse
+   * ne pouvait pas les remplacer elle-même.
+   */
   readonly gallery: {
     readonly eyebrow: string;
     readonly title: string;
     readonly introduction: string;
-    readonly placeholders: readonly ThriftStorePhotoPlaceholder[];
+    readonly items: readonly GalleryItem[];
   };
   readonly closing: {
     readonly eyebrow: string;

@@ -1,9 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import type {
-  ThriftStoreImage,
-  ThriftStorePageData,
-} from '@/types/thriftStore';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
+import type { ThriftStorePageData } from '@/types/thriftStore';
 
 interface Props {
   hero: ThriftStorePageData['hero'];
@@ -11,15 +8,6 @@ interface Props {
 
 const { hero } = Astro.props;
 const lensClipId = 'thrift-store-hero-lens-clip';
-
-const responsiveWidths = (visual: ThriftStoreImage): number[] => {
-  const candidates = [480, 720, 960, 1280, 1600, 1920];
-  const available = candidates.filter(
-    (candidate) => candidate <= visual.image.width,
-  );
-
-  return available.length > 0 ? available : [visual.image.width];
-};
 ---
 
 <section
@@ -42,18 +30,24 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     </defs>
   </svg>
 
-  <div class="thrift-hero__primary" aria-hidden="true">
-    <Image
-      src={hero.primaryImage.image}
-      alt=""
-      widths={responsiveWidths(hero.primaryImage)}
-      sizes="100vw"
-      format="webp"
-      quality={78}
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
+  <div class="thrift-hero__slides" aria-hidden="true">
+    {
+      hero.slides.map((visual, index) => (
+        <div
+          class="thrift-hero__slide"
+          data-hero-slide
+          data-active={index === 0 ? 'true' : 'false'}
+        >
+          <RemoteImage
+            image={visual.image}
+            alt=""
+            sizes="100vw"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'low'}
+          />
+        </div>
+      ))
+    }
   </div>
 
   <div
@@ -63,22 +57,16 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     style={`clip-path: url(#${lensClipId}); -webkit-clip-path: url(#${lensClipId});`}
   >
     {
-      hero.revealImages.map((visual, index) => (
+      hero.slides.map((visual, index) => (
         <div
           class="thrift-hero__reveal"
           data-organic-lens-layer
-          data-active={index === 0 ? 'true' : 'false'}
+          data-active={index === 1 ? 'true' : 'false'}
         >
-          <Image
-            src={visual.image}
+          <RemoteImage
+            image={visual.image}
             alt=""
-            widths={responsiveWidths(visual)}
             sizes="100vw"
-            format="webp"
-            quality={74}
-            loading="lazy"
-            decoding="async"
-            fetchpriority="low"
             data-organic-lens-image
           />
         </div>
@@ -108,18 +96,49 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     <p class="thrift-hero__introduction">{hero.introduction}</p>
   </div>
 
-  <p class="thrift-hero__temporary-note">
-    Visuel temporaire — photographies réelles à venir
-  </p>
+  {
+    hero.slides.length > 1 && (
+      <div
+        class="thrift-hero__indicators"
+        role="group"
+        aria-label="Choisir l’image du hero"
+      >
+        {hero.slides.map((visual, index) => (
+          <button
+            type="button"
+            aria-label={`Afficher l’image ${index + 1} sur ${hero.slides.length} : ${visual.label}`}
+            aria-pressed={index === 0 ? 'true' : 'false'}
+            data-hero-indicator
+          >
+            <span aria-hidden="true" />
+          </button>
+        ))}
+      </div>
+    )
+  }
 </section>
 
 <script>
+  import { initializeHeroSlideshow } from '@/scripts/hero-slideshow';
   import { initializeOrganicHeroLens } from '@/scripts/organic-hero-lens';
 
   document
     .querySelectorAll<HTMLElement>('[data-thrift-hero]')
     .forEach((hero) => {
-      initializeOrganicHeroLens(hero);
+      if (hero.dataset.initialized === 'true') return;
+      hero.dataset.initialized = 'true';
+
+      const slideCount = hero.querySelectorAll('[data-hero-slide]').length;
+      const lensController = initializeOrganicHeroLens(hero, {
+        cycleOnMovement: false,
+        initialImageIndex: 1,
+      });
+
+      initializeHeroSlideshow(hero, {
+        // La loupe révèle l'image suivante, jamais celle déjà affichée.
+        onSelect: (index) =>
+          lensController?.setActiveImage((index + 1) % slideCount),
+      });
     });
 </script>
 
@@ -138,7 +157,8 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     color: var(--color-ivory);
   }
 
-  .thrift-hero__primary,
+  .thrift-hero__slides,
+  .thrift-hero__slide,
   .thrift-hero__reveals,
   .thrift-hero__reveal,
   .thrift-hero__scrim,
@@ -148,11 +168,20 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     inset: 0;
   }
 
-  .thrift-hero__primary {
+  .thrift-hero__slides {
     z-index: -4;
   }
 
-  .thrift-hero__primary :global(img),
+  .thrift-hero__slide {
+    opacity: 0;
+    transition: opacity 1250ms var(--motion-ease-cinematic);
+  }
+
+  .thrift-hero__slide[data-active='true'] {
+    opacity: 1;
+  }
+
+  .thrift-hero__slide :global(img),
   .thrift-hero__reveal :global(img) {
     display: block;
     width: 100%;
@@ -160,7 +189,7 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     object-fit: cover;
   }
 
-  .thrift-hero__primary :global(img) {
+  .thrift-hero__slide :global(img) {
     object-position: 52% center;
   }
 
@@ -275,16 +304,43 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
     text-shadow: 0 1px 1rem rgb(28 25 24 / 38%);
   }
 
-  .thrift-hero__temporary-note {
+  .thrift-hero__indicators {
     position: absolute;
     z-index: 2;
-    right: var(--gutter-page);
-    bottom: 1.25rem;
-    margin: 0;
-    color: color-mix(in srgb, var(--color-ivory) 58%, transparent);
-    font-size: 0.5625rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    bottom: 1rem;
+    left: var(--gutter-page);
+    display: flex;
+    align-items: center;
+  }
+
+  .thrift-hero__indicators button {
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-ivory);
+    cursor: pointer;
+  }
+
+  .thrift-hero__indicators span {
+    width: 0.375rem;
+    height: 0.375rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    transition:
+      width var(--duration-short) var(--ease-editorial),
+      background-color var(--duration-short) var(--ease-editorial);
+  }
+
+  .thrift-hero__indicators button[aria-pressed='true'] span {
+    width: 1.5rem;
+    border-radius: 0;
+    background: currentColor;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -298,8 +354,12 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
       min-height: 42rem;
     }
 
-    .thrift-hero__primary :global(img) {
+    .thrift-hero__slide :global(img) {
       object-position: 62% center;
+    }
+
+    .thrift-hero__indicators {
+      left: 0.5rem;
     }
 
     .thrift-hero__scrim {
@@ -312,33 +372,27 @@ const responsiveWidths = (visual: ThriftStoreImage): number[] => {
         ),
         linear-gradient(90deg, rgb(28 25 24 / 28%), transparent);
     }
-
-    .thrift-hero__temporary-note {
-      right: 1.25rem;
-      left: 1.25rem;
-      text-align: left;
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .thrift-hero__temporary-note {
-      right: 2.5rem;
-    }
-  }
-
-  @media (min-width: 64rem) {
-    .thrift-hero__temporary-note {
-      right: 5rem;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .thrift-hero__reveals,
     .thrift-hero__lens-definition,
     .thrift-hero__lens-outline,
-    .thrift-hero__lens-metric {
+    .thrift-hero__lens-metric,
+    .thrift-hero__indicators {
       display: none;
       transition: none;
+    }
+
+    /* Une seule image, sans fondu : le script arrête aussi la rotation. */
+    .thrift-hero__slide {
+      display: none;
+      transition: none;
+    }
+
+    .thrift-hero__slide:first-child {
+      display: block;
+      opacity: 1;
     }
   }
 </style>

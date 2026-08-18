@@ -11,8 +11,7 @@ const parishLifePageData = await getParishLifePageData();
 ---
 
 <BaseLayout
-  title={parishLifePageData.seo.title}
-  description={parishLifePageData.seo.description}
+  seo={parishLifePageData.seo}
   pageClass="parish-life-page"
   headerVariant="transparent"
 >

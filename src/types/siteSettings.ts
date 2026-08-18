@@ -1,3 +1,5 @@
+import type { SanityRenderableImage } from '@/types/sanityImage';
+
 export interface PublicAddress {
   readonly street: string;
   readonly city: string;
@@ -34,4 +36,34 @@ export interface PublicContactDetails {
   readonly email?: PublicEmail;
   readonly directionsUrl: string;
   readonly map: PublicMapSettings;
+  /**
+   * Heures d’ouverture du secrétariat, en une ligne prête à afficher.
+   *
+   * Coordonnée globale : la même valeur sert la page Horaires, Contact et
+   * Première visite. Absente tant que la paroisse ne l’a pas confirmée.
+   */
+  readonly officeHoursLabel?: string;
+  /**
+   * Informations de stationnement, en une ligne prête à afficher.
+   *
+   * Même statut que `officeHoursLabel` : c’est un fait sur le lieu, vrai
+   * indépendamment de la page qui l’affiche. Absent tant que la paroisse ne
+   * l’a pas confirmé.
+   */
+  readonly parkingLabel?: string;
+  /**
+   * Informations d’accessibilité, en une ligne prête à afficher.
+   *
+   * Absent tant que la paroisse ne l’a pas confirmé — et il vaut mieux ne rien
+   * afficher qu’annoncer un accès dont personne n’a vérifié la réalité.
+   */
+  readonly accessibilityLabel?: string;
+  /**
+   * Image de partage du site, servie à toute page qui n’a pas la sienne.
+   *
+   * Absente tant que la paroisse n’en a pas fourni une. Aucune image locale ne
+   * la remplace : partager sans image vaut mieux que partager une image qui
+   * n’a rien à voir avec la page.
+   */
+  readonly shareImage?: SanityRenderableImage;
 }

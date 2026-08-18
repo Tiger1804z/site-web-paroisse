@@ -1,15 +1,125 @@
-export interface SanitySiteSettingsAddress {
-  readonly street: string | null;
-  readonly city: string | null;
-  readonly province: string | null;
-  readonly postalCode: string | null;
-  readonly country: string | null;
-}
+import type {
+  SITE_SETTINGS_QUERY_RESULT,
+  MASS_SCHEDULE_QUERY_RESULT,
+  PARISH_EVENTS_QUERY_RESULT,
+  EVENTS_PAGE_QUERY_RESULT,
+  HOME_PAGE_QUERY_RESULT,
+  SCHEDULE_PAGE_QUERY_RESULT,
+  THRIFT_STORE_QUERY_RESULT,
+  THRIFT_STORE_PAGE_QUERY_RESULT,
+  SERVICES_PAGE_QUERY_RESULT,
+  PARISH_LIFE_PAGE_QUERY_RESULT,
+  FIRST_VISIT_PAGE_QUERY_RESULT,
+  ADVERTISERS_QUERY_RESULT,
+  ADVERTISERS_PAGE_QUERY_RESULT,
+  CONTACT_PAGE_QUERY_RESULT,
+  ABOUT_PAGE_QUERY_RESULT,
+} from '@/lib/sanity/sanity.types';
 
-export interface SanitySiteSettingsDocument {
-  readonly organizationName: string | null;
-  readonly address: SanitySiteSettingsAddress | null;
-  readonly phone: string | null;
-  readonly publicEmail: string | null;
-  readonly showPublicEmail: boolean | null;
-}
+/**
+ * Type brut du document siteSettings tel que renvoyé par SITE_SETTINGS_QUERY.
+ *
+ * Dérivé du type généré par Sanity TypeGen — la source de vérité est le schéma
+ * Sanity plus la projection GROQ. Ce module est la seule frontière qui référence
+ * le fichier généré : le normalizer et le getter importent d'ici, jamais du
+ * fichier généré directement. `null` = singleton absent ou requête sans résultat.
+ */
+export type SanitySiteSettingsResult = SITE_SETTINGS_QUERY_RESULT;
+
+/**
+ * Type brut du document massSchedule tel que renvoyé par MASS_SCHEDULE_QUERY.
+ *
+ * Même frontière que ci-dessus : structure machine (jours en anglais, heures
+ * `HH:mm`), les libellés français sont dérivés dans le normalizer.
+ */
+export type SanityMassScheduleResult = MASS_SCHEDULE_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par SCHEDULE_PAGE_QUERY. */
+export type SanitySchedulePageResult = SCHEDULE_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut des événements renvoyés par PARISH_EVENTS_QUERY.
+ *
+ * Les images y sont encore des objets Sanity complets — référence de fichier,
+ * point focal et rognage — parce que le constructeur d'adresses en a besoin.
+ */
+export type SanityParishEventsResult = PARISH_EVENTS_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par EVENTS_PAGE_QUERY. */
+export type SanityEventsPageResult = EVENTS_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut de la page d’accueil renvoyé par HOME_PAGE_QUERY.
+ *
+ * Un seul document, deux lectures : `normalizeSanityHomePage` en tire les
+ * textes des sections, `normalizeSanityHomePageEvents` les trois réglages de la
+ * section des activités.
+ */
+export type SanityHomePageResult = HOME_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut de la friperie renvoyé par THRIFT_STORE_QUERY.
+ *
+ * Donnée partagée : heures, emplacement et téléphone propres à la friperie,
+ * distincts de ceux du secrétariat.
+ */
+export type SanityThriftStoreResult = THRIFT_STORE_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par THRIFT_STORE_PAGE_QUERY. */
+export type SanityThriftStorePageResult = THRIFT_STORE_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par SERVICES_PAGE_QUERY.
+ *
+ * Les ancres y sont déjà des chaînes : la projection extrait `slug.current`.
+ */
+export type SanityServicesPageResult = SERVICES_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par PARISH_LIFE_PAGE_QUERY.
+ *
+ * Les ancres y sont déjà des chaînes : la projection extrait `slug.current`.
+ * Elles rattachent aussi l’image locale de chaque groupe.
+ */
+export type SanityParishLifePageResult = PARISH_LIFE_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du document firstVisitPage tel que renvoyé par
+ * FIRST_VISIT_PAGE_QUERY.
+ *
+ * Les lignes d’informations pratiques n’y portent que leur source : les valeurs
+ * partagées (adresse, téléphone, stationnement, accessibilité) arrivent par
+ * `SanitySiteSettingsResult`, et le getter recompose les deux.
+ */
+export type SanityFirstVisitPageResult = FIRST_VISIT_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut de la collection d’annonceurs renvoyée par ADVERTISERS_QUERY.
+ *
+ * Déjà triée par la requête (`order` puis `name`), mais pas filtrée : le statut
+ * y est encore présent, et c’est `selectAdvertisers()` qui écarte ce qui ne se
+ * publie pas.
+ */
+export type SanityAdvertisersResult = ADVERTISERS_QUERY_RESULT;
+
+/** Type brut du contenu de page renvoyé par ADVERTISERS_PAGE_QUERY. */
+export type SanityAdvertisersPageResult = ADVERTISERS_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par CONTACT_PAGE_QUERY.
+ *
+ * N'y figure aucune coordonnée : elles arrivent par `SanitySiteSettingsResult`,
+ * et le getter recompose les deux. La structure du formulaire n'y est pas non
+ * plus — elle appartient au code.
+ */
+export type SanityContactPageResult = CONTACT_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par ABOUT_PAGE_QUERY.
+ *
+ * Les illustrations de la chronologie y sont encore des objets Sanity complets
+ * — référence de fichier, point focal et rognage — parce que le constructeur
+ * d’adresses en a besoin. Le hero et le cadre d’architecture n’y figurent pas :
+ * ces images sont des fichiers du dépôt.
+ */
+export type SanityAboutPageResult = ABOUT_PAGE_QUERY_RESULT;

@@ -20,6 +20,7 @@ export const parishLifePageData = {
       'Découvrez les rencontres, les célébrations et les initiatives qui tissent des liens dans notre communauté.',
     images: [
       {
+        kind: 'image',
         image: churchGatheringImage,
         alt: 'Illustration artistique de personnes rassemblées à l’entrée d’une église; scène non documentaire',
         label: 'Une communauté rassemblée',
@@ -31,6 +32,7 @@ export const parishLifePageData = {
           'Image fournie par l’utilisateur; auteur indiqué « Tylijura » dans le nom du fichier, source et licence exactes à archiver.',
       },
       {
+        kind: 'image',
         image: worshipAiImage,
         alt: 'Illustration artistique monochrome d’une femme chantant entourée d’une communauté; personnes fictives',
         label: 'Le chant et la prière',
@@ -42,6 +44,7 @@ export const parishLifePageData = {
           'Image générée par IA fournie par l’utilisateur; auteur indiqué « Alanajordan » dans le nom du fichier, source et licence exactes à archiver.',
       },
       {
+        kind: 'image',
         image: childrenWorkshopAiImage,
         alt: 'Illustration artistique d’enfants participant à un atelier créatif; personnages fictifs',
         label: 'Grandir ensemble',
@@ -86,9 +89,7 @@ export const parishLifePageData = {
         label: 'Demander de l’information',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 1,
     },
     {
       id: 'chorale',
@@ -111,9 +112,7 @@ export const parishLifePageData = {
         label: 'Demander de l’information',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 2,
     },
     {
       id: 'dames-fils-notre-dame',
@@ -136,9 +135,7 @@ export const parishLifePageData = {
         label: 'Demander de l’information',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 3,
     },
     {
       id: 'marguilliers',
@@ -161,9 +158,7 @@ export const parishLifePageData = {
         label: 'Communiquer avec la paroisse',
         href: '/contact/',
       },
-      status: 'to-confirm',
       active: true,
-      order: 4,
     },
   ],
   participation: {

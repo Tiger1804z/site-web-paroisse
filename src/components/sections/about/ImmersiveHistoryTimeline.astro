@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import type { HistoryImageKind, HistoryTimelineContent } from '@/types/about';
 
 interface Props {
@@ -10,11 +10,17 @@ interface Props {
 
 const { history } = Astro.props;
 
+// La légende reste écrite dans le code : c'est une déclaration du site sur ce
+// qu'il montre, pas un texte à réécrire. Le Studio choisit laquelle s'applique.
 const imageKindLabels = {
   'ai-illustration': 'Illustration artistique — non documentaire',
   'documentary-photo': 'Repère documentaire — photographie prise dans l’église',
   'current-photo': 'Photographie actuelle',
 } satisfies Record<HistoryImageKind, string>;
+
+// Le compte se lit dans la liste : écrire « Neuf repères » en dur mentirait dès
+// qu'un repère serait ajouté ou retiré dans le Studio.
+const chaptersLabel = `${history.entries.length} repères de l’histoire paroissiale`;
 ---
 
 <div
@@ -68,10 +74,7 @@ const imageKindLabels = {
       </aside>
     </header>
 
-    <ol
-      class="history-timeline__chapters"
-      aria-label="Neuf repères de l’histoire paroissiale"
-    >
+    <ol class="history-timeline__chapters" aria-label={chaptersLabel}>
       {
         history.entries.map((entry, index) => (
           <li class="history-timeline__chapter-item">
@@ -85,7 +88,6 @@ const imageKindLabels = {
               data-history-chapter
               data-history-index={index}
               data-history-image-kind={entry.imageKind}
-              data-history-editorial-status={entry.editorialStatus}
             >
               <span
                 class="history-timeline__trigger"
@@ -95,7 +97,7 @@ const imageKindLabels = {
 
               <div class="history-timeline__axis" aria-hidden="true">
                 <span class="history-timeline__marker">
-                  {entry.stepNumber.toString().padStart(2, '0')}
+                  {(index + 1).toString().padStart(2, '0')}
                 </span>
               </div>
 
@@ -139,24 +141,25 @@ const imageKindLabels = {
                 </div>
               </div>
 
-              <figure
-                class:list={[
-                  'history-timeline__figure',
-                  `history-timeline__figure--${entry.imageKind}`,
-                ]}
-              >
-                <Image
-                  src={entry.image}
-                  alt={entry.imageAlt}
-                  widths={[360, 540, 720, 900]}
-                  sizes="(min-width: 64rem) 42vw, calc(100vw - 5rem)"
-                  format="webp"
-                  quality={88}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <figcaption>{imageKindLabels[entry.imageKind]}</figcaption>
-              </figure>
+              {/*
+                Sans illustration — Sanity muet au build — le repère garde son
+                texte et perd son cadre. Un `figure` vide vaudrait moins que
+                rien : il laisserait un trou dans la chronologie.
+              */}
+              {entry.image && (
+                <figure
+                  class:list={[
+                    'history-timeline__figure',
+                    `history-timeline__figure--${entry.imageKind}`,
+                  ]}
+                >
+                  <RemoteImage
+                    image={entry.image}
+                    sizes="(min-width: 64rem) 42vw, calc(100vw - 5rem)"
+                  />
+                  <figcaption>{imageKindLabels[entry.imageKind]}</figcaption>
+                </figure>
+              )}
             </article>
           </li>
         ))

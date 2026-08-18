@@ -12,4 +12,19 @@ export default defineCliConfig({
      */
     autoUpdates: true,
   },
+  typegen: {
+    // Génération explicite via `pnpm sanity:typegen`, pas pendant `sanity dev`.
+    enabled: false,
+    // Chemins relatifs à studio/ : on scanne les requêtes GROQ du frontend.
+    // On exclut le fichier généré lui-même du scan (hygiène + évite un crash du
+    // parseur qui re-parse sa propre sortie).
+    path: ['../src/**/*.{ts,tsx,js,jsx}', '!../src/lib/sanity/sanity.types.ts'],
+    schema: './schema.json',
+    generates: '../src/lib/sanity/sanity.types.ts',
+    overloadClientMethods: true,
+    // Le fichier généré est ignoré par Prettier/ESLint : on désactive le
+    // formatage post-génération (il échoue ici car le plugin Tailwind cherche
+    // le CSS relativement à studio/). Types valides, non formatés : sans effet.
+    formatGeneratedCode: false,
+  },
 })

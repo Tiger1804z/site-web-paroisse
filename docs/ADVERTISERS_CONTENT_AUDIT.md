@@ -113,10 +113,42 @@ portraits et aucun chemin local absolu.
 
 ## Décision de publication
 
-La route `/nos-annonceurs/` est complète mais reste `noindex`. Le getter public
-ne rend que les entrées `active`; les quatre entrées historiques
-`confirmation-required` demeurent dans la source locale pour faciliter la
-révision sans être affichées publiquement.
+> **Mise à jour du 31 juillet 2026 — le contenu est dans Sanity et les quatre
+> fiches sont publiées.**
+>
+> Le contenu est passé dans la collection `advertiser` et le document
+> `advertisersPage`. Les quatre fiches sont en statut `active`.
+>
+> **Ce que cet audit recommandait est renversé, sciemment.** L’audit tenait la
+> page historique pour une preuve insuffisante et gardait donc les fiches
+> masquées. L’administratrice du site a tranché autrement : ces placements sont
+> **encore publics sur l’ancien site de la paroisse**, donc les reprendre est la
+> continuité de ce qui est déjà en ligne, et ce n’est pas au site de décider à
+> la place de la paroisse ce qu’elle affiche. La secrétaire retire une fiche en
+> la passant à « Inactif », sans changement de code.
+>
+> Ce qui ne change pas : **aucun portrait n’est publié**, faute de droits
+> documentés. Seules les coordonnées déjà affichées le sont, et chaque fiche
+> garde sa condition de révision dans le champ « Note de révision », qui n’est
+> jamais projeté vers le site.
+>
+> Trois textes ont été réécrits, parce que publier les fiches les rendait faux :
+> la description de Buffet Marina contenait sa propre condition de révision, le
+> titre de section annonçait « Les annonceurs confirmés », et un paragraphe
+> affirmait qu’une présence n’apparaît qu’après confirmation. Ce paragraphe dit
+> maintenant comment demander une correction ou un retrait.
+>
+> Les fonctions des trois élus proviennent de l’image historique. La
+> vice-présidence de l’Assemblée nationale attribuée à Frantz Benjamin n’a pas
+> été reprise : c’est un rôle qui change de titulaire, et donc le plus
+> susceptible d’être périmé. **Les trois fonctions restent à confirmer.**
+>
+> Le repli local `src/data/advertisers.ts` porte les mêmes quatre entrées, pour
+> que le site se construise même si Sanity ne répond pas.
+
+La route `/nos-annonceurs/` reste `noindex` : les ententes, les coordonnées, les
+fonctions et les logos ne sont pas confirmés. Le getter public ne rend que les
+entrées `active`.
 
 Conditions pour retirer `noindex` :
 

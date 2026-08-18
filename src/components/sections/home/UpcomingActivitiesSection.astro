@@ -1,8 +1,8 @@
 ---
-import { Image } from 'astro:assets';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import TextLink from '@/components/ui/TextLink.astro';
 import {
   formatParishEventDate,
@@ -53,17 +53,13 @@ const { featured, secondary } = events;
           >
             {featured.coverImage && (
               <>
-                <Image
-                  src={featured.coverImage.image}
-                  alt={featured.coverImage.alt}
-                  widths={[640, 960, 1280]}
+                <RemoteImage
+                  image={featured.coverImage}
                   sizes={
                     secondary.length > 0
                       ? '(min-width: 64rem) calc(100vw - 31rem), calc(100vw - 2.5rem)'
                       : '(min-width: 64rem) calc(100vw - 8rem), calc(100vw - 2.5rem)'
                   }
-                  loading="lazy"
-                  decoding="async"
                 />
                 <div class="featured-activity__overlay" aria-hidden="true" />
               </>
@@ -126,13 +122,10 @@ const { featured, secondary } = events;
                 >
                   {event.coverImage && (
                     <span class="secondary-activity__image">
-                      <Image
-                        src={event.coverImage.image}
+                      <RemoteImage
+                        image={event.coverImage}
                         alt=""
-                        widths={[160]}
                         sizes="80px"
-                        loading="lazy"
-                        decoding="async"
                       />
                     </span>
                   )}

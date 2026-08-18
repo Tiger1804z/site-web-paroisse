@@ -1,5 +1,4 @@
 ---
-import Button from '@/components/ui/Button.astro';
 import TextLink from '@/components/ui/TextLink.astro';
 import type { ScheduleSidebarContent } from '@/types/schedule';
 
@@ -11,28 +10,9 @@ const { content } = Astro.props;
 ---
 
 <aside
-  class:list={[
-    'schedule-sidebar',
-    !content.bulletin.active && 'schedule-sidebar--single',
-  ]}
+  class="schedule-sidebar schedule-sidebar--single"
   aria-label="Informations pratiques"
 >
-  {
-    content.bulletin.active && (
-      <section
-        class="schedule-sidebar__bulletin"
-        aria-labelledby="schedule-bulletin-title"
-      >
-        <p class="schedule-sidebar__eyebrow">{content.bulletin.eyebrow}</p>
-        <h2 id="schedule-bulletin-title">{content.bulletin.title}</h2>
-        <p class="schedule-sidebar__period">{content.bulletin.periodLabel}</p>
-        <Button href={content.bulletin.link.href} variant="light">
-          {content.bulletin.link.label}
-        </Button>
-      </section>
-    )
-  }
-
   <section
     class="schedule-sidebar__office"
     aria-labelledby="schedule-office-title"
@@ -43,7 +23,11 @@ const { content } = Astro.props;
     >
       {content.office.eyebrow}
     </h2>
-    <p class="schedule-sidebar__hours">{content.office.hoursLabel}</p>
+    {
+      content.office.hoursLabel && (
+        <p class="schedule-sidebar__hours">{content.office.hoursLabel}</p>
+      )
+    }
     <p class="schedule-sidebar__message">{content.office.message}</p>
     <TextLink href={content.office.link.href}>
       {content.office.link.label}
@@ -57,17 +41,8 @@ const { content } = Astro.props;
     gap: 1.5rem;
   }
 
-  .schedule-sidebar__bulletin,
   .schedule-sidebar__office {
     padding: 1.5rem;
-  }
-
-  .schedule-sidebar__bulletin {
-    background: var(--color-burgundy);
-    color: var(--color-ivory);
-  }
-
-  .schedule-sidebar__office {
     border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
     background: var(--color-surface);
   }
@@ -85,29 +60,14 @@ const { content } = Astro.props;
     color: var(--color-wood);
   }
 
-  .schedule-sidebar__bulletin h2 {
-    margin: 0;
-    color: var(--color-ivory);
-    font-size: 1.5rem;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  .schedule-sidebar__period {
-    margin: 0.5rem 0 1.25rem;
-    color: color-mix(in srgb, var(--color-ivory) 68%, transparent);
-    font-size: var(--font-size-ui);
-  }
-
-  .schedule-sidebar__bulletin :global(.ui-button) {
-    width: 100%;
-  }
-
   .schedule-sidebar__hours {
     margin: 0;
     color: var(--color-charcoal);
     font-size: var(--font-size-ui);
     font-weight: 600;
+    /* Les heures viennent d’un champ multiligne : les retours saisis par
+       l’éditrice sont conservés tels quels. */
+    white-space: pre-line;
   }
 
   .schedule-sidebar__message {

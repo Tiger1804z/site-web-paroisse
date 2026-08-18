@@ -1,0 +1,239 @@
+---
+import Container from '@/components/ui/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { LEGAL_PAGES_UPDATED_LABEL } from '@/data/legal';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
+
+const settings = await getSiteSettings();
+const email = settings.email;
+---
+
+<BaseLayout
+  seo={{
+    title: 'Mentions légales',
+    description: `Qui publie le site de la ${settings.organizationName}, où il est hébergé, et à qui appartiennent les textes et les images.`,
+  }}
+  pageClass="legal-page"
+  headerVariant="light"
+>
+  <article class="legal">
+    <Container size="reading">
+      <header class="legal__header">
+        <p class="type-eyebrow">Informations sur ce site</p>
+        <h1 class="type-h1">Mentions légales</h1>
+        <p class="type-body-large legal__lede">
+          Qui publie ce site, où il est hébergé, et ce qu’on peut faire de son
+          contenu.
+        </p>
+        <p class="legal__updated">
+          Dernière mise à jour : {LEGAL_PAGES_UPDATED_LABEL}
+        </p>
+      </header>
+
+      <section aria-labelledby="editeur">
+        <h2 id="editeur" class="type-h2">Éditeur du site</h2>
+        <dl class="legal__facts">
+          <div>
+            <dt>Organisme</dt>
+            <dd>{settings.organizationName}</dd>
+          </div>
+          <div>
+            <dt>Adresse</dt>
+            <dd>{settings.address.formatted}</dd>
+          </div>
+          <div>
+            <dt>Téléphone</dt>
+            <dd>
+              <a href={settings.phone.href}>{settings.phone.display}</a>
+            </dd>
+          </div>
+          {
+            email && (
+              <div>
+                <dt>Courriel</dt>
+                <dd>
+                  <a href={email.href}>{email.display}</a>
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+      </section>
+
+      <section aria-labelledby="hebergement">
+        <h2 id="hebergement" class="type-h2">Hébergement</h2>
+        <p>
+          Les pages du site sont hébergées et livrées par <strong
+            >Cloudflare</strong
+          >. Les textes et les images que l’on y voit sont administrés dans
+          <strong>Sanity</strong>, et les images sont servies depuis son réseau
+          de diffusion.
+        </p>
+        <p>
+          La page <a href="/politique-de-confidentialite/"
+            >Politique de confidentialité</a
+          > décrit ce que ces services voient de votre visite.
+        </p>
+      </section>
+
+      <section aria-labelledby="contenu">
+        <h2 id="contenu" class="type-h2">Textes et photographies</h2>
+        <p>
+          Les textes de ce site sont la propriété de la {
+            settings.organizationName
+          }. Les photographies de l’église ont été prises pour ce site et sont
+          utilisées avec l’autorisation de leurs auteurs.
+        </p>
+        <p>
+          Certaines illustrations ne sont pas des photographies documentaires :
+          elles représentent une scène plutôt qu’un fait. C’est notamment le cas
+          des images accompagnant le récit historique de la paroisse, qui
+          portent chacune la mention <em
+            >« Illustration artistique — non documentaire »</em
+          > sous l’image. Elles ne prétendent reproduire aucune archive.
+        </p>
+        <p>
+          Pour toute demande concernant une image ou un texte, écrivez{' '}
+          {
+            email ? (
+              <>
+                à <a href={email.href}>{email.display}</a>
+              </>
+            ) : (
+              <>au secrétariat</>
+            )
+          }.
+        </p>
+      </section>
+
+      <section aria-labelledby="liens">
+        <h2 id="liens" class="type-h2">Liens vers d’autres sites</h2>
+        <p>
+          Ce site renvoie vers des sites tiers — cartes routières, sites
+          d’annonceurs, ressources diocésaines. La paroisse n’exerce aucun
+          contrôle sur leur contenu et ne peut en répondre. Suivre l’un de ces
+          liens vous fait quitter ce site.
+        </p>
+      </section>
+
+      <section aria-labelledby="exactitude">
+        <h2 id="exactitude" class="type-h2">Exactitude des informations</h2>
+        <p>
+          Les horaires, les activités et les coordonnées publiés ici sont tenus
+          à jour avec soin, mais ils peuvent changer — en particulier les heures
+          de messe, qui varient selon les saisons liturgiques et les périodes de
+          l’année.
+        </p>
+        <p>
+          <strong
+            >Avant un déplacement, un appel au {settings.phone.display} reste la façon
+            la plus sûre de confirmer.</strong
+          >
+        </p>
+      </section>
+
+      <section aria-labelledby="signaler">
+        <h2 id="signaler" class="type-h2">Signaler une erreur</h2>
+        <p>
+          Une information inexacte, un lien brisé, une image qui ne devrait pas
+          s’y trouver? Écrivez{' '}
+          {
+            email ? (
+              <>
+                à <a href={email.href}>{email.display}</a>
+              </>
+            ) : (
+              <>au secrétariat</>
+            )
+          }{' '}
+          ou téléphonez au <a href={settings.phone.href}
+            >{settings.phone.display}</a
+          >. Les corrections sont faites rapidement.
+        </p>
+      </section>
+    </Container>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-block: 8rem 6rem;
+    background: var(--color-ivory);
+  }
+
+  .legal__header {
+    margin-bottom: 3.5rem;
+  }
+
+  .legal__lede {
+    margin-top: 1.5rem;
+    color: var(--color-muted);
+  }
+
+  .legal__updated {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  .legal :global(section) {
+    margin-top: 3rem;
+  }
+
+  .legal :global(h2) {
+    margin-bottom: 1.25rem;
+  }
+
+  .legal :global(p),
+  .legal :global(li),
+  .legal :global(dd) {
+    line-height: 1.7;
+    color: var(--color-charcoal);
+  }
+
+  .legal :global(p + p) {
+    margin-top: 1rem;
+  }
+
+  .legal :global(a) {
+    color: var(--color-burgundy);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .legal__facts {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .legal__facts dt {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .legal__facts dd {
+    margin-top: 0.25rem;
+  }
+
+  @media (min-width: 48rem) {
+    .legal {
+      padding-block: 10rem 8rem;
+    }
+
+    .legal__facts {
+      grid-template-columns: 10rem 1fr;
+      gap: 0.75rem 2rem;
+    }
+
+    .legal__facts > div {
+      display: contents;
+    }
+
+    .legal__facts dd {
+      margin-top: 0;
+    }
+  }
+</style>

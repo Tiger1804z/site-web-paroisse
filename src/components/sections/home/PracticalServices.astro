@@ -1,32 +1,15 @@
 ---
-import churchImage from '@/assets/images/home/editorial/church-facade-editorial.jpg';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { HomeServicesContent } from '@/types/homePage';
 
-const serviceLinks = [
-  {
-    label: 'Mariage et baptême',
-    href: '/nos-services/#sacrements-et-initiation',
-  },
-  {
-    label: 'Communion, confirmation et catéchuménat',
-    href: '/nos-services/#sacrements-et-initiation',
-  },
-  {
-    label: 'Funérailles et certificats',
-    href: '/nos-services/#accompagnement-et-documents',
-  },
-  {
-    label: 'Messes, lampions et intentions',
-    href: '/nos-services/#priere-et-memoire',
-  },
-  {
-    label: 'Location de salle',
-    href: '/nos-services/#location-de-salle',
-  },
-] as const;
+interface Props {
+  content: HomeServicesContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <section
@@ -36,19 +19,13 @@ const serviceLinks = [
   <Container>
     <div class="practical-services__layout">
       <div class="practical-services__copy" data-motion-reveal>
-        <Eyebrow>Services paroissiaux</Eyebrow>
-        <h2 id="practical-services-title" class="type-h2">
-          Un accompagnement pour les moments qui comptent
-        </h2>
-        <p>
-          Sacrements, démarches, intentions de messe et accueil des familles :
-          retrouvez les premiers repères avant de communiquer avec le
-          secrétariat.
-        </p>
+        <Eyebrow>{content.eyebrow}</Eyebrow>
+        <h2 id="practical-services-title" class="type-h2">{content.title}</h2>
+        <p>{content.introduction}</p>
 
         <ul class="practical-services__links">
           {
-            serviceLinks.map((item) => (
+            content.links.map((item) => (
               <li>
                 <a href={item.href}>
                   <span>{item.label}</span>
@@ -59,33 +36,39 @@ const serviceLinks = [
           }
         </ul>
 
-        <Button href="/nos-services/">Explorer tous nos services</Button>
+        <Button href="/nos-services/">{content.ctaLabel}</Button>
       </div>
 
-      <div class="practical-services__visual" data-motion-reveal>
-        <EditorialImageFrame
-          image={churchImage}
-          alt="Détail architectural de la façade de Santa Maria del Fiore à Florence, utilisé comme illustration"
-          variant="arch"
-          objectPosition="49% center"
-          widths={[400, 600, 800, 1000]}
-          sizes="(min-width: 64rem) 34vw, 80vw"
-        />
-        <span class="practical-services__visual-note">
-          Accueil · célébration · accompagnement
-        </span>
-      </div>
+      {
+        content.image && (
+          <div class="practical-services__visual" data-motion-reveal>
+            <EditorialImageFrame
+              image={content.image}
+              variant="arch"
+              sizes="(min-width: 64rem) 34vw, 80vw"
+            />
+            {content.visualNote && (
+              <span class="practical-services__visual-note">
+                {content.visualNote}
+              </span>
+            )}
+          </div>
+        )
+      }
 
       <a class="practical-services__thrift" href="/friperie/">
         <span class="practical-services__thrift-index" aria-hidden="true">
-          Service communautaire
+          {content.thrift.eyebrow}
         </span>
-        <span class="practical-services__thrift-title">La friperie</span>
+        <span class="practical-services__thrift-title">
+          {content.thrift.title}
+        </span>
         <span class="practical-services__thrift-copy">
-          Un lieu de réemploi et d’entraide, présenté dans un espace dédié.
+          {content.thrift.description}
         </span>
         <span class="practical-services__thrift-link">
-          Découvrir la friperie <span aria-hidden="true">→</span>
+          {content.thrift.linkLabel}
+          <span aria-hidden="true">→</span>
         </span>
       </a>
     </div>

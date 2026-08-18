@@ -7,16 +7,15 @@ import {
   selectAdvertisers,
 } from '../src/lib/advertisers/advertisers.ts';
 import { siteSettingsData } from '../src/data/siteSettings.ts';
+import { findRoute } from '../src/lib/seo/routes.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 
 function advertiser(overrides = {}) {
   return {
     id: 'advertiser-default',
-    slug: 'advertiser-default',
     name: 'Annonceur exemple',
     status: 'active',
-    featured: false,
     order: 1,
     ...overrides,
   };
@@ -28,8 +27,8 @@ test('un annonceur actif est publiable', () => {
 
 test('un annonceur inactif et un brouillon sont exclus', () => {
   const selected = selectAdvertisers([
-    advertiser({ id: 'inactive', slug: 'inactive', status: 'inactive' }),
-    advertiser({ id: 'draft', slug: 'draft', status: 'draft' }),
+    advertiser({ id: 'inactive', status: 'inactive' }),
+    advertiser({ id: 'draft', status: 'draft' }),
   ]);
 
   assert.equal(selected.length, 0);
@@ -49,17 +48,29 @@ test('un annonceur à confirmer est exclu par défaut', () => {
 
 test('la sélection respecte l’ordre et évite les doublons', () => {
   const selected = selectAdvertisers([
-    advertiser({ id: 'third', slug: 'third', order: 3 }),
-    advertiser({ id: 'first', slug: 'first', order: 1 }),
-    advertiser({ id: 'second', slug: 'second', order: 2 }),
-    advertiser({ id: 'second', slug: 'second', order: 4 }),
-    advertiser({ id: 'first', slug: 'different-slug', order: 5 }),
-    advertiser({ id: 'different-id', slug: 'third', order: 6 }),
+    advertiser({ id: 'third', order: 3 }),
+    advertiser({ id: 'first', order: 1 }),
+    advertiser({ id: 'second', order: 2 }),
+    advertiser({ id: 'second', order: 4 }),
+    advertiser({ id: 'first', order: 5 }),
   ]);
 
   assert.deepEqual(
     selected.map(({ id }) => id),
     ['first', 'second', 'third'],
+  );
+});
+
+test('à rang égal, les fiches sont classées par nom', () => {
+  const selected = selectAdvertisers([
+    advertiser({ id: 'zephyr', name: 'Zephyr', order: 5 }),
+    advertiser({ id: 'atelier', name: 'Atelier', order: 5 }),
+    advertiser({ id: 'epicerie', name: 'Épicerie', order: 5 }),
+  ]);
+
+  assert.deepEqual(
+    selected.map(({ name }) => name),
+    ['Atelier', 'Épicerie', 'Zephyr'],
   );
 });
 
@@ -70,7 +81,7 @@ test('une fiche sans logo possède un fallback typographique', () => {
   );
 
   assert.match(component, /advertiser-card__monogram/);
-  assert.match(component, /advertiser\.logo\?\.status === 'confirmed'/);
+  assert.match(component, /\{advertiser\.logo \?/);
 });
 
 test('les données manquantes ne créent pas de lignes vides', () => {
@@ -92,7 +103,8 @@ test('le téléphone du secrétariat provient des réglages globaux', () => {
 
   assert.equal(siteSettingsData.phone.display, '514 722-1161');
   assert.equal(siteSettingsData.phone.href, 'tel:+15147221161');
-  assert.match(dataSource, /phone:\s*siteSettingsData\.phone/);
+  assert.match(dataSource, /siteSettings:\s*PublicContactDetails/);
+  assert.match(dataSource, /phone:\s*siteSettings\.phone/);
 });
 
 test('les liens commerciaux sont explicitement commandités', () => {
@@ -111,9 +123,13 @@ test('l’ancienne route est noindex et canonique', () => {
     'utf8',
   );
 
-  assert.match(aliasPage, /canonicalPath="\/nos-annonceurs\/"/);
   assert.match(aliasPage, /redirectTo="\/nos-annonceurs\/"/);
-  assert.match(aliasPage, /\bnoIndex\b/);
+
+  // Depuis l'étape 4 du lot SEO, l'indexation et la canonique se lisent au
+  // registre de routes, pas dans la page.
+  const route = findRoute('/merci-a-nos-annonceurs/');
+  assert.equal(route?.indexable, false);
+  assert.equal(route?.canonicalPath, '/nos-annonceurs/');
 });
 
 test('la page reste utile sans annonceur confirmé', () => {

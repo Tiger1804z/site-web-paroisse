@@ -10,28 +10,10 @@ interface PlaceholderPage {
 export function getStaticPaths() {
   const placeholderPages = [
     {
-      slug: 'feuillets-paroissiaux',
-      title: 'Feuillets paroissiaux',
-      description:
-        'Feuillets paroissiaux — contenu temporaire en attente de migration.',
-    },
-    {
       slug: 'galerie',
       title: 'Galerie',
       description:
         'Galerie — route réservée pendant que la sélection photographique demeure intégrée à l’accueil.',
-    },
-    {
-      slug: 'politique-de-confidentialite',
-      title: 'Politique de confidentialité',
-      description:
-        'Politique de confidentialité — contenu temporaire en attente de rédaction.',
-    },
-    {
-      slug: 'mentions-legales',
-      title: 'Mentions légales',
-      description:
-        'Mentions légales — contenu temporaire en attente de rédaction.',
     },
   ] as const satisfies readonly PlaceholderPage[];
 
@@ -44,12 +26,7 @@ export function getStaticPaths() {
 const { title, description } = Astro.props as PlaceholderPage;
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  headerVariant="light"
-  noIndex
->
+<BaseLayout seo={{ title, description }} headerVariant="light">
   <section
     class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
     aria-labelledby="placeholder-title"

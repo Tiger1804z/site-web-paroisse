@@ -1,7 +1,6 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
-import ThriftStorePhotoPlaceholder from './ThriftStorePhotoPlaceholder.astro';
 import type { ThriftStorePageData } from '@/types/thriftStore';
 
 interface Props {
@@ -10,9 +9,18 @@ interface Props {
 }
 
 const { introduction, practicalInformation } = Astro.props;
-const hasConfirmedPracticalInformation =
-  practicalInformation.hours.confirmed ||
-  practicalInformation.location.confirmed;
+const { hours, location } = practicalInformation;
+// Un renseignement absent n’est pas publié : la paroisse ne l’a pas confirmé.
+const hasPracticalInformation = Boolean(
+  hours || location || practicalInformation.phone,
+);
+
+// Le numéro est saisi tel qu’il s’affiche; le format cliquable en est dérivé,
+// jamais saisi une seconde fois.
+const phoneDisplay = practicalInformation.phone;
+const phoneDigits = phoneDisplay?.replace(/\D/g, '');
+const phoneHref =
+  phoneDigits?.length === 10 ? `tel:+1${phoneDigits}` : undefined;
 ---
 
 <section
@@ -21,15 +29,6 @@ const hasConfirmedPracticalInformation =
 >
   <Container>
     <div class="thrift-introduction__grid">
-      <figure class="thrift-introduction__visual">
-        <ThriftStorePhotoPlaceholder
-          placeholder={introduction.photoPlaceholder}
-        />
-        <figcaption>
-          Cadre réservé à une photographie réelle de la friperie.
-        </figcaption>
-      </figure>
-
       <div class="thrift-introduction__content">
         <p class="thrift-introduction__eyebrow">{introduction.eyebrow}</p>
         <h2 id="thrift-introduction-title">{introduction.title}</h2>
@@ -45,18 +44,30 @@ const hasConfirmedPracticalInformation =
         </aside>
 
         {
-          hasConfirmedPracticalInformation && (
+          hasPracticalInformation && (
             <dl class="thrift-introduction__facts">
-              {practicalInformation.hours.confirmed && (
+              {hours && (
                 <div>
                   <dt>Horaires</dt>
-                  <dd>{practicalInformation.hours.value}</dd>
+                  <dd>{hours}</dd>
                 </div>
               )}
-              {practicalInformation.location.confirmed && (
+              {location && (
                 <div>
                   <dt>Emplacement</dt>
-                  <dd>{practicalInformation.location.value}</dd>
+                  <dd>{location}</dd>
+                </div>
+              )}
+              {phoneDisplay && (
+                <div>
+                  <dt>Téléphone</dt>
+                  <dd>
+                    {phoneHref ? (
+                      <a href={phoneHref}>{phoneDisplay}</a>
+                    ) : (
+                      phoneDisplay
+                    )}
+                  </dd>
                 </div>
               )}
             </dl>
@@ -82,17 +93,6 @@ const hasConfirmedPracticalInformation =
     display: grid;
     gap: clamp(2.5rem, 5vw, 4rem);
     align-items: center;
-  }
-
-  .thrift-introduction__visual {
-    margin: 0;
-  }
-
-  .thrift-introduction__visual figcaption {
-    margin-top: 0.75rem;
-    color: var(--color-muted);
-    font-size: 0.6875rem;
-    line-height: 1.5;
   }
 
   .thrift-introduction__eyebrow {
@@ -171,9 +171,16 @@ const hasConfirmedPracticalInformation =
     line-height: 1.5;
   }
 
+  .thrift-introduction__facts a {
+    color: var(--color-burgundy);
+    font-weight: 600;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
   @media (min-width: 64rem) {
     .thrift-introduction__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 52rem;
     }
   }
 

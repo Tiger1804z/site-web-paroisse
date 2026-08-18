@@ -3,7 +3,6 @@ import MotionController from '@/components/motion/MotionController.astro';
 import HomeGallery from '@/components/sections/home/HomeGallery.astro';
 import HomeHero from '@/components/sections/home/HomeHero.astro';
 import MassSchedulePreview from '@/components/sections/home/MassSchedulePreview.astro';
-import ParishBulletin from '@/components/sections/home/ParishBulletin.astro';
 import ParishLifePreview from '@/components/sections/home/ParishLifePreview.astro';
 import PracticalServices from '@/components/sections/home/PracticalServices.astro';
 import SpiritualInterlude from '@/components/sections/home/SpiritualInterlude.astro';
@@ -11,15 +10,17 @@ import UpcomingActivitiesSection from '@/components/sections/home/UpcomingActivi
 import VisitSection from '@/components/sections/home/VisitSection.astro';
 import WelcomeSection from '@/components/sections/home/WelcomeSection.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { isInformationRoutePublic } from '@/lib/navigation';
 import {
   getHomepageEventsSettings,
   getHomepageParishEvents,
 } from '@/lib/content/getParishEvents';
-import { getHomepageGalleryItems } from '@/lib/content/getHomepageGalleryItems';
+import { getHomePageData } from '@/lib/content/getHomePageData';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
+import { getWeeklyMasses } from '@/lib/content/getMassSchedule';
+import { siteIdentityGraph } from '@/lib/seo/pageGraphs';
 
 const buildTime = new Date();
+const homePage = await getHomePageData();
 const homepageEventsSettings = await getHomepageEventsSettings();
 const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
   ? await getHomepageParishEvents(
@@ -27,21 +28,20 @@ const homepageEvents = homepageEventsSettings.showHomepageUpcomingSection
       homepageEventsSettings.homepageUpcomingLimit,
     )
   : { secondary: [] };
-const showParishBulletin = isInformationRoutePublic('/feuillets-paroissiaux');
 const siteSettings = await getSiteSettings();
-const homepageGalleryItems = await getHomepageGalleryItems(6);
+const weeklyMasses = await getWeeklyMasses();
 ---
 
 <BaseLayout
-  title="Accueil"
+  seo={homePage.seo}
+  jsonLd={siteIdentityGraph(siteSettings)}
   titleOrder="site-first"
-  description="Découvrez les célébrations, les activités et la vie communautaire de la Paroisse Saint-René-Goupil."
   pageClass="home-page"
   headerVariant="transparent"
 >
-  <HomeHero />
-  <WelcomeSection />
-  <MassSchedulePreview />
+  <HomeHero content={homePage.hero} masses={weeklyMasses} />
+  <WelcomeSection content={homePage.welcome} />
+  <MassSchedulePreview content={homePage.massPreview} masses={weeklyMasses} />
   {
     homepageEventsSettings.showHomepageUpcomingSection &&
       homepageEvents.featured && (
@@ -51,11 +51,14 @@ const homepageGalleryItems = await getHomepageGalleryItems(6);
         />
       )
   }
-  <ParishLifePreview />
-  {showParishBulletin && <ParishBulletin />}
-  <PracticalServices />
-  <SpiritualInterlude />
-  <HomeGallery items={homepageGalleryItems} />
-  <VisitSection contact={siteSettings} />
+  <ParishLifePreview content={homePage.parishLife} />
+  <PracticalServices content={homePage.services} />
+  <SpiritualInterlude content={homePage.interlude} />
+  {
+    homePage.gallery.items.length > 0 && (
+      <HomeGallery content={homePage.gallery} />
+    )
+  }
+  <VisitSection content={homePage.visit} contact={siteSettings} />
   <MotionController />
 </BaseLayout>

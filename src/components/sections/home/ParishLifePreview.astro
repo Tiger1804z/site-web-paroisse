@@ -1,38 +1,22 @@
 ---
-import { Image } from 'astro:assets';
-import parishLifeArtwork from '@/assets/images/home/editorial/parish-life-marian-artwork.jpg';
+import RemoteImage from '@/components/ui/RemoteImage.astro';
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { HomeParishLifeContent } from '@/types/homePage';
 
-interface ParishGroup {
-  number: string;
-  name: string;
-  description: string;
+interface Props {
+  content: HomeParishLifeContent;
 }
 
-const groups = [
-  {
-    number: '01',
-    name: 'Jeunes',
-    description: 'Activités et rassemblements pour la jeunesse',
-  },
-  {
-    number: '02',
-    name: 'Chorale',
-    description: 'Chant liturgique et animation des célébrations',
-  },
-  {
-    number: '03',
-    name: 'Dames et Fils de Notre-Dame',
-    description: 'Dévotion mariale et entraide communautaire',
-  },
-  {
-    number: '04',
-    name: 'Marguilliers',
-    description: 'Conseil de fabrique et gouvernance paroissiale',
-  },
-] as const satisfies readonly ParishGroup[];
+const { content } = Astro.props;
+
+// La numérotation suit la liste et se recalcule : retirer un groupe ne laisse
+// pas un trou dans la série.
+const groups = content.groups.map((group, index) => ({
+  ...group,
+  number: String(index + 1).padStart(2, '0'),
+}));
 ---
 
 <section
@@ -40,27 +24,21 @@ const groups = [
   class="parish-life section-block"
   aria-labelledby="parish-life-title"
 >
-  <div class="parish-life__media" aria-hidden="true">
-    <Image
-      src={parishLifeArtwork}
-      alt=""
-      widths={[640, 960, 1280, 1600, 1920]}
-      sizes="100vw"
-      loading="lazy"
-      quality={72}
-    />
-  </div>
+  {
+    content.image && (
+      <div class="parish-life__media" aria-hidden="true">
+        <RemoteImage image={content.image} alt="" sizes="100vw" />
+      </div>
+    )
+  }
   <div class="parish-life__overlay" aria-hidden="true"></div>
 
   <Container class="parish-life__container">
     <div class="parish-life__layout">
       <div class="parish-life__heading" data-motion-reveal>
-        <Eyebrow tone="light">Communauté</Eyebrow>
-        <h2 id="parish-life-title" class="type-h2">Vivre la paroisse</h2>
-        <p>
-          Des espaces de rencontre, de service et de prière qui prennent vie
-          grâce à l’engagement de la communauté.
-        </p>
+        <Eyebrow tone="light">{content.eyebrow}</Eyebrow>
+        <h2 id="parish-life-title" class="type-h2">{content.title}</h2>
+        <p>{content.introduction}</p>
       </div>
 
       <ol class="parish-life__list" data-motion-stagger>
@@ -73,9 +51,7 @@ const groups = [
                 </span>
                 <span class="parish-group__copy">
                   <span class="parish-group__title">{group.name}</span>
-                  <span class="parish-group__description">
-                    {group.description}
-                  </span>
+                  <span class="parish-group__description">{group.teaser}</span>
                 </span>
                 <span class="parish-group__arrow" aria-hidden="true">
                   →
@@ -89,7 +65,7 @@ const groups = [
 
     <div class="parish-life__action" data-motion-reveal>
       <Button href="/vie-paroissiale" variant="light">
-        Découvrir nos groupes
+        {content.ctaLabel}
       </Button>
     </div>
   </Container>

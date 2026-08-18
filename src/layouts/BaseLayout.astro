@@ -1,38 +1,87 @@
 ---
 import Footer from '@/components/layout/Footer.astro';
 import Header from '@/components/layout/Header.astro';
+import { getSiteSettings } from '@/lib/content/getSiteSettings';
+import { buildDocumentHead, type TitleOrder } from '@/lib/seo/documentHead';
+import { jsonLdGraph, type JsonLdNode } from '@/lib/seo/jsonLd';
+import { routeFor } from '@/lib/seo/routes';
+import { SITE_URL } from '@/lib/seo/siteUrl';
 import { SITE_NAME } from '@/lib/site';
+import type { PageSeo } from '@/types/seo';
 import '@/styles/global.css';
 
+/**
+ * Le test d'environnement est écrit ici, littéralement, plutôt qu'importé :
+ * Vite remplace `import.meta.env.*` par sa valeur au build, ce qui rend la
+ * branche morte évidente et fait disparaître l'import dynamique du bundle.
+ * Avec un import statique, l'île de Visual Editing était émise dans la sortie
+ * publique — 678 kB jamais servis, mais bien présents.
+ */
+const visualEditingEnabled =
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
+const VisualEditing = visualEditingEnabled
+  ? (await import('@sanity/astro/visual-editing')).VisualEditing
+  : null;
+
 interface Props {
-  title: string;
-  description?: string;
-  titleOrder?: 'page-first' | 'site-first';
+  /**
+   * Référencement de la page, en un seul objet.
+   *
+   * Les pages branchées sur Sanity passent le bloc que leur normalizer a
+   * composé; les trois anciennes adresses, la page 404 et la page de
+   * vérification l'écrivent à la main — elles n'ont pas de document.
+   */
+  seo: PageSeo;
+  titleOrder?: TitleOrder;
   pageClass?: string;
   headerVariant?: 'light' | 'transparent';
   footerVariant?: 'default' | 'compact';
-  noIndex?: boolean;
-  canonicalPath?: string;
   redirectTo?: string;
+  /**
+   * Données structurées propres à la page. Vide sur la plupart d'entre elles :
+   * on ne décrit à un moteur que ce qu'on sait décrire.
+   */
+  jsonLd?: readonly JsonLdNode[];
 }
 
 const {
-  title,
-  description = 'Site Web de la Paroisse Saint-René-Goupil.',
+  seo,
   titleOrder = 'page-first',
   pageClass,
   headerVariant = 'light',
   footerVariant = 'default',
-  noIndex = false,
-  canonicalPath,
   redirectTo,
+  jsonLd = [],
 } = Astro.props;
-const documentTitle =
-  title === SITE_NAME
-    ? title
-    : titleOrder === 'site-first'
-      ? `${SITE_NAME} | ${title}`
-      : `${title} | ${SITE_NAME}`;
+
+// L'indexation et l'adresse canonique viennent du registre, jamais du contenu.
+const route = routeFor(Astro.url.pathname);
+
+// Image de partage générale, servie aux pages qui n'ont pas la leur. Le nom de
+// la paroisse, lui, reste la constante locale : en prévisualisation, une
+// chaîne venue de Sanity porte des caractères stega invisibles, et le titre
+// d'un document n'est pas un endroit où les laisser entrer.
+const siteSettings = await getSiteSettings();
+
+const head = buildDocumentHead({
+  seo,
+  route,
+  siteName: SITE_NAME,
+  siteUrl: SITE_URL,
+  siteShareImage: siteSettings.shareImage,
+  titleOrder,
+  previewing: visualEditingEnabled,
+});
+
+/**
+ * Le graphe est sérialisé ici plutôt que dans le gabarit : `<` est échappé
+ * pour qu'un texte contenant `</script>` — un titre d'événement, une
+ * description — ne referme pas la balise.
+ */
+const structuredData =
+  jsonLd.length > 0
+    ? JSON.stringify(jsonLdGraph(jsonLd)).replace(/</g, '\\u003c')
+    : null;
 ---
 
 <!doctype html>
@@ -43,20 +92,52 @@ const documentTitle =
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <meta name="description" content={description} />
-    {noIndex && <meta name="robots" content="noindex, nofollow" />}
-    {canonicalPath && <link rel="canonical" href={canonicalPath} />}
+    <meta name="description" content={head.description} />
+    {head.robots && <meta name="robots" content={head.robots} />}
+    <link rel="canonical" href={head.canonicalUrl} />
     {
       redirectTo && (
         <meta http-equiv="refresh" content={`0;url=${redirectTo}`} />
       )
     }
+
+    {/* Aperçu du lien quand la page est partagée. */}
+    <meta property="og:type" content={head.openGraph.type} />
+    <meta property="og:title" content={head.openGraph.title} />
+    <meta property="og:description" content={head.openGraph.description} />
+    <meta property="og:url" content={head.openGraph.url} />
+    <meta property="og:site_name" content={head.openGraph.siteName} />
+    <meta property="og:locale" content={head.openGraph.locale} />
+    {
+      head.openGraph.image && (
+        <>
+          <meta property="og:image" content={head.openGraph.image.url} />
+          <meta property="og:image:alt" content={head.openGraph.image.alt} />
+        </>
+      )
+    }
+    {
+      /* Les autres champs sont repris d'Open Graph : seule la forme de la
+         vignette doit être dite. */
+    }
+    <meta name="twitter:card" content={head.twitterCard} />
+
+    {
+      structuredData && (
+        <script
+          type="application/ld+json"
+          set:html={structuredData}
+          is:inline
+        />
+      )
+    }
+
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <title>{documentTitle}</title>
+    <title>{head.title}</title>
   </head>
   <body
     class:list={['site-shell', 'has-mobile-actions', pageClass]}
@@ -75,5 +156,10 @@ const documentTitle =
       <slot />
     </main>
     <Footer variant={footerVariant} />
+    {
+      /* Overlays officiels de Sanity. Sans le drapeau, rien n'est rendu et
+        aucun JavaScript de Visual Editing n'est envoyé au navigateur. */
+    }
+    {VisualEditing && <VisualEditing enabled />}
   </body>
 </html>

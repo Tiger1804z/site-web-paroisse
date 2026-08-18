@@ -51,17 +51,20 @@ const categoryLabels: Readonly<Record<EventCategoryKind, string>> = {
             id={category.slug}
             class:list={[
               'event-category',
+              !category.visual && 'event-category--textonly',
               index % 2 === 1 && 'event-category--reversed',
               category.featured && 'event-category--featured',
             ]}
             data-confirmation-required={category.confirmationRequired}
           >
-            <div class="event-category__media">
-              <EventVisual
-                visual={category.visual}
-                featured={category.featured}
-              />
-            </div>
+            {category.visual && (
+              <div class="event-category__media">
+                <EventVisual
+                  visual={category.visual}
+                  featured={category.featured}
+                />
+              </div>
+            )}
             <div class="event-category__content">
               <p class="event-category__eyebrow type-eyebrow">
                 <span>{String(index + 1).padStart(2, '0')}</span>
@@ -195,10 +198,19 @@ const categoryLabels: Readonly<Record<EventCategoryKind, string>> = {
     }
   }
 
+  .event-category--textonly {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   @media (min-width: 64rem) {
     .event-category {
       grid-template-columns: minmax(0, 7fr) minmax(20rem, 5fr);
       gap: clamp(3rem, 7vw, 6.5rem);
+    }
+
+    .event-category--textonly {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 52rem;
     }
 
     .event-category--reversed {
