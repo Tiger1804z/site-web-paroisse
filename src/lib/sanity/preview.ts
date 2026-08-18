@@ -31,6 +31,18 @@ const visualEditingFlag = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED;
 export const visualEditingEnabled = visualEditingFlag === 'true';
 
 /**
+ * Environnement de prévisualisation déployé : le site est alors compilé en
+ * `output: 'server'` derrière l'adaptateur Cloudflare, et chaque page est
+ * rendue au moment de la requête.
+ *
+ * Pas de préfixe `PUBLIC_` : ce drapeau décrit la forme du build, pas une
+ * donnée dont le navigateur aurait besoin. Il est posé par
+ * `scripts/build-preview.mjs` et relu à l'identique par `astro.config.mjs`,
+ * qui en tire l'adaptateur. Les deux ne peuvent donc pas diverger.
+ */
+export const previewDeployment = import.meta.env.PREVIEW_DEPLOYMENT === 'true';
+
+/**
  * La comparaison est volontairement stricte : `BaseLayout.astro` teste la même
  * chaîne littéralement pour que Vite élimine l'île d'overlays du site public.
  * Une comparaison tolérante y empêcherait l'élimination de la branche morte.
@@ -130,24 +142,53 @@ if (visualEditingEnabled && !readToken) {
 }
 
 /**
- * Le site public est pré-rendu. Construire avec le drapeau actif figerait des
- * brouillons, des marqueurs stega et l'île d'overlays dans du HTML destiné à
- * être déployé — et un avertissement dans un journal de build ne se remarque
- * pas. On refuse donc de produire cette sortie.
+ * Deux verrous, et ils regardent dans des directions opposées.
  *
- * `pnpm build:public` force le drapeau à « false » le temps du build : c'est
- * la commande de production, et elle ne rencontre jamais cette barrière. Un
- * environnement de prévisualisation déployé rendra à la demande, sans passer
- * par un build statique.
+ * Le premier : un build **prérendu** de production avec la prévisualisation
+ * active figerait des brouillons, des marqueurs stega et l'île d'overlays dans
+ * du HTML destiné au public. Un avertissement dans un journal de build ne se
+ * remarque pas; on refuse donc de produire cette sortie.
+ *
+ * La condition n'est plus « production », mais « production sans déploiement
+ * de prévisualisation » : un environnement de prévisualisation est lui aussi
+ * un build de production, et il a le droit — le devoir, même — d'activer tout
+ * cela. Ce qui le distingue n'est pas le drapeau, c'est qu'il ne prérend rien;
+ * `astro.config.mjs` le construit en `output: 'server'`.
+ *
+ * `pnpm build:public` force les deux drapeaux à « false » sans toucher `.env`.
  */
-if (visualEditingEnabled && import.meta.env.PROD) {
+if (visualEditingEnabled && import.meta.env.PROD && !previewDeployment) {
   throw new Error(
     [
-      'Build de production lancé avec la prévisualisation active.',
+      'Build public lancé avec la prévisualisation active.',
       '',
-      "PUBLIC_SANITY_VISUAL_EDITING_ENABLED vaut « true ». Le HTML produit contiendrait des brouillons, des caractères stega invisibles, un noindex sur toutes les pages et l'île de Visual Editing.",
+      "PUBLIC_SANITY_VISUAL_EDITING_ENABLED vaut « true » alors que le site est prérendu. Le HTML produit contiendrait des brouillons, des caractères stega invisibles, un noindex sur toutes les pages et l'île de Visual Editing.",
       '',
-      'Utiliser « pnpm build:public », qui force le drapeau à « false » sans toucher au fichier .env.',
+      'Utiliser « pnpm build:public » pour le site public, « pnpm build:preview » pour la prévisualisation.',
+    ].join('\n'),
+  );
+}
+
+/**
+ * Le second verrou ferme la porte inverse, et c'est celle qui échoue en
+ * silence. Un build de prévisualisation sans le drapeau produirait un site
+ * rendu à la demande, parfaitement fonctionnel, servi sur l'adresse de
+ * prévisualisation — mais sans overlays et sans brouillons. Presentation
+ * afficherait la page et répéterait « Unable to connect » sans que rien n'ait
+ * l'air cassé.
+ *
+ * Les deux drapeaux sont posés ensemble par un seul script. S'ils arrivent
+ * séparés, c'est que quelqu'un les a saisis à la main dans une console
+ * d'hébergement — exactement le moment où il faut le dire.
+ */
+if (previewDeployment && !visualEditingEnabled) {
+  throw new Error(
+    [
+      'Build de prévisualisation lancé sans la prévisualisation.',
+      '',
+      'PREVIEW_DEPLOYMENT vaut « true » mais PUBLIC_SANITY_VISUAL_EDITING_ENABLED ne vaut pas « true ». Le site serait rendu à la demande, sans overlays ni brouillons, et Presentation resterait sur « Unable to connect ».',
+      '',
+      'Utiliser « pnpm build:preview », qui pose les deux drapeaux ensemble.',
     ].join('\n'),
   );
 }
