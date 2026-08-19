@@ -1,7 +1,10 @@
+import type { SanityImageSource } from '@sanity/image-url';
 import {
-  createImageUrlBuilder,
-  type SanityImageSource,
-} from '@sanity/image-url';
+  createRemoteImageSources,
+  type RemoteImageOptions,
+  type RemoteImageProfileName,
+  type RemoteImageSources,
+} from '@/lib/sanity/image-sources';
 
 /**
  * Construction des adresses d'images servies par le CDN de Sanity.
@@ -15,61 +18,44 @@ import {
  * la librairie officielle, à travers les paramètres d'adresse. C'est ce qui
  * permet à l'éditrice de remplacer une photo sans qu'un développeur ait à
  * régler le cadrage à la main.
+ *
+ * Le calcul des largeurs et de la qualité vit dans `image-sources.ts`, qui ne
+ * lit pas l'environnement et se teste donc sans navigateur ni build.
  */
-const builder = createImageUrlBuilder({
+const buildSources = createRemoteImageSources({
   projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID,
   dataset: import.meta.env.PUBLIC_SANITY_DATASET,
 });
 
-/** Largeurs générées pour le `srcset`, du téléphone au grand écran. */
-export const DEFAULT_IMAGE_WIDTHS = [480, 720, 960, 1280, 1600, 1920] as const;
+export {
+  DEFAULT_IMAGE_QUALITY,
+  DEFAULT_IMAGE_WIDTHS,
+  HERO_IMAGE_QUALITY,
+  HERO_IMAGE_WIDTHS,
+  type RemoteImageOptions,
+  type RemoteImageSources,
+} from '@/lib/sanity/image-sources';
 
-export interface RemoteImageOptions {
-  /** Largeurs à générer; par défaut `DEFAULT_IMAGE_WIDTHS`. */
-  readonly widths?: readonly number[];
-  /** Rapport largeur/hauteur imposé, pour un recadrage constant. */
-  readonly aspectRatio?: number;
-}
-
-export interface RemoteImageSources {
-  readonly src: string;
-  readonly srcSet: string;
-}
-
-/**
- * Adresse principale et `srcset` d'une image Sanity.
- *
- * `auto('format')` laisse le CDN servir du WebP ou de l'AVIF selon le
- * navigateur, sans qu'on ait à gérer les variantes nous-mêmes.
- */
 export function buildRemoteImageSources(
   source: SanityImageSource,
   options: RemoteImageOptions = {},
 ): RemoteImageSources {
-  const widths = options.widths ?? DEFAULT_IMAGE_WIDTHS;
-
-  const url = (width: number): string => {
-    const image = builder.image(source).width(width).auto('format').quality(78);
-
-    // Un format imposé n'est demandé que si l'appelant en fournit un. Sans
-    // hauteur, Sanity renvoie l'image entière : le cadrage est alors fait par
-    // le navigateur, via le point focal posé en `object-position`. C'est ce
-    // qu'il faut ici, parce que plusieurs cadres du site s'étirent à la
-    // hauteur de leur colonne et n'ont pas de format connu à l'avance.
-    if (options.aspectRatio) {
-      return image
-        .height(Math.round(width / options.aspectRatio))
-        .fit('crop')
-        .url();
-    }
-
-    return image.url();
-  };
-
-  const largest = widths[widths.length - 1] ?? 1280;
-
-  return {
-    src: url(largest),
-    srcSet: widths.map((width) => `${url(width)} ${width}w`).join(', '),
-  };
+  return buildSources(source, options);
 }
+
+/**
+ * Le constructeur injecté dans les normalizers.
+ *
+ * Ils reçoivent des objets image issus de GROQ, dont le type précis varie d'une
+ * projection à l'autre; la conversion vit ici plutôt que recopiée à chaque
+ * appel. Le profil traverse sans être interprété : c'est l'appelant qui sait
+ * qu'une image est un en-tête pleine largeur.
+ */
+export function buildImageSources(
+  source: unknown,
+  profile: RemoteImageProfileName = 'default',
+): RemoteImageSources {
+  return buildSources(source as SanityImageSource, { profile });
+}
+
+export type { RemoteImageProfileName };

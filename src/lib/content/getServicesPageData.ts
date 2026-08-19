@@ -1,6 +1,6 @@
 import { loadQuery } from '@/lib/sanity/preview';
 import { buildServicesPageData } from '@/data/services';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
 import { SERVICES_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityServicesPageResult } from '@/lib/sanity/types';
@@ -29,9 +29,5 @@ export async function getServicesPageData(): Promise<ServicesPageData> {
   const fallback = buildServicesPageData(siteSettings);
   const raw = await fetchServicesPageRaw();
 
-  return normalizeSanityServicesPage(raw, fallback, (source) =>
-    buildRemoteImageSources(
-      source as Parameters<typeof buildRemoteImageSources>[0],
-    ),
-  );
+  return normalizeSanityServicesPage(raw, fallback, buildImageSources);
 }

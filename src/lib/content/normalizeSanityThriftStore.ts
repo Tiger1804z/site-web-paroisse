@@ -117,7 +117,7 @@ function normalizeHeroSlides(
 ): ThriftStoreHeroSlide[] {
   return (raw?.slides ?? []).flatMap((slide) => {
     const label = cleanString(slide.label);
-    const image = normalizeSanityImage(slide.visual, buildSources);
+    const image = normalizeSanityImage(slide.visual, buildSources, 'hero');
 
     return label && image ? [{ label, image }] : [];
   });

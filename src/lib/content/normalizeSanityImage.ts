@@ -1,3 +1,4 @@
+import type { RemoteImageProfileName } from '@/lib/sanity/image-sources';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 
 /**
@@ -6,8 +7,15 @@ import type { SanityRenderableImage } from '@/types/sanityImage';
  * Injecté plutôt qu'importé : le vrai constructeur lit `import.meta.env`, qui
  * n'existe pas sous `node --test`. Les getters fournissent l'implémentation
  * réelle, les tests une doublure — et la logique reste testable.
+ *
+ * Le profil dit à quoi sert l'image, pas comment la fabriquer : seul le
+ * normalizer sait qu'une image donnée est un en-tête pleine largeur, et c'est
+ * cette information-là qui décide des largeurs et de la qualité.
  */
-export type ImageSourceBuilder = (source: unknown) => {
+export type ImageSourceBuilder = (
+  source: unknown,
+  profile?: RemoteImageProfileName,
+) => {
   src: string;
   srcSet: string;
 };
@@ -51,13 +59,14 @@ function cleanString(value: string | null | undefined): string | undefined {
 export function normalizeSanityImage(
   raw: RawSanityImage | null | undefined,
   buildSources: ImageSourceBuilder,
+  profile: RemoteImageProfileName = 'default',
 ): SanityRenderableImage | undefined {
   const alt = cleanString(raw?.alt);
   const image = raw?.image;
   if (!alt || !image?.asset?._id) return undefined;
 
   const dimensions = image.asset.metadata?.dimensions;
-  const { src, srcSet } = buildSources(image);
+  const { src, srcSet } = buildSources(image, profile);
   const hotspot = image.hotspot;
 
   return {

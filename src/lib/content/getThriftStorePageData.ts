@@ -1,6 +1,6 @@
 import { loadQuery } from '@/lib/sanity/preview';
 import { thriftStorePageData } from '@/data/thriftStore';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import type { ThriftStorePageData } from '@/types/thriftStore';
 import {
   THRIFT_STORE_PAGE_QUERY,
@@ -51,10 +51,7 @@ export async function getThriftStorePageData(): Promise<ThriftStorePageData> {
     rawPage,
     rawStore,
     thriftStorePageData,
-    (source) =>
-      buildRemoteImageSources(
-        source as Parameters<typeof buildRemoteImageSources>[0],
-      ),
+    buildImageSources,
   );
 
   return {
