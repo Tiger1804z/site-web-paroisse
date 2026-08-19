@@ -1,5 +1,5 @@
 import { loadQuery } from '@/lib/sanity/preview';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { buildAdvertisersPageSource } from '@/data/advertisers';
 import { selectAdvertisers } from '@/lib/advertisers/advertisers';
 import { getSiteSettings } from '@/lib/content/getSiteSettings';
@@ -67,26 +67,21 @@ export async function getAdvertisersPageData(): Promise<AdvertisersPageData> {
   const source =
     rawAdvertisers === null
       ? fallback.advertisers
-      : normalizeSanityAdvertisers(rawAdvertisers, (imageSource) =>
-          buildRemoteImageSources(
-            imageSource as Parameters<typeof buildRemoteImageSources>[0],
-          ),
-        );
+      : normalizeSanityAdvertisers(rawAdvertisers, buildImageSources);
 
   const advertisers = selectAdvertisers(source);
 
-  const heroImage = normalizeSanityImage(rawPage?.hero?.image, (source) =>
-    buildRemoteImageSources(
-      source as Parameters<typeof buildRemoteImageSources>[0],
-    ),
+  const heroImage = normalizeSanityImage(
+    rawPage?.hero?.image,
+    buildImageSources,
+    'hero',
   );
 
   // L'image de partage suit la même route que celle du premier écran : le
   // normalizer n'a pas le constructeur d'adresses du CDN.
-  const shareImage = normalizeSanityImage(rawPage?.seo?.image, (source) =>
-    buildRemoteImageSources(
-      source as Parameters<typeof buildRemoteImageSources>[0],
-    ),
+  const shareImage = normalizeSanityImage(
+    rawPage?.seo?.image,
+    buildImageSources,
   );
 
   return {

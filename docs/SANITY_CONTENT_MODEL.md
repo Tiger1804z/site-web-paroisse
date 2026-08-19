@@ -53,7 +53,8 @@ rien apporté tant qu’il n’existe qu’un seul horaire.
 Deux systèmes coexistent volontairement pendant la migration.
 
 - **Image locale** — fichier du projet, connu au build, traité par
-  `astro:assets`. C’est encore le cas de tous les heros de page.
+  `astro:assets`. Il n’en reste que des replis : les en-têtes de page viennent
+  du Studio depuis la migration des pages.
 - **Image Sanity** — téléversée par l’éditrice, servie par le CDN, rendue par
   `RemoteImage.astro`. Le recadrage qu’elle choisit dans le Studio devient un
   `object-position`, parce que la plupart des cadres du site s’étirent à la
@@ -65,8 +66,32 @@ cases — personne reconnaissable, image générée par IA. Ces deux cases
 n’interdisent rien; elles permettent de répondre à la question plus tard, ce
 qui est impossible si l’information n’a jamais été saisie.
 
-Migrer les heros de page demandera un ticket dédié, traitant tous les visuels
-de page ensemble plutôt qu’une page à la fois.
+### Deux profils de rendu, un seul pipeline
+
+`src/lib/sanity/image-sources.ts` fabrique les adresses du CDN. Deux profils s’y
+partagent le même `auto=format` (WebP ou AVIF selon le navigateur) et le même
+`srcset` :
+
+| Profil    | Largeurs générées | Qualité                         | Pour                               |
+| --------- | ----------------- | ------------------------------- | ---------------------------------- |
+| `default` | 480 → 1920        | 78                              | cartes, galeries, illustrations    |
+| `hero`    | 720 → 3200        | 85, puis 76 à 2560 et 72 à 3200 | en-têtes occupant toute la largeur |
+
+Un en-tête couvre la fenêtre entière : un écran de 1600 px CSS en densité double
+réclame 3200 px de source. Le plafond de 1920 obligeait le navigateur à agrandir,
+et le détail partait — c’est ce qui rendait les en-têtes flous sur grand écran.
+La qualité redescend au-delà de 1920 px parce qu’un pixel affiché à demi-taille
+ne montre plus son bruit de compression : mesuré sur la photographie d’accueil,
+3200 px pèse 392 ko à 72 contre 684 ko à 85, pour un résultat identique à l’œil.
+
+C’est le normalizer qui choisit le profil, parce que lui seul sait qu’une image
+est un en-tête. Le constructeur d’adresses, lui, ne connaît que des largeurs.
+
+**Conséquence éditoriale.** Le pipeline ne peut pas inventer des pixels : les
+largeurs sont plafonnées à celles du fichier téléversé, rognage compris. Une
+photographie d’en-tête déposée en 1920 px restera servie en 1920 px. Pour qu’un
+en-tête profite de la haute définition, il faut téléverser au moins **2560 px de
+large**, idéalement 3200.
 
 ## `parishLifePage` — migré
 

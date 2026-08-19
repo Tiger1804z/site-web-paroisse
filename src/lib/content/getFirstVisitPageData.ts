@@ -1,5 +1,5 @@
 import { loadQuery } from '@/lib/sanity/preview';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { firstVisitPageData } from '@/data/firstVisit';
 import { FIRST_VISIT_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityFirstVisitPageResult } from '@/lib/sanity/types';
@@ -41,10 +41,7 @@ export async function getFirstVisitPageData(): Promise<FirstVisitPageData> {
   const page = normalizeSanityFirstVisitPage(
     raw,
     firstVisitPageData,
-    (source) =>
-      buildRemoteImageSources(
-        source as Parameters<typeof buildRemoteImageSources>[0],
-      ),
+    buildImageSources,
   );
 
   return {

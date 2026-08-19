@@ -368,14 +368,26 @@ ensuite avec la règle « révéler l’image suivante ».
 La vidéo de référence fournie le 27 juillet 2026 précise le mouvement : la
 fenêtre n'est pas un disque fixe. Elle naît au début du geste, gonfle avec
 l'énergie du pointeur, s'étire légèrement dans sa direction, accuse un retard
-court, puis se résorbe lorsque le mouvement cesse. Le diamètre maximal reste
-`clamp(150px, 15vw, 250px)`.
+court, puis se résorbe lorsque le mouvement cesse. Le diamètre maximal est
+`clamp(170px, 17vw, 280px)`.
 
 Un listener `pointermove` passif, attaché uniquement au hero, mesure la
 distance, la vitesse et la direction. Une seule boucle `requestAnimationFrame`
-interpole la position à `0.13`, la croissance à `0.17` et le retrait à
-`0.105`. Douze points, deux harmoniques discrètes et des courbes quadratiques
-produisent le tracé SVG organique. La forme se referme après 105 ms sans
+applique ensuite un lissage exponentiel exprimé en constante de temps, jamais
+en fraction par image : 62 ms quand le pointeur est proche du centre, 20 ms
+quand l'écart approche 180 px, 90 ms pour la croissance du rayon et 150 ms pour
+son retrait. Le suivi est donc identique à 60 Hz et à 120 Hz, et une image
+sautée ne creuse plus le retard. Un garde-fou ramène en outre l'écart entre le
+pointeur et le centre à 32 % du rayon courant : un déplacement brusque ne peut
+jamais laisser le curseur sortir de la lentille.
+
+`src/scripts/organic-hero-lens-motion.ts` isole cette mathématique — suivi,
+garde-fou, décroissance de l'énergie, rapprochement d'angle par le plus court
+chemin, contour — pour qu'elle soit testée sans navigateur. Douze points, deux
+harmoniques discrètes, une respiration lente et des courbes quadratiques
+produisent le tracé SVG organique. La traîne est plus longue que le nez, mais le
+centroïde du contour est ramené exactement sur le point suivi : la masse ne part
+ni devant ni derrière le curseur. La forme se referme après 115 ms sans
 mouvement réel; elle ne demeure donc pas comme une vignette flottante.
 
 Sur Friperie, les quatre révélations avancent dans un ordre fixe après 180 px
@@ -390,7 +402,10 @@ Le script :
 - conserve les images en faible priorité dans le HTML, puis les promeut vers
   `eager` et les décode pendant un temps d'inactivité ou au premier geste;
 - refuse d'afficher la lentille tant que les quatre images ne sont pas prêtes;
-- recalcule la géométrie avec `ResizeObserver`;
+- recalcule la géométrie avec `ResizeObserver`, et la marque périmée au
+  défilement ou au redimensionnement : sans cela, une page défilée pendant le
+  survol décalait la lentille de la hauteur défilée. La mesure est relue au plus
+  une fois par image, seulement lorsqu'elle a pu changer;
 - laisse la forme se résorber à `pointerleave`, mais l'annule immédiatement
   lorsque l'onglet est caché;
 - nettoie listeners, observer, idle callback et frame à `pagehide` ou

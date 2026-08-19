@@ -42,7 +42,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
               src={slide.image}
               alt=""
               widths={[640, 960, 1280, 1600, 1920]}
-              sizes="(min-width: 768px) 68vw, 100vw"
+              sizes="100vw"
               loading={index === 0 ? 'eager' : 'lazy'}
               decoding="async"
               fetchpriority={index === 0 ? 'high' : 'low'}
@@ -52,7 +52,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
             <RemoteImage
               image={slide.image}
               alt=""
-              sizes="(min-width: 768px) 68vw, 100vw"
+              sizes="100vw"
               loading={index === 0 ? 'eager' : 'lazy'}
               fetchpriority={index === 0 ? 'high' : 'low'}
             />
@@ -103,7 +103,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
               src={slide.image}
               alt=""
               widths={[640, 960, 1280, 1600, 1920]}
-              sizes="(min-width: 768px) 68vw, 100vw"
+              sizes="100vw"
               loading="lazy"
               decoding="async"
               fetchpriority="low"
@@ -114,7 +114,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
             <RemoteImage
               image={slide.image}
               alt=""
-              sizes="(min-width: 768px) 68vw, 100vw"
+              sizes="100vw"
               data-organic-lens-image
             />
           )}
@@ -256,7 +256,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
 
 <style>
   .parish-life-hero {
-    --lens-size: clamp(9.375rem, 15vw, 15.625rem);
+    --lens-size: clamp(10.625rem, 17vw, 17.5rem);
 
     position: relative;
     isolation: isolate;

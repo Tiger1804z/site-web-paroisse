@@ -4,7 +4,7 @@ import {
   homepageEventsSettings,
 } from '@/data/parish-events';
 import { HOME_PAGE_QUERY, PARISH_EVENTS_QUERY } from '@/lib/sanity/queries';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { normalizeSanityParishEvents } from '@/lib/content/normalizeSanityParishEvents';
 import { fetchEventsPageRaw } from '@/lib/content/getEventsPageData';
 import {
@@ -34,11 +34,7 @@ import type {
 async function getParishEventSource(): Promise<readonly ParishEvent[]> {
   try {
     const raw = await loadQuery(PARISH_EVENTS_QUERY);
-    return normalizeSanityParishEvents(raw, (source) =>
-      buildRemoteImageSources(
-        source as Parameters<typeof buildRemoteImageSources>[0],
-      ),
-    );
+    return normalizeSanityParishEvents(raw, buildImageSources);
   } catch (error) {
     console.error(
       '[getParishEvents] Échec du fetch Sanity — aucune activité affichée.',
