@@ -36,4 +36,4 @@ Sous Windows, utiliser `corepack pnpm` si le shim Corepack ne peut pas être act
 
 ## Périmètre actuel
 
-L’initialisation est terminée lorsque `pnpm validate` réussit. Les pages complètes, le CMS, les formulaires, le backend, l’analytique, les tests E2E et le déploiement doivent rester dans des tickets futurs.
+L’initialisation est terminée lorsque `pnpm validate` réussit. Le CMS et le déploiement sont faits : le contenu vit dans Sanity, le site public et le Studio sont sur Cloudflare Pages, et la prévisualisation éditoriale sur le Worker `paroisse-preview` — voir `docs/SANITY_VISUAL_EDITING.md`. Les formulaires connectés, le backend, l’analytique et les tests E2E doivent rester dans des tickets futurs.
