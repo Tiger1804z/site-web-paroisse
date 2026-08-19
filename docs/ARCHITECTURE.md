@@ -84,7 +84,7 @@ détaillée n’est générée avant validation des contenus et du modèle CMS.
 
 Le site paroissial sera principalement composé de contenu éditorial, d’horaires, d’événements et de renseignements pratiques. Astro produit du HTML statique par défaut, limite le JavaScript envoyé au navigateur et fournit un routage fondé sur les fichiers. Ce modèle favorise la performance, le référencement, la résilience et l’accessibilité.
 
-La sortie `static` est déclarée explicitement dans `astro.config.mjs`. Aucun adaptateur serveur n’est installé.
+La sortie est décidée dans `astro.config.mjs` : `static` pour le site public, et `server` derrière l’adaptateur `@astrojs/cloudflare` pour le seul environnement de prévisualisation éditoriale. Le build public ne charge pas l’adaptateur et ne produit aucun code serveur. Voir `docs/SANITY_VISUAL_EDITING.md`.
 
 ## Pourquoi React reste disponible
 
@@ -590,7 +590,7 @@ l’instant.
   pas;
 - le sitemap consolidé est une proposition en attente de validation;
 - les valeurs extraites du site existant sont inventoriées, mais non publiables sans le statut de confirmation approprié;
-- aucun CMS, formulaire connecté, backend ou déploiement n’est configuré;
+- le CMS et le déploiement sont configurés — Sanity pour le contenu, Cloudflare Pages pour le site public et pour le Studio, un Worker Cloudflare pour la prévisualisation éditoriale; le formulaire connecté et le backend ne le sont pas;
 - `sharp` est le seul package ajouté dans `S1-T02`, pour le traitement d’images Astro au build;
 - les contrôles automatisés d’interaction et de parcours seront ajoutés avec de vrais parcours critiques, pas pour ce seul ticket.
 

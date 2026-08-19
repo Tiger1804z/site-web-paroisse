@@ -1,7 +1,24 @@
 # État actuel du projet
 
-Dernière mise à jour : 18 août 2026 — préparation de la promotion de la
-migration Sanity vers la production.
+Dernière mise à jour : 18 août 2026 — migration Sanity promue en production, et
+prévisualisation éditoriale livrée.
+
+`main` = `staging` = `259be9e`.
+
+**Sanity Visual Editing / Cloudflare Preview : livré et validé de bout en bout le
+18 août 2026.** Trois ressources en ligne :
+
+```text
+public   https://paroisse-saint-rene-goupil.pages.dev                 (Pages, branche main)
+Studio   https://site-web-paroisse.pages.dev                          (Pages, branche main)
+preview  https://paroisse-preview.sebastieneugene123600.workers.dev   (Workers, branche staging)
+```
+
+La chaîne a été éprouvée sur la vraie infrastructure : un brouillon visible dans
+Presentation pendant que le site public affichait encore l’ancien texte, un clic
+sur un texte ouvrant le champ exact du document, puis publication, webhook
+Sanity et reconstruction du site public. Les détails d’exploitation vivent dans
+`docs/SANITY_VISUAL_EDITING.md`.
 
 La migration comprend la prévisualisation éditoriale (Visual Editing) et les
 contenus de Nos services, Vie paroissiale, Première visite, Nos annonceurs,
