@@ -40,9 +40,11 @@ légèrement plus généreux, métadonnées harmonisées, CTA de 52 px, navigati
 traitement photographique commun, une cadence de 7,6 secondes, un fondu de
 1,25 seconde et une carte « Prochaines messes » bourgogne plutôt que blanche.
 
-Le CMS et ses replis statiques sont intégrés. Les formulaires connectés et le
-déploiement ne sont pas encore implémentés. Plusieurs horaires, dates, crédits
-photo et informations opérationnelles demeurent à confirmer avant publication.
+Le CMS et ses replis statiques sont intégrés, et le site est déployé : le site
+public et le Studio sur Cloudflare Pages, la prévisualisation éditoriale sur un
+Worker Cloudflare. Les formulaires connectés ne sont pas encore implémentés.
+Plusieurs horaires, dates, crédits photo et informations opérationnelles
+demeurent à confirmer avant publication.
 
 La route `/horaires/` utilise également uniquement des placeholders. Son flux
 de contenu local typé et sa future connexion à Sanity sont expliqués dans

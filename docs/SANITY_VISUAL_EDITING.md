@@ -157,23 +157,27 @@ de priorité des variables d’environnement » plus haut.
 
 ## Déploiement
 
+**Les trois ressources sont en ligne depuis le 18 août 2026.**
+
 Le site public et le Studio sont sur **Cloudflare Pages**. La prévisualisation
-va sur **Cloudflare Workers**, et ce n'est pas un choix : depuis la version 12,
+est sur **Cloudflare Workers**, et ce n'est pas un choix : depuis la version 12,
 `@astrojs/cloudflare` ne prend plus Pages en charge. Il n'existe aucun
 adaptateur Pages compatible avec Astro 7.
 
 Trois ressources Cloudflare, indépendantes :
 
-| Ressource        | Produit | Contenu               |
-| ---------------- | ------- | --------------------- |
-| public           | Pages   | HTML statique         |
-| Studio           | Pages   | Studio Sanity compilé |
-| prévisualisation | Workers | Worker + assets       |
+| Ressource        | Produit | Adresse                                                      | Branche de production |
+| ---------------- | ------- | ------------------------------------------------------------ | --------------------- |
+| public           | Pages   | `https://paroisse-saint-rene-goupil.pages.dev`               | `main`                |
+| Studio           | Pages   | `https://site-web-paroisse.pages.dev`                        | `main`                |
+| prévisualisation | Workers | `https://paroisse-preview.sebastieneugene123600.workers.dev` | `staging`             |
 
-### Créer le Worker de prévisualisation
+### Le Worker de prévisualisation
 
-Tableau de bord Cloudflare → **Workers & Pages** → **Create** → **Workers** →
-**Import a repository** (Workers Builds).
+**Il existe et il tourne.** Créé le 18 août 2026 depuis le tableau de bord
+Cloudflare → **Workers & Pages** → **Create** → **Workers** → **Import a
+repository** (Workers Builds). Ce qui suit est sa configuration telle qu'elle
+est : à relire pour comprendre, ou à resaisir pour le reconstruire.
 
 | Réglage           | Valeur                                                                        |
 | ----------------- | ----------------------------------------------------------------------------- |
@@ -194,6 +198,28 @@ lui-même `dist/server/wrangler.json` (point d'entrée, dossier d'assets), et
 `.wrangler/deploy/config.json` y renvoie Wrangler. C'est ce qui rend la commande
 de déploiement aussi courte.
 
+#### Branche suivie, et comment relancer un déploiement
+
+La branche de production du Worker est **`staging`**, et les builds des branches
+non-production sont **désactivés**. La prévisualisation suit donc la branche
+d'intégration, pas chaque branche de travail : elle montre ce qui est sur le
+point de partir en production, ce qui est exactement son rôle.
+
+Pour la redéployer sans pousser de commit, un **Deploy Hook Workers** existe :
+
+```text
+nom      staging-preview
+branche  staging
+appel    POST sur son URL  →  {"success": true, "status": "queued"}
+```
+
+**L'URL de ce hook est un secret.** Quiconque la connaît peut déclencher des
+déploiements : elle ne s'écrit ni ici, ni dans un ticket, ni dans une capture
+d'écran. Une première URL a été exposée par accident pendant la mise en place;
+le hook a été supprimé et recréé, donc l'ancienne ne vaut plus rien. C'est la
+bonne réaction, et la seule — une URL de hook ne se « reprend » pas, elle se
+remplace.
+
 ### Variables — et pourquoi chacune est là où elle est
 
 Le préfixe `PUBLIC_` n'est pas une convention de nommage : c'est **le
@@ -202,13 +228,13 @@ navigateur. Une variable ainsi nommée est publiée, point.
 
 #### Variables publiques (type « Plaintext »)
 
-| Variable                   | Valeur                                              | Pourquoi elle peut être publique                                                             |
-| -------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `PUBLIC_SANITY_PROJECT_ID` | `xo2ahvjo`                                          | Identifiant de projet, visible dans toute URL d'image Sanity.                                |
-| `PUBLIC_SANITY_DATASET`    | `production`                                        | Nom d'un jeu de données, sans pouvoir d'accès.                                               |
-| `PUBLIC_SANITY_STUDIO_URL` | `https://site-web-paroisse.pages.dev`               | Adresse du Studio, nécessaire au navigateur pour construire les liens « modifier ce champ ». |
-| `SITE_URL`                 | `https://<PREVIEW_PROJECT>.<SUBDOMAIN>.workers.dev` | Adresse publique du site prévisualisé; sans elle le build échoue volontairement.             |
-| `NODE_VERSION`             | `22.19.0`                                           | Réglage de la plateforme de build.                                                           |
+| Variable                   | Valeur                                                       | Pourquoi elle peut être publique                                                             |
+| -------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `PUBLIC_SANITY_PROJECT_ID` | `xo2ahvjo`                                                   | Identifiant de projet, visible dans toute URL d'image Sanity.                                |
+| `PUBLIC_SANITY_DATASET`    | `production`                                                 | Nom d'un jeu de données, sans pouvoir d'accès.                                               |
+| `PUBLIC_SANITY_STUDIO_URL` | `https://site-web-paroisse.pages.dev`                        | Adresse du Studio, nécessaire au navigateur pour construire les liens « modifier ce champ ». |
+| `SITE_URL`                 | `https://paroisse-preview.sebastieneugene123600.workers.dev` | Adresse publique du site prévisualisé; sans elle le build échoue volontairement.             |
+| `NODE_VERSION`             | `22.19.0`                                                    | Réglage de la plateforme de build.                                                           |
 
 `PUBLIC_SANITY_VISUAL_EDITING_ENABLED` et `PREVIEW_DEPLOYMENT` ne se saisissent
 **pas** : `pnpm build:preview` les pose lui-même, ensemble. Une seule commande à
@@ -238,22 +264,36 @@ navigateur pour parler à Sanity. Chaque origine qui interroge Sanity **depuis l
 navigateur** doit être déclarée, sinon Presentation reste bloqué sur « Unable to
 connect » alors que la page s'affiche normalement.
 
+L'origine de la prévisualisation **est déjà déclarée**, sans identifiants,
+depuis le 18 août 2026. La commande sert à en ajouter une autre — un port local
+inhabituel, un futur environnement :
+
 ```bash
-pnpm --dir studio exec sanity cors add https://<PREVIEW_PROJECT>.<SUBDOMAIN>.workers.dev --no-credentials
+pnpm --dir studio exec sanity cors add https://paroisse-preview.sebastieneugene123600.workers.dev --no-credentials
 pnpm --dir studio exec sanity cors list
 ```
 
-| Origine                                | Allow credentials | Pourquoi                                                                                                                                                                                                                                                                |
-| -------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Studio (`site-web-paroisse.pages.dev`) | **ON**            | Le Studio agit **au nom de la personne connectée** : il lit et écrit avec le cookie de session Sanity. Sans identifiants, personne ne peut éditer.                                                                                                                      |
-| Prévisualisation (`*.workers.dev`)     | **OFF**           | Le site prévisualisé lit Sanity **depuis son serveur**, avec son propre jeton. Le navigateur n'a besoin d'aucune session. Autoriser les identifiants donnerait à cette origine le pouvoir d'agir au nom de l'éditrice connectée — un pouvoir dont elle n'a aucun usage. |
-| Site public                            | _(pas d'entrée)_  | Le site public ne parle jamais à Sanity depuis le navigateur : tout est déjà dans le HTML. Aucune origine à déclarer.                                                                                                                                                   |
+| Origine déclarée                                                                | Allow credentials | Pourquoi                                                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `https://site-web-paroisse.pages.dev` — Studio (_managed origin_)               | **ON**            | Le Studio agit **au nom de la personne connectée** : il lit et écrit avec le cookie de session Sanity. Sans identifiants, personne ne peut éditer.                                                                                                                      |
+| `http://localhost:3333` — Studio local                                          | **ON**            | Même rôle, sur la machine de développement.                                                                                                                                                                                                                             |
+| `https://paroisse-preview.sebastieneugene123600.workers.dev` — prévisualisation | **OFF**           | Le site prévisualisé lit Sanity **depuis son serveur**, avec son propre jeton. Le navigateur n’a besoin d’aucune session. Autoriser les identifiants donnerait à cette origine le pouvoir d’agir au nom de l’éditrice connectée — un pouvoir dont elle n’a aucun usage. |
+| `http://localhost:4321` — site local                                            | **OFF**           | Même raisonnement, en développement.                                                                                                                                                                                                                                    |
+| `https://paroisse-saint-rene-goupil.pages.dev` — site public                    | **OFF**           | Le site public ne parle jamais à Sanity depuis le navigateur : tout est déjà dans le HTML. L’entrée existe, ne lui sert à rien, et sans identifiants n’accorde rien. La retirer serait aussi correct que la garder.                                                     |
 
 La règle générale : **« Allow credentials » ne s'active que pour une origine qui
 doit agir au nom de l'utilisateur connecté.** Partout ailleurs, c'est du pouvoir
 donné sans besoin.
 
-## Créer le jeton — à faire manuellement
+## Le jeton de lecture — exploitation et renouvellement
+
+**Il est en place**, en **Secret** Cloudflare sur le Worker, sous le nom
+`SANITY_API_READ_TOKEN`. Côté Sanity il s'appelle `astro-preview-viewer`.
+
+Il a déjà été renouvelé une fois : la valeur d'origine avait été perdue, un
+nouveau jeton Viewer l'a remplacée, et l'ancien a été révoqué. Aucun identifiant
+inutilisé ne reste actif — c'est la moitié du travail qu'on oublie le plus
+souvent. La marche à suivre, pour la prochaine fois :
 
 1. Ouvrir <https://www.sanity.io/manage/project/xo2ahvjo>.
 2. Onglet **API** → **Tokens** → **Add API token**.
@@ -263,14 +303,19 @@ donné sans besoin.
 5. Copier la valeur **une seule fois**, la coller dans la variable
    `SANITY_API_READ_TOKEN` du Worker (type **Secret**), et dans le `.env` local
    si on veut prévisualiser sur sa machine. Jamais dans le dépôt.
+6. Redéployer le Worker. Le jeton est inliné dans le paquet serveur au moment du
+   build : il n'est pas relu à chaud, et un secret changé sans redéploiement ne
+   change rien.
+7. **Révoquer l'ancien jeton** dans la même page. Un identifiant oublié survit
+   toujours à la raison qui l'avait fait créer.
 
 Sans jeton, la prévisualisation fonctionne quand même : elle affiche le contenu
 **publié** avec les overlays, et journalise un avertissement. Seuls les
 brouillons manquent.
 
-## Brancher le Studio
+## Le Studio et l'adresse de la prévisualisation
 
-Le Studio lit l'adresse à afficher dans son iframe :
+**C'est configuré.** Le Studio lit l'adresse à afficher dans son iframe :
 
 ```ts
 // studio/presentation.ts
@@ -278,14 +323,27 @@ export const previewUrl =
   process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:4321';
 ```
 
-Dans le projet **Pages du Studio**, ajouter :
+Dans le projet **Pages du Studio**, la variable est posée :
 
 ```text
-SANITY_STUDIO_PREVIEW_URL=https://<PREVIEW_PROJECT>.<SUBDOMAIN>.workers.dev
+SANITY_STUDIO_PREVIEW_URL=https://paroisse-preview.sebastieneugene123600.workers.dev
 ```
 
-puis redéployer le Studio. Le préfixe `SANITY_STUDIO_` est la convention Sanity
-pour ce qui doit atteindre le navigateur — c'est une adresse, pas un secret.
+Le Studio a été redéployé après cet ajout, et son journal de build l'a
+confirmé :
+
+```text
+Including the following environment variables as part of the JavaScript bundle:
+- SANITY_STUDIO_PREVIEW_URL
+```
+
+Cette ligne est la vérification qui compte : sans elle, la variable n'a pas
+atteint le navigateur, et Presentation retomberait sur `http://localhost:4321`
+sans rien dire. Le préfixe `SANITY_STUDIO_` est la convention Sanity pour ce qui
+doit atteindre le navigateur — c'est une adresse, pas un secret.
+
+Changer l'adresse de la prévisualisation se fait donc ici, et nulle part dans le
+code.
 
 ## Commandes
 
@@ -569,10 +627,10 @@ Chaque étape prouve une chose précise; l'ordre compte.
 Contrôles rapides depuis un terminal :
 
 ```bash
-curl -sI https://<PREVIEW_PROJECT>.<SUBDOMAIN>.workers.dev/ | grep -i x-robots-tag
+curl -sI https://paroisse-preview.sebastieneugene123600.workers.dev/ | grep -i x-robots-tag
 #   X-Robots-Tag: noindex, nofollow
 
-curl -s https://<PREVIEW_PROJECT>.<SUBDOMAIN>.workers.dev/robots.txt
+curl -s https://paroisse-preview.sebastieneugene123600.workers.dev/robots.txt
 #   User-agent: *
 #   Disallow: /
 
@@ -581,6 +639,46 @@ curl -s https://paroisse-saint-rene-goupil.pages.dev/robots.txt
 #   Allow: /
 #   Sitemap: ...
 ```
+
+## Ce qui est normal, et ne se corrige pas
+
+Trois comportements observés en production ressemblent à des pannes. Aucun n'en
+est une. Ils sont écrits ici pour que personne ne les « répare ».
+
+### Cloudflare Pages avertit qu'il ignore `wrangler.jsonc`
+
+Depuis que le fichier est sur `main`, les builds Pages du site public et du
+Studio affichent :
+
+```text
+A Wrangler configuration file was found but it does not appear to be valid.
+Did you mean to use wrangler.toml to configure Pages?
+...
+Skipping file and continuing.
+```
+
+`wrangler.jsonc` appartient au **Worker** de prévisualisation. Il ne contient pas
+`pages_build_output_dir` parce qu'il ne décrit pas un projet Pages. Les deux
+builds Pages détectent le fichier, l'ignorent, et se terminent verts.
+
+**Ne pas ajouter `pages_build_output_dir` pour faire taire l'avertissement.** Un
+même fichier décrirait alors deux produits Cloudflare différents, et le silence
+gagné coûterait la lisibilité du seul fichier qui nomme le Worker.
+
+### Presentation demande parfois un rafraîchissement manuel
+
+Observé sur `aboutPage.hero.introduction` : la modification est bien enregistrée
+comme brouillon, mais l'iframe ne la rend pas immédiatement. Un clic sur le
+bouton **Refresh** de l'iframe affiche la bonne valeur.
+
+Ce n'est pas un défaut de lecture des brouillons, ni de correspondance des
+champs : les deux ont été vérifiés ailleurs sur la même session. C'est le signal
+de rafraîchissement qui n'atteint pas toujours la page. Non bloquant, et laissé
+tel quel : le comprendre demanderait une enquête à part.
+
+### La prévisualisation n'est pas derrière Cloudflare Access
+
+État connu et accepté, pas un oubli. Voir « Limites connues ».
 
 ## Retour arrière
 
@@ -597,9 +695,11 @@ jamais de toucher au site public.
 ## Limites connues
 
 - La prévisualisation est accessible à qui connaît son adresse. Elle est
-  interdite d'indexation par trois moyens, mais elle n'est pas protégée par mot
-  de passe. Poser Cloudflare Access devant le Worker est le geste à faire si des
-  brouillons deviennent sensibles; c'est un réglage de compte, pas du code.
+  interdite d'indexation par trois moyens, mais elle n'est **pas** derrière
+  Cloudflare Access. **C'est une décision, pas un oubli** : ce qu'on y voit est
+  le contenu d'un site paroissial public, à quelques heures près. Poser Access
+  devant le Worker reste le geste à faire si des brouillons devenaient
+  sensibles; c'est un réglage de compte, pas du code.
 - `@astrojs/cloudflare` est épinglé en `14.1.7`. La série `14.2.x` déclare
   accepter Astro `^7.0.0` mais importe `beginContentEntryCollection`
   d'`astro/app`, qui n'existe qu'à partir d'Astro 7.2. Monter l'adaptateur
