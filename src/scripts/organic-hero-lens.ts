@@ -1,3 +1,14 @@
+import {
+  approachAngle,
+  buildLensPoints,
+  buildSmoothPath,
+  clamp,
+  decay,
+  followPointer,
+  LENS_SHAPE,
+  type Point,
+} from './organic-hero-lens-motion.ts';
+
 type IdleWindow = Window &
   typeof globalThis & {
     requestIdleCallback?: (
@@ -6,11 +17,6 @@ type IdleWindow = Window &
     ) => number;
     cancelIdleCallback?: (handle: number) => void;
   };
-
-type Point = {
-  x: number;
-  y: number;
-};
 
 type OrganicHeroLensOptions = {
   initialImageIndex?: number;
@@ -24,34 +30,17 @@ export type OrganicHeroLensController = {
   setActiveImage: (index: number) => void;
 };
 
-const clamp = (value: number, minimum: number, maximum: number) =>
-  Math.min(Math.max(value, minimum), maximum);
-
-const buildSmoothPath = (points: Point[]) => {
-  const pointCount = points.length;
-  const firstPoint = points[0];
-  const lastPoint = points[pointCount - 1];
-
-  if (!firstPoint || !lastPoint) return '';
-
-  const startX = (lastPoint.x + firstPoint.x) / 2;
-  const startY = (lastPoint.y + firstPoint.y) / 2;
-  const commands = [`M ${startX.toFixed(2)} ${startY.toFixed(2)}`];
-
-  points.forEach((point, index) => {
-    const nextPoint = points[(index + 1) % pointCount];
-    if (!nextPoint) return;
-
-    const middleX = (point.x + nextPoint.x) / 2;
-    const middleY = (point.y + nextPoint.y) / 2;
-    commands.push(
-      `Q ${point.x.toFixed(2)} ${point.y.toFixed(2)} ${middleX.toFixed(2)} ${middleY.toFixed(2)}`,
-    );
-  });
-
-  commands.push('Z');
-  return commands.join(' ');
-};
+/** Au-delà de ce silence, en millisecondes, la lentille se referme. */
+const MOVEMENT_FRESHNESS = 115;
+/** Constante de temps de l’énergie du geste. */
+const ENERGY_TIME_CONSTANT = 240;
+/** Constante de temps de la direction de l’étirement. */
+const DIRECTION_TIME_CONSTANT = 70;
+/** Croissance et retrait du rayon, en constantes de temps. */
+const RADIUS_GROWTH_TIME_CONSTANT = 90;
+const RADIUS_RELEASE_TIME_CONSTANT = 150;
+/** Dérive lente de la forme, en radians par milliseconde. */
+const IDLE_SHAPE_DRIFT = 0.00085;
 
 export const initializeOrganicHeroLens = (
   hero: HTMLElement,
@@ -97,6 +86,10 @@ export const initializeOrganicHeroLens = (
   const imageChangeDelay = options.imageChangeDelay ?? 560;
 
   let heroRect = hero.getBoundingClientRect();
+  // Une mesure périmée, jamais une mesure par image : le rectangle n’est relu
+  // que lorsque la page a bougé sous le pointeur.
+  let geometryStale = false;
+  let maximumRadius = lensMetric.getBoundingClientRect().width / 2;
   let pointerInside = false;
   let imagesReady = false;
   let preparingImages = false;
@@ -109,15 +102,24 @@ export const initializeOrganicHeroLens = (
   let targetY = heroRect.height / 2;
   let currentX = targetX;
   let currentY = targetY;
-  let previousPointerX = targetX;
-  let previousPointerY = targetY;
+  // Dernière position en coordonnées de fenêtre : un défilement change le
+  // rectangle du héros sans nouvel événement de pointeur. Le geste se mesure
+  // dans ce repère, sinon une page qui défile passerait pour un mouvement de
+  // souris — énergie fantôme et image qui saute.
+  let clientX = heroRect.left + targetX;
+  let clientY = heroRect.top + targetY;
+  let previousPointerX = clientX;
+  let previousPointerY = clientY;
   let previousPointerTime = performance.now();
+  let previousFrameTime = performance.now();
   let lastPointerMove = -Infinity;
   let currentRadius = 0;
   let targetRadius = 0;
   let motionEnergy = 0;
   let motionDirection = 0;
+  let targetDirection = 0;
   let shapePhase = 0;
+  let breathPhase = 0;
   let travelledDistance = 0;
   let lastImageChange = performance.now();
 
@@ -133,16 +135,36 @@ export const initializeOrganicHeroLens = (
 
   setActiveImage(options.initialImageIndex ?? 0);
 
-  const resizeObserver = new ResizeObserver(() => {
+  const measureGeometry = () => {
     heroRect = hero.getBoundingClientRect();
-    targetX = clamp(targetX, 0, heroRect.width);
-    targetY = clamp(targetY, 0, heroRect.height);
-    currentX = clamp(currentX, 0, heroRect.width);
-    currentY = clamp(currentY, 0, heroRect.height);
-  });
+    maximumRadius = lensMetric.getBoundingClientRect().width / 2;
+    geometryStale = false;
+    return heroRect;
+  };
 
-  const getLensMaximumRadius = () =>
-    lensMetric.getBoundingClientRect().width / 2;
+  /** Le rectangle courant, relu seulement s’il a pu changer. */
+  const readHeroRect = () => (geometryStale ? measureGeometry() : heroRect);
+
+  const markGeometryStale = () => {
+    geometryStale = true;
+  };
+
+  /** La position du pointeur dans le repère du héros, mesure fraîche comprise. */
+  const pointerToHero = () => {
+    const rect = readHeroRect();
+    return {
+      x: clamp(clientX - rect.left, 0, rect.width),
+      y: clamp(clientY - rect.top, 0, rect.height),
+    };
+  };
+
+  const resizeObserver = new ResizeObserver(() => {
+    const rect = measureGeometry();
+    targetX = clamp(targetX, 0, rect.width);
+    targetY = clamp(targetY, 0, rect.height);
+    currentX = clamp(currentX, 0, rect.width);
+    currentY = clamp(currentY, 0, rect.height);
+  });
 
   const writeLensShape = () => {
     if (currentRadius < 0.35) {
@@ -151,34 +173,15 @@ export const initializeOrganicHeroLens = (
       return;
     }
 
-    const pointCount = 12;
-    const points: Point[] = [];
-    const energy = clamp(motionEnergy, 0, 1);
-    const longitudinalScale = 1 + energy * 0.26;
-    const lateralScale = 1 - energy * 0.08;
-
-    for (let index = 0; index < pointCount; index += 1) {
-      const angle = (index / pointCount) * Math.PI * 2;
-      const relativeAngle = angle - motionDirection;
-      const organicRadius =
-        1 +
-        Math.sin(angle * 3 + shapePhase) * 0.1 +
-        Math.sin(angle * 5 - shapePhase * 0.72) * 0.05;
-      const longitudinal =
-        Math.cos(relativeAngle) *
-        currentRadius *
-        organicRadius *
-        longitudinalScale;
-      const lateral =
-        Math.sin(relativeAngle) * currentRadius * organicRadius * lateralScale;
-      const cosine = Math.cos(motionDirection);
-      const sine = Math.sin(motionDirection);
-
-      points.push({
-        x: currentX + longitudinal * cosine - lateral * sine,
-        y: currentY + longitudinal * sine + lateral * cosine,
-      });
-    }
+    const points: Point[] = buildLensPoints({
+      centerX: currentX,
+      centerY: currentY,
+      radius: currentRadius,
+      energy: motionEnergy,
+      direction: motionDirection,
+      shapePhase,
+      breathPhase,
+    });
 
     const path = buildSmoothPath(points);
     lensClipPath.setAttribute('d', path);
@@ -208,19 +211,56 @@ export const initializeOrganicHeroLens = (
       return;
     }
 
-    const movementIsFresh = pointerInside && time - lastPointerMove < 105;
-    const maximumRadius = getLensMaximumRadius();
+    // Une image sautée ou un onglet ralenti ne doit ni figer ni catapulter la
+    // lentille : le pas de temps est borné.
+    const deltaTime = clamp(time - previousFrameTime, 1, 64);
+    previousFrameTime = time;
+
+    const movementIsFresh =
+      pointerInside && time - lastPointerMove < MOVEMENT_FRESHNESS;
+
+    // Le héros a pu défiler pendant le geste : la cible est recalculée à partir
+    // des coordonnées de fenêtre, pas d’un rectangle mesuré à l’entrée.
+    if (pointerInside && geometryStale) {
+      const pointer = pointerToHero();
+      targetX = pointer.x;
+      targetY = pointer.y;
+    }
+
     targetRadius =
       movementIsFresh && imagesReady
-        ? maximumRadius * (0.52 + motionEnergy * 0.48)
+        ? maximumRadius * (0.58 + motionEnergy * 0.42)
         : 0;
 
-    currentX += (targetX - currentX) * 0.13;
-    currentY += (targetY - currentY) * 0.13;
+    const eased = followPointer(
+      { x: currentX, y: currentY },
+      { x: targetX, y: targetY },
+      deltaTime,
+      currentRadius,
+    );
+    currentX = eased.x;
+    currentY = eased.y;
+
+    const radiusTimeConstant =
+      targetRadius > currentRadius
+        ? RADIUS_GROWTH_TIME_CONSTANT
+        : RADIUS_RELEASE_TIME_CONSTANT;
     currentRadius +=
       (targetRadius - currentRadius) *
-      (targetRadius > currentRadius ? 0.17 : 0.105);
-    motionEnergy *= 0.94;
+      (1 - Math.exp(-deltaTime / radiusTimeConstant));
+
+    motionDirection = approachAngle(
+      motionDirection,
+      targetDirection,
+      1 - Math.exp(-deltaTime / DIRECTION_TIME_CONSTANT),
+    );
+    motionEnergy = decay(motionEnergy, deltaTime, ENERGY_TIME_CONSTANT);
+    // La forme respire et dérive même quand la souris ralentit : la matière
+    // reste vivante au lieu de se figer.
+    breathPhase =
+      (breathPhase + (deltaTime * Math.PI * 2) / LENS_SHAPE.breathPeriod) %
+      (Math.PI * 2);
+    shapePhase += deltaTime * IDLE_SHAPE_DRIFT;
 
     if (currentRadius > 0.45 && imagesReady) {
       hero.dataset.lensActive = 'true';
@@ -248,6 +288,7 @@ export const initializeOrganicHeroLens = (
 
   const requestPointerFrame = () => {
     if (frameId === undefined) {
+      previousFrameTime = performance.now();
       frameId = window.requestAnimationFrame(animatePointer);
     }
   };
@@ -274,7 +315,10 @@ export const initializeOrganicHeroLens = (
     );
     preparingImages = false;
 
-    if (imagesReady && performance.now() - lastPointerMove < 105) {
+    if (
+      imagesReady &&
+      performance.now() - lastPointerMove < MOVEMENT_FRESHNESS
+    ) {
       requestPointerFrame();
     }
   };
@@ -297,14 +341,18 @@ export const initializeOrganicHeroLens = (
     if (!pointerCapability.matches || event.pointerType === 'touch') return;
 
     pointerInside = true;
-    heroRect = hero.getBoundingClientRect();
-    targetX = clamp(event.clientX - heroRect.left, 0, heroRect.width);
-    targetY = clamp(event.clientY - heroRect.top, 0, heroRect.height);
+    clientX = event.clientX;
+    clientY = event.clientY;
+    measureGeometry();
+    const pointer = pointerToHero();
+    targetX = pointer.x;
+    targetY = pointer.y;
     currentX = targetX;
     currentY = targetY;
-    previousPointerX = targetX;
-    previousPointerY = targetY;
+    previousPointerX = clientX;
+    previousPointerY = clientY;
     previousPointerTime = performance.now();
+    previousFrameTime = previousPointerTime;
     lastPointerMove = -Infinity;
     travelledDistance = 0;
     lastImageChange = performance.now();
@@ -319,17 +367,18 @@ export const initializeOrganicHeroLens = (
     if (!pointerInside) return;
 
     const now = performance.now();
-    const nextX = clamp(event.clientX - heroRect.left, 0, heroRect.width);
-    const nextY = clamp(event.clientY - heroRect.top, 0, heroRect.height);
-    const deltaX = nextX - previousPointerX;
-    const deltaY = nextY - previousPointerY;
+    clientX = event.clientX;
+    clientY = event.clientY;
+    const pointer = pointerToHero();
+    const deltaX = clientX - previousPointerX;
+    const deltaY = clientY - previousPointerY;
     const distance = Math.hypot(deltaX, deltaY);
     const elapsed = Math.max(now - previousPointerTime, 8);
 
-    targetX = nextX;
-    targetY = nextY;
-    previousPointerX = nextX;
-    previousPointerY = nextY;
+    targetX = pointer.x;
+    targetY = pointer.y;
+    previousPointerX = clientX;
+    previousPointerY = clientY;
     previousPointerTime = now;
 
     if (distance > 0.35) {
@@ -342,7 +391,7 @@ export const initializeOrganicHeroLens = (
         0.08,
         1,
       );
-      motionDirection = Math.atan2(deltaY, deltaX);
+      targetDirection = Math.atan2(deltaY, deltaX);
       shapePhase += Math.min(distance * 0.006, 0.42);
       lastPointerMove = now;
       maybeChangeImage(distance, now);
@@ -405,6 +454,18 @@ export const initializeOrganicHeroLens = (
     signal: controller.signal,
   });
   document.addEventListener('visibilitychange', handleVisibilityChange, {
+    passive: true,
+    signal: controller.signal,
+  });
+  // Un défilement déplace le héros sans redimensionner quoi que ce soit : sans
+  // ces deux écouteurs, la lentille se décalait de la hauteur défilée. La
+  // capture attrape aussi le défilement d’un conteneur interne.
+  window.addEventListener('scroll', markGeometryStale, {
+    passive: true,
+    capture: true,
+    signal: controller.signal,
+  });
+  window.addEventListener('resize', markGeometryStale, {
     passive: true,
     signal: controller.signal,
   });
