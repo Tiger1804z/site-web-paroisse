@@ -5,6 +5,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import sanity from '@sanity/astro';
+import cloudflare from '@astrojs/cloudflare';
 import { loadEnv } from 'vite';
 
 /**
@@ -124,6 +125,27 @@ const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
   '',
 );
 
+/**
+ * Topologie du build : site public statique, ou environnement de
+ * prévisualisation rendu à la demande.
+ *
+ * Le site public est un tas de fichiers HTML. C'est ce qu'on veut : rapide,
+ * indexable, sans serveur à surveiller. Mais un fichier figé ne peut pas
+ * montrer un brouillon qui vient d'être tapé — Presentation demande à la page
+ * de se rafraîchir, et un fichier statique se recharge identique à lui-même.
+ * La prévisualisation doit donc rendre à chaque requête, ce qui exige un
+ * adaptateur serveur.
+ *
+ * La lecture se fait sur `process.env`, jamais sur `.env` : le fichier local
+ * décrit le contenu d'une session de travail, pas la forme du site produit.
+ * Une ligne oubliée dans `.env` ne doit pas transformer `pnpm build:public`
+ * en build serveur.
+ *
+ * Le drapeau est posé par `scripts/build-preview.mjs`, et forcé à « false »
+ * par `scripts/build-public.mjs`. Aucun des deux ne touche `.env`.
+ */
+const previewDeployment = process.env.PREVIEW_DEPLOYMENT === 'true';
+
 /** Alias corrects, déclarés avant ceux de l'intégration. */
 const sanityPackageAliases = [
   { find: /^styled-components$/, name: 'styled-components' },
@@ -136,7 +158,29 @@ const sanityPackageAliases = [
   );
 
 export default defineConfig({
-  output: 'static',
+  /**
+   * `static` prérend chaque route au build; `server` les rend à la demande.
+   *
+   * En prévisualisation, rien n'est prérendu : c'est la garantie qu'aucune
+   * page ne peut afficher un brouillon vieux du dernier build. Effet de bord
+   * utile — le build de prévisualisation n'interroge jamais Sanity, donc il ne
+   * peut ni échouer sur le contenu ni exiger un jeton valide pour aboutir.
+   */
+  output: previewDeployment ? 'server' : 'static',
+  /**
+   * L'adaptateur n'est ajouté qu'en prévisualisation. Le build public ne
+   * charge donc ni `@astrojs/cloudflare` ni son greffon Vite : sa sortie reste
+   * exactement celle d'aujourd'hui, sans `_worker.js`.
+   *
+   * `imageService: 'compile'` optimise les images des routes prérendues
+   * pendant le build et laisse passer les autres telles quelles. Sur Workers,
+   * `sharp` n'existe pas à l'exécution; comme la prévisualisation ne prérend
+   * rien, ses images sont servies sans transformation. Acceptable ici : on
+   * prévisualise du contenu, pas des poids de fichiers.
+   */
+  ...(previewDeployment
+    ? { adapter: cloudflare({ imageService: 'compile' }) }
+    : {}),
   integrations: [
     react(),
     sanity({
@@ -147,6 +191,31 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss(), fixSanityAliasesOnWindows()],
+    /**
+     * La topologie décidée ci-dessus, injectée telle quelle dans le code.
+     *
+     * `src/lib/sanity/preview.ts` lit `import.meta.env.PREVIEW_DEPLOYMENT`
+     * pour savoir s'il a le droit d'activer la prévisualisation. Sans cette
+     * injection il lirait l'environnement par le chemin normal d'Astro — et
+     * mesure faite le 18 août 2026, pour une variable NON préfixée `PUBLIC_`,
+     * c'est la valeur du fichier `.env` qui l'emporte sur celle du processus.
+     * L'inverse des variables `PUBLIC_`, dont la valeur de processus gagne;
+     * c'est d'ailleurs ce qui fait fonctionner `scripts/build-public.mjs`.
+     *
+     * Conséquence sans cette ligne : une ligne `PREVIEW_DEPLOYMENT=true`
+     * oubliée dans `.env` ferait croire à `preview.ts` qu'il est dans un
+     * environnement serveur, alors que la config, elle, lit `process.env` et
+     * construit du statique. Le verrou qui interdit de figer des brouillons
+     * dans du HTML public serait levé par erreur — silencieusement.
+     *
+     * Une seule décision, un seul endroit, et le code la reçoit au lieu de la
+     * redécouvrir.
+     */
+    define: {
+      'import.meta.env.PREVIEW_DEPLOYMENT': JSON.stringify(
+        previewDeployment ? 'true' : 'false',
+      ),
+    },
     resolve: {
       alias: sanityPackageAliases,
     },

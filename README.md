@@ -184,6 +184,7 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 | `pnpm dev`                | Démarre le serveur de développement.                      |
 | `pnpm build`              | Génère le site selon le mode de prévisualisation actif.   |
 | `pnpm build:public`       | Génère le site public statique dans `dist/`.              |
+| `pnpm build:preview`      | Génère l’environnement de prévisualisation Cloudflare.    |
 | `pnpm preview`            | Sert localement le dernier build.                         |
 | `pnpm check`              | Vérifie les composants Astro et les types TypeScript.     |
 | `pnpm lint`               | Exécute ESLint sans accepter d’avertissement.             |
@@ -191,6 +192,7 @@ Astro affiche l’adresse locale, normalement `http://localhost:4321`.
 | `pnpm format:check`       | Vérifie le format sans modifier les fichiers.             |
 | `pnpm sanity:typegen`     | Régénère les types des schémas et requêtes Sanity.        |
 | `pnpm validate`           | Enchaîne format, lint, types, tests, build public et SEO. |
+| `pnpm validate:preview`   | Construit la prévisualisation et contrôle sa sortie.      |
 | `pnpm --dir studio build` | Génère le Studio statique dans `studio/dist/`.            |
 
 ## Structure
@@ -314,6 +316,6 @@ header translucide et fait de `/nos-services/` la route canonique. Les choix
 - authentification;
 - analytique;
 - tests Vitest et Playwright;
-- déploiement et prévisualisations distantes.
+- déploiement du site public (fait) et protection par mot de passe de la prévisualisation.
 
 Vitest et Playwright seront ajoutés seulement lorsque de vrais composants interactifs et des parcours critiques justifieront des tests automatisés.
