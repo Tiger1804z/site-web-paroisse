@@ -3,7 +3,7 @@ import { eventsPageData } from '@/data/events';
 import type { EventsPageData } from '@/types/events';
 import { EVENTS_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityEventsPageResult } from '@/lib/sanity/types';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { normalizeSanityEventsPage } from '@/lib/content/normalizeSanityEventsPage';
 
 /**
@@ -26,10 +26,10 @@ export async function fetchEventsPageRaw(): Promise<SanityEventsPageResult> {
 
 export async function getEventsPageData(): Promise<EventsPageData> {
   const raw = await fetchEventsPageRaw();
-  const page = normalizeSanityEventsPage(raw, eventsPageData, (source) =>
-    buildRemoteImageSources(
-      source as Parameters<typeof buildRemoteImageSources>[0],
-    ),
+  const page = normalizeSanityEventsPage(
+    raw,
+    eventsPageData,
+    buildImageSources,
   );
 
   return {

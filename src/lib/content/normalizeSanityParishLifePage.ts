@@ -49,7 +49,7 @@ function normalizeSlide(
   buildSources: ImageSourceBuilder,
 ): ParishLifeHeroImage | undefined {
   const label = cleanString(raw.label);
-  const image = normalizeSanityImage(raw.visual, buildSources);
+  const image = normalizeSanityImage(raw.visual, buildSources, 'hero');
   if (!label || !image) return undefined;
 
   return { kind: 'remote-image', label, image };

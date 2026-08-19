@@ -1,6 +1,6 @@
 import { loadQuery } from '@/lib/sanity/preview';
 import { homePageData } from '@/data/homePage';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { HOME_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityHomePageResult } from '@/lib/sanity/types';
 import { getParishLifePageData } from '@/lib/content/getParishLifePageData';
@@ -54,14 +54,9 @@ export async function getHomePageData(): Promise<HomePageData> {
 
   const page = normalizeSanityHomePage(raw, homePageData, groupNames);
 
-  const buildSources = (source: unknown) =>
-    buildRemoteImageSources(
-      source as Parameters<typeof buildRemoteImageSources>[0],
-    );
-
   const candidates = normalizeSanityHomeGallery(
     raw?.gallery?.photos,
-    buildSources,
+    buildImageSources,
   );
 
   // Les illustrations de section sont composées ici, comme les photographies du
@@ -71,7 +66,7 @@ export async function getHomePageData(): Promise<HomePageData> {
   const sectionImage = (source: unknown) => {
     const image = normalizeSanityImage(
       source as Parameters<typeof normalizeSanityImage>[0],
-      buildSources,
+      buildImageSources,
     );
     return image ? { image } : {};
   };
@@ -81,13 +76,13 @@ export async function getHomePageData(): Promise<HomePageData> {
   // pas une diapositive.
   const heroSlides = (raw?.hero?.slides ?? []).flatMap((slide) => {
     const label = slide.label?.trim();
-    const image = normalizeSanityImage(slide.visual, buildSources);
+    const image = normalizeSanityImage(slide.visual, buildImageSources, 'hero');
 
     return label && image ? [{ label, image }] : [];
   });
 
   // L'image de partage suit la même route que les illustrations de section.
-  const shareImage = normalizeSanityImage(raw?.seo?.image, buildSources);
+  const shareImage = normalizeSanityImage(raw?.seo?.image, buildImageSources);
 
   return {
     ...page,

@@ -183,7 +183,11 @@ export function normalizeSanityAboutPage(
     return normalized ? [normalized] : [];
   });
 
-  const heroImage = normalizeSanityImage(raw?.hero?.image, buildSources);
+  const heroImage = normalizeSanityImage(
+    raw?.hero?.image,
+    buildSources,
+    'hero',
+  );
 
   const architectureImage = normalizeSanityImage(
     raw?.architecture?.image,

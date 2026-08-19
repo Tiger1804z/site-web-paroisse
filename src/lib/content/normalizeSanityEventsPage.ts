@@ -153,7 +153,11 @@ export function normalizeSanityEventsPage(
     return normalized ? [normalized] : [];
   });
 
-  const heroImage = normalizeSanityImage(raw?.hero?.image, buildSources);
+  const heroImage = normalizeSanityImage(
+    raw?.hero?.image,
+    buildSources,
+    'hero',
+  );
 
   return {
     seo: normalizeSanitySeo(raw?.seo, fallback.seo, buildSources),

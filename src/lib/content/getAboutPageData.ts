@@ -1,6 +1,6 @@
 import { loadQuery } from '@/lib/sanity/preview';
 import { aboutPageData } from '@/data/about';
-import { buildRemoteImageSources } from '@/lib/sanity/image';
+import { buildImageSources } from '@/lib/sanity/image';
 import { ABOUT_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityAboutPageResult } from '@/lib/sanity/types';
 import { normalizeSanityAboutPage } from '@/lib/content/normalizeSanityAboutPage';
@@ -28,9 +28,5 @@ async function fetchAboutPageRaw(): Promise<SanityAboutPageResult> {
 export async function getAboutPageData(): Promise<AboutPageData> {
   const raw = await fetchAboutPageRaw();
 
-  return normalizeSanityAboutPage(raw, aboutPageData, (source) =>
-    buildRemoteImageSources(
-      source as Parameters<typeof buildRemoteImageSources>[0],
-    ),
-  );
+  return normalizeSanityAboutPage(raw, aboutPageData, buildImageSources);
 }
