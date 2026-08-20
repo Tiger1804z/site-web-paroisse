@@ -148,10 +148,14 @@ const { title, events } = Astro.props;
                 <p class="upcoming-event__notice">{event.capacityNotice}</p>
               )}
 
-              {event.contact?.phone && event.contact.phoneHref && (
+              {event.contact?.phone && (
                 <p class="upcoming-event__phone">
                   Téléphone :
-                  <a href={event.contact.phoneHref}>{event.contact.phone}</a>
+                  {event.contact.phoneHref ? (
+                    <a href={event.contact.phoneHref}>{event.contact.phone}</a>
+                  ) : (
+                    <span>{event.contact.phone}</span>
+                  )}
                 </p>
               )}
 

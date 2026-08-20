@@ -80,11 +80,7 @@ const email = settings.email;
               </li>
             )
           }
-          <li>
-            par téléphone, au <a href={settings.phone.href}
-              >{settings.phone.display}</a
-            >
-          </li>
+          <li>par téléphone, au {settings.phone.display}</li>
           <li>par la poste, au {settings.address.formatted}</li>
         </ul>
       </section>
@@ -238,10 +234,8 @@ const email = settings.email;
               <>au secrétariat</>
             )
           }{' '}
-          ou de téléphoner au <a href={settings.phone.href}
-            >{settings.phone.display}</a
-          >. La paroisse répond dans un délai raisonnable, et au plus tard dans
-          les trente jours.
+          ou de téléphoner au {settings.phone.display}. La paroisse répond dans
+          un délai raisonnable, et au plus tard dans les trente jours.
         </p>
       </section>
 

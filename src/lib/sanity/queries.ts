@@ -1071,7 +1071,6 @@ export const ADVERTISERS_PAGE_QUERY = defineQuery(`
       title,
       description,
       details,
-      phoneLabel,
       contactLabel
     },
     settings {

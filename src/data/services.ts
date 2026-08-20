@@ -10,9 +10,12 @@ const detail = (label: string, value: string): ParishServiceDetail => ({
 export function buildServicesPageData(
   siteSettings: PublicContactDetails,
 ): ServicesPageData {
-  const phoneCta = {
-    label: 'Téléphoner au secrétariat',
-    href: siteSettings.phone.href,
+  // Chaque service renvoyait vers un appel d'un seul geste. Le secrétariat
+  // reçoit ces appels à domicile, à toute heure : le bouton mène désormais aux
+  // coordonnées, où le numéro figure avec les heures d'ouverture.
+  const secretariatCta = {
+    label: 'Contacter le secrétariat',
+    href: '/contact/',
   } as const;
 
   return {
@@ -64,7 +67,7 @@ export function buildServicesPageData(
               'Faire confirmer les documents requis et toute autorisation territoriale.',
               'Prévoir une seconde rencontre et une pratique selon les indications reçues.',
             ],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
           {
             id: 'bapteme',
@@ -85,7 +88,7 @@ export function buildServicesPageData(
               'Faire confirmer les certificats requis pour l’enfant, le parrain et la marraine.',
               'Prendre rendez-vous une fois les documents rassemblés.',
             ],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
           {
             id: 'catechese',
@@ -105,7 +108,7 @@ export function buildServicesPageData(
               ),
             ],
             note: 'Les critères d’âge, le dossier précis et les responsables doivent être reconfirmés avant l’inscription.',
-            cta: phoneCta,
+            cta: secretariatCta,
           },
         ],
       },
@@ -126,7 +129,7 @@ export function buildServicesPageData(
             details: [
               detail('Tarif 2026', '350 $; chantre et musicien en supplément.'),
             ],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
           {
             id: 'certificats',
@@ -140,7 +143,7 @@ export function buildServicesPageData(
                 '20 $ par document, plus 2 $ de frais de poste lorsque applicable.',
               ),
             ],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
         ],
       },
@@ -159,7 +162,7 @@ export function buildServicesPageData(
               'Une intention peut être confiée pour une messe annoncée, selon les disponibilités communiquées par le secrétariat.',
             active: true,
             details: [detail('Tarif 2026', '15 $ par messe annoncée.')],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
           {
             id: 'lampions',
@@ -171,7 +174,7 @@ export function buildServicesPageData(
               detail('Tarif 2026', '5 $ par lampion.'),
               detail('Tarif 2026', '5 $ pour une lampe du sanctuaire.'),
             ],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
           {
             id: 'messes-commemoratives',
@@ -180,7 +183,7 @@ export function buildServicesPageData(
               'Une célébration peut être demandée à la mémoire d’une personne, sous réserve de la date convenue avec la paroisse.',
             active: true,
             details: [detail('Tarif 2026', '150 $, sans musicien ni chantre.')],
-            cta: phoneCta,
+            cta: secretariatCta,
           },
           {
             id: 'celebrations-speciales',
@@ -195,7 +198,7 @@ export function buildServicesPageData(
               ),
             ],
             note: 'Les dates, le déroulement et l’ouverture des inscriptions doivent être confirmés pour chaque occurrence.',
-            cta: phoneCta,
+            cta: secretariatCta,
           },
         ],
       },
@@ -222,7 +225,7 @@ export function buildServicesPageData(
               detail('Contrat', 'Remis et signé le jour de la réservation.'),
             ],
             note: 'Aucune capacité, aucun tarif, aucun équipement ni aucune heure disponible ne sont publiés avant confirmation.',
-            cta: phoneCta,
+            cta: secretariatCta,
           },
         ],
       },
@@ -236,9 +239,9 @@ export function buildServicesPageData(
     finalCta: {
       title: 'Parler de votre démarche',
       description:
-        'Pour faire confirmer un tarif, un document, une date ou une disponibilité, téléphonez directement au secrétariat.',
-      primary: phoneCta,
-      phone: siteSettings.phone,
+        'Pour faire confirmer un tarif, un document, une date ou une disponibilité, communiquez avec le secrétariat.',
+      primary: secretariatCta,
+      phone: { display: siteSettings.phone.display },
     },
   } as const satisfies ServicesPageData;
 }

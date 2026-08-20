@@ -87,9 +87,15 @@ export interface ServicesPageData {
     readonly title: string;
     readonly description: string;
     readonly primary: ServicesCallToAction;
+    /**
+     * Le numéro du secrétariat, affiché seul.
+     *
+     * Pas d'adresse `tel:` : la paroisse ne veut plus qu'un geste sur le numéro
+     * déclenche un appel, le secrétariat recevant ces appels à domicile à toute
+     * heure. Le bouton voisin mène à la page Contact.
+     */
     readonly phone: {
       readonly display: string;
-      readonly href: `tel:${string}`;
     };
   };
 }

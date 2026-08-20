@@ -14,7 +14,6 @@ export const siteSettingsData = {
     display: '514 722-1161',
     international: '+1 514 722-1161',
     e164: '+15147221161',
-    href: 'tel:+15147221161',
   },
   email: {
     display: '',

@@ -49,9 +49,12 @@ test('les coordonnées publiques confirmées sont centralisées', () => {
   assert.equal(siteSettingsData.address.postalCode, 'H1Z 1X8');
 });
 
-test('le téléphone possède les formats public et cliquable attendus', () => {
+test('le téléphone possède ses formats public, international et machine', () => {
   assert.equal(siteSettingsData.phone.display, '514 722-1161');
-  assert.equal(siteSettingsData.phone.href, 'tel:+15147221161');
+  assert.equal(siteSettingsData.phone.international, '+1 514 722-1161');
+  assert.equal(siteSettingsData.phone.e164, '+15147221161');
+  // Aucun format cliquable : voir tests/parish-phone.test.mjs.
+  assert.equal('href' in siteSettingsData.phone, false);
 });
 
 test('les heures du secrétariat sont une coordonnée globale', () => {

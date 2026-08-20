@@ -28,13 +28,15 @@ export function buildContactMethods(
       href: '#nous-trouver',
       note: 'Emplacement confirmé par la paroisse.',
     },
+    // Pas de `href` : le numéro s'affiche, il ne se compose pas d'un geste. Le
+    // secrétariat reçoit ces appels à domicile, à toute heure, et la carte
+    // renvoie donc aux heures d'ouverture plutôt qu'à un bouton d'appel.
     {
       id: 'phone',
       kind: 'phone',
       label: 'Téléphone',
       value: siteSettings.phone.display,
-      href: siteSettings.phone.href,
-      note: 'Touchez le numéro pour appeler.',
+      note: 'Le secrétariat répond durant ses heures d’ouverture.',
     },
   ];
 

@@ -2,6 +2,7 @@
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import type { ThriftStorePageData } from '@/types/thriftStore';
+import { toThirdPartyDialableDigits } from '@/lib/content/parishPhone';
 
 interface Props {
   introduction: ThriftStorePageData['introduction'];
@@ -16,11 +17,13 @@ const hasPracticalInformation = Boolean(
 );
 
 // Le numéro est saisi tel qu’il s’affiche; le format cliquable en est dérivé,
-// jamais saisi une seconde fois.
+// jamais saisi une seconde fois. La friperie a sa propre ligne et garde son
+// lien d’appel — mais si le numéro principal de la paroisse était saisi ici,
+// il s’afficherait sans devenir cliquable : le secrétariat reçoit ces appels à
+// domicile, à toute heure.
 const phoneDisplay = practicalInformation.phone;
-const phoneDigits = phoneDisplay?.replace(/\D/g, '');
-const phoneHref =
-  phoneDigits?.length === 10 ? `tel:+1${phoneDigits}` : undefined;
+const phoneDigits = toThirdPartyDialableDigits(phoneDisplay);
+const phoneHref = phoneDigits ? `tel:+1${phoneDigits}` : undefined;
 ---
 
 <section

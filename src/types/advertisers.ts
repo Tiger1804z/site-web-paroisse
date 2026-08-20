@@ -16,9 +16,17 @@ export interface AdvertiserAddress {
   readonly lines: readonly string[];
 }
 
+/**
+ * Le numéro d'un annonceur.
+ *
+ * `href` est facultatif : une saisie qui n'a pas dix chiffres n'ouvre pas de
+ * lien, et le numéro principal de la paroisse n'en ouvre jamais. Dans les deux
+ * cas le numéro s'affiche quand même — seul le geste qui déclenche l'appel
+ * disparaît.
+ */
 export interface AdvertiserPhone {
   readonly display: string;
-  readonly href: `tel:${string}`;
+  readonly href?: `tel:${string}`;
 }
 
 export interface AdvertiserEmail {
@@ -77,8 +85,14 @@ export interface AdvertisersPageData {
     readonly title: string;
     readonly description: string;
     readonly details: readonly string[];
+    /**
+     * Le numéro du secrétariat, affiché sans bouton d'appel.
+     *
+     * Il n'y a plus qu'un bouton dans ce bloc, et il mène à la page Contact :
+     * la paroisse a retiré tout déclenchement d'appel d'un seul geste sur son
+     * numéro principal, que le secrétariat reçoit à domicile à toute heure.
+     */
     readonly phone: PublicPhone;
-    readonly phoneLabel: string;
     readonly contactLabel: string;
     readonly contactHref: '/contact/';
   };

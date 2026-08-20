@@ -76,9 +76,6 @@ export function normalizeSanityAdvertisersPage(
         fallback.solicitation.description,
       details: details.length > 0 ? details : fallback.solicitation.details,
       phone: fallback.solicitation.phone,
-      phoneLabel:
-        cleanString(raw?.solicitation?.phoneLabel) ??
-        fallback.solicitation.phoneLabel,
       contactLabel:
         cleanString(raw?.solicitation?.contactLabel) ??
         fallback.solicitation.contactLabel,

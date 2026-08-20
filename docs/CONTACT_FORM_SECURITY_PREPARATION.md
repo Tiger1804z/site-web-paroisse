@@ -139,6 +139,31 @@ et activation des blocs. Il ne contiendra jamais les secrets, l’adresse
 destinataire privée, la logique de validation serveur, la limitation de
 fréquence ou le code d’envoi.
 
+## Destinataire cible
+
+Adresse fournie par la paroisse le 20 août 2026, à retenir comme destinataire
+des messages du formulaire :
+
+    paroissesrgoupil@videotron.ca
+
+**À faire confirmer avant l’implémentation.** Cette adresse ne correspond pas
+tout à fait à celle déjà consignée ailleurs dans le dépôt —
+`paroissergoupil@videotron.ca`, sans le `s` après `paroisse`, notée dans
+[`CONTENT_INVENTORY.md`](./CONTENT_INVENTORY.md),
+[`plan-reprise-2026-08-04.md`](./plan-reprise-2026-08-04.md) et
+[`checklist-rencontre-2026-08-11.md`](./checklist-rencontre-2026-08-11.md).
+Une lettre de différence suffit à faire disparaître les messages : la paroisse
+doit trancher laquelle est la bonne avant qu’un envoi soit branché.
+
+Rien n’est branché à cette adresse dans le dépôt. Elle est notée ici, et
+nulle part dans le code, parce que le destinataire reste un secret
+d’exploitation : voir « Données et Sanity » ci-dessus.
+
+Le formulaire prend d’autant plus d’importance depuis le 20 août 2026 : le
+numéro principal de la paroisse n’est plus cliquable nulle part sur le site
+(voir [`PARISH_PHONE_NOT_CLICKABLE.md`](./PARISH_PHONE_NOT_CLICKABLE.md)), et
+l’écrit devient le canal que le site encourage.
+
 ## Reprise obligatoire
 
 Instruction de reprise :

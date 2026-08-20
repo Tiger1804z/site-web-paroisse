@@ -147,9 +147,10 @@ function normalizeHeroSlides(
 /**
  * Fusionne le contenu Sanity avec le repli local.
  *
- * Une seule chose ne vient jamais de Sanity : **le bouton d'appel**, dérivé du
- * téléphone du secrétariat. Le Studio ne contient aucune adresse de lien pour
- * cette page.
+ * Une seule chose ne vient jamais de Sanity : **le bouton vers le secrétariat**,
+ * qui mène toujours à la page Contact. Le Studio ne contient aucune adresse de
+ * lien pour cette page — et plus aucun bouton n'y déclenche d'appel : le
+ * secrétariat reçoit ces appels à domicile, à toute heure.
  *
  * Les images, elles, viennent désormais du Studio et de nulle part ailleurs. Le
  * repli local n'en porte plus : un en-tête sans image garde son fond sombre, un
@@ -164,8 +165,8 @@ export function normalizeSanityServicesPage(
   const cta =
     fallback.finalCta.primary ??
     ({
-      label: 'Téléphoner au secrétariat',
-      href: fallback.finalCta.phone.href,
+      label: 'Contacter le secrétariat',
+      href: '/contact/',
     } as const);
 
   const chapters = (raw?.chapters ?? []).flatMap((chapter) => {

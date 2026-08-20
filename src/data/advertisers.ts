@@ -130,7 +130,6 @@ export function buildAdvertisersPageSource(
         'Aucun tarif ni espace disponible n’est annoncé en temps réel sur le site.',
       ],
       phone: siteSettings.phone,
-      phoneLabel: 'Téléphoner au secrétariat',
       contactLabel: 'Voir nos coordonnées',
       contactHref: '/contact/',
     },
