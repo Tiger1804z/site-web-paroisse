@@ -142,14 +142,45 @@ test('une image générée par IA n’entre pas dans le carrousel', () => {
   );
 });
 
-test('Contact demeure sans endpoint ni envoi réseau', () => {
+test('Contact n’envoie que vers sa propre adresse, et sans secret', () => {
+  // Le formulaire envoie désormais pour de vrai. Ce qui reste interdit :
+  // envoyer ailleurs que chez nous, et emporter quoi que ce soit de secret
+  // dans un fichier servi au navigateur.
   const contactForm = readFileSync(
     `${rootPath}/src/components/sections/contact/ContactForm.astro`,
     'utf8',
   );
 
-  assert.doesNotMatch(contactForm, /\bfetch\s*\(/);
-  assert.doesNotMatch(contactForm, /XMLHttpRequest/);
+  // Une adresse relative, donc la même origine. Une adresse absolue enverrait
+  // les coordonnées d'un paroissien vers un tiers.
+  assert.match(contactForm, /data-endpoint="\/api\/contact"/);
+  assert.doesNotMatch(contactForm, /fetch\(\s*['"`]https?:\/\//);
+
+  // L'envoi reste maîtrisé : jamais la soumission native du navigateur, qui
+  // partirait sans jeton ni JSON.
   assert.match(contactForm, /event\.preventDefault\(\)/);
+
+  // Seule la clé publique Turnstile entre dans la page. Les quatre autres
+  // valeurs vivent dans la Function, et n'ont pas de nom à citer ici.
+  assert.match(contactForm, /PUBLIC_TURNSTILE_SITE_KEY/);
+  for (const secret of [
+    'TURNSTILE_SECRET_KEY',
+    // L'adresse du formulaire désigne la boîte du secrétariat : dans une page,
+    // elle offrirait à quiconque un accès direct, sans Zod ni Turnstile.
+    'FORMSPREE_ENDPOINT',
+    'formspree.io',
+    'videotron.ca',
+  ]) {
+    assert.doesNotMatch(
+      contactForm,
+      new RegExp(secret.replace('.', '\\.')),
+      `${secret} n’a rien à faire dans un composant servi au navigateur`,
+    );
+  }
+
+  // L'adresse vit dans une Pages Function, à la racine du dépôt. Une route
+  // Astro sous `src/pages/api` exigerait un adaptateur serveur et ferait
+  // perdre au site public sa nature de fichiers statiques.
   assert.equal(existsSync(`${rootPath}/src/pages/api`), false);
+  assert.equal(existsSync(`${rootPath}/functions/api/contact.ts`), true);
 });

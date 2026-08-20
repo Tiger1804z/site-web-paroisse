@@ -16,15 +16,16 @@
 /**
  * Le formulaire transmet-il réellement les messages?
  *
- * **Faux aujourd'hui** : `/contact` vérifie les champs dans le navigateur et
- * n'envoie rien. Une politique qui décrirait un envoi inexistant serait fausse
- * le jour de sa publication.
+ * **Vrai depuis le 20 août 2026** : `/contact` poste vers `/api/contact`, une
+ * Cloudflare Pages Function qui valide le message, vérifie le jeton
+ * antipourriel, puis le transmet au secrétariat par l'API de Formspree.
  *
- * Le lot « formulaire » posera un vrai réglage d'environnement
- * (`CONTACT_FORM_ENABLED`) et cette constante le suivra. En attendant, une
- * seule valeur commande les deux versions du texte.
+ * Cette constante commande les deux versions du texte de la politique. Elle
+ * décrit ce que le code fait, pas ce qu'on souhaite qu'il fasse : la remettre à
+ * `false` sans débrancher l'envoi rendrait la page menteuse, et
+ * `tests/legal-pages.test.mjs` s'y oppose.
  */
-export const CONTACT_FORM_SENDS_MESSAGES = false;
+export const CONTACT_FORM_SENDS_MESSAGES = true;
 
 /**
  * Responsable de la protection des renseignements personnels.
@@ -76,10 +77,20 @@ export const THIRD_PARTY_SERVICES = [
     what: 'Le site est hébergé par Cloudflare, qui livre les pages.',
     when: 'À l’affichage de toute page.',
   },
+  {
+    name: 'Cloudflare Turnstile',
+    what: 'Un contrôle antipourriel de Cloudflare vérifie que le formulaire est rempli par une personne et non par un programme. Il n’affiche aucune énigme à résoudre.',
+    when: 'À l’affichage de la page Contact seulement.',
+  },
+  {
+    name: 'Formspree',
+    what: 'Les messages du formulaire sont acheminés au secrétariat par le service d’envoi Formspree. Le navigateur ne le contacte jamais directement : la transmission se fait de serveur à serveur.',
+    when: 'À l’envoi d’un message, jamais à la simple consultation.',
+  },
 ] as const;
 
 /**
  * Dernière révision du contenu de ces pages, telle qu'elle s'affiche.
  * À modifier quand le texte change.
  */
-export const LEGAL_PAGES_UPDATED_LABEL = '6 août 2026';
+export const LEGAL_PAGES_UPDATED_LABEL = '20 août 2026';

@@ -15,6 +15,18 @@ export const siteSettingsData = {
     international: '+1 514 722-1161',
     e164: '+15147221161',
   },
+  /**
+   * Le courriel du secrétariat n'est pas affiché publiquement.
+   *
+   * Décision du 20 août 2026 : le formulaire de la page Contact est le canal
+   * écrit de la paroisse. Une adresse en clair dans une page est moissonnée par
+   * les robots à pourriel, et arriverait dans la même boîte que celle que le
+   * formulaire protège — celle que la secrétaire relève depuis chez elle.
+   *
+   * L'adresse existe, elle est confirmée, et elle vit dans les variables
+   * d'environnement de la Function comme destinataire du formulaire. Jamais
+   * dans une page.
+   */
   email: {
     display: '',
     href: '',

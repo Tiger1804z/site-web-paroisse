@@ -7,6 +7,19 @@ interface Props {
 }
 
 const { form } = Astro.props;
+
+/**
+ * La clé publique du widget antipourriel.
+ *
+ * Le préfixe `PUBLIC_` la fait entrer dans le HTML, et c'est voulu : le widget
+ * en a besoin pour s'afficher. Elle est liée au domaine, donc sans valeur
+ * ailleurs. La clé secrète, elle, ne quitte jamais la Function.
+ *
+ * Absente, aucun widget n'est rendu — et le script refuse alors d'envoyer,
+ * puisque la Function exige un jeton. Mieux vaut un bouton qui explique qu'un
+ * envoi qui part vers un refus certain.
+ */
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 const reasonField = form.fields.find(({ name }) => name === 'reason');
 const fullNameField = form.fields.find(({ name }) => name === 'fullName');
 const emailField = form.fields.find(({ name }) => name === 'email');
@@ -20,22 +33,36 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
   aria-labelledby="contact-form-title"
   data-motion-reveal
 >
+  {
+    /*
+     * Le widget antipourriel de Cloudflare, chargé seulement là où il sert.
+     *
+     * `is:inline` empêche Astro de le regrouper dans son propre paquet : le
+     * script doit rester à cette adresse, c'est lui qui pose la globale
+     * `turnstile` et lit les attributs `data-sitekey` de la page.
+     *
+     * Il n'est chargé que si la clé publique existe — sans clé, aucun widget
+     * n'est rendu, et charger le script ne ferait qu'ajouter une requête vers
+     * un tiers pour rien.
+     */
+    turnstileSiteKey && (
+      <script
+        is:inline
+        async
+        defer
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      />
+    )
+  }
+
   <h2 id="contact-form-title">{form.title}</h2>
   <p class="contact-form-section__introduction">{form.introduction}</p>
-
-  <div
-    id="contact-form-unavailable"
-    class="contact-form-section__notice"
-    role="note"
-  >
-    <span aria-hidden="true"></span>
-    <p>{form.unavailableNotice}</p>
-  </div>
 
   <form
     class="contact-form"
     data-contact-form
-    aria-describedby="contact-form-unavailable contact-form-privacy"
+    data-endpoint="/api/contact"
+    aria-describedby="contact-form-privacy"
     novalidate
   >
     <div
@@ -75,24 +102,52 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
       <a href={form.privacyPolicyHref}>Consulter la page de confidentialité</a>.
     </p>
 
-    <button class="contact-form__button" type="button" data-contact-validate>
-      {form.validationButtonLabel}
+    {
+      turnstileSiteKey && (
+        /*
+         * Aucun `data-callback` : le jeton se lit dans le champ caché que le
+         * widget dépose lui-même, au moment de l'envoi. Nommer des fonctions
+         * globales qui n'existent pas ferait croire à un mécanisme absent.
+         *
+         * L'expiration se gère seule — le widget renouvelle son jeton par
+         * défaut — et le script en redemande un après chaque tentative.
+         */
+        <div
+          class="cf-turnstile contact-form__turnstile"
+          data-sitekey={turnstileSiteKey}
+          data-language="fr"
+          data-contact-turnstile
+        />
+      )
+    }
+
+    <button
+      class="contact-form__button"
+      type="submit"
+      data-contact-submit
+      data-idle-label={form.submitButtonLabel}
+      data-sending-label={form.sendingLabel}
+    >
+      {form.submitButtonLabel}
     </button>
 
     <p
-      class="contact-form__local-status"
-      data-contact-local-status
+      class="contact-form__status"
+      data-contact-status
+      data-success-notice={form.successNotice}
+      data-error-notice={form.errorNotice}
       role="status"
+      aria-live="polite"
       tabindex="-1"
       hidden
     >
-      {form.locallyValidNotice}
     </p>
 
     <noscript>
       <p class="contact-form__noscript">
-        La vérification locale nécessite JavaScript. L’envoi en ligne demeure
-        désactivé et aucun renseignement ne sera transmis.
+        L’envoi du formulaire nécessite JavaScript. Vous pouvez sinon vous
+        présenter au secrétariat durant ses heures d’ouverture, ou composer le
+        numéro indiqué plus haut.
       </p>
     </noscript>
   </form>
@@ -151,23 +206,78 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
       const controls = Array.from(
         contactForm.querySelectorAll<ContactControl>('[data-contact-field]'),
       );
-      const validateButton = contactForm.querySelector<HTMLButtonElement>(
-        '[data-contact-validate]',
+      const submitButton = contactForm.querySelector<HTMLButtonElement>(
+        '[data-contact-submit]',
       );
       const errorSummary = contactForm.querySelector<HTMLElement>(
         '[data-contact-error-summary]',
       );
-      const localStatus = contactForm.querySelector<HTMLElement>(
-        '[data-contact-local-status]',
+      const status = contactForm.querySelector<HTMLElement>(
+        '[data-contact-status]',
       );
       const honeypot = contactForm.querySelector<HTMLInputElement>(
         '[data-contact-honeypot]',
       );
+      const turnstile = contactForm.querySelector<HTMLElement>(
+        '[data-contact-turnstile]',
+      );
 
-      const clearLocalStatus = () => {
-        if (localStatus) {
-          localStatus.hidden = true;
-        }
+      const endpoint = contactForm.dataset.endpoint ?? '/api/contact';
+      // Un seul envoi à la fois. Le bouton désactivé suffit à la souris, pas au
+      // clavier ni à un double clic rapide : ce drapeau, lui, ne se contourne pas.
+      let sending = false;
+
+      const clearStatus = () => {
+        if (status) status.hidden = true;
+      };
+
+      const showStatus = (kind: 'success' | 'error') => {
+        if (!status) return;
+        const notice =
+          kind === 'success'
+            ? status.dataset.successNotice
+            : status.dataset.errorNotice;
+
+        status.textContent = notice ?? '';
+        status.dataset.kind = kind;
+        status.hidden = false;
+        status.focus();
+      };
+
+      /**
+       * Le jeton antipourriel, écrit par le widget dans un champ caché.
+       *
+       * Cloudflare le nomme lui-même; on le lit là où il le pose plutôt que de
+       * le recopier ailleurs.
+       */
+      const readToken = (): string =>
+        (
+          contactForm.querySelector<HTMLInputElement>(
+            '[name="cf-turnstile-response"]',
+          )?.value ?? ''
+        ).trim();
+
+      /**
+       * Redemande un jeton après tout échec.
+       *
+       * Un jeton ne sert qu'une fois. Sans cette remise à zéro, la deuxième
+       * tentative du visiteur serait refusée pour « jeton déjà utilisé », et il
+       * ne comprendrait pas pourquoi son message corrigé ne part toujours pas.
+       */
+      const resetTurnstile = () => {
+        const api = (window as unknown as { turnstile?: { reset: () => void } })
+          .turnstile;
+        if (turnstile && api) api.reset();
+      };
+
+      const setSending = (isSending: boolean) => {
+        sending = isSending;
+        if (!submitButton) return;
+
+        submitButton.disabled = isSending;
+        submitButton.textContent = isSending
+          ? (submitButton.dataset.sendingLabel ?? 'Envoi en cours…')
+          : (submitButton.dataset.idleLabel ?? 'Envoyer le message');
       };
 
       controls.forEach((control) => {
@@ -177,31 +287,25 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
           }
         });
 
-        control.addEventListener('input', () => {
-          clearLocalStatus();
-          if (control.getAttribute('aria-invalid') === 'true') {
-            validateControl(control);
-          }
-        });
-
-        control.addEventListener('change', () => {
-          clearLocalStatus();
-          if (control.getAttribute('aria-invalid') === 'true') {
-            validateControl(control);
-          }
-        });
-      });
-
-      contactForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-      });
-
-      validateButton?.addEventListener('click', () => {
-        clearLocalStatus();
-
-        if (honeypot?.value) {
-          return;
+        for (const event of ['input', 'change'] as const) {
+          control.addEventListener(event, () => {
+            clearStatus();
+            if (control.getAttribute('aria-invalid') === 'true') {
+              validateControl(control);
+            }
+          });
         }
+      });
+
+      contactForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (sending) return;
+
+        clearStatus();
+
+        // Le piège à robots : on ne dit rien et on ne part pas. Le serveur le
+        // refuse aussi — cette porte-ci évite seulement le voyage.
+        if (honeypot?.value) return;
 
         const invalidControls = controls.filter(
           (control) => !validateControl(control),
@@ -224,9 +328,54 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
           errorSummary.textContent = '';
         }
 
-        if (localStatus) {
-          localStatus.hidden = false;
-          localStatus.focus();
+        // Sans jeton, le serveur refusera à coup sûr. Autant le dire ici, où
+        // l'on peut encore expliquer, plutôt que d'afficher un refus opaque.
+        const turnstileToken = readToken();
+        if (!turnstileToken) {
+          if (errorSummary) {
+            errorSummary.textContent = turnstile
+              ? 'La vérification antipourriel n’est pas terminée. Patientez un instant, puis réessayez.'
+              : 'La vérification antipourriel n’a pas pu se charger. Réessayez plus tard.';
+            errorSummary.hidden = false;
+            errorSummary.focus();
+          }
+          return;
+        }
+
+        setSending(true);
+
+        try {
+          const data = new FormData(contactForm);
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              turnstileToken,
+              reason: data.get('reason'),
+              fullName: data.get('fullName'),
+              email: data.get('email'),
+              phone: data.get('phone'),
+              message: data.get('message'),
+              // Une case cochée vaut « on » dans un formulaire; le serveur
+              // n'accepte que le booléen `true`. La traduction se fait ici.
+              privacyConsent: data.get('privacyConsent') !== null,
+            }),
+          });
+
+          if (!response.ok) throw new Error(String(response.status));
+
+          contactForm.reset();
+          controls.forEach((control) =>
+            control.setAttribute('aria-invalid', 'false'),
+          );
+          showStatus('success');
+        } catch {
+          showStatus('error');
+        } finally {
+          // Après un succès comme après un échec : le jeton vient d'être
+          // consommé, ou l'a peut-être été. Le suivant sera propre.
+          resetTurnstile();
+          setSending(false);
         }
       });
     });
@@ -285,7 +434,7 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
   }
 
   .contact-form__error-summary,
-  .contact-form__local-status,
+  .contact-form__status,
   .contact-form__noscript {
     margin: 0;
     padding: 0.875rem 1rem;
@@ -295,6 +444,23 @@ const consentField = form.fields.find(({ name }) => name === 'privacyConsent');
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1.6;
+  }
+
+  /* Un succès ne se lit pas comme une erreur. La couleur n'est pas le seul
+     signal — le texte dit lui-même ce qui s'est passé — mais elle évite un
+     instant de doute à qui la perçoit. */
+  .contact-form__status[data-kind='success'] {
+    border-left-color: var(--color-gold);
+    color: var(--color-charcoal);
+  }
+
+  .contact-form__turnstile {
+    min-height: 65px;
+  }
+
+  .contact-form__button[disabled] {
+    cursor: progress;
+    opacity: 0.72;
   }
 
   .contact-form__privacy {

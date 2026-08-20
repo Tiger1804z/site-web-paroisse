@@ -43,4 +43,24 @@ export default [
       },
     },
   },
+  {
+    // Les tests qui exercent un gestionnaire de requête fabriquent des objets
+    // `fetch` — une `Request`, ses `Headers`, la `Response` qui en sort.
+    //
+    // Contrairement à `URL`, qu'un test importe depuis `node:url`, aucun module
+    // `node:` ne les exporte : ce sont des globales, et rien d'autre. Les
+    // déclarer ici vaut mieux que désactiver `no-undef`, qui laisserait passer
+    // les vraies fautes de frappe du même coup.
+    files: ['tests/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        Headers: 'readonly',
+        Request: 'readonly',
+        Response: 'readonly',
+        // Sert à relire un corps `x-www-form-urlencoded` comme le fera le
+        // service qui le reçoit — la seule façon honnête de le vérifier.
+        URLSearchParams: 'readonly',
+      },
+    },
+  },
 ];

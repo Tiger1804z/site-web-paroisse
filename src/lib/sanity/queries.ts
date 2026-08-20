@@ -1142,9 +1142,10 @@ export const CONTACT_PAGE_QUERY = defineQuery(`
         label,
         "value": value.current
       },
-      unavailableNotice,
-      validationButtonLabel,
-      locallyValidNotice,
+      submitButtonLabel,
+      sendingLabel,
+      successNotice,
+      errorNotice,
       privacyNotice
     }
   }

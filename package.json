@@ -43,7 +43,8 @@
     "react-is": "19.2.8",
     "sharp": "^0.35.3",
     "styled-components": "^6.4.4",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

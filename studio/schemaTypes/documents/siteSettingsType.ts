@@ -88,7 +88,7 @@ export const siteSettingsType = defineType({
       title: 'Afficher le courriel publiquement',
       type: 'boolean',
       description:
-        'Rester désactivé tant que le courriel n’est pas confirmé et validé pour diffusion.',
+        'À laisser désactivé. Le formulaire de la page Contact est le canal écrit de la paroisse : une adresse affichée en clair est moissonnée par les robots à pourriel, et le formulaire fait le même travail en filtrant.',
       initialValue: false,
       hidden: ({parent}) => !parent?.publicEmail,
     }),

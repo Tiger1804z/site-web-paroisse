@@ -135,15 +135,15 @@ export function normalizeSanityContactPage(
       introduction:
         cleanString(raw?.form?.introduction) ?? fallback.form.introduction,
       fields: applyReasons(fallback.form.fields, reasons),
-      unavailableNotice:
-        cleanString(raw?.form?.unavailableNotice) ??
-        fallback.form.unavailableNotice,
-      validationButtonLabel:
-        cleanString(raw?.form?.validationButtonLabel) ??
-        fallback.form.validationButtonLabel,
-      locallyValidNotice:
-        cleanString(raw?.form?.locallyValidNotice) ??
-        fallback.form.locallyValidNotice,
+      submitButtonLabel:
+        cleanString(raw?.form?.submitButtonLabel) ??
+        fallback.form.submitButtonLabel,
+      sendingLabel:
+        cleanString(raw?.form?.sendingLabel) ?? fallback.form.sendingLabel,
+      successNotice:
+        cleanString(raw?.form?.successNotice) ?? fallback.form.successNotice,
+      errorNotice:
+        cleanString(raw?.form?.errorNotice) ?? fallback.form.errorNotice,
       privacyNotice:
         cleanString(raw?.form?.privacyNotice) ?? fallback.form.privacyNotice,
       privacyPolicyHref: fallback.form.privacyPolicyHref,

@@ -115,9 +115,19 @@ export interface ContactPageData {
     readonly title: string;
     readonly introduction: string;
     readonly fields: readonly ContactFormField[];
-    readonly unavailableNotice: string;
-    readonly validationButtonLabel: string;
-    readonly locallyValidNotice: string;
+    /** Libellé du bouton au repos. */
+    readonly submitButtonLabel: string;
+    /** Ce que le bouton affiche pendant l'envoi, et que le lecteur d'écran annonce. */
+    readonly sendingLabel: string;
+    /**
+     * Confirmation affichée après un envoi réussi.
+     *
+     * Elle ne promet aucun délai : le secrétariat est ouvert deux jours et demi
+     * par semaine, et une promesse qu'il ne tiendra pas déçoit à coup sûr.
+     */
+    readonly successNotice: string;
+    /** Message d'échec, qui invite à réessayer sans accuser la personne. */
+    readonly errorNotice: string;
     readonly privacyNotice: string;
     readonly privacyPolicyHref: string;
   };
