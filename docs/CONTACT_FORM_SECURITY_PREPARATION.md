@@ -130,12 +130,18 @@ n’apparaît dans un fichier servi au navigateur.
 paroissergoupil@videotron.ca
 ```
 
-Confirmé par la paroisse le 20 août 2026. Seule adresse canonique du dépôt :
-`paroisse` + `rgoupil`, **sans `s` intercalé**.
+Orthographe confirmée par la paroisse le 20 août 2026. Seule adresse canonique du
+dépôt : `paroisse` + `rgoupil`, **sans `s` intercalé**.
 
-Elle est réglée **dans le tableau de bord Formspree**, sur le formulaire que
-`FORMSPREE_ENDPOINT` désigne. Elle n’est ni dans le code, ni dans Sanity, ni dans
-une variable d’environnement.
+Le destinataire se règle **dans le tableau de bord Formspree**, sur le formulaire
+que `FORMSPREE_ENDPOINT` désigne. Il n’est ni dans le code, ni dans Sanity, ni
+dans une variable d’environnement — le changer ne demandera donc **ni commit ni
+redéploiement**.
+
+⚠️ **Ce n’est pas encore cette adresse qui reçoit.** Formspree exige qu’une
+adresse soit vérifiée par son titulaire avant de lui livrer quoi que ce soit, et
+la paroisse ne l’a pas encore fait. En attendant, le formulaire livre dans une
+boîte temporaire. Voir « Ce qui reste à faire ».
 
 Elle **n’est pas non plus affichée sur le site** — `showPublicEmail` reste
 désactivé. Une adresse en clair dans une page est moissonnée par les robots à
@@ -185,9 +191,9 @@ au gestionnaire de traverser trois fournisseurs sans changer d’une ligne.
 `reason` porte le libellé lisible et non la valeur machine — c’est un humain qui
 lira « Baptême », pas « baptism ».
 
-⚠️ La documentation de Formspree écrit `subject`, sans tiret bas. `_subject` est
-l’ancienne syntaxe. Si l’objet n’apparaît pas dans la boîte, c’est cette
-ligne-là qu’il faut changer.
+`subject` s’écrit sans tiret bas — `_subject` est l’ancienne syntaxe. **Vérifié
+par un envoi réel le 21 août 2026** : l’objet arrive tel quel dans la boîte, sous
+la forme `[Nouveau message du site] <Motif> — <Nom>`. Ne pas le renommer.
 
 ### Ce qu’on y perd
 
@@ -212,20 +218,83 @@ qui garantit la forme `{"ok": true}`, et donc la garde de succès.
 C’est la quatrième occurrence du même réflexe dans ce formulaire, après
 `z.literal(true)` pour le consentement et `success === true` pour Turnstile.
 
-## ⚠️ Ce qui reste à faire pour mettre en service
+## Le trajet réel, validé le 21 août 2026
 
-**Aucune modification DNS.** C’est la contrainte qui a dicté le choix de
-Formspree, et elle tient : rien à toucher sur `paroissesaintrenegoupil.com`, qui
-sert encore l’ancien site.
+Le trajet complet a été joué en vrai depuis un déploiement Preview de cette
+branche, sur `*.pages.dev`, avec les vraies clés :
 
-1. Régler le destinataire du formulaire sur formspree.io.
-2. Créer une clé Turnstile pour le domaine du déploiement Pages.
-3. Saisir les trois variables côté Cloudflare Pages.
-4. Vérifier le **quota** du plan Formspree : le gratuit plafonne les soumissions
-   mensuelles, et un formulaire de paroisse silencieux passerait inaperçu.
+```
+navigateur → /api/contact → gardes HTTP → Zod → Turnstile siteverify
+           → Formspree → boîte de réception
+```
 
-Le formulaire fonctionne alors **sur l’adresse `*.pages.dev` actuelle**, avant
-même que le domaine bascule.
+Ce qui a été observé, et non déduit :
+
+- le widget Turnstile se charge et se résout sur le déploiement Pages;
+- la Function répond, et la page affiche sa confirmation;
+- la soumission arrive dans Formspree;
+- la notification arrive dans la boîte du destinataire, en réception normale —
+  pas dans le dossier indésirable;
+- l’objet personnalisé arrive intact;
+- les cinq champs arrivent : `name`, `email`, `reason`, `message`, `phone`.
+
+**Ce qui n’est pas encore validé** : l’acheminement vers
+`paroissergoupil@videotron.ca`. Le destinataire réglé dans Formspree est
+temporairement une autre boîte, le temps que la paroisse confirme la sienne —
+voir « Ce qui reste à faire » plus bas.
+
+### Formshield est désactivé, délibérément
+
+Formspree a classé la première soumission réelle en indésirable. Son filtre
+maison, **Formshield**, produisait un faux positif sur une soumission
+parfaitement légitime — celle-là même que nos propres gardes venaient d’accepter.
+
+Il a donc été désactivé. Ce n’est pas un renoncement : la soumission qui atteint
+Formspree a déjà franchi le contrôle d’origine, les limites de taille, le piège à
+robots, le schéma Zod et **Cloudflare Turnstile**. Ajouter par-dessus un filtre
+heuristique qui refuse ce que ces gardes-là ont accepté, c’est perdre des
+messages de paroissiens sans rien gagner.
+
+Le **CAPTCHA de Formspree reste désactivé** lui aussi, pour la même raison :
+Turnstile occupe déjà ce rôle, et en demander deux fois au visiteur serait le
+punir d’écrire.
+
+À relire si Formspree change ses réglages par défaut, ou si du pourriel commence
+réellement à passer.
+
+## ⚠️ Ce qui reste à faire
+
+**Aucune modification DNS**, ni maintenant ni ensuite. C’est la contrainte qui a
+dicté le choix de Formspree, et elle tient : rien à toucher sur
+`paroissesaintrenegoupil.com`, qui sert encore l’ancien site.
+
+1. **La paroisse confirme son adresse chez Formspree.** Formspree lui envoie un
+   courriel de vérification; quelqu’un doit cliquer le lien depuis la boîte
+   `paroissergoupil@videotron.ca`. C’est le seul point bloquant.
+2. Basculer le destinataire du formulaire vers cette adresse, **dans le tableau
+   de bord Formspree**. Aucun changement de code, aucun redéploiement : le
+   destinataire n’est pas dans le dépôt.
+3. Refaire un envoi réel vers la boîte de la paroisse, et vérifier qu’il arrive
+   en réception normale.
+4. Saisir les trois variables dans l’environnement **Production** de Pages, comme
+   elles l’ont été en Preview.
+5. Supprimer les anciennes variables devenues inutiles en Production —
+   `RESEND_API_KEY`, `CONTACT_RECIPIENT_EMAIL`. Le code n’en dépend plus, mais
+   une variable orpheline finit par faire croire à un mécanisme qui n’existe pas.
+6. Surveiller le **quota** du plan Formspree : le gratuit plafonne les
+   soumissions mensuelles, et un formulaire de paroisse silencieux passerait
+   longtemps inaperçu.
+
+### Les variables se saisissent par environnement
+
+Piège rencontré le 21 août 2026 : les variables posées en **Production** ne sont
+**pas** visibles depuis un déploiement **Preview**. Cloudflare Pages tient les
+deux environnements séparément. Il faut donc saisir les trois **deux fois**, une
+par environnement, puis relancer le déploiement.
+
+Rien ne le signale à l’écran : par construction, une variable absente donne une
+chaîne vide et le formulaire refuse tout — porte fermée, comme voulu. Le
+diagnostic se lit dans les journaux de la Function, pas dans la page.
 
 ### Le jour où le domaine sera libre
 
@@ -249,8 +318,8 @@ Toute la logique — gardes, validation, Turnstile, erreurs — est couverte par
 `node --test`, sans réseau : la couche d’envoi et `fetch` arrivent en paramètres.
 
 Formspree, lui, n’a pas de clés factices : son adresse de formulaire EST la
-configuration. Le trajet complet se vérifie donc en vrai, une fois, depuis le
-déploiement Pages.
+configuration. Le trajet complet devait donc se vérifier en vrai, une fois,
+depuis le déploiement Pages — **c’est fait, le 21 août 2026**.
 
 ## Couverture
 
@@ -258,7 +327,7 @@ déploiement Pages.
 | ----------------------------------- | ----- |
 | `tests/contact-submission.test.mjs` | 16    |
 | `tests/contact-request.test.mjs`    | 22    |
-| `tests/contact-email.test.mjs`      | 9     |
+| `tests/contact-email.test.mjs`      | 13    |
 
 Chaque garde a été vérifiée par mutation : on la retire, et le test qui prétend
 la surveiller tombe. Une garde qu’aucun test ne pleure n’est pas une garde.
