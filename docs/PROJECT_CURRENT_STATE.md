@@ -1,9 +1,10 @@
 # État actuel du projet
 
-Dernière mise à jour : 18 août 2026 — migration Sanity promue en production, et
-prévisualisation éditoriale livrée.
+Dernière mise à jour : 26 août 2026 — formulaire Contact livré jusqu'à la boîte
+du secrétariat, et numéro de la paroisse rendu non cliquable.
 
-`main` = `staging` = `259be9e`.
+`staging` = `3ae5bd6` (PR #28 fusionnée), `main` = `77e8126`. Les deux branches
+**divergent** : la promotion vers `main` n'est pas faite, et c'est délibéré.
 
 **Sanity Visual Editing / Cloudflare Preview : livré et validé de bout en bout le
 18 août 2026.** Trois ressources en ligne :
@@ -132,6 +133,10 @@ un envoi réel est arrivé dans la boîte du secrétariat — qui en a confirmé
 réception. Les trois variables d’environnement sont en place en **Production**
 comme en Preview, et les deux anciennes héritées de Resend y ont été supprimées
 le même jour.
+
+Le numéro de la paroisse, lui, s'affiche partout et n'est **cliquable nulle
+part** — le secrétariat reçoit les appels à domicile. Voir
+[`PARISH_PHONE_NOT_CLICKABLE.md`](./PARISH_PHONE_NOT_CLICKABLE.md).
 
 ## Mini-galerie de l’accueil
 
