@@ -138,10 +138,10 @@ que `FORMSPREE_ENDPOINT` désigne. Il n’est ni dans le code, ni dans Sanity, n
 dans une variable d’environnement — le changer ne demandera donc **ni commit ni
 redéploiement**.
 
-⚠️ **Ce n’est pas encore cette adresse qui reçoit.** Formspree exige qu’une
-adresse soit vérifiée par son titulaire avant de lui livrer quoi que ce soit, et
-la paroisse ne l’a pas encore fait. En attendant, le formulaire livre dans une
-boîte temporaire. Voir « Ce qui reste à faire ».
+✅ **C’est bien cette adresse qui reçoit, depuis le 26 août 2026.** Formspree
+exige qu’une adresse soit vérifiée par son titulaire avant de lui livrer quoi que
+ce soit : le secrétariat l’a fait, et le destinataire du formulaire a été basculé
+vers elle dans le tableau de bord. La boîte temporaire ne sert plus.
 
 Elle **n’est pas non plus affichée sur le site** — `showPublicEmail` reste
 désactivé. Une adresse en clair dans une page est moissonnée par les robots à
@@ -238,10 +238,21 @@ Ce qui a été observé, et non déduit :
 - l’objet personnalisé arrive intact;
 - les cinq champs arrivent : `name`, `email`, `reason`, `message`, `phone`.
 
-**Ce qui n’est pas encore validé** : l’acheminement vers
-`paroissergoupil@videotron.ca`. Le destinataire réglé dans Formspree est
-temporairement une autre boîte, le temps que la paroisse confirme la sienne —
-voir « Ce qui reste à faire » plus bas.
+### La livraison au secrétariat, validée le 26 août 2026
+
+Le dernier maillon — l’acheminement jusqu’à `paroissergoupil@videotron.ca` — a
+été rejoué en vrai depuis le formulaire d’un déploiement Preview, une fois
+l’adresse confirmée par la paroisse et le destinataire basculé dans Formspree :
+
+- Turnstile se résout;
+- `/api/contact` répond en succès;
+- les gardes HTTP et le schéma Zod passent normalement;
+- Formspree accepte la soumission;
+- la notification arrive dans la boîte Vidéotron de la paroisse;
+- **le secrétariat a confirmé la réception**, explicitement : « Message bien
+  reçu. »
+
+Le trajet est donc validé de bout en bout, sans maillon déduit.
 
 ### Formshield est désactivé, délibérément
 
@@ -268,20 +279,16 @@ réellement à passer.
 dicté le choix de Formspree, et elle tient : rien à toucher sur
 `paroissesaintrenegoupil.com`, qui sert encore l’ancien site.
 
-1. **La paroisse confirme son adresse chez Formspree.** Formspree lui envoie un
-   courriel de vérification; quelqu’un doit cliquer le lien depuis la boîte
-   `paroissergoupil@videotron.ca`. C’est le seul point bloquant.
-2. Basculer le destinataire du formulaire vers cette adresse, **dans le tableau
-   de bord Formspree**. Aucun changement de code, aucun redéploiement : le
-   destinataire n’est pas dans le dépôt.
-3. Refaire un envoi réel vers la boîte de la paroisse, et vérifier qu’il arrive
-   en réception normale.
-4. Saisir les trois variables dans l’environnement **Production** de Pages, comme
+Trois points sont **tombés le 26 août 2026** : la paroisse a confirmé son adresse
+chez Formspree, le destinataire du formulaire a été basculé vers elle, et un
+envoi réel est arrivé dans la boîte du secrétariat, en réception normale. Restent :
+
+1. Saisir les trois variables dans l’environnement **Production** de Pages, comme
    elles l’ont été en Preview.
-5. Supprimer les anciennes variables devenues inutiles en Production —
+2. Supprimer les anciennes variables devenues inutiles en Production —
    `RESEND_API_KEY`, `CONTACT_RECIPIENT_EMAIL`. Le code n’en dépend plus, mais
    une variable orpheline finit par faire croire à un mécanisme qui n’existe pas.
-6. Surveiller le **quota** du plan Formspree : le gratuit plafonne les
+3. Surveiller le **quota** du plan Formspree : le gratuit plafonne les
    soumissions mensuelles, et un formulaire de paroisse silencieux passerait
    longtemps inaperçu.
 

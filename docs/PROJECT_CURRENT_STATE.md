@@ -126,9 +126,11 @@ Formspree. Le trajet complet a été joué en vrai depuis un déploiement Previe
 Le détail vit dans
 [`CONTACT_FORM_SECURITY_PREPARATION.md`](./CONTACT_FORM_SECURITY_PREPARATION.md).
 
-Il reste un point bloquant, et il n’est pas technique : la paroisse doit
-confirmer son adresse auprès de Formspree pour en devenir le destinataire. En
-attendant, les messages arrivent dans une boîte temporaire.
+Depuis le 26 août 2026, le destinataire est bien `paroissergoupil@videotron.ca` :
+la paroisse a confirmé son adresse auprès de Formspree, la bascule est faite, et
+un envoi réel est arrivé dans la boîte du secrétariat — qui en a confirmé la
+réception. Il ne reste que la saisie des trois variables dans l’environnement
+**Production** de Pages.
 
 ## Mini-galerie de l’accueil
 
