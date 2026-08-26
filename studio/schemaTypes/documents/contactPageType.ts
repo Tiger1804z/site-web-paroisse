@@ -147,23 +147,32 @@ export const contactPageType = defineType({
             'La liste déroulante du formulaire. L’ordre du tableau fait foi. Une liste vide laisse les motifs définis par le code.',
         }),
         defineField({
-          name: 'unavailableNotice',
-          title: 'Avis « envoi non activé »',
-          type: 'text',
-          rows: 3,
-          description:
-            'Dit à la personne que rien n’est transmis. À ne pas retirer tant que l’envoi n’est pas en service.',
-        }),
-        defineField({
-          name: 'validationButtonLabel',
-          title: 'Libellé du bouton',
+          name: 'submitButtonLabel',
+          title: 'Libellé du bouton d’envoi',
           type: 'string',
         }),
         defineField({
-          name: 'locallyValidNotice',
-          title: 'Message après vérification',
+          name: 'sendingLabel',
+          title: 'Libellé pendant l’envoi',
+          type: 'string',
+          description:
+            'Affiché sur le bouton le temps que le message parte. Ex. : « Envoi en cours… ».',
+        }),
+        defineField({
+          name: 'successNotice',
+          title: 'Message de confirmation',
           type: 'text',
           rows: 2,
+          description:
+            'Affiché après un envoi réussi. Ne promettre aucun délai de réponse : le secrétariat n’est ouvert que deux jours et demi par semaine.',
+        }),
+        defineField({
+          name: 'errorNotice',
+          title: 'Message en cas d’échec',
+          type: 'text',
+          rows: 2,
+          description:
+            'Affiché quand le message n’a pas pu partir. Inviter à réessayer, sans expliquer la cause technique.',
         }),
         defineField({
           name: 'privacyNotice',

@@ -8,8 +8,8 @@ const rootPath = fileURLToPath(new URL('..', import.meta.url));
 const read = (relativePath) =>
   readFileSync(`${rootPath}/${relativePath}`, 'utf8');
 
-const phone = { display: '514 722-1161', href: 'tel:+15147221161' };
-const phoneCta = { label: 'Téléphoner au secrétariat', href: phone.href };
+const phone = { display: '514 722-1161' };
+const secretariatCta = { label: 'Contacter le secrétariat', href: '/contact/' };
 
 // `src/data/services.ts` importe des images et ne peut pas être chargé par
 // Node : on reconstruit ici la forme attendue du normalizer.
@@ -44,7 +44,7 @@ const fallback = {
           summary: 'Résumé local.',
           active: true,
           details: [{ label: 'Tarif 2026', value: '400 $' }],
-          cta: phoneCta,
+          cta: secretariatCta,
         },
       ],
     },
@@ -60,7 +60,7 @@ const fallback = {
           title: 'Une demande traitée avec le secrétariat',
           summary: 'Résumé local.',
           active: true,
-          cta: phoneCta,
+          cta: secretariatCta,
         },
       ],
     },
@@ -73,7 +73,7 @@ const fallback = {
   finalCta: {
     title: 'Parler de votre démarche',
     description: 'Description locale.',
-    primary: phoneCta,
+    primary: secretariatCta,
     phone,
   },
 };
@@ -203,15 +203,17 @@ test('une image sans libellé ne rejoint pas le carrousel d’en-tête', () => {
   assert.deepEqual(result.hero.slides, []);
 });
 
-test('le bouton d’appel ne vient jamais de Sanity', () => {
+test('le bouton vers le secrétariat ne vient jamais de Sanity', () => {
   const result = normalizeSanityServicesPage(
     { chapters: [sanityChapter] },
     fallback,
     buildSources,
   );
 
-  assert.deepEqual(result.chapters[0].services[0].cta, phoneCta);
-  assert.equal(result.finalCta.phone.href, phone.href);
+  assert.deepEqual(result.chapters[0].services[0].cta, secretariatCta);
+  // Le numéro s'affiche sous le bouton, sans jamais déclencher d'appel.
+  assert.equal(result.finalCta.phone.display, phone.display);
+  assert.equal(result.finalCta.phone.href, undefined);
 
   // Aucun champ d'adresse dans le schéma : l'éditrice ne peut pas saisir un lien.
   const serviceSchema = read('studio/schemaTypes/objects/parishServiceType.ts');

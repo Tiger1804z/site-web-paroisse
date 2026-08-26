@@ -22,12 +22,10 @@ function derivePhone(
   const digits = display.replace(/\D/g, '');
   if (digits.length !== 10) return fallback;
 
-  const e164 = `+1${digits}`;
   return {
     display,
     international: `+1 ${display}`,
-    e164,
-    href: `tel:${e164}`,
+    e164: `+1${digits}`,
   };
 }
 

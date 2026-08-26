@@ -43,9 +43,7 @@ const email = settings.email;
           </div>
           <div>
             <dt>Téléphone</dt>
-            <dd>
-              <a href={settings.phone.href}>{settings.phone.display}</a>
-            </dd>
+            <dd>{settings.phone.display}</dd>
           </div>
           {
             email && (
@@ -146,9 +144,8 @@ const email = settings.email;
               <>au secrétariat</>
             )
           }{' '}
-          ou téléphonez au <a href={settings.phone.href}
-            >{settings.phone.display}</a
-          >. Les corrections sont faites rapidement.
+          ou téléphonez au {settings.phone.display}. Les corrections sont faites
+          rapidement.
         </p>
       </section>
     </Container>

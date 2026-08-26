@@ -1071,7 +1071,6 @@ export const ADVERTISERS_PAGE_QUERY = defineQuery(`
       title,
       description,
       details,
-      phoneLabel,
       contactLabel
     },
     settings {
@@ -1143,9 +1142,10 @@ export const CONTACT_PAGE_QUERY = defineQuery(`
         label,
         "value": value.current
       },
-      unavailableNotice,
-      validationButtonLabel,
-      locallyValidNotice,
+      submitButtonLabel,
+      sendingLabel,
+      successNotice,
+      errorNotice,
       privacyNotice
     }
   }

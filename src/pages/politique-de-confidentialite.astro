@@ -80,11 +80,7 @@ const email = settings.email;
               </li>
             )
           }
-          <li>
-            par téléphone, au <a href={settings.phone.href}
-              >{settings.phone.display}</a
-            >
-          </li>
+          <li>par téléphone, au {settings.phone.display}</li>
           <li>par la poste, au {settings.address.formatted}</li>
         </ul>
       </section>
@@ -140,9 +136,11 @@ const email = settings.email;
         <h3 class="type-h4">Contre les envois automatisés</h3>
         <p>
           Le formulaire comporte des protections contre les messages envoyés par
-          des robots — un champ invisible laissé vide par un humain, et une
-          vérification anti-pourriel. Ces protections examinent la manière dont
-          le formulaire est rempli, pas la personne qui le remplit.
+          des robots — un champ invisible laissé vide par un humain, et le
+          contrôle <strong>Cloudflare Turnstile</strong>. Ce dernier n’affiche
+          aucune énigme à résoudre : il observe la façon dont la page est
+          utilisée. Ces protections examinent la manière dont le formulaire est
+          rempli, pas la personne qui le remplit.
         </p>
       </section>
 
@@ -238,10 +236,8 @@ const email = settings.email;
               <>au secrétariat</>
             )
           }{' '}
-          ou de téléphoner au <a href={settings.phone.href}
-            >{settings.phone.display}</a
-          >. La paroisse répond dans un délai raisonnable, et au plus tard dans
-          les trente jours.
+          ou de téléphoner au {settings.phone.display}. La paroisse répond dans
+          un délai raisonnable, et au plus tard dans les trente jours.
         </p>
       </section>
 

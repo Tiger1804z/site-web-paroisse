@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
 import {
@@ -134,19 +134,30 @@ test('la carte déclarée est bien celle que la page Contact affiche', () => {
  * mais ce test vérifie que les deux versions du texte existent bel et bien.
  */
 test('l’état réel du formulaire commande le texte affiché', () => {
+  // La constante ne décrit pas une intention, mais ce que le code fait. Elle a
+  // basculé le 20 août 2026, quand le formulaire s'est mis à transmettre pour
+  // de vrai — et elle doit rester d'accord avec la Function qui l'exécute.
   assert.equal(
     CONTACT_FORM_SENDS_MESSAGES,
-    false,
+    true,
     'la constante a changé : relire la politique avant de publier.',
+  );
+
+  assert.equal(
+    existsSync(`${rootPath}/functions/api/contact.ts`),
+    CONTACT_FORM_SENDS_MESSAGES,
+    'la politique annonce un envoi que rien ne réalise, ou l’inverse.',
   );
 
   assert.ok(
     privacy.includes('CONTACT_FORM_SENDS_MESSAGES'),
     'la politique décrit l’envoi sans consulter son état réel.',
   );
+  // Les deux versions du texte doivent coexister : la page doit pouvoir
+  // redire que l'envoi est inactif si quelqu'un débranche la Function.
   assert.ok(
     privacy.includes('n’est pas encore activé'),
-    'la politique ne dit pas que l’envoi est inactif.',
+    'la politique a perdu sa version « envoi inactif ».',
   );
 });
 

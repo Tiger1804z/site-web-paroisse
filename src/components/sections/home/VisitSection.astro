@@ -31,7 +31,7 @@ const { content, contact } = Astro.props;
             {contact.address.city}, {contact.address.province}{' '}
             {contact.address.postalCode}
           </span>
-          <a href={contact.phone.href}>{contact.phone.display}</a>
+          <span class="visit-section__phone">{contact.phone.display}</span>
         </address>
 
         <div class="visit-section__actions">
@@ -146,14 +146,14 @@ const { content, contact } = Astro.props;
     font-size: clamp(1.35rem, 2.3vw, 1.75rem);
   }
 
-  .visit-section__address a {
+  /* Numéro affiché, jamais cliquable : pas de soulignement qui promettrait un
+     appel d'un seul geste. Le reste de la présentation ne bouge pas. */
+  .visit-section__phone {
     width: fit-content;
     margin-top: 0.55rem;
     color: var(--color-gold-light);
     font-size: 1.12rem;
     font-weight: 650;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.28em;
   }
 
   .visit-section__actions {

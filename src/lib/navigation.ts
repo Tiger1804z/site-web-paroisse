@@ -56,6 +56,19 @@ export const scheduleNavigation = {
   href: '/horaires',
 } as const satisfies NavigationItem;
 
+/**
+ * Raccourci vers la page Contact.
+ *
+ * La barre d'actions rapides menait auparavant à un appel direct. Le
+ * secrétariat reçoit ces appels à domicile à toute heure, alors le raccourci
+ * mène désormais aux coordonnées complètes : la personne y trouve le numéro,
+ * les heures d'ouverture et de quoi écrire, et choisit son moment.
+ */
+export const contactNavigation = {
+  label: 'Contact',
+  href: '/contact',
+} as const satisfies NavigationItem;
+
 export const legalNavigation = [
   {
     label: 'Politique de confidentialité',

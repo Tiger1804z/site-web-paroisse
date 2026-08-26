@@ -204,7 +204,7 @@ const siteSettings = await getSiteSettings();
           </svg>
           <span>{siteSettings.address.formatted}</span>
         </a>
-        <a class="mobile-menu__detail" href={siteSettings.phone.href}>
+        <p class="mobile-menu__detail">
           <svg
             aria-hidden="true"
             viewBox="0 0 24 24"
@@ -220,7 +220,7 @@ const siteSettings = await getSiteSettings();
               stroke-linejoin="round"></path>
           </svg>
           <span>{siteSettings.phone.display}</span>
-        </a>
+        </p>
         {
           siteSettings.email && (
             <a class="mobile-menu__detail" href={siteSettings.email.href}>
@@ -668,13 +668,16 @@ const siteSettings = await getSiteSettings();
     display: flex;
     min-height: 2.75rem;
     align-items: center;
+    margin: 0;
     gap: 0.75rem;
     color: inherit;
     text-decoration: none;
     transition: color var(--duration-short) var(--ease-editorial);
   }
 
-  .mobile-menu__detail:hover {
+  /* Le téléphone est un `p` : il s'affiche comme les autres coordonnées, mais
+     rien ne s'y clique. Seules les lignes réellement navigables réagissent. */
+  a.mobile-menu__detail:hover {
     color: var(--color-ivory);
   }
 
