@@ -279,16 +279,23 @@ réellement à passer.
 dicté le choix de Formspree, et elle tient : rien à toucher sur
 `paroissesaintrenegoupil.com`, qui sert encore l’ancien site.
 
-Trois points sont **tombés le 26 août 2026** : la paroisse a confirmé son adresse
-chez Formspree, le destinataire du formulaire a été basculé vers elle, et un
-envoi réel est arrivé dans la boîte du secrétariat, en réception normale. Restent :
+Cinq points sont **tombés le 26 août 2026** : la paroisse a confirmé son adresse
+chez Formspree, le destinataire du formulaire a été basculé vers elle, un envoi
+réel est arrivé dans la boîte du secrétariat en réception normale, les trois
+variables sont en place dans l’environnement **Production** de Pages, et les deux
+anciennes — `RESEND_API_KEY`, `CONTACT_RECIPIENT_EMAIL` — y ont été supprimées.
+Production et Preview portent désormais les **mêmes huit variables**, aux mêmes
+types, et la clé publique Turnstile y est la même — celle que le test réel a
+déjà vue se résoudre sur `*.pages.dev`, qui est aussi le domaine de Production.
 
-1. Saisir les trois variables dans l’environnement **Production** de Pages, comme
-   elles l’ont été en Preview.
-2. Supprimer les anciennes variables devenues inutiles en Production —
-   `RESEND_API_KEY`, `CONTACT_RECIPIENT_EMAIL`. Le code n’en dépend plus, mais
-   une variable orpheline finit par faire croire à un mécanisme qui n’existe pas.
-3. Surveiller le **quota** du plan Formspree : le gratuit plafonne les
+Restent :
+
+1. Rejouer une soumission réelle **depuis le site de Production**, une fois
+   déployé. L’API de Cloudflare ne renvoie jamais la valeur d’un secret : rien
+   ne permet de _lire_ que le `FORMSPREE_ENDPOINT` de Production désigne le même
+   formulaire que celui éprouvé en Preview. Un secret ne se vérifie qu’en s’en
+   servant.
+2. Surveiller le **quota** du plan Formspree : le gratuit plafonne les
    soumissions mensuelles, et un formulaire de paroisse silencieux passerait
    longtemps inaperçu.
 

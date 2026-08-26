@@ -129,8 +129,9 @@ Le détail vit dans
 Depuis le 26 août 2026, le destinataire est bien `paroissergoupil@videotron.ca` :
 la paroisse a confirmé son adresse auprès de Formspree, la bascule est faite, et
 un envoi réel est arrivé dans la boîte du secrétariat — qui en a confirmé la
-réception. Il ne reste que la saisie des trois variables dans l’environnement
-**Production** de Pages.
+réception. Les trois variables d’environnement sont en place en **Production**
+comme en Preview, et les deux anciennes héritées de Resend y ont été supprimées
+le même jour.
 
 ## Mini-galerie de l’accueil
 
