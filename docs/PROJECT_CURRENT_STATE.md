@@ -3,8 +3,9 @@
 Dernière mise à jour : 26 août 2026 — formulaire Contact livré jusqu'à la boîte
 du secrétariat, et numéro de la paroisse rendu non cliquable.
 
-`staging` = `3ae5bd6` (PR #28 fusionnée), `main` = `77e8126`. Les deux branches
-**divergent** : la promotion vers `main` n'est pas faite, et c'est délibéré.
+`staging` porte la fusion de la PR #28 (`3ae5bd6`); `main` est restée à
+`77e8126`. Les deux branches **divergent** : la promotion vers `main` n'est pas
+faite, et c'est délibéré.
 
 **Sanity Visual Editing / Cloudflare Preview : livré et validé de bout en bout le
 18 août 2026.** Trois ressources en ligne :
