@@ -32,10 +32,15 @@ export const primaryNavigation = [
   { label: 'Vie paroissiale', href: '/vie-paroissiale' },
   { label: 'Nos services', href: '/nos-services' },
   { label: 'Événements', href: '/evenements' },
+  { label: 'Friperie', href: '/friperie' },
 ] as const satisfies readonly NavigationItem[];
 
+/**
+ * La friperie a quitté ce groupe pour la navigation principale : c'est le
+ * service que la paroisse met le plus en avant, et il était rangé derrière un
+ * menu déroulant que personne n'ouvre.
+ */
 const informationRouteDefinitions = [
-  { label: 'Friperie', href: '/friperie', active: true },
   { label: 'Location de salle', href: '/location-de-salle', active: false },
   { label: 'Galerie', href: '/galerie', active: false },
   { label: 'Nos annonceurs', href: '/nos-annonceurs', active: true },
