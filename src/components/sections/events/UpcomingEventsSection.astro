@@ -17,6 +17,27 @@ interface Props {
 }
 
 const { title, events } = Astro.props;
+
+/**
+ * L'annonce telle que la paroisse l'a écrite, découpée en paragraphes.
+ *
+ * `description` porte le texte complet, avec ses ruptures. `excerpt` ne prend
+ * le relais que si elle est vide : une phrase vaut mieux qu'une carte muette.
+ *
+ * Les retours simples à l'intérieur d'un paragraphe — une liste de musiciens,
+ * par exemple — sont conservés par la feuille de style, pas ici : les couper
+ * en paragraphes séparés inventerait une structure que l'annonce n'a pas.
+ */
+function announcementParagraphs(
+  event: ParishEventWithTemporalStatus,
+): readonly string[] {
+  const source = event.description?.trim() ? event.description : event.excerpt;
+
+  return source
+    .split(/\r?\n[ \t]*\r?\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+}
 ---
 
 <section
@@ -79,7 +100,7 @@ const { title, events } = Astro.props;
               </div>
             )}
 
-            <div class="upcoming-event__content">
+            <div class="upcoming-event__heading">
               <div class="upcoming-event__badges">
                 <span>{getParishEventCategoryLabel(event.category)}</span>
                 {event.temporalStatus === 'ongoing' && (
@@ -97,7 +118,12 @@ const { title, events } = Astro.props;
                 </time>
               </p>
               <h3 class="type-h3">{event.title}</h3>
-              <p class="upcoming-event__excerpt">{event.excerpt}</p>
+            </div>
+
+            <div class="upcoming-event__body">
+              {announcementParagraphs(event).map((paragraph) => (
+                <p class="upcoming-event__paragraph">{paragraph}</p>
+              ))}
 
               <dl class="upcoming-event__details">
                 {event.departureAt && (
@@ -281,11 +307,26 @@ const { title, events } = Astro.props;
     font-size: 0.625rem;
   }
 
-  .upcoming-event__content {
+  .upcoming-event__heading,
+  .upcoming-event__body {
     display: flex;
+    min-width: 0;
     flex-direction: column;
     align-items: flex-start;
-    padding: clamp(1.75rem, 5vw, 3.5rem);
+  }
+
+  /*
+    En lecture linéaire — mobile, lecteur d'écran — l'ordre reste celui du
+    document : image, catégorie, date, titre, puis le texte de l'annonce.
+    L'en-tête ne porte donc pas de marge basse, c'est le corps qui l'espace.
+  */
+  .upcoming-event__heading {
+    padding: clamp(1.75rem, 5vw, 3.5rem) clamp(1.75rem, 5vw, 3.5rem) 0;
+  }
+
+  .upcoming-event__body {
+    padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.75rem, 5vw, 3.5rem)
+      clamp(1.75rem, 5vw, 3.5rem);
   }
 
   .upcoming-event__badges {
@@ -317,11 +358,21 @@ const { title, events } = Astro.props;
     color: var(--color-charcoal);
   }
 
-  .upcoming-event__excerpt {
+  /*
+    `pre-line` garde les retours simples écrits dans l'annonce — la liste des
+    musiciens d'un concert en dépend — sans transformer chacun d'eux en
+    paragraphe, ce que le texte d'origine ne dit pas.
+  */
+  .upcoming-event__paragraph {
     max-width: 38rem;
     margin: 1.1rem 0 0;
     color: var(--color-muted);
     line-height: 1.75;
+    white-space: pre-line;
+  }
+
+  .upcoming-event__paragraph:first-child {
+    margin-top: 0;
   }
 
   .upcoming-event__details {
@@ -332,6 +383,11 @@ const { title, events } = Astro.props;
     margin: 1.75rem 0 0;
     padding-top: 1.5rem;
     border-top: 1px solid var(--color-border);
+  }
+
+  /* Sans un seul détail à annoncer, cette liste ne dessinait qu'un trait. */
+  .upcoming-event__details:empty {
+    display: none;
   }
 
   .upcoming-event__details div {
@@ -387,23 +443,51 @@ const { title, events } = Astro.props;
   }
 
   @media (min-width: 64rem) {
-    .upcoming-event {
-      grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
+    /*
+      Deux colonnes, deux rangées.
+
+      L'image garde le format de la photographie, donc elle ne descend pas
+      jusqu'au bas de la carte. Plutôt que de l'étirer pour combler ce vide,
+      la catégorie, la date et le titre viennent s'y loger, et le texte de
+      l'annonce occupe l'autre colonne sur toute la hauteur.
+    */
+    .upcoming-event:not(.upcoming-event--without-image) {
+      grid-template-columns: minmax(24rem, 0.9fr) minmax(0, 1.1fr);
+      grid-template-rows: auto 1fr;
     }
 
-    /* Une carte sur deux renvoie son image à droite. Sans cette alternance,
-       la liste aligne une colonne d'images sur toute sa hauteur. */
-    .upcoming-event--reversed:not(.upcoming-event--without-image) {
-      grid-template-columns: minmax(28rem, 0.92fr) minmax(0, 1.08fr);
-    }
-
-    .upcoming-event--reversed .upcoming-event__media-column {
+    .upcoming-event__media-column {
       grid-row: 1;
+      grid-column: 1;
+    }
+
+    .upcoming-event__heading {
+      grid-row: 2;
+      grid-column: 1;
+      padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.75rem, 5vw, 3.5rem)
+        clamp(1.75rem, 5vw, 3.5rem);
+    }
+
+    .upcoming-event__body {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      justify-content: center;
+      padding: clamp(1.75rem, 5vw, 3.5rem);
+    }
+
+    /* Une carte sur deux renvoie son image à droite, et le bloc image + titre
+       avec elle : l'alternance porte sur la colonne entière, pas sur la seule
+       photographie. */
+    .upcoming-event--reversed:not(.upcoming-event--without-image) {
+      grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 0.9fr);
+    }
+
+    .upcoming-event--reversed .upcoming-event__media-column,
+    .upcoming-event--reversed .upcoming-event__heading {
       grid-column: 2;
     }
 
-    .upcoming-event--reversed .upcoming-event__content {
-      grid-row: 1;
+    .upcoming-event--reversed .upcoming-event__body {
       grid-column: 1;
     }
 
@@ -449,12 +533,20 @@ const { title, events } = Astro.props;
       box-shadow: 0 1.25rem 3rem rgb(28 25 24 / 28%);
     }
 
+    /* Sans photographie, il n'y a plus de vide à combler : une seule colonne,
+       et le texte reprend sa lecture ordinaire sous le titre. */
     .upcoming-event--without-image {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .upcoming-event--without-image .upcoming-event__content {
+    .upcoming-event--without-image .upcoming-event__heading {
       max-width: 58rem;
+      padding-bottom: 0;
+    }
+
+    .upcoming-event--without-image .upcoming-event__body {
+      max-width: 58rem;
+      padding-top: clamp(1.25rem, 3vw, 1.75rem);
     }
   }
 
