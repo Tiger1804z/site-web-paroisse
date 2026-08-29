@@ -35,12 +35,13 @@ const { title, events } = Astro.props;
 
     <div class="upcoming-events-section__list">
       {
-        events.map((event) => (
+        events.map((event, index) => (
           <article
             id={event.slug}
             class:list={[
               'upcoming-event',
               !event.coverImage && 'upcoming-event--without-image',
+              index % 2 === 1 && 'upcoming-event--reversed',
               event.publicationStatus === 'cancelled' &&
                 'upcoming-event--cancelled',
             ]}
@@ -91,7 +92,8 @@ const { title, events } = Astro.props;
 
               <p class="upcoming-event__date">
                 <time datetime={event.startAt}>
-                  {formatParishEventDate(event.startAt)}
+                  {formatParishEventDate(event.startAt)} à{' '}
+                  {formatParishEventTime(event.startAt)}
                 </time>
               </p>
               <h3 class="type-h3">{event.title}</h3>
@@ -387,6 +389,22 @@ const { title, events } = Astro.props;
   @media (min-width: 64rem) {
     .upcoming-event {
       grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
+    }
+
+    /* Une carte sur deux renvoie son image à droite. Sans cette alternance,
+       la liste aligne une colonne d'images sur toute sa hauteur. */
+    .upcoming-event--reversed:not(.upcoming-event--without-image) {
+      grid-template-columns: minmax(28rem, 0.92fr) minmax(0, 1.08fr);
+    }
+
+    .upcoming-event--reversed .upcoming-event__media-column {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    .upcoming-event--reversed .upcoming-event__content {
+      grid-row: 1;
+      grid-column: 1;
     }
 
     .upcoming-event__media {
