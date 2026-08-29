@@ -15,6 +15,7 @@
     "build:preview": "node scripts/build-preview.mjs",
     "check:seo": "node --experimental-strip-types scripts/check-built-seo.mjs",
     "check:public": "node scripts/check-public-bundle.mjs",
+    "check:phone": "node scripts/check-parish-phone.mjs",
     "check:preview": "node scripts/check-preview-bundle.mjs",
     "preview": "astro preview",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
@@ -22,7 +23,7 @@
     "lint": "eslint . --max-warnings 0",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build:public && pnpm check:seo && pnpm check:public",
+    "validate": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build:public && pnpm check:seo && pnpm check:public && pnpm check:phone",
     "validate:preview": "pnpm build:preview && pnpm check:preview",
     "sanity:typegen": "pnpm --dir studio typegen",
     "astro": "astro"
@@ -42,7 +43,8 @@
     "react-is": "19.2.8",
     "sharp": "^0.35.3",
     "styled-components": "^6.4.4",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

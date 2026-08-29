@@ -10,6 +10,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { isParishMainPhone, toDialableDigits } from './parishPhone.ts';
 
 type RawAdvertiser = SanityAdvertisersResult[number];
 
@@ -52,16 +53,23 @@ function normalizeStatus(value: string | null | undefined): AdvertiserStatus {
  *
  * L'éditrice écrit « 514 728-4345 »; personne ne saisit deux fois le même
  * numéro sous deux formes. Un numéro qui n'a pas dix chiffres n'obtient pas de
- * lien : mieux vaut un texte non cliquable qu'un appel vers nulle part.
+ * lien, et disparaît : une saisie à moitié faite n'est pas une coordonnée.
+ * Le numéro principal de la paroisse, lui, s'affiche sans lien — c'est le geste
+ * qui déclenche l'appel qui disparaît, pas l'information.
  */
 function normalizePhone(value: string | null | undefined): Advertiser['phone'] {
   const display = cleanString(value);
   if (!display) return undefined;
 
-  const digits = display.replace(/\D/g, '');
-  if (digits.length !== 10) return undefined;
+  const digits = toDialableDigits(display);
+  if (!digits) return undefined;
 
-  return { display, href: `tel:+1${digits}` as const };
+  // Le numéro principal de la paroisse saisi sur une fiche d'annonceur reste
+  // affiché, mais sans lien : le secrétariat reçoit ces appels à domicile, à
+  // toute heure, et aucun champ libre ne doit rouvrir cette porte.
+  return isParishMainPhone(display)
+    ? { display }
+    : { display, href: `tel:+1${digits}` as const };
 }
 
 /**

@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import RemoteImage from '@/components/ui/RemoteImage.astro';
+import RichText from '@/components/ui/RichText.astro';
 import {
   formatParishEventDate,
   formatParishEventPrice,
@@ -10,6 +11,7 @@ import {
   getParishEventCategoryLabel,
 } from '@/lib/events/parish-events';
 import type { ParishEventWithTemporalStatus } from '@/types/parish-events';
+import type { RichText as RichTextValue } from '@/types/richText';
 
 interface Props {
   title: string;
@@ -17,6 +19,24 @@ interface Props {
 }
 
 const { title, events } = Astro.props;
+
+/**
+ * L'annonce telle que la paroisse l'a écrite.
+ *
+ * `description` porte le texte complet, avec ses paragraphes et ses emphases.
+ * `excerpt` ne prend le relais que si elle est vide : une phrase vaut mieux
+ * qu'une carte muette. Le repli est converti au même format plutôt que rendu
+ * à part — un seul chemin de rendu, donc une seule apparence possible.
+ */
+function announcementBlocks(
+  event: ParishEventWithTemporalStatus,
+): RichTextValue {
+  return (
+    event.description ?? [
+      { key: 'resume', spans: [{ text: event.excerpt, marks: [] }] },
+    ]
+  );
+}
 ---
 
 <section
@@ -35,12 +55,13 @@ const { title, events } = Astro.props;
 
     <div class="upcoming-events-section__list">
       {
-        events.map((event) => (
+        events.map((event, index) => (
           <article
             id={event.slug}
             class:list={[
               'upcoming-event',
               !event.coverImage && 'upcoming-event--without-image',
+              index % 2 === 1 && 'upcoming-event--reversed',
               event.publicationStatus === 'cancelled' &&
                 'upcoming-event--cancelled',
             ]}
@@ -78,7 +99,7 @@ const { title, events } = Astro.props;
               </div>
             )}
 
-            <div class="upcoming-event__content">
+            <div class="upcoming-event__heading">
               <div class="upcoming-event__badges">
                 <span>{getParishEventCategoryLabel(event.category)}</span>
                 {event.temporalStatus === 'ongoing' && (
@@ -91,11 +112,15 @@ const { title, events } = Astro.props;
 
               <p class="upcoming-event__date">
                 <time datetime={event.startAt}>
-                  {formatParishEventDate(event.startAt)}
+                  {formatParishEventDate(event.startAt)} à{' '}
+                  {formatParishEventTime(event.startAt)}
                 </time>
               </p>
               <h3 class="type-h3">{event.title}</h3>
-              <p class="upcoming-event__excerpt">{event.excerpt}</p>
+            </div>
+
+            <div class="upcoming-event__body">
+              <RichText blocks={announcementBlocks(event)} />
 
               <dl class="upcoming-event__details">
                 {event.departureAt && (
@@ -148,10 +173,14 @@ const { title, events } = Astro.props;
                 <p class="upcoming-event__notice">{event.capacityNotice}</p>
               )}
 
-              {event.contact?.phone && event.contact.phoneHref && (
+              {event.contact?.phone && (
                 <p class="upcoming-event__phone">
                   Téléphone :
-                  <a href={event.contact.phoneHref}>{event.contact.phone}</a>
+                  {event.contact.phoneHref ? (
+                    <a href={event.contact.phoneHref}>{event.contact.phone}</a>
+                  ) : (
+                    <span>{event.contact.phone}</span>
+                  )}
                 </p>
               )}
 
@@ -275,11 +304,26 @@ const { title, events } = Astro.props;
     font-size: 0.625rem;
   }
 
-  .upcoming-event__content {
+  .upcoming-event__heading,
+  .upcoming-event__body {
     display: flex;
+    min-width: 0;
     flex-direction: column;
     align-items: flex-start;
-    padding: clamp(1.75rem, 5vw, 3.5rem);
+  }
+
+  /*
+    En lecture linéaire — mobile, lecteur d'écran — l'ordre reste celui du
+    document : image, catégorie, date, titre, puis le texte de l'annonce.
+    L'en-tête ne porte donc pas de marge basse, c'est le corps qui l'espace.
+  */
+  .upcoming-event__heading {
+    padding: clamp(1.75rem, 5vw, 3.5rem) clamp(1.75rem, 5vw, 3.5rem) 0;
+  }
+
+  .upcoming-event__body {
+    padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.75rem, 5vw, 3.5rem)
+      clamp(1.75rem, 5vw, 3.5rem);
   }
 
   .upcoming-event__badges {
@@ -311,11 +355,25 @@ const { title, events } = Astro.props;
     color: var(--color-charcoal);
   }
 
-  .upcoming-event__excerpt {
+  /*
+    `pre-line` garde les retours simples écrits dans l'annonce — la liste des
+    musiciens d'un concert en dépend — sans transformer chacun d'eux en
+    paragraphe, ce que le texte d'origine ne dit pas.
+  */
+  /*
+    Les paragraphes viennent du composant `RichText`, donc d'un autre fichier :
+    la portée automatique d'Astro ne les atteint pas. `:global` les rejoint,
+    ancré sur un élément de cette carte pour ne pas déborder ailleurs.
+  */
+  .upcoming-event__body :global(.rich-text__paragraph) {
     max-width: 38rem;
     margin: 1.1rem 0 0;
     color: var(--color-muted);
     line-height: 1.75;
+  }
+
+  .upcoming-event__body :global(.rich-text__paragraph:first-child) {
+    margin-top: 0;
   }
 
   .upcoming-event__details {
@@ -326,6 +384,11 @@ const { title, events } = Astro.props;
     margin: 1.75rem 0 0;
     padding-top: 1.5rem;
     border-top: 1px solid var(--color-border);
+  }
+
+  /* Sans un seul détail à annoncer, cette liste ne dessinait qu'un trait. */
+  .upcoming-event__details:empty {
+    display: none;
   }
 
   .upcoming-event__details div {
@@ -381,18 +444,77 @@ const { title, events } = Astro.props;
   }
 
   @media (min-width: 64rem) {
-    .upcoming-event {
-      grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
-    }
+    /*
+      Deux colonnes, deux rangées.
 
-    .upcoming-event__media {
-      min-height: 29rem;
+      L'image garde le format de la photographie, donc elle ne descend pas
+      jusqu'au bas de la carte. Plutôt que de l'étirer pour combler ce vide,
+      la catégorie, la date et le titre viennent s'y loger, et le texte de
+      l'annonce occupe l'autre colonne sur toute la hauteur.
+    */
+    .upcoming-event:not(.upcoming-event--without-image) {
+      grid-template-columns: minmax(24rem, 0.9fr) minmax(0, 1.1fr);
+      grid-template-rows: auto 1fr;
     }
 
     .upcoming-event__media-column {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    .upcoming-event__heading {
+      grid-row: 2;
+      grid-column: 1;
+      padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.75rem, 5vw, 3.5rem)
+        clamp(1.75rem, 5vw, 3.5rem);
+    }
+
+    .upcoming-event__body {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      justify-content: center;
+      padding: clamp(1.75rem, 5vw, 3.5rem);
+    }
+
+    /* Une carte sur deux renvoie son image à droite, et le bloc image + titre
+       avec elle : l'alternance porte sur la colonne entière, pas sur la seule
+       photographie. */
+    .upcoming-event--reversed:not(.upcoming-event--without-image) {
+      grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 0.9fr);
+    }
+
+    .upcoming-event--reversed .upcoming-event__media-column,
+    .upcoming-event--reversed .upcoming-event__heading {
+      grid-column: 2;
+    }
+
+    .upcoming-event--reversed .upcoming-event__body {
+      grid-column: 1;
+    }
+
+    .upcoming-event__media {
+      min-height: 24rem;
+    }
+
+    /*
+      Hauteur laissée au texte, pas imposée à l'image.
+
+      Ce cadre réclamait 43rem de haut. Les photographies d'événement, elles,
+      sont larges et basses : `cover` devait donc les agrandir jusqu'à remplir
+      cette hauteur, puis jeter les côtés. Une photo de 229 px de haut était
+      étirée trois fois — c'est de là que venait le flou, pas de la largeur du
+      fichier, que le CDN sert déjà à sa taille native.
+
+      Le plancher descend à 24rem et la hauteur de la carte suit le texte. Le
+      même fichier n'est plus agrandi que d'environ moitié, sans qu'un seul
+      pixel soit inventé.
+    */
+    .upcoming-event__media-column {
       position: relative;
       display: block;
-      min-height: 43rem;
+      align-self: start;
+      aspect-ratio: 16 / 9;
+      min-height: 0;
     }
 
     .upcoming-event__media-column > .upcoming-event__media {
@@ -412,12 +534,20 @@ const { title, events } = Astro.props;
       box-shadow: 0 1.25rem 3rem rgb(28 25 24 / 28%);
     }
 
+    /* Sans photographie, il n'y a plus de vide à combler : une seule colonne,
+       et le texte reprend sa lecture ordinaire sous le titre. */
     .upcoming-event--without-image {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .upcoming-event--without-image .upcoming-event__content {
+    .upcoming-event--without-image .upcoming-event__heading {
       max-width: 58rem;
+      padding-bottom: 0;
+    }
+
+    .upcoming-event--without-image .upcoming-event__body {
+      max-width: 58rem;
+      padding-top: clamp(1.25rem, 3vw, 1.75rem);
     }
   }
 

@@ -1,9 +1,11 @@
 # État actuel du projet
 
-Dernière mise à jour : 18 août 2026 — migration Sanity promue en production, et
-prévisualisation éditoriale livrée.
+Dernière mise à jour : 26 août 2026 — formulaire Contact livré jusqu'à la boîte
+du secrétariat, et numéro de la paroisse rendu non cliquable.
 
-`main` = `staging` = `259be9e`.
+`staging` porte la fusion de la PR #28 (`3ae5bd6`); `main` est restée à
+`77e8126`. Les deux branches **divergent** : la promotion vers `main` n'est pas
+faite, et c'est délibéré.
 
 **Sanity Visual Editing / Cloudflare Preview : livré et validé de bout en bout le
 18 août 2026.** Trois ressources en ligne :
@@ -110,15 +112,32 @@ validation les lit, et une expression mal saisie dans le Studio casserait la
 page en silence. Seule la liste des motifs se saisit, parce qu’elle suit les
 services offerts.
 
-Le formulaire Contact demeure une préparation frontend :
+**Le formulaire Contact transmet réellement depuis le 20 août 2026.** Il poste
+vers `/api/contact`, une Cloudflare Pages Function qui refait toute la
+validation, vérifie un jeton Cloudflare Turnstile, puis transmet par l’API de
+Formspree. Le trajet complet a été joué en vrai depuis un déploiement Preview le
+21 août 2026.
 
-- champs, honeypot, validation locale et erreurs accessibles;
-- submit bloqué avec `preventDefault()`;
-- aucun `fetch`, endpoint, faux succès ou stockage;
-- aucun secret, fournisseur SMTP/API ou fonction serverless.
+- champs, honeypot, validation locale et erreurs accessibles — inchangés;
+- `preventDefault()` reste, mais pour envoyer en JSON plutôt que pour ne rien
+  faire;
+- aucun stockage : rien n’est enregistré côté site, le message vit dans la boîte
+  du secrétariat;
+- aucun secret dans le dépôt — trois variables d’environnement, côté Pages.
 
-S1-T09 devra donc encore être repris à la porte de validation du système
-d’envoi avant livraison.
+Le détail vit dans
+[`CONTACT_FORM_SECURITY_PREPARATION.md`](./CONTACT_FORM_SECURITY_PREPARATION.md).
+
+Depuis le 26 août 2026, le destinataire est bien `paroissergoupil@videotron.ca` :
+la paroisse a confirmé son adresse auprès de Formspree, la bascule est faite, et
+un envoi réel est arrivé dans la boîte du secrétariat — qui en a confirmé la
+réception. Les trois variables d’environnement sont en place en **Production**
+comme en Preview, et les deux anciennes héritées de Resend y ont été supprimées
+le même jour.
+
+Le numéro de la paroisse, lui, s'affiche partout et n'est **cliquable nulle
+part** — le secrétariat reçoit les appels à domicile. Voir
+[`PARISH_PHONE_NOT_CLICKABLE.md`](./PARISH_PHONE_NOT_CLICKABLE.md).
 
 ## Mini-galerie de l’accueil
 
@@ -264,6 +283,12 @@ contrat typé, HTML statique. Le détail est dans
 Les images locales passent par `astro:assets`, celles du Studio par le CDN de
 Sanity avec point focal.
 
-L’envoi du formulaire Contact, la réservation et les paiements ne sont toujours
-pas installés. Le site n’est déployé nulle part : aucun adaptateur, aucun
-domaine, et la CI valide sans déployer.
+La réservation et les paiements ne sont pas installés, et rien ne les prépare.
+
+L’envoi du formulaire Contact, lui, l’est depuis le 20 août 2026 : une Cloudflare
+Pages Function le porte, hors du build statique. Le site public est déployé sur
+Cloudflare Pages et reste un tas de fichiers HTML — le dossier `functions/` vit à
+la racine du dépôt, jamais dans `dist/`.
+
+Le domaine `paroissesaintrenegoupil.com` sert encore l’ancien site : le nouveau
+répond pour l’instant sur son adresse `*.pages.dev`.

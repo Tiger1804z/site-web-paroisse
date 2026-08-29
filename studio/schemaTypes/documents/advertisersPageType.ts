@@ -118,11 +118,6 @@ export const advertisersPageType = defineType({
             'Une précision par entrée. N’annoncer ni tarif, ni format, ni disponibilité : ces faits changent et se confirment par téléphone.',
         }),
         defineField({
-          name: 'phoneLabel',
-          title: 'Libellé du bouton d’appel',
-          type: 'string',
-        }),
-        defineField({
           name: 'contactLabel',
           title: 'Libellé du bouton Contact',
           type: 'string',

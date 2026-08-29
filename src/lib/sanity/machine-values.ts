@@ -44,6 +44,17 @@ export const MACHINE_VALUE_FIELDS: ReadonlySet<string> = new Set([
   'visualKind',
   'weekday',
 
+  // Emphases d'un fragment de texte enrichi : « strong », « em ». Le rendu
+  // compare ces chaînes pour choisir sa balise. Encodées, aucune ne
+  // correspondrait plus, et le gras disparaîtrait de la seule
+  // prévisualisation — la panne que ce module existe pour empêcher.
+  'marks',
+
+  // Style d'un bloc de texte enrichi. Le rendu compare cette chaîne pour
+  // choisir sa balise; encodée, elle ne vaudrait plus « normal » et le
+  // paragraphe changerait d'apparence dans la seule prévisualisation.
+  'style',
+
   // Slugs : fragments d'adresse publique et ancres de page.
   'slug',
   'value',

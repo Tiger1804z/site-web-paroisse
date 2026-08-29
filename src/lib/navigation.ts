@@ -32,10 +32,15 @@ export const primaryNavigation = [
   { label: 'Vie paroissiale', href: '/vie-paroissiale' },
   { label: 'Nos services', href: '/nos-services' },
   { label: 'Événements', href: '/evenements' },
+  { label: 'Friperie', href: '/friperie' },
 ] as const satisfies readonly NavigationItem[];
 
+/**
+ * La friperie a quitté ce groupe pour la navigation principale : c'est le
+ * service que la paroisse met le plus en avant, et il était rangé derrière un
+ * menu déroulant que personne n'ouvre.
+ */
 const informationRouteDefinitions = [
-  { label: 'Friperie', href: '/friperie', active: true },
   { label: 'Location de salle', href: '/location-de-salle', active: false },
   { label: 'Galerie', href: '/galerie', active: false },
   { label: 'Nos annonceurs', href: '/nos-annonceurs', active: true },
@@ -54,6 +59,19 @@ export const firstVisitNavigation = {
 export const scheduleNavigation = {
   label: 'Voir les horaires',
   href: '/horaires',
+} as const satisfies NavigationItem;
+
+/**
+ * Raccourci vers la page Contact.
+ *
+ * La barre d'actions rapides menait auparavant à un appel direct. Le
+ * secrétariat reçoit ces appels à domicile à toute heure, alors le raccourci
+ * mène désormais aux coordonnées complètes : la personne y trouve le numéro,
+ * les heures d'ouverture et de quoi écrire, et choisit son moment.
+ */
+export const contactNavigation = {
+  label: 'Contact',
+  href: '/contact',
 } as const satisfies NavigationItem;
 
 export const legalNavigation = [

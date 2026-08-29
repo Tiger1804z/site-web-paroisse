@@ -33,9 +33,7 @@ const { paymentMethods, finalCta } = Astro.props;
         <Button href={finalCta.primary.href} variant="light">
           {finalCta.primary.label}
         </Button>
-        <a class="services-closing__phone" href={finalCta.phone.href}>
-          {finalCta.phone.display}
-        </a>
+        <p class="services-closing__phone">{finalCta.phone.display}</p>
       </div>
     </div>
   </Container>
@@ -123,15 +121,16 @@ const { paymentMethods, finalCta } = Astro.props;
     margin-top: 2rem;
   }
 
+  /* Numéro affiché, pas composé : plus rien ne se clique ici, donc plus de
+     soulignement qui l'annoncerait. Le bouton voisin mène à la page Contact. */
   .services-closing__phone {
     display: block;
     width: fit-content;
-    margin-top: 1.25rem;
+    margin: 1.25rem 0 0;
     color: var(--color-gold);
     font-family: var(--font-display);
     font-size: 1.5rem;
     font-weight: 600;
-    text-decoration-thickness: 1px;
   }
 
   @media (min-width: 64rem) {

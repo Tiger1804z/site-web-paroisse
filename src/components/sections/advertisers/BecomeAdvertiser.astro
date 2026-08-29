@@ -26,20 +26,11 @@ const { solicitation } = Astro.props;
           {solicitation.details.map((detail) => <li>{detail}</li>)}
         </ul>
         <div class="become-advertiser__actions">
-          <Button href={solicitation.phone.href} variant="light">
-            {solicitation.phoneLabel}
-          </Button>
-          <Button href={solicitation.contactHref} variant="dark">
+          <Button href={solicitation.contactHref} variant="light">
             {solicitation.contactLabel}
           </Button>
         </div>
-        <a
-          class="become-advertiser__phone"
-          href={solicitation.phone.href}
-          aria-label={`Appeler le secrétariat au ${solicitation.phone.display}`}
-        >
-          {solicitation.phone.display}
-        </a>
+        <p class="become-advertiser__phone">{solicitation.phone.display}</p>
       </div>
     </div>
   </Container>
@@ -142,10 +133,12 @@ const { solicitation } = Astro.props;
     margin-top: 2rem;
   }
 
+  /* Le numéro reste lisible, mais aucun geste ne le compose : le secrétariat
+     reçoit ces appels à domicile, à toute heure. */
   .become-advertiser__phone {
     display: block;
     width: fit-content;
-    margin-top: 1.25rem;
+    margin: 1.25rem 0 0;
     color: var(--color-gold);
     font-family: var(--font-display);
     font-size: 1.5rem;

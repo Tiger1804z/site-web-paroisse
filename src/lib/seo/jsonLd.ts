@@ -1,5 +1,6 @@
 import type { ParishEvent } from '@/types/parish-events';
 import type { PublicContactDetails } from '@/types/siteSettings';
+import { richTextToPlainText } from '../content/normalizeSanityRichText.ts';
 import { absoluteUrl } from './urls.ts';
 
 /**
@@ -130,7 +131,9 @@ export function eventJsonLd(
     name,
     startDate,
     endDate: cleanText(event.endAt),
-    description: cleanText(event.description) ?? cleanText(event.excerpt),
+    description:
+      cleanText(richTextToPlainText(event.description)) ??
+      cleanText(event.excerpt),
     url: absoluteUrl(siteUrl, pagePath),
     eventStatus:
       event.publicationStatus === 'cancelled'

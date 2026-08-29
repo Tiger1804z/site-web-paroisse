@@ -11,6 +11,8 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanityRichText } from './normalizeSanityRichText.ts';
+import { toThirdPartyDialableDigits } from './parishPhone.ts';
 
 export type { ImageSourceBuilder };
 
@@ -47,8 +49,11 @@ function normalizeEvent(
         }
       : undefined;
 
-  const phone = publishableContact?.phone;
-  const phoneDigits = phone?.replace(/\D/g, '');
+  // La personne-ressource d'une activité garde son lien d'appel : c'est sa
+  // ligne à elle. Le numéro principal de la paroisse, lui, s'affiche sans jamais
+  // devenir cliquable — le secrétariat reçoit ces appels à domicile, à toute
+  // heure, et un champ libre ne doit pas rouvrir la porte qu'on vient de fermer.
+  const phoneDigits = toThirdPartyDialableDigits(publishableContact?.phone);
 
   const gallery = (raw.gallery ?? [])
     .map((item) => normalizeSanityImage(item, buildSources))
@@ -59,7 +64,7 @@ function normalizeEvent(
     slug,
     title,
     excerpt,
-    description: cleanString(raw.description),
+    description: normalizeSanityRichText(raw.description),
     category,
     startAt,
     endAt: cleanString(raw.endAt),
@@ -84,10 +89,9 @@ function normalizeEvent(
         publishableContact.email)
         ? {
             ...publishableContact,
-            phoneHref:
-              phoneDigits?.length === 10
-                ? (`tel:+1${phoneDigits}` as const)
-                : undefined,
+            phoneHref: phoneDigits
+              ? (`tel:+1${phoneDigits}` as const)
+              : undefined,
           }
         : undefined,
     publicationStatus: raw.publicationStatus ?? 'draft',

@@ -9,11 +9,23 @@ export interface PublicAddress {
   readonly formatted: string;
 }
 
+/**
+ * Le numéro principal de la paroisse, sous ses trois formes utiles.
+ *
+ * Aucune adresse `tel:` : le secrétariat reçoit ces appels à domicile, à toute
+ * heure, et un numéro cliquable transforme une consultation nocturne en
+ * sonnerie. Le numéro reste affiché partout où il sert — c'est le déclenchement
+ * de l'appel d'un seul geste qui disparaît, pas l'information.
+ *
+ * `international` sert aux données structurées (`schema.org`), qui décrivent la
+ * paroisse sans offrir de bouton d'appel dans la page. `e164` reste la forme
+ * machine de référence : c'est elle qui identifie le numéro principal quand il
+ * faut le reconnaître ailleurs (voir `isParishMainPhone`).
+ */
 export interface PublicPhone {
   readonly display: string;
   readonly international: string;
   readonly e164: string;
-  readonly href: `tel:${string}`;
 }
 
 export interface PublicEmail {

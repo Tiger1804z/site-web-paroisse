@@ -63,9 +63,7 @@ const fallbackPage = {
       display: '514 722-1161',
       international: '+1 514 722-1161',
       e164: '+15147221161',
-      href: 'tel:+15147221161',
     },
-    phoneLabel: 'Téléphoner au secrétariat',
     contactLabel: 'Voir nos coordonnées',
     contactHref: '/contact/',
   },
@@ -219,7 +217,6 @@ test('le contenu de page vient de Sanity, le seo reste au code', () => {
         title: null,
         description: null,
         details: [],
-        phoneLabel: 'Appeler',
         contactLabel: null,
       },
       settings: { showAdvertisers: false, showSolicitation: null },
@@ -253,7 +250,25 @@ test('Sanity ne fournit ni téléphone ni adresse de bouton pour la page', () =>
     /name: 'href'|name: 'phoneHref'|name: 'contactHref'/,
   );
   assert.equal(page.solicitation.contactHref, '/contact/');
-  assert.equal(page.solicitation.phone.href, 'tel:+15147221161');
+  assert.equal(page.solicitation.phone.display, '514 722-1161');
+});
+
+test('le bloc « Devenir annonceur » n’offre plus de bouton d’appel', () => {
+  const component = read(
+    'src/components/sections/advertisers/BecomeAdvertiser.astro',
+  );
+  const schema = read('studio/schemaTypes/documents/advertisersPageType.ts');
+
+  // Le numéro reste affiché…
+  assert.match(component, /become-advertiser__phone/);
+  assert.match(component, /solicitation\.phone\.display/);
+  // …mais aucun geste ne le compose, et il ne reste qu'un bouton, vers Contact.
+  assert.doesNotMatch(component, /solicitation\.phone\.href/);
+  assert.doesNotMatch(component, /Appeler|Téléphoner/);
+  assert.equal(component.match(/<Button/g)?.length, 1);
+  // Le libellé du bouton d'appel a disparu du Studio en même temps : un champ
+  // que le site ne lit plus n'a rien à faire sous les yeux de la secrétaire.
+  assert.doesNotMatch(schema, /phoneLabel/);
 });
 
 test('une collection vide n’est pas un échec de requête', () => {

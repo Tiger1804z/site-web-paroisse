@@ -102,7 +102,7 @@ test('le téléphone du secrétariat provient des réglages globaux', () => {
   );
 
   assert.equal(siteSettingsData.phone.display, '514 722-1161');
-  assert.equal(siteSettingsData.phone.href, 'tel:+15147221161');
+  assert.equal(siteSettingsData.phone.e164, '+15147221161');
   assert.match(dataSource, /siteSettings:\s*PublicContactDetails/);
   assert.match(dataSource, /phone:\s*siteSettings\.phone/);
 });

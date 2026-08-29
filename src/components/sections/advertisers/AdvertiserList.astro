@@ -58,11 +58,14 @@ const initialsFor = (name: string) =>
                   {advertiser.address?.lines.map((line) => (
                     <span>{line}</span>
                   ))}
-                  {advertiser.phone && (
-                    <a href={advertiser.phone.href}>
-                      {advertiser.phone.display}
-                    </a>
-                  )}
+                  {advertiser.phone &&
+                    (advertiser.phone.href ? (
+                      <a href={advertiser.phone.href}>
+                        {advertiser.phone.display}
+                      </a>
+                    ) : (
+                      <span>{advertiser.phone.display}</span>
+                    ))}
                   {advertiser.email && (
                     <a href={advertiser.email.href}>
                       {advertiser.email.display}

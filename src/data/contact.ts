@@ -1,3 +1,11 @@
+// Chemin relatif et extension explicite : `tests/sanity-contact.test.mjs`
+// charge ce module tel quel par `node --test`, qui ne résout pas l'alias `@/`.
+// Les imports de type ci-dessous n'ont pas la contrainte — ils sont effacés
+// avant l'exécution, celui-ci ne l'est pas.
+import {
+  CONTACT_REASON_LABELS,
+  CONTACT_REASON_VALUES,
+} from '../lib/contact/contactSubmission.ts';
 import type {
   ContactMethod,
   ContactOfficeHours,
@@ -28,13 +36,15 @@ export function buildContactMethods(
       href: '#nous-trouver',
       note: 'Emplacement confirmé par la paroisse.',
     },
+    // Pas de `href` : le numéro s'affiche, il ne se compose pas d'un geste. Le
+    // secrétariat reçoit ces appels à domicile, à toute heure, et la carte
+    // renvoie donc aux heures d'ouverture plutôt qu'à un bouton d'appel.
     {
       id: 'phone',
       kind: 'phone',
       label: 'Téléphone',
       value: siteSettings.phone.display,
-      href: siteSettings.phone.href,
-      note: 'Touchez le numéro pour appeler.',
+      note: 'Le secrétariat répond durant ses heures d’ouverture.',
     },
   ];
 
@@ -131,7 +141,7 @@ export function buildContactPageData(
     form: {
       title: 'Préparer votre message',
       introduction:
-        'Vous pouvez remplir les champs pour vérifier votre demande. Aucun renseignement n’est transmis tant que le système d’envoi sécurisé n’est pas activé.',
+        'Remplissez les champs ci-dessous. Votre message est transmis au secrétariat, qui y répondra durant ses heures d’ouverture.',
       fields: [
         {
           name: 'reason',
@@ -140,17 +150,10 @@ export function buildContactPageData(
           required: true,
           placeholder: 'Choisissez un motif',
           requiredMessage: 'Veuillez choisir un motif de contact.',
-          options: [
-            { label: 'Question générale', value: 'general' },
-            { label: 'Horaire', value: 'schedule' },
-            { label: 'Baptême', value: 'baptism' },
-            { label: 'Mariage', value: 'marriage' },
-            { label: 'Location de salle', value: 'room-rental' },
-            { label: 'Friperie', value: 'thrift-store' },
-            { label: 'Événement', value: 'event' },
-            { label: 'Vie paroissiale', value: 'parish-life' },
-            { label: 'Autre', value: 'other' },
-          ],
+          options: CONTACT_REASON_VALUES.map((value) => ({
+            value,
+            label: CONTACT_REASON_LABELS[value],
+          })),
         },
         {
           name: 'fullName',
@@ -209,13 +212,14 @@ export function buildContactPageData(
             'Vous devez accepter l’utilisation de vos renseignements pour poursuivre.',
         },
       ],
-      unavailableNotice:
-        'Envoi en ligne non activé. Ce formulaire vérifie seulement les champs dans votre navigateur; aucun message ni renseignement n’est transmis.',
-      validationButtonLabel: 'Vérifier le message',
-      locallyValidNotice:
-        'Les champs sont valides, mais l’envoi en ligne n’est pas encore activé. Aucun message n’a été transmis.',
+      submitButtonLabel: 'Envoyer le message',
+      sendingLabel: 'Envoi en cours…',
+      successNotice:
+        'Votre message a bien été transmis à la paroisse. Merci de nous avoir écrit.',
+      errorNotice:
+        'L’envoi a échoué. Veuillez réessayer dans quelques instants.',
       privacyNotice:
-        'Les renseignements transmis seront utilisés uniquement afin de répondre à votre demande. Une politique de confidentialité approuvée sera requise avant l’activation de l’envoi.',
+        'Les renseignements transmis sont utilisés uniquement afin de répondre à votre demande.',
       privacyPolicyHref: '/politique-de-confidentialite/',
     },
   };

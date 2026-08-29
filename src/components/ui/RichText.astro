@@ -1,0 +1,56 @@
+---
+import type { RichText, RichTextSpan } from '@/types/richText';
+
+interface Props {
+  /** Paragraphes déjà normalisés — voir `normalizeSanityRichText`. */
+  blocks: RichText;
+  /** Classe appliquée à chaque paragraphe, pour que l'appelant garde sa typo. */
+  paragraphClass?: string;
+}
+
+const { blocks, paragraphClass } = Astro.props;
+
+/**
+ * L'ordre d'imbrication n'a aucune importance visuelle, mais en avoir un fixe
+ * évite que deux paragraphes identiques produisent deux balisages différents.
+ */
+function isBold(span: RichTextSpan): boolean {
+  return span.marks.includes('strong');
+}
+
+function isItalic(span: RichTextSpan): boolean {
+  return span.marks.includes('em');
+}
+---
+
+{
+  blocks.map((paragraph) => (
+    <p class:list={['rich-text__paragraph', paragraphClass]}>
+      {paragraph.spans.map((span) =>
+        isBold(span) ? (
+          <strong>{isItalic(span) ? <em>{span.text}</em> : span.text}</strong>
+        ) : isItalic(span) ? (
+          <em>{span.text}</em>
+        ) : (
+          <Fragment>{span.text}</Fragment>
+        ),
+      )}
+    </p>
+  ))
+}
+
+<style>
+  /*
+    Les retours à la ligne simples saisis dans le Studio (Maj + Entrée) sont
+    conservés. Une distribution musicale s'écrit ainsi — un nom par ligne —
+    sans que chaque nom devienne un paragraphe.
+  */
+  .rich-text__paragraph {
+    white-space: pre-line;
+  }
+
+  .rich-text__paragraph strong {
+    color: var(--color-charcoal);
+    font-weight: 700;
+  }
+</style>
