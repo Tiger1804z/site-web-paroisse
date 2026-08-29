@@ -11,6 +11,7 @@ import {
   normalizeSanityImage,
   type ImageSourceBuilder,
 } from './normalizeSanityImage.ts';
+import { normalizeSanityRichText } from './normalizeSanityRichText.ts';
 import { toThirdPartyDialableDigits } from './parishPhone.ts';
 
 export type { ImageSourceBuilder };
@@ -63,7 +64,7 @@ function normalizeEvent(
     slug,
     title,
     excerpt,
-    description: cleanString(raw.description),
+    description: normalizeSanityRichText(raw.description),
     category,
     startAt,
     endAt: cleanString(raw.endAt),

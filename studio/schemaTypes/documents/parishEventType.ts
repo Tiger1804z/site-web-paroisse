@@ -80,10 +80,11 @@ export const parishEventType = defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Description complète',
-      type: 'text',
-      rows: 6,
+      title: 'Annonce complète',
+      type: 'richText',
       group: 'essentiel',
+      description:
+        'Le texte affiché sur la page Événements. Gras et italique sont disponibles; Maj + Entrée passe à la ligne sans commencer un paragraphe.',
     }),
     defineField({
       name: 'category',

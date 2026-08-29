@@ -1,3 +1,4 @@
+import type { RichText } from '@/types/richText';
 import type { SanityRenderableImage } from '@/types/sanityImage';
 export const PARISH_EVENT_TIME_ZONE = 'America/Toronto' as const;
 
@@ -34,7 +35,7 @@ export interface ParishEvent {
   readonly slug: string;
   readonly title: string;
   readonly excerpt: string;
-  readonly description?: string;
+  readonly description?: RichText;
   readonly category: ParishEventCategory;
   readonly startAt: string;
   readonly endAt?: string;

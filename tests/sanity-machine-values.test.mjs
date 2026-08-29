@@ -403,3 +403,33 @@ test('preview : les catégories d’événements gardent leur visuel et leur nat
   assert.equal(page.categories[0].category, 'cultural');
   assert.equal(page.categories[0].visual.kind, 'clothing-rack');
 });
+
+/**
+ * `marks` et `style` ne sont pas des listes de valeurs déclarées dans le
+ * schéma : le contrôle piloté par `schema.json` ne peut pas les repérer. Ils
+ * n'en sont pas moins lus par le code, donc ce test les tient à la main.
+ */
+test('les emphases du texte enrichi survivent à la prévisualisation', () => {
+  const bloc = {
+    _type: 'block',
+    _key: 'p0',
+    style: 'normal',
+    children: [
+      {
+        _type: 'span',
+        _key: 's0',
+        text: 'Pour la réception qui suivra',
+        marks: ['strong'],
+      },
+      { _type: 'span', _key: 's1', text: ', apportez un plat.', marks: [] },
+    ],
+  };
+
+  const nettoye = cleanMachineValues(encodeDeep([bloc]));
+
+  assert.equal(nettoye[0].style, 'normal');
+  assert.deepEqual(nettoye[0].children[0].marks, ['strong']);
+  // Le texte, lui, garde son encodage : c'est ce qui rend le paragraphe
+  // cliquable dans Presentation.
+  assert.notEqual(nettoye[0].children[0].text, 'Pour la réception qui suivra');
+});

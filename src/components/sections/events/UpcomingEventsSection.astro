@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import RemoteImage from '@/components/ui/RemoteImage.astro';
+import RichText from '@/components/ui/RichText.astro';
 import {
   formatParishEventDate,
   formatParishEventPrice,
@@ -10,6 +11,7 @@ import {
   getParishEventCategoryLabel,
 } from '@/lib/events/parish-events';
 import type { ParishEventWithTemporalStatus } from '@/types/parish-events';
+import type { RichText as RichTextValue } from '@/types/richText';
 
 interface Props {
   title: string;
@@ -19,24 +21,21 @@ interface Props {
 const { title, events } = Astro.props;
 
 /**
- * L'annonce telle que la paroisse l'a écrite, découpée en paragraphes.
+ * L'annonce telle que la paroisse l'a écrite.
  *
- * `description` porte le texte complet, avec ses ruptures. `excerpt` ne prend
- * le relais que si elle est vide : une phrase vaut mieux qu'une carte muette.
- *
- * Les retours simples à l'intérieur d'un paragraphe — une liste de musiciens,
- * par exemple — sont conservés par la feuille de style, pas ici : les couper
- * en paragraphes séparés inventerait une structure que l'annonce n'a pas.
+ * `description` porte le texte complet, avec ses paragraphes et ses emphases.
+ * `excerpt` ne prend le relais que si elle est vide : une phrase vaut mieux
+ * qu'une carte muette. Le repli est converti au même format plutôt que rendu
+ * à part — un seul chemin de rendu, donc une seule apparence possible.
  */
-function announcementParagraphs(
+function announcementBlocks(
   event: ParishEventWithTemporalStatus,
-): readonly string[] {
-  const source = event.description?.trim() ? event.description : event.excerpt;
-
-  return source
-    .split(/\r?\n[ \t]*\r?\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
+): RichTextValue {
+  return (
+    event.description ?? [
+      { key: 'resume', spans: [{ text: event.excerpt, marks: [] }] },
+    ]
+  );
 }
 ---
 
@@ -121,9 +120,7 @@ function announcementParagraphs(
             </div>
 
             <div class="upcoming-event__body">
-              {announcementParagraphs(event).map((paragraph) => (
-                <p class="upcoming-event__paragraph">{paragraph}</p>
-              ))}
+              <RichText blocks={announcementBlocks(event)} />
 
               <dl class="upcoming-event__details">
                 {event.departureAt && (
@@ -363,15 +360,19 @@ function announcementParagraphs(
     musiciens d'un concert en dépend — sans transformer chacun d'eux en
     paragraphe, ce que le texte d'origine ne dit pas.
   */
-  .upcoming-event__paragraph {
+  /*
+    Les paragraphes viennent du composant `RichText`, donc d'un autre fichier :
+    la portée automatique d'Astro ne les atteint pas. `:global` les rejoint,
+    ancré sur un élément de cette carte pour ne pas déborder ailleurs.
+  */
+  .upcoming-event__body :global(.rich-text__paragraph) {
     max-width: 38rem;
     margin: 1.1rem 0 0;
     color: var(--color-muted);
     line-height: 1.75;
-    white-space: pre-line;
   }
 
-  .upcoming-event__paragraph:first-child {
+  .upcoming-event__body :global(.rich-text__paragraph:first-child) {
     margin-top: 0;
   }
 
