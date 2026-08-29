@@ -37,9 +37,10 @@
  * dans le champ « Personne à joindre » : celui-ci demande une case d'accord, et
  * cet accord se donne par une personne, pas par un script.
  *
- * L'affichage sur l'accueil reste décoché : la demande porte sur la page
- * Événements. Une case à cocher dans le Studio suffira le jour où la paroisse
- * voudra ces annonces aussi sur la page d'accueil.
+ * Les quatre annonces sont cochées « Afficher sur l'accueil ». La page
+ * d'accueil met d'elle-même la plus proche en grande carte et range les
+ * suivantes à côté; une activité passée en sort toute seule. Rien à retoucher
+ * quand une date tombe.
  *
  * Rejouable : les documents portent des identifiants stables, et une image
  * déjà en place n'est pas téléversée une seconde fois.
@@ -56,6 +57,16 @@ const SOURCE_NOTE =
   'Image reprise de la page « Évènements à venir » de l’ancien site de la paroisse. ' +
   'Crédit et autorisation à confirmer auprès de la paroisse et de l’artiste.'
 
+/**
+ * Un fragment de paragraphe, avec ou sans emphase.
+ *
+ * Les emphases sont celles de l'ancien site, relevées dans sa page et non
+ * devinées : « Pour la réception qui suivra » en gras, « Rhapsodie hongroise
+ * nº 2 » et « A Charlie Brown Christmas » en italique, « Quatuor à cordes » et
+ * « Trio jazz » en gras.
+ */
+type Fragment = {text: string; marks?: ('strong' | 'em')[]}
+
 type EventSeed = {
   id: string
   title: string
@@ -63,7 +74,7 @@ type EventSeed = {
   category: string
   startAt: string
   excerpt: string
-  paragraphs: string[]
+  paragraphs: Fragment[][]
   image: {
     file: string
     alt: string
@@ -83,9 +94,18 @@ const EVENTS: EventSeed[] = [
     excerpt:
       'La Fabrique Saint-René-Goupil a l’immense plaisir de vous annoncer que la paroisse célébrera encore cette année, son patron Saint René Goupil, canonisé en 1930 par le pape Pie XI, dont la mémoire liturgique est célébrée le 26 septembre. La messe solennelle en la circonstance aura lieu le dimanche 27 septembre à 10 heures.',
     paragraphs: [
-      'La Fabrique Saint-René-Goupil a l’immense plaisir de vous annoncer que la paroisse célébrera encore cette année, son patron Saint René Goupil, canonisé en 1930 par le pape Pie XI, dont la mémoire liturgique est célébrée le 26 septembre. La messe solennelle en la circonstance aura lieu le dimanche 27 septembre à 10 heures. Notre invité d’honneur cette année sera le père Jean-Marie Bilwala, vicaire épiscopal. Nous en profiterons pour souligner le cinquième anniversaire de la chorale Ave Maria.',
-      'Pour la réception qui suivra, si vous désirez contribuer en apportant un plat cuisiné, des boissons gazeuses ou des ustensiles, veuillez contacter un membre des Fils et des Dames de Notre-Dame soit Luce Eugène (438) 885-2543, Rachel Genty (438) 860-2296 ou le secrétariat (514) 722-1161.',
-      'Toute contribution sera grandement appréciée. Nous vous en remercions à l’avance.',
+      [
+        {
+          text: 'La Fabrique Saint-René-Goupil a l’immense plaisir de vous annoncer que la paroisse célébrera encore cette année, son patron Saint René Goupil, canonisé en 1930 par le pape Pie XI, dont la mémoire liturgique est célébrée le 26 septembre. La messe solennelle en la circonstance aura lieu le dimanche 27 septembre à 10 heures. Notre invité d’honneur cette année sera le père Jean-Marie Bilwala, vicaire épiscopal. Nous en profiterons pour souligner le cinquième anniversaire de la chorale Ave Maria.',
+        },
+      ],
+      [
+        {text: 'Pour la réception qui suivra', marks: ['strong']},
+        {
+          text: ', si vous désirez contribuer en apportant un plat cuisiné, des boissons gazeuses ou des ustensiles, veuillez contacter un membre des Fils et des Dames de Notre-Dame soit Luce Eugène (438) 885-2543, Rachel Genty (438) 860-2296 ou le secrétariat (514) 722-1161.',
+        },
+      ],
+      [{text: 'Toute contribution sera grandement appréciée. Nous vous en remercions à l’avance.'}],
     ],
     image: {
       file: 'evenemntsavenir1.jpg',
@@ -104,9 +124,19 @@ const EVENTS: EventSeed[] = [
     excerpt:
       'Un quintette de cuivres interprète Debussy, Ravel, Dvořák, Piazzolla et Liszt avec des arrangements originaux, dont la Rhapsodie hongroise nº 2, dans un concert énergique et accessible.',
     paragraphs: [
-      'Un quintette de cuivres interprète Debussy, Ravel, Dvořák, Piazzolla et Liszt avec des arrangements originaux, dont la Rhapsodie hongroise nº 2, dans un concert énergique et accessible.',
-      'Avec des arrangements musicaux originaux, un répertoire unique qui marie avec brio la musique classique et divers styles, ainsi qu’une solide présence sur scène qui plaît à un large public, Buzz Cuivres est l’un des quintettes de cuivres les plus reconnus au Canada. Grâce à de remarquables transcriptions originales, laissez-vous emporter par de célèbres compositions du tournant du 20e siècle. Le programme aussi inspiré qu’inspirant réunit de véritables chefs-d’œuvre intemporels que tous les publics sauront apprécier. Venez entendre ces célèbres inspirations sous le nouvel éclairage incomparable que leur donne le quintette Buzz Cuivres !',
-      'Musique classique et arrangements – Grand public - Gratuit',
+      [
+        {
+          text: 'Un quintette de cuivres interprète Debussy, Ravel, Dvořák, Piazzolla et Liszt avec des arrangements originaux, dont la ',
+        },
+        {text: 'Rhapsodie hongroise nº 2', marks: ['em']},
+        {text: ', dans un concert énergique et accessible.'},
+      ],
+      [
+        {
+          text: 'Avec des arrangements musicaux originaux, un répertoire unique qui marie avec brio la musique classique et divers styles, ainsi qu’une solide présence sur scène qui plaît à un large public, Buzz Cuivres est l’un des quintettes de cuivres les plus reconnus au Canada. Grâce à de remarquables transcriptions originales, laissez-vous emporter par de célèbres compositions du tournant du 20e siècle. Le programme aussi inspiré qu’inspirant réunit de véritables chefs-d’œuvre intemporels que tous les publics sauront apprécier. Venez entendre ces célèbres inspirations sous le nouvel éclairage incomparable que leur donne le quintette Buzz Cuivres !',
+        },
+      ],
+      [{text: 'Musique classique et arrangements – Grand public - Gratuit'}],
     ],
     image: {
       file: 'evenemntsavenir2.jpg',
@@ -125,10 +155,18 @@ const EVENTS: EventSeed[] = [
     excerpt:
       'David Bontemps et Emmanuel Delly proposent une traversée musicale entre racines et renouveau. Un concert vibrant qui fait émerger des résonances d’Haïti à travers un dialogue raffiné entre piano et percussions.',
     paragraphs: [
-      'David Bontemps et Emmanuel Delly proposent une traversée musicale entre racines et renouveau. Un concert vibrant qui fait émerger des résonances d’Haïti à travers un dialogue raffiné entre piano et percussions.',
-      'Le pianiste David Bontemps convie à un voyage dans les multiples mémoires qui imprègnent les sonorités de son île natale d’Haïti. À travers des airs anciens revisités et ses propres compositions, il recrée des atmosphères du passé tout en cheminant sur de nouveaux sentiers où le rejoint le percussionniste Emmanuel Delly.',
-      'Musique classique et musique du monde',
-      'Grand public-Gratuit',
+      [
+        {
+          text: 'David Bontemps et Emmanuel Delly proposent une traversée musicale entre racines et renouveau. Un concert vibrant qui fait émerger des résonances d’Haïti à travers un dialogue raffiné entre piano et percussions.',
+        },
+      ],
+      [
+        {
+          text: 'Le pianiste David Bontemps convie à un voyage dans les multiples mémoires qui imprègnent les sonorités de son île natale d’Haïti. À travers des airs anciens revisités et ses propres compositions, il recrée des atmosphères du passé tout en cheminant sur de nouveaux sentiers où le rejoint le percussionniste Emmanuel Delly.',
+        },
+      ],
+      [{text: 'Musique classique et musique du monde'}],
+      [{text: 'Grand public-Gratuit'}],
     ],
     image: {
       file: 'evenemntsavenir3.jpg',
@@ -147,13 +185,35 @@ const EVENTS: EventSeed[] = [
     excerpt:
       'Un concert chaleureux qui revisite les mélodies emblématiques de A Charlie Brown Christmas. Entre jazz et musique de chambre, cette rencontre musicale évoque la nostalgie, la douceur et l’esprit rassembleur du temps des Fêtes, pour petits et grands.',
     paragraphs: [
-      'Un concert chaleureux qui revisite les mélodies emblématiques de A Charlie Brown Christmas. Entre jazz et musique de chambre, cette rencontre musicale évoque la nostalgie, la douceur et l’esprit rassembleur du temps des Fêtes, pour petits et grands.',
-      'Les Chambristes du Grand Montréal et le Rozan Trio vous invitent à plonger dans la magie du temps des Fêtes avec Le Noël de Charlie Brown. Inspiré de l’album A Charlie Brown Christmas du légendaire pianiste de jazz Vince Guaraldi, ce concert vous fera revivre la douceur et la nostalgie des célèbres mélodies. Une rencontre unique entre le son raffiné d’un quatuor à cordes et l’énergie chaleureuse d’un trio jazz avec les arrangements originaux de Karl A. Rozankovic. Célébrez la magie de Noël!',
-      'Quatuor à cordes',
-      'Veronica Ungureanu, violon 1\nMarie-Anne Rozankovic, violon 2\nZoé Dumais, alto\nLoredana Zanca , violoncelle',
-      'Trio jazz',
-      'Karl A. Rozankovic , piano\nVincent Dessureault , contrebasse\nLéo Minville, batterie',
-      'Pascale Brigitte Boilard, voix et animation- Gratuit',
+      [
+        {text: 'Un concert chaleureux qui revisite les mélodies emblématiques de '},
+        {text: 'A Charlie Brown Christmas', marks: ['em']},
+        {
+          text: '. Entre jazz et musique de chambre, cette rencontre musicale évoque la nostalgie, la douceur et l’esprit rassembleur du temps des Fêtes, pour petits et grands.',
+        },
+      ],
+      [
+        {
+          text: 'Les Chambristes du Grand Montréal et le Rozan Trio vous invitent à plonger dans la magie du temps des Fêtes avec Le Noël de Charlie Brown. Inspiré de l’album ',
+        },
+        {text: 'A Charlie Brown Christmas', marks: ['em']},
+        {
+          text: ' du légendaire pianiste de jazz Vince Guaraldi, ce concert vous fera revivre la douceur et la nostalgie des célèbres mélodies. Une rencontre unique entre le son raffiné d’un quatuor à cordes et l’énergie chaleureuse d’un trio jazz avec les arrangements originaux de Karl A. Rozankovic. Célébrez la magie de Noël!',
+        },
+      ],
+      [{text: 'Quatuor à cordes', marks: ['strong']}],
+      [
+        {
+          text: 'Veronica Ungureanu, violon 1\nMarie-Anne Rozankovic, violon 2\nZoé Dumais, alto\nLoredana Zanca , violoncelle',
+        },
+      ],
+      [{text: 'Trio jazz', marks: ['strong']}],
+      [
+        {
+          text: 'Karl A. Rozankovic , piano\nVincent Dessureault , contrebasse\nLéo Minville, batterie',
+        },
+      ],
+      [{text: 'Pascale Brigitte Boilard, voix et animation- Gratuit'}],
     ],
     image: {
       file: 'evenemntsavenir4.jpg',
@@ -162,6 +222,27 @@ const EVENTS: EventSeed[] = [
     },
   },
 ]
+
+/**
+ * Convertit les paragraphes en blocs de texte enrichi.
+ *
+ * Les clés sont dérivées de la position : stables d'une exécution à l'autre,
+ * donc rejouer le script ne réécrit pas des identifiants au hasard.
+ */
+function toRichText(paragraphs: Fragment[][]) {
+  return paragraphs.map((fragments, blockIndex) => ({
+    _type: 'block',
+    _key: `p${blockIndex}`,
+    style: 'normal',
+    markDefs: [],
+    children: fragments.map((fragment, spanIndex) => ({
+      _type: 'span',
+      _key: `p${blockIndex}s${spanIndex}`,
+      text: fragment.text,
+      marks: fragment.marks ?? [],
+    })),
+  }))
+}
 
 async function uploadCoverImage(entry: EventSeed) {
   const asset = await client.assets.upload(
@@ -198,12 +279,12 @@ async function seed() {
         title: entry.title,
         slug: {_type: 'slug', current: entry.slug},
         excerpt: entry.excerpt,
-        description: entry.paragraphs.join('\n\n'),
+        description: toRichText(entry.paragraphs),
         category: entry.category,
         startAt: entry.startAt,
         publicationStatus: 'published',
         showOnWebsite: true,
-        showOnHomepage: false,
+        showOnHomepage: true,
         showInArchive: true,
         featured: false,
         ...(coverImage ? {coverImage} : {}),
