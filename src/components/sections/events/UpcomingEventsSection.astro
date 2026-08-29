@@ -408,13 +408,28 @@ const { title, events } = Astro.props;
     }
 
     .upcoming-event__media {
-      min-height: 29rem;
+      min-height: 24rem;
     }
 
+    /*
+      Hauteur laissée au texte, pas imposée à l'image.
+
+      Ce cadre réclamait 43rem de haut. Les photographies d'événement, elles,
+      sont larges et basses : `cover` devait donc les agrandir jusqu'à remplir
+      cette hauteur, puis jeter les côtés. Une photo de 229 px de haut était
+      étirée trois fois — c'est de là que venait le flou, pas de la largeur du
+      fichier, que le CDN sert déjà à sa taille native.
+
+      Le plancher descend à 24rem et la hauteur de la carte suit le texte. Le
+      même fichier n'est plus agrandi que d'environ moitié, sans qu'un seul
+      pixel soit inventé.
+    */
     .upcoming-event__media-column {
       position: relative;
       display: block;
-      min-height: 43rem;
+      align-self: start;
+      aspect-ratio: 16 / 9;
+      min-height: 0;
     }
 
     .upcoming-event__media-column > .upcoming-event__media {
