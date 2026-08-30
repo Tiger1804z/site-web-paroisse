@@ -45,7 +45,7 @@ Versions directes résolues le 18 août 2026. `pnpm-lock.yaml` demeure la source
 | Package                        | Version   | Type          | Utilité                                                   |
 | ------------------------------ | --------- | ------------- | --------------------------------------------------------- |
 | `@sanity/icons`                | `5.2.1`   | Production    | Icônes des structures et champs éditoriaux.               |
-| `@sanity/vision`               | `6.10.0`  | Production    | Outil Vision pour inspecter les requêtes GROQ.            |
+| `@sanity/locale-fr-fr`         | `1.2.37`  | Production    | Interface du Studio en français.                          |
 | `react`                        | `19.2.8`  | Production    | Runtime d’interface du Studio.                            |
 | `react-dom`                    | `19.2.8`  | Production    | Rendu navigateur du Studio.                               |
 | `sanity`                       | `6.10.0`  | Production    | Studio, schémas, Structure, Presentation, CLI et TypeGen. |
@@ -59,5 +59,7 @@ Versions directes résolues le 18 août 2026. `pnpm-lock.yaml` demeure la source
 ## Paquets volontairement absents
 
 React Router, bibliothèque UI générique, backend de formulaire, ORM, base de données, analytique et tests E2E restent absents. Le sitemap est généré par une route Astro contrôlée par le registre SEO; aucun paquet supplémentaire n’est requis.
+
+`@sanity/vision` a été retiré le 30 août 2026. C’est une console de requêtes GROQ : utile au développement, sans usage éditorial, et un onglet de plus à expliquer — ou à interdire — dans le guide de la secrétaire. Pour interroger le jeu de données, `pnpm --dir studio exec sanity documents query '<groq>'` fait le même travail hors du Studio.
 
 Vitest et Playwright seront évalués quand des composants interactifs réels et des parcours critiques auront été développés.

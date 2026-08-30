@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@sanity/icons": "^5.2.1",
-    "@sanity/vision": "^6.10.0",
+    "@sanity/locale-fr-fr": "^1.2.37",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sanity": "^6.10.0",

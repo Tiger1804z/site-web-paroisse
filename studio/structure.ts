@@ -7,7 +7,17 @@ import {FolderIcon} from '@sanity/icons/Folder'
 import {DocumentsIcon} from '@sanity/icons/Documents'
 import {HomeIcon} from '@sanity/icons/Home'
 
-const SINGLETONS = [
+/**
+ * Les documents uniques : une seule fiche existe, à une adresse fixe, et le
+ * site la lit par son identifiant.
+ *
+ * Exportée parce que `sanity.config.ts` en a besoin pour deux garde-fous que
+ * la structure seule ne pose pas : retirer ces types du bouton « + » (un
+ * doublon serait invisible ici comme sur le site) et leur retirer Supprimer,
+ * Dupliquer et Dépublier. Une seule liste, pour qu'un type ajouté à la
+ * structure ne puisse pas oublier ses protections.
+ */
+export const SINGLETON_TYPES = [
   'siteSettings',
   'massSchedule',
   'thriftStore',
@@ -24,8 +34,9 @@ const SINGLETONS = [
 ]
 
 // Les collections ont leur propre section : ce sont des documents multiples,
-// pas des réglages uniques.
-const COLLECTIONS = ['parishEvent', 'advertiser']
+// pas des réglages uniques. Ce sont aussi les deux seuls types que le bouton
+// « + » doit proposer — voir `sanity.config.ts`.
+export const COLLECTION_TYPES = ['parishEvent', 'advertiser']
 
 /**
  * Deux sections, pour rendre visible la distinction du modèle de contenu :
@@ -119,6 +130,6 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       ...S.documentTypeListItems().filter((listItem) => {
         const id = listItem.getId() as string
-        return !SINGLETONS.includes(id) && !COLLECTIONS.includes(id)
+        return !SINGLETON_TYPES.includes(id) && !COLLECTION_TYPES.includes(id)
       }),
     ])
