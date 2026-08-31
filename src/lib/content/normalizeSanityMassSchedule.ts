@@ -15,6 +15,7 @@ import {
   formatTimeLabel,
   WEEKDAY_LABELS,
 } from '../schedules/schedule-format.ts';
+import { normalizeScheduleTime } from '../schedules/schedule-time.ts';
 
 type RawMassSchedule = NonNullable<SanityMassScheduleResult>;
 type RawPeriod = NonNullable<RawMassSchedule['regularSchedule']>;
@@ -51,7 +52,9 @@ function toUsableEntry(
   // Sans numéro explicite, la position dans le tableau Sanity fait foi :
   // l'éditrice réorganise par glisser-déposer, sans champ à remplir.
   const order = typeof entry.order === 'number' ? entry.order : index;
-  const time = timeLabel ? (cleanString(entry.time) ?? '') : '';
+  // Clé de tri, comparée en texte : elle doit être la forme normalisée, sinon
+  // « 8:00 » se classerait après « 16:00 ».
+  const time = normalizeScheduleTime(entry.time) ?? '';
 
   if (entry.recurrenceType === 'custom') {
     const displayLabel = cleanString(entry.displayLabel);

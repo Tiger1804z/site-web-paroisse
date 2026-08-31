@@ -1,4 +1,5 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
+import {normalizeScheduleTime} from '../../lib/scheduleTime'
 
 // Champs identifiants d'une entrée, pour détecter les doublons dans le tableau.
 type ScheduleEntryValue = {
@@ -59,13 +60,16 @@ export const schedulePeriodType = defineType({
               entry?.recurrenceType,
               entry?.weekday,
               entry?.displayLabel,
-              entry?.time,
+              // Sur la forme normalisée : « 8 h » et « 08:00 » sont la même
+              // heure, et deux lignes identiques ne doivent pas passer parce
+              // qu'elles ont été tapées différemment.
+              normalizeScheduleTime(entry?.time),
               entry?.title,
             ]
               .map((part) => (part ?? '').trim().toLowerCase())
               .join('|')
             if (seen.has(signature)) {
-              return 'Deux célébrations identiques (même jour, heure et type) dans ce groupe.'
+              return 'Cette célébration est déjà dans la liste, au même jour et à la même heure.'
             }
             seen.add(signature)
           }
