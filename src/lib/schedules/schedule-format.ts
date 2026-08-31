@@ -1,4 +1,7 @@
 import type { ScheduleWeekday } from '@/types/schedule';
+// Import relatif et extension explicite : ce module est chargé tel quel par
+// `node --test`, qui ne résout ni l'alias `@/` ni une extension implicite.
+import { normalizeScheduleTime } from './schedule-time.ts';
 
 export const SCHEDULE_TIME_ZONE = 'America/Toronto' as const;
 
@@ -23,7 +26,6 @@ export const WEEKDAY_INDEXES: Readonly<Record<ScheduleWeekday, number>> = {
   saturday: 6,
 };
 
-const TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 // Les dates seules (`validFrom`/`validUntil`) sont des jours civils sans heure :
@@ -51,16 +53,21 @@ export function cleanString(
   return trimmed ? trimmed : undefined;
 }
 
-/** `16:00` → `16 h`, `10:30` → `10 h 30`. Invalide → `undefined`. */
+/**
+ * `16:00` → `16 h`, `10:30` → `10 h 30`. Invalide → `undefined`.
+ *
+ * Les saisies humaines (`8h`, `8 h 30`) sont acceptées : elles sont normalisées
+ * avant lecture, comme le fait déjà le champ du Studio. Voir
+ * `schedule-time.ts` pour la raison.
+ */
 export function formatTimeLabel(
   value: string | null | undefined,
 ): string | undefined {
-  const clean = cleanString(value);
-  const match = clean ? TIME_PATTERN.exec(clean) : null;
-  if (!match) return undefined;
+  const normalized = normalizeScheduleTime(value);
+  if (!normalized) return undefined;
 
-  const hours = Number(match[1]);
-  const minutes = match[2];
+  const hours = Number(normalized.slice(0, 2));
+  const minutes = normalized.slice(3);
 
   return minutes === '00' ? `${hours} h` : `${hours} h ${minutes}`;
 }
@@ -69,11 +76,10 @@ export function formatTimeLabel(
 export function parseTimeToMinutes(
   value: string | null | undefined,
 ): number | undefined {
-  const clean = cleanString(value);
-  const match = clean ? TIME_PATTERN.exec(clean) : null;
-  if (!match) return undefined;
+  const normalized = normalizeScheduleTime(value);
+  if (!normalized) return undefined;
 
-  return Number(match[1]) * 60 + Number(match[2]);
+  return Number(normalized.slice(0, 2)) * 60 + Number(normalized.slice(3));
 }
 
 /** `2026-06-21` → `21 juin 2026`. Invalide → `undefined`. */

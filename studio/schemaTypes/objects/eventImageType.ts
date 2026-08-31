@@ -110,10 +110,9 @@ export const eventImageType = defineType({
         if (size.width >= MINIMUM_WIDTH && size.height >= MINIMUM_HEIGHT) return true
 
         return (
-          `Cette image fait ${size.width} × ${size.height} pixels. ` +
-          `En dessous de ${MINIMUM_WIDTH} × ${MINIMUM_HEIGHT}, elle sera affichée plus grande ` +
-          `qu’elle n’est et paraîtra floue. Une photo prise au téléphone ou envoyée par ` +
-          `l’artiste convient; une image copiée depuis un site web est souvent trop petite.`
+          `Image un peu petite (${size.width} × ${size.height} pixels) : elle paraîtra floue. ` +
+          `Une photo prise au téléphone convient; une image copiée depuis un site web, ` +
+          `rarement. Publiable quand même.`
         )
       })
       .warning(),

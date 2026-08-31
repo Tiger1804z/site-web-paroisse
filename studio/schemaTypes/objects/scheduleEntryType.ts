@@ -1,4 +1,6 @@
 import {defineType, defineField} from 'sanity'
+import {ScheduleTimeInput} from '../../components/ScheduleTimeInput'
+import {normalizeScheduleTime} from '../../lib/scheduleTime'
 
 // Jours contrôlés : valeur machine en anglais (source de vérité calculable),
 // libellé français affiché à l'éditrice. Le libellé « Samedi » du frontend est
@@ -12,6 +14,28 @@ const WEEKDAYS = [
   {title: 'Vendredi', value: 'friday'},
   {title: 'Samedi', value: 'saturday'},
 ]
+
+/**
+ * L'aperçu d'une ligne de tableau doit parler la langue de l'éditrice.
+ *
+ * Sans cette table, la liste des célébrations affichait `tuesday · 08:00` : la
+ * valeur machine, celle que le site ne montre jamais. Le champ proposait bien
+ * « Mardi », mais la ligne repliée le contredisait.
+ */
+const WEEKDAY_LABELS: Record<string, string> = Object.fromEntries(
+  WEEKDAYS.map(({title, value}) => [value, title]),
+)
+
+/** `08:00` → `8 h`, `10:30` → `10 h 30`. Comme le site l'affiche. */
+function formatTimeLabel(value?: string): string | undefined {
+  const normalized = normalizeScheduleTime(value)
+  if (!normalized) return undefined
+
+  const hours = Number(normalized.slice(0, 2))
+  const minutes = normalized.slice(3)
+
+  return minutes === '00' ? `${hours} h` : `${hours} h ${minutes}`
+}
 
 // Petit type local pour lire le champ frère `recurrenceType` dans les
 // validations conditionnelles (context.parent n'est pas typé par TypeGen).
@@ -67,17 +91,20 @@ export const scheduleEntryType = defineType({
       name: 'time',
       title: 'Heure',
       type: 'string',
-      description: 'Format 24 h : HH:mm (ex. : 16:00). Facultatif en mode personnalisé.',
+      description:
+        'Écrire l’heure comme on la dit : 8 h, 8h30, 16 h. Elle se met en forme toute seule quand on quitte le champ.',
+      placeholder: '8 h 30',
+      components: {input: ScheduleTimeInput},
       validation: (rule) =>
         rule.custom((value, context) => {
           const parent = context.parent as ScheduleEntryParent
           const isWeekly = parent?.recurrenceType === 'weekly'
           if (!value) {
-            return isWeekly ? 'L’heure est requise pour une célébration hebdomadaire.' : true
+            return isWeekly ? 'Indiquer l’heure de cette célébration.' : true
           }
-          return /^([01]\d|2[0-3]):[0-5]\d$/.test(value)
+          return normalizeScheduleTime(value)
             ? true
-            : 'Utiliser le format 24 h HH:mm (ex. : 16:00).'
+            : 'Heure incomprise. Écrire par exemple 8 h, 8h30 ou 16 h.'
         }),
     }),
     defineField({
@@ -116,8 +143,8 @@ export const scheduleEntryType = defineType({
       active: 'active',
     },
     prepare({recurrenceType, weekday, displayLabel, time, title, active}) {
-      const day = recurrenceType === 'weekly' ? weekday : displayLabel
-      const subtitle = [day, time].filter(Boolean).join(' · ')
+      const day = recurrenceType === 'weekly' ? WEEKDAY_LABELS[weekday as string] : displayLabel
+      const subtitle = [day, formatTimeLabel(time)].filter(Boolean).join(' · ')
       return {
         title: `${active === false ? '⏸ ' : ''}${title || 'Célébration'}`,
         subtitle: subtitle || undefined,

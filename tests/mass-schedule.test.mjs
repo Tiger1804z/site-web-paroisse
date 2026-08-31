@@ -300,7 +300,10 @@ test('les heures sont formatées à la française', () => {
   assert.equal(formatTimeLabel('10:30'), '10 h 30');
   assert.equal(formatTimeLabel('09:05'), '9 h 05');
   assert.equal(formatTimeLabel('24:00'), undefined);
-  assert.equal(formatTimeLabel('16h00'), undefined);
+  // `16h00` était refusé jusqu'au 30 août 2026. Il ne l'est plus : c'est ainsi
+  // qu'on écrit une heure, et refuser cette forme faisait disparaître la messe
+  // du site. Voir `tests/schedule-time.test.mjs` pour la table complète.
+  assert.equal(formatTimeLabel('16h00'), '16 h');
   assert.equal(formatTimeLabel(null), undefined);
 });
 

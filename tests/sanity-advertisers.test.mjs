@@ -306,7 +306,7 @@ test('les annonceurs sont une collection, pas une liste dans la page', () => {
     'studio/schemaTypes/documents/advertisersPageType.ts',
   );
 
-  assert.match(structure, /COLLECTIONS = \['parishEvent', 'advertiser'\]/);
+  assert.match(structure, /COLLECTION_TYPES = \['parishEvent', 'advertiser'\]/);
   assert.match(structure, /documentTypeListItem\('advertiser'\)/);
   assert.doesNotMatch(pageSchema, /type: 'advertiser'/);
 });

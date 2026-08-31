@@ -34,7 +34,7 @@ export const seoType = defineType({
       validation: (rule) => [
         rule
           .required()
-          .error('Le titre est obligatoire : sans lui, Google affiche n’importe quoi.'),
+          .error('Titre obligatoire : sans lui, Google choisit lui-même quoi afficher.'),
         rule
           .max(60)
           .warning(
@@ -53,7 +53,7 @@ export const seoType = defineType({
         rule
           .required()
           .error(
-            'La description est obligatoire : sans elle, Google invente un extrait au hasard.',
+            'Description obligatoire : sans elle, Google choisit lui-même un extrait de la page.',
           ),
         rule.min(50).warning('Moins de 50 caractères, c’est trop court pour renseigner quelqu’un.'),
         rule
