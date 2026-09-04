@@ -38,7 +38,7 @@ const initialsFor = (name: string) =>
               {advertiser.logo ? (
                 <RemoteImage
                   image={advertiser.logo}
-                  sizes="(min-width: 64rem) 18rem, 70vw"
+                  sizes="(min-width: 64rem) 38rem, 92vw"
                   loading="lazy"
                 />
               ) : (
@@ -138,7 +138,7 @@ const initialsFor = (name: string) =>
     display: grid;
     min-height: 15rem;
     place-items: center;
-    padding: 2rem;
+    padding: 0.5rem;
     background:
       radial-gradient(
         circle at 50% 42%,
@@ -148,9 +148,21 @@ const initialsFor = (name: string) =>
       var(--color-paper);
   }
 
+  /*
+   * Le visuel occupe toute la largeur de son cadre.
+   *
+   * Il était bridé à 18rem de large et 12rem de haut, dans un cadre qui en
+   * fait plus du double : les cartes d'affaire des élus s'affichaient plus
+   * petites que sur l'ancien site, et leurs coordonnées — écrites dans
+   * l'image — devenaient illisibles.
+   *
+   * `contain`, et jamais `cover` : ces visuels portent une adresse, un
+   * téléphone et un courriel. Un recadrage qui remplit le cadre couperait le
+   * texte, et personne ne verrait ce qui manque.
+   */
   .advertiser-card__identity :global(img) {
-    width: min(100%, 18rem);
-    max-height: 12rem;
+    width: 100%;
+    height: auto;
     object-fit: contain;
   }
 
