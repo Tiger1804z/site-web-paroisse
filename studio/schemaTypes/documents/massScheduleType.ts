@@ -59,6 +59,12 @@ export const massScheduleType = defineType({
      * cette date bouge, et le site a continué d'annoncer le 29 juillet.
      * L'avertissement ne bloque pas la publication — il pose la question au
      * seul moment où quelqu'un peut y répondre.
+     *
+     * Il ne se déclenche que sur un brouillon, c'est-à-dire pendant qu'on
+     * édite. `_updatedAt` ne distingue pas une messe déplacée d'une virgule
+     * corrigée : sur un document publié, la moindre retouche laisserait un
+     * avertissement permanent sous une date pourtant exacte. Un avertissement
+     * toujours allumé n'apprend qu'une chose — à ne plus les lire.
      */
     defineField({
       name: 'lastReviewedAt',
@@ -72,8 +78,14 @@ export const massScheduleType = defineType({
             const reviewed = parishDay(value)
             if (!reviewed) return true
 
-            const document = context.document as {_updatedAt?: unknown} | undefined
-            const changed = parishDay(document?._updatedAt)
+            const document = context.document as {_id?: unknown; _updatedAt?: unknown} | undefined
+
+            // Hors édition, on se tait : voir la note ci-dessus.
+            if (typeof document?._id !== 'string' || !document._id.startsWith('drafts.')) {
+              return true
+            }
+
+            const changed = parishDay(document._updatedAt)
             if (!changed || reviewed >= changed) return true
 
             return 'Ces horaires ont été modifiés après cette date. Si les heures affichées sont les bonnes, mettez la date à aujourd’hui : c’est celle que le site publie.'
