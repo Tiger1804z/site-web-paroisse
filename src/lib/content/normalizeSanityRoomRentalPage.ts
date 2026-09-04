@@ -1,4 +1,7 @@
 import type {
+  RoomRentalAlcohol,
+  RoomRentalChurch,
+  RoomRentalDeposit,
   RoomRentalDetail,
   RoomRentalPageData,
   RoomRentalRoom,
@@ -45,6 +48,8 @@ function normalizeRoom(raw: RawRoom): RoomRentalRoom | undefined {
   const location = cleanString(raw.location);
   const capacity = cleanString(raw.capacity);
   const price = cleanString(raw.price);
+  const hourlyExtra = cleanString(raw.hourlyExtra);
+  const curfew = cleanString(raw.curfew);
   const description = cleanString(raw.description);
 
   return {
@@ -53,7 +58,92 @@ function normalizeRoom(raw: RawRoom): RoomRentalRoom | undefined {
     ...(location ? { location } : {}),
     ...(capacity ? { capacity } : {}),
     ...(price ? { price } : {}),
+    ...(hourlyExtra ? { hourlyExtra } : {}),
+    ...(curfew ? { curfew } : {}),
     ...(description ? { description } : {}),
+  };
+}
+
+/**
+ * La location de l'église, ou rien.
+ *
+ * Sans titre ni description, la section entière disparaît : annoncer « Location
+ * de l'église » sous un cadre vide laisserait croire à une offre qu'on ne peut
+ * pas décrire. Le repli ne reprend pas la main ici — une paroisse qui cesse de
+ * louer son église doit pouvoir le retirer du site sans changement de code.
+ */
+function normalizeChurch(
+  raw: RawPage['church'] | undefined,
+  fallback: RoomRentalChurch | undefined,
+): RoomRentalChurch | undefined {
+  if (!raw) return fallback;
+
+  const title = cleanString(raw.title);
+  const description = cleanString(raw.description);
+  if (!title || !description) return undefined;
+
+  const capacity = cleanString(raw.capacity);
+  const price = cleanString(raw.price);
+  const note = cleanString(raw.note);
+
+  return {
+    id: fallback?.id ?? 'location-de-leglise',
+    eyebrow: cleanString(raw.eyebrow) ?? fallback?.eyebrow ?? 'Autre espace',
+    title,
+    description,
+    ...(capacity ? { capacity } : {}),
+    ...(price ? { price } : {}),
+    ...(note ? { note } : {}),
+  };
+}
+
+/**
+ * Le dépôt de garantie disparaît si son message est vide.
+ *
+ * Un titre « Dépôt de garantie » seul, sans montant ni condition de
+ * remboursement, inquiète sans informer.
+ */
+function normalizeDeposit(
+  raw: RawPage['deposit'] | undefined,
+  fallback: RoomRentalDeposit | undefined,
+): RoomRentalDeposit | undefined {
+  if (!raw) return fallback;
+
+  const message = cleanString(raw.message);
+  if (!message) return undefined;
+
+  return {
+    title: cleanString(raw.title) ?? fallback?.title ?? 'Dépôt de garantie',
+    message,
+  };
+}
+
+/**
+ * Les règles sur l'alcool disparaissent s'il n'en reste aucune.
+ *
+ * Le bouton vers le formulaire de permis ne s'affiche que si son adresse est
+ * saisie : un libellé de bouton sans adresse produit un lien mort, et celui-ci
+ * mène à une démarche obligatoire.
+ */
+function normalizeAlcohol(
+  raw: RawPage['alcohol'] | undefined,
+  fallback: RoomRentalAlcohol | undefined,
+): RoomRentalAlcohol | undefined {
+  if (!raw) return fallback;
+
+  const rules = cleanList(raw.rules);
+  if (rules.length === 0) return undefined;
+
+  const permitUrl = cleanString(raw.permitUrl);
+
+  return {
+    title: cleanString(raw.title) ?? fallback?.title ?? 'Boissons alcoolisées',
+    rules,
+    ...(permitUrl ? { permitUrl } : {}),
+    permitLinkLabel:
+      cleanString(raw.permitLinkLabel) ??
+      fallback?.permitLinkLabel ??
+      'Faire une demande de permis',
   };
 }
 
@@ -92,6 +182,9 @@ export function normalizeSanityRoomRentalPage(
     return normalized ? [normalized] : [];
   });
   const practicalItems = normalizeDetails(raw?.practical?.items);
+  const church = normalizeChurch(raw?.church ?? undefined, fallback.church);
+  const deposit = normalizeDeposit(raw?.deposit ?? undefined, fallback.deposit);
+  const alcohol = normalizeAlcohol(raw?.alcohol ?? undefined, fallback.alcohol);
   const periodLabel =
     cleanString(raw?.offer?.periodLabel) ?? fallback.offer.periodLabel;
 
@@ -117,6 +210,9 @@ export function normalizeSanityRoomRentalPage(
       items: amenities.length > 0 ? amenities : fallback.amenities.items,
     },
     rooms: rooms.length > 0 ? rooms : fallback.rooms,
+    ...(church ? { church } : {}),
+    ...(deposit ? { deposit } : {}),
+    ...(alcohol ? { alcohol } : {}),
     practical: {
       title: cleanString(raw?.practical?.title) ?? fallback.practical.title,
       items:

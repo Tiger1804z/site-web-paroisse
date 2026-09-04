@@ -1,5 +1,7 @@
 ---
 import MotionController from '@/components/motion/MotionController.astro';
+import RoomRentalAlcohol from '@/components/sections/room-rental/RoomRentalAlcohol.astro';
+import RoomRentalChurch from '@/components/sections/room-rental/RoomRentalChurch.astro';
 import RoomRentalHero from '@/components/sections/room-rental/RoomRentalHero.astro';
 import RoomRentalPractical from '@/components/sections/room-rental/RoomRentalPractical.astro';
 import RoomRentalRooms from '@/components/sections/room-rental/RoomRentalRooms.astro';
@@ -19,7 +21,18 @@ const roomRentalPageData = await getRoomRentalPageData();
     offer={roomRentalPageData.offer}
     amenities={roomRentalPageData.amenities}
     rooms={roomRentalPageData.rooms}
+    deposit={roomRentalPageData.deposit}
   />
+  {
+    roomRentalPageData.church && (
+      <RoomRentalChurch church={roomRentalPageData.church} />
+    )
+  }
+  {
+    roomRentalPageData.alcohol && (
+      <RoomRentalAlcohol alcohol={roomRentalPageData.alcohol} />
+    )
+  }
   <RoomRentalPractical
     practical={roomRentalPageData.practical}
     finalCta={roomRentalPageData.finalCta}

@@ -1,0 +1,96 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { RoomRentalPageData } from '@/types/roomRental';
+
+interface Props {
+  alcohol: NonNullable<RoomRentalPageData['alcohol']>;
+}
+
+const { alcohol } = Astro.props;
+---
+
+<section class="rental-alcohol" aria-labelledby="rental-alcohol-title">
+  <Container>
+    <div class="rental-alcohol__layout" data-motion-reveal>
+      <h2 id="rental-alcohol-title">{alcohol.title}</h2>
+
+      <div>
+        <ul class="rental-alcohol__rules">
+          {alcohol.rules.map((rule) => <li>{rule}</li>)}
+        </ul>
+
+        {
+          alcohol.permitUrl && (
+            <Button
+              class="rental-alcohol__link"
+              href={alcohol.permitUrl}
+              variant="secondary"
+              target="_blank"
+            >
+              {alcohol.permitLinkLabel}
+            </Button>
+          )
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .rental-alcohol {
+    padding-block: clamp(3.5rem, 6vw, 5.5rem);
+    background: var(--color-paper);
+  }
+
+  .rental-alcohol__layout {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .rental-alcohol h2 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .rental-alcohol__rules {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /*
+   * Une règle par ligne, chacune sur son filet. L'ancien site les donnait en un
+   * seul bloc commençant par « NOTE: », où le délai de dix jours — le seul fait
+   * qui peut faire rater une réservation — arrivait en dernier, après deux
+   * virgules.
+   */
+  .rental-alcohol__rules li {
+    padding-block: 0.875rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 28%, transparent);
+    color: var(--color-charcoal);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .rental-alcohol__rules li:first-child {
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
+  }
+
+  .rental-alcohol__link {
+    margin-top: 1.75rem;
+  }
+
+  @media (min-width: 64rem) {
+    .rental-alcohol__layout {
+      grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr);
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+</style>
