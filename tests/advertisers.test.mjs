@@ -171,3 +171,39 @@ test('aucune intégration d’envoi n’est ajoutée à la page', () => {
   assert.doesNotMatch(source, /smtp|serverless|\/api\//i);
   assert.equal(existsSync(`${rootPath}/src/pages/api`), false);
 });
+
+/* -------------------------------------------------------------------------
+ * L'affichage des visuels
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Les visuels des annonceurs sont des cartes d'affaire : l'adresse, le
+ * téléphone et le courriel sont écrits DANS l'image. Deux conséquences que le
+ * style ne doit jamais reprendre.
+ *
+ * Bridés à 18rem de large dans un cadre qui en fait plus du double, ils
+ * s'affichaient plus petits que sur l'ancien site et leur texte devenait
+ * illisible. Et un recadrage `cover`, qui remplirait le cadre, couperait ce
+ * texte sans que personne ne voie ce qui manque.
+ */
+test('le visuel d’un annonceur occupe son cadre, sans être recadré', () => {
+  const source = readFileSync(
+    `${rootPath}/src/components/sections/advertisers/AdvertiserList.astro`,
+    'utf8',
+  );
+  const regle = /\.advertiser-card__identity :global\(img\) \{([^}]*)\}/.exec(
+    source,
+  )?.[1];
+
+  assert.ok(regle, 'la règle de l’image est introuvable.');
+  assert.match(regle, /width: 100%/);
+  assert.match(regle, /object-fit: contain/);
+  assert.ok(
+    !/object-fit:\s*cover/.test(regle),
+    'un recadrage couperait les coordonnées écrites dans la carte.',
+  );
+  assert.ok(
+    !/max-width|max-height/.test(regle),
+    'aucun plafond : c’est ce qui rapetissait les cartes.',
+  );
+});
