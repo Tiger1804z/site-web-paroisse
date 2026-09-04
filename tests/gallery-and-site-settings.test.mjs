@@ -99,12 +99,18 @@ test('une personne reconnaissable sans consentement n’est pas publiée', () =>
   );
 });
 
+/**
+ * La galerie attendait, désactivée, dans le menu « Informations ». Ce menu a
+ * disparu; l'entrée aussi. La route reste réservée et fermée au registre, mais
+ * plus aucune liste de navigation ne la nomme — un lien vers une page vide est
+ * pire qu'une page absente.
+ */
 test('Galerie reste masquée de la navigation publique', () => {
   const navigation = readFileSync(`${rootPath}/src/lib/navigation.ts`, 'utf8');
 
-  assert.match(
-    navigation,
-    /\{\s*label:\s*'Galerie',\s*href:\s*'\/galerie',\s*active:\s*false\s*\}/,
+  assert.ok(
+    !navigation.includes("label: 'Galerie'"),
+    'aucune liste de navigation ne doit nommer la galerie.',
   );
 });
 

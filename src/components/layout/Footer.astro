@@ -1,7 +1,7 @@
 ---
 import {
   contactNavigation,
-  informationNavigation,
+  footerSecondaryNavigation,
   legalNavigation,
   primaryNavigation,
   scheduleNavigation,
@@ -51,11 +51,11 @@ const siteSettings = await getSiteSettings();
         </ul>
 
         <p class="site-footer__heading site-footer__heading--secondary">
-          Informations pratiques
+          Pour commencer
         </p>
         <ul class="site-footer__links">
           {
-            informationNavigation.map((item) => (
+            footerSecondaryNavigation.map((item) => (
               <li>
                 <a href={item.href}>{item.label}</a>
               </li>
