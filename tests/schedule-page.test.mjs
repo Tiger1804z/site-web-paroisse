@@ -376,3 +376,18 @@ test('le Studio avertit quand la date de vérification a pris du retard', () => 
   assert.match(schema, /_updatedAt/);
   assert.match(schema, /\.warning\(\)/);
 });
+
+/**
+ * Il se tait hors édition. `_updatedAt` ne distingue pas une messe déplacée
+ * d'une virgule corrigée : sur un document publié, la moindre retouche
+ * laisserait un avertissement permanent sous une date pourtant exacte — et un
+ * avertissement toujours allumé n'apprend qu'à ne plus les lire.
+ */
+test('l’avertissement ne se déclenche que sur un brouillon', () => {
+  const schema = readFileSync(
+    `${rootPath}/studio/schemaTypes/documents/massScheduleType.ts`,
+    'utf8',
+  );
+
+  assert.match(schema, /_id\.startsWith\('drafts\.'\)/);
+});
