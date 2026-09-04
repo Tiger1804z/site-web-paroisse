@@ -828,7 +828,27 @@ export const ROOM_RENTAL_PAGE_QUERY = defineQuery(`
       location,
       capacity,
       price,
+      hourlyExtra,
+      curfew,
       description
+    },
+    church {
+      eyebrow,
+      title,
+      description,
+      capacity,
+      price,
+      note
+    },
+    deposit {
+      title,
+      message
+    },
+    alcohol {
+      title,
+      rules,
+      permitUrl,
+      permitLinkLabel
     },
     practical {
       title,

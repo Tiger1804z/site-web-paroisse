@@ -7,9 +7,10 @@ interface Props {
   offer: RoomRentalPageData['offer'];
   amenities: RoomRentalPageData['amenities'];
   rooms: RoomRentalPageData['rooms'];
+  deposit?: RoomRentalPageData['deposit'];
 }
 
-const { offer, amenities, rooms } = Astro.props;
+const { offer, amenities, rooms, deposit } = Astro.props;
 ---
 
 <section class="rental-rooms" aria-labelledby="rental-rooms-title">
@@ -40,7 +41,10 @@ const { offer, amenities, rooms } = Astro.props;
               {room.description && (
                 <p class="rental-room__description">{room.description}</p>
               )}
-              {(room.capacity || room.price) && (
+              {(room.capacity ||
+                room.price ||
+                room.hourlyExtra ||
+                room.curfew) && (
                 <dl class="rental-room__facts">
                   {room.capacity && (
                     <div>
@@ -54,6 +58,18 @@ const { offer, amenities, rooms } = Astro.props;
                       <dd>{room.price}</dd>
                     </div>
                   )}
+                  {room.hourlyExtra && (
+                    <div>
+                      <dt>Heure supplémentaire</dt>
+                      <dd>{room.hourlyExtra}</dd>
+                    </div>
+                  )}
+                  {room.curfew && (
+                    <div>
+                      <dt>Heure limite de départ</dt>
+                      <dd>{room.curfew}</dd>
+                    </div>
+                  )}
                 </dl>
               )}
             </div>
@@ -61,6 +77,32 @@ const { offer, amenities, rooms } = Astro.props;
         ))
       }
     </div>
+
+    {
+      deposit && (
+        <aside class="rental-deposit" aria-labelledby="rental-deposit-title">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <div>
+            <h3 id="rental-deposit-title">{deposit.title}</h3>
+            <p>{deposit.message}</p>
+          </div>
+        </aside>
+      )
+    }
 
     {
       amenities.items.length > 0 && (
@@ -183,6 +225,40 @@ const { offer, amenities, rooms } = Astro.props;
     color: var(--color-charcoal);
     font-size: 1.0625rem;
     font-weight: 600;
+  }
+
+  /*
+   * Le dépôt tombe juste sous les tarifs, encadré d'or et non d'un simple
+   * filet gris : c'est de l'argent exigé en plus du prix affiché, et on ne
+   * l'apprend nulle part ailleurs avant le comptoir.
+   */
+  .rental-deposit {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    margin-top: clamp(2rem, 4vw, 2.5rem);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 55%, transparent);
+    background: color-mix(in srgb, var(--color-gold) 8%, var(--color-surface));
+  }
+
+  .rental-deposit svg {
+    color: var(--color-wood);
+  }
+
+  .rental-deposit h3 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .rental-deposit p {
+    margin: 0.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.7;
   }
 
   .rental-amenities {

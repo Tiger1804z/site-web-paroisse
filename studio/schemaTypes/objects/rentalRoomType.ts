@@ -54,6 +54,20 @@ export const rentalRoomType = defineType({
         'Le prix et la durée qu’il couvre : « 250 $ pour 4 heures ». Laisser vide tant que le tarif n’est pas arrêté.',
     }),
     defineField({
+      name: 'hourlyExtra',
+      title: 'Heure supplémentaire',
+      type: 'string',
+      description:
+        'Ce que coûte une heure de plus, si la paroisse en offre : « 50 $ par heure supplémentaire ». Laisser vide sinon.',
+    }),
+    defineField({
+      name: 'curfew',
+      title: 'Heure limite de départ',
+      type: 'string',
+      description:
+        'L’heure à laquelle la salle doit être libérée : « 22 h ». C’est une des premières questions posées au téléphone.',
+    }),
+    defineField({
       name: 'description',
       title: 'Précision',
       type: 'text',
