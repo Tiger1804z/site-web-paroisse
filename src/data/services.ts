@@ -7,6 +7,15 @@ const detail = (label: string, value: string): ParishServiceDetail => ({
   value,
 });
 
+/**
+ * La location de salle n'est plus ici.
+ *
+ * Elle a quitté cette page le 3 septembre 2026 pour `/location-de-salle/`, qui
+ * a son onglet et son document Sanity. Ce n'est pas un déménagement de confort :
+ * la section publiait deux salles, deux capacités et deux tarifs dans la valeur
+ * d'un seul champ, au bas d'une page qu'on ouvre pour préparer un baptême. Voir
+ * `src/data/roomRental.ts`.
+ */
 export function buildServicesPageData(
   siteSettings: PublicContactDetails,
 ): ServicesPageData {
@@ -21,7 +30,7 @@ export function buildServicesPageData(
   return {
     seo: {
       title: 'Nos services',
-      description: `Découvrez les sacrements, les démarches, les services de prière et la location de salle proposés par la ${SITE_NAME}.`,
+      description: `Découvrez les sacrements, les démarches et les services de prière proposés par la ${SITE_NAME}.`,
     },
     hero: {
       eyebrow: 'Accueil et accompagnement',
@@ -198,33 +207,6 @@ export function buildServicesPageData(
               ),
             ],
             note: 'Les dates, le déroulement et l’ouverture des inscriptions doivent être confirmés pour chaque occurrence.',
-            cta: secretariatCta,
-          },
-        ],
-      },
-      {
-        id: 'location-de-salle',
-        eyebrow: 'Accueil',
-        title: 'Location de salle',
-        introduction:
-          'La disponibilité est vérifiée manuellement afin d’éviter toute promesse de réservation qui ne pourrait pas être tenue.',
-        surface: 'burgundy',
-        services: [
-          {
-            id: 'demande-location',
-            title: 'Une demande traitée avec le secrétariat',
-            summary:
-              'Une salle peut être offerte sur demande. Le secrétariat communique les tarifs et les disponibilités, confirme la réservation directement avec la personne et remet le contrat à signer le jour de la réservation.',
-            active: true,
-            details: [
-              detail(
-                'Disponibilité',
-                'Communiquée directement par le secrétariat; aucun calendrier public automatique.',
-              ),
-              detail('Réservation', 'Confirmée directement avec la paroisse.'),
-              detail('Contrat', 'Remis et signé le jour de la réservation.'),
-            ],
-            note: 'Aucune capacité, aucun tarif, aucun équipement ni aucune heure disponible ne sont publiés avant confirmation.',
             cta: secretariatCta,
           },
         ],

@@ -38,6 +38,9 @@ export const locations = {
   servicesPage: defineLocations({
     locations: [{title: 'Page Nos services', href: '/nos-services/'}],
   }),
+  roomRentalPage: defineLocations({
+    locations: [{title: 'Page Location de salle', href: '/location-de-salle/'}],
+  }),
   parishLifePage: defineLocations({
     locations: [{title: 'Page Vie paroissiale', href: '/vie-paroissiale/'}],
   }),
@@ -91,6 +94,8 @@ export const mainDocuments = defineDocuments([
   {route: '/horaires/', filter: `_type == "schedulePage"`},
   {route: '/nos-services', filter: `_type == "servicesPage"`},
   {route: '/nos-services/', filter: `_type == "servicesPage"`},
+  {route: '/location-de-salle', filter: `_type == "roomRentalPage"`},
+  {route: '/location-de-salle/', filter: `_type == "roomRentalPage"`},
   {route: '/vie-paroissiale', filter: `_type == "parishLifePage"`},
   {route: '/vie-paroissiale/', filter: `_type == "parishLifePage"`},
   {route: '/premiere-visite', filter: `_type == "firstVisitPage"`},

@@ -111,7 +111,7 @@ export const homePageData = {
       {
         label: 'Location de salle',
         target: 'location-de-salle',
-        href: '/nos-services/#location-de-salle',
+        href: '/location-de-salle/',
       },
     ],
     ctaLabel: 'Explorer tous nos services',

@@ -11,6 +11,7 @@ import {parishLifePageType} from './documents/parishLifePageType'
 import {firstVisitPageType} from './documents/firstVisitPageType'
 import {advertiserType} from './documents/advertiserType'
 import {advertisersPageType} from './documents/advertisersPageType'
+import {roomRentalPageType} from './documents/roomRentalPageType'
 import {contactPageType} from './documents/contactPageType'
 import {aboutPageType} from './documents/aboutPageType'
 import {eventCategoryType} from './objects/eventCategoryType'
@@ -24,6 +25,7 @@ import {thriftStoreSectionType} from './objects/thriftStoreSectionType'
 import {serviceChapterType} from './objects/serviceChapterType'
 import {serviceDetailType} from './objects/serviceDetailType'
 import {parishServiceType} from './objects/parishServiceType'
+import {rentalRoomType} from './objects/rentalRoomType'
 import {parishGroupType} from './objects/parishGroupType'
 import {heroSlideType} from './objects/heroSlideType'
 import {visitStepType} from './objects/visitStepType'
@@ -58,6 +60,7 @@ export const schemaTypes = [
   parishLifePageType,
   firstVisitPageType,
   advertisersPageType,
+  roomRentalPageType,
   contactPageType,
   aboutPageType,
   // Objets réutilisables
@@ -73,6 +76,7 @@ export const schemaTypes = [
   thriftStoreSectionType,
   serviceChapterType,
   parishServiceType,
+  rentalRoomType,
   serviceDetailType,
   parishGroupType,
   heroSlideType,

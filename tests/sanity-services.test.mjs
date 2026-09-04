@@ -49,15 +49,15 @@ const fallback = {
       ],
     },
     {
-      id: 'location-de-salle',
-      eyebrow: 'Accueil',
-      title: 'Location de salle',
+      id: 'priere-et-memoire',
+      eyebrow: 'Prière et mémoire',
+      title: 'Intentions, lampions et célébrations',
       introduction: 'Introduction locale.',
-      surface: 'burgundy',
+      surface: 'charcoal',
       services: [
         {
-          id: 'demande-location',
-          title: 'Une demande traitée avec le secrétariat',
+          id: 'lampions',
+          title: 'Lampions et lampe du sanctuaire',
           summary: 'Résumé local.',
           active: true,
           cta: secretariatCta,
@@ -291,15 +291,35 @@ test('une surface inconnue retombe sur la plus neutre', () => {
   assert.equal(result.chapters[0].surface, 'ivory');
 });
 
-test('l’ancre de la location de salle reste la cible de la redirection', () => {
-  const redirect = read('src/pages/location-de-salle.astro');
-  const anchor = redirect.match(/\/nos-services\/#([a-z0-9-]+)/)?.[1];
-
-  assert.equal(anchor, 'location-de-salle');
-  // Le repli local doit toujours contenir cette ancre, sinon la redirection
-  // arrive sur une page sans destination.
+/**
+ * La location de salle a quitté cette page le 3 septembre 2026.
+ *
+ * Elle y était le dernier chapitre, et `/location-de-salle/` n'était qu'une
+ * redirection vers son ancre. Les deux se tenaient : si le chapitre revenait
+ * ici, la page dédiée et Nos services publieraient les mêmes tarifs à deux
+ * adresses, et rien ne dirait laquelle Google doit croire.
+ */
+test('la location de salle ne revient pas dans Nos services', () => {
   const localData = read('src/data/services.ts');
-  assert.match(localData, /id: 'location-de-salle'/);
+
+  assert.ok(
+    !/id: 'location-de-salle'/.test(localData),
+    'le chapitre est reparti : sa page est /location-de-salle/.',
+  );
+  assert.ok(
+    !localData.includes('/nos-services/#location-de-salle'),
+    'plus aucun lien ne doit viser l’ancienne ancre.',
+  );
+});
+
+test('la page Location de salle ne redirige plus vers Nos services', () => {
+  const page = read('src/pages/location-de-salle.astro');
+
+  assert.ok(
+    !page.includes('redirectTo'),
+    'la route est canonique d’elle-même : elle n’envoie plus ailleurs.',
+  );
+  assert.match(page, /getRoomRentalPageData/);
 });
 
 test('les champs que rien n’affiche ne sont pas recréés dans le Studio', () => {

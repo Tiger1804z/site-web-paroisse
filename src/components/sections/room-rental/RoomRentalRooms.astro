@@ -1,0 +1,230 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import type { RoomRentalPageData } from '@/types/roomRental';
+
+interface Props {
+  offer: RoomRentalPageData['offer'];
+  amenities: RoomRentalPageData['amenities'];
+  rooms: RoomRentalPageData['rooms'];
+}
+
+const { offer, amenities, rooms } = Astro.props;
+---
+
+<section class="rental-rooms" aria-labelledby="rental-rooms-title">
+  <Container>
+    <div class="rental-rooms__intro" data-motion-reveal>
+      <Eyebrow>{offer.eyebrow}</Eyebrow>
+      <h2 id="rental-rooms-title">{offer.title}</h2>
+      {
+        offer.periodLabel && (
+          <p class="rental-rooms__period">{offer.periodLabel}</p>
+        )
+      }
+      {offer.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+
+    <div class="rental-rooms__list" data-motion-stagger>
+      {
+        rooms.map((room, index) => (
+          <article id={room.id} class="rental-room" data-motion-item>
+            <p class="rental-room__index" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </p>
+            <div class="rental-room__body">
+              <h3>{room.name}</h3>
+              {room.location && (
+                <p class="rental-room__location">{room.location}</p>
+              )}
+              {room.description && (
+                <p class="rental-room__description">{room.description}</p>
+              )}
+              {(room.capacity || room.price) && (
+                <dl class="rental-room__facts">
+                  {room.capacity && (
+                    <div>
+                      <dt>Capacité</dt>
+                      <dd>{room.capacity}</dd>
+                    </div>
+                  )}
+                  {room.price && (
+                    <div>
+                      <dt>Tarif</dt>
+                      <dd>{room.price}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    {
+      amenities.items.length > 0 && (
+        <aside
+          class="rental-amenities"
+          aria-labelledby="rental-amenities-title"
+        >
+          <h3 id="rental-amenities-title">{amenities.title}</h3>
+          <ul>
+            {amenities.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </Container>
+</section>
+
+<style>
+  .rental-rooms {
+    padding-block: clamp(4rem, 7vw, 6.5rem);
+    background: var(--color-ivory);
+  }
+
+  .rental-rooms__intro {
+    max-width: 44rem;
+  }
+
+  .rental-rooms__intro h2 {
+    margin: 0.75rem 0 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.65rem + 1.5vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .rental-rooms__period {
+    margin: 1rem 0 0;
+    color: var(--color-wood);
+    font-size: var(--font-size-meta);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .rental-rooms__intro p:not(.rental-rooms__period) {
+    margin: 1.25rem 0 0;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .rental-rooms__list {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .rental-room {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: var(--color-surface);
+  }
+
+  .rental-room__index {
+    margin: 0;
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .rental-room h3 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.3rem + 0.7vw, 2rem);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .rental-room__location {
+    margin: 0.5rem 0 0;
+    color: var(--color-wood);
+    font-size: var(--font-size-meta);
+    font-weight: 600;
+  }
+
+  .rental-room__description {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .rental-room__facts {
+    display: grid;
+    gap: 1rem 2.5rem;
+    margin: 1.5rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+  }
+
+  .rental-room__facts dt {
+    color: var(--color-wood);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .rental-room__facts dd {
+    margin: 0.35rem 0 0;
+    color: var(--color-charcoal);
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+
+  .rental-amenities {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--color-paper);
+  }
+
+  .rental-amenities h3 {
+    margin: 0;
+    color: var(--color-charcoal);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+
+  .rental-amenities ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rental-amenities li {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+    color: var(--color-charcoal);
+    font-size: var(--font-size-meta);
+  }
+
+  @media (min-width: 48rem) {
+    .rental-room__facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .rental-rooms__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+</style>
