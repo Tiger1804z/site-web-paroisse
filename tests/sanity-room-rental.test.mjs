@@ -4,6 +4,7 @@ import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
 import { buildRoomRentalPageData } from '../src/data/roomRental.ts';
 import { normalizeSanityRoomRentalPage } from '../src/lib/content/normalizeSanityRoomRentalPage.ts';
+import { findRoute } from '../src/lib/seo/routes.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
 const read = (relativePath) =>
@@ -191,12 +192,14 @@ test('une étape à moitié saisie n’est pas affichée', () => {
  * contradiction que Google tranche seul.
  */
 test('la route est canonique d’elle-même et datée par son document', () => {
-  const routes = read('src/lib/seo/routes.ts');
+  const route = findRoute('/location-de-salle/');
 
-  assert.match(
-    routes,
-    /\{ path: '\/location-de-salle\/', indexable: true, documentId: 'roomRentalPage' \}/,
-  );
+  assert.ok(route, 'la route doit être au registre.');
+  assert.equal(route.indexable, true);
+  assert.equal(route.documentId, 'roomRentalPage');
+  // Plus aucune canonique : la page ne renvoie plus son autorité à
+  // /nos-services/, elle la garde.
+  assert.equal(route.canonicalPath, undefined);
 });
 
 test('le document est unique, et protégé comme tel', () => {
