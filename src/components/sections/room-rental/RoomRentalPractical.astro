@@ -1,0 +1,139 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import type { RoomRentalPageData } from '@/types/roomRental';
+
+interface Props {
+  practical: RoomRentalPageData['practical'];
+  finalCta: RoomRentalPageData['finalCta'];
+}
+
+const { practical, finalCta } = Astro.props;
+---
+
+<section class="rental-practical" aria-labelledby="rental-practical-title">
+  <Container>
+    <div class="rental-practical__layout">
+      <div class="rental-practical__steps" data-motion-reveal>
+        <h2 id="rental-practical-title">{practical.title}</h2>
+        <dl>
+          {
+            practical.items.map((item) => (
+              <div>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div class="rental-practical__cta" data-motion-reveal>
+        <h3>{finalCta.title}</h3>
+        <p>{finalCta.description}</p>
+        <Button href={finalCta.primary.href} variant="light">
+          {finalCta.primary.label}
+        </Button>
+        <p class="rental-practical__phone">{finalCta.phone.display}</p>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .rental-practical {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4rem, 8vw, 7rem);
+    background:
+      radial-gradient(
+        circle at 82% 20%,
+        color-mix(in srgb, var(--color-gold) 14%, transparent),
+        transparent 26rem
+      ),
+      var(--color-burgundy-dark);
+    color: var(--color-ivory);
+  }
+
+  .rental-practical__layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 3rem;
+  }
+
+  .rental-practical h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 1.6rem + 1.2vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .rental-practical dl {
+    margin: 2rem 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 32%, transparent);
+  }
+
+  .rental-practical dl > div {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 22%, transparent);
+  }
+
+  .rental-practical dt {
+    color: var(--color-gold);
+    font-size: var(--font-size-micro);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .rental-practical dd {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-ivory) 84%, transparent);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .rental-practical__cta {
+    align-self: start;
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
+    background: color-mix(in srgb, var(--color-charcoal) 34%, transparent);
+  }
+
+  .rental-practical__cta h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .rental-practical__cta p {
+    margin: 1rem 0 1.75rem;
+    color: color-mix(in srgb, var(--color-ivory) 80%, transparent);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  /* Affiché, jamais cliquable : le secrétariat reçoit ces appels à domicile. */
+  .rental-practical__phone {
+    margin: 1.5rem 0 0;
+    color: var(--color-gold);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  @media (min-width: 64rem) {
+    .rental-practical__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.8fr);
+      align-items: start;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+</style>

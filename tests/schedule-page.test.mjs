@@ -18,6 +18,7 @@ function document(overrides = {}) {
     },
     notice: null,
     beforeYouVisit: null,
+    firstVisitCta: null,
     sidebar: null,
     faq: null,
     ...overrides,
@@ -266,4 +267,112 @@ test('la fonctionnalité Feuillets paroissiaux est retirée du site', () => {
   assert.doesNotMatch(navigation, /feuillets-paroissiaux/);
   assert.doesNotMatch(placeholderPage, /feuillets-paroissiaux/);
   assert.doesNotMatch(JSON.stringify(schedulePageData), /feuillet/i);
+});
+
+/* -------------------------------------------------------------------------
+ * La carte « Première visite »
+ * ------------------------------------------------------------------------- */
+
+/**
+ * « Première visite » a quitté la barre de navigation : c'est une page qu'on
+ * lit une fois, pas une destination hebdomadaire. Elle se rattrape ici, au seul
+ * moment où la question se pose — juste après avoir lu l'heure de la messe.
+ * Si la carte disparaît, la page devient introuvable pour qui n'inspecte pas le
+ * pied de page.
+ */
+test('la carte Première visite porte le texte demandé par la paroisse', () => {
+  assert.equal(fallback.firstVisitCta.title, 'C’est votre première visite?');
+  assert.match(fallback.firstVisitCta.message, /où entrer, où vous stationner/);
+  assert.equal(
+    fallback.firstVisitCta.link.label,
+    'Préparer ma première visite',
+  );
+  assert.equal(fallback.firstVisitCta.link.href, '/premiere-visite/');
+});
+
+test('le Studio peut réécrire la carte, mais pas sa destination', () => {
+  const result = normalizeSanitySchedulePage(
+    document({
+      firstVisitCta: {
+        title: 'Vous venez pour la première fois?',
+        message: 'Texte publié depuis Sanity.',
+        linkLabel: 'Tout savoir avant de venir',
+      },
+    }),
+    fallback,
+  );
+
+  assert.equal(result.firstVisitCta.title, 'Vous venez pour la première fois?');
+  assert.equal(result.firstVisitCta.link.label, 'Tout savoir avant de venir');
+  // La destination est une route du site, pas du contenu.
+  assert.equal(result.firstVisitCta.link.href, '/premiere-visite/');
+});
+
+test('un champ vide laisse le repli reprendre la main, seul', () => {
+  const result = normalizeSanitySchedulePage(
+    document({
+      firstVisitCta: { title: '   ', message: null, linkLabel: 'Y aller' },
+    }),
+    fallback,
+  );
+
+  assert.equal(result.firstVisitCta.title, fallback.firstVisitCta.title);
+  assert.equal(result.firstVisitCta.message, fallback.firstVisitCta.message);
+  assert.equal(result.firstVisitCta.link.label, 'Y aller');
+});
+
+test('la page Horaires affiche la carte sous les horaires réguliers', () => {
+  const page = readFileSync(`${rootPath}/src/pages/horaires.astro`, 'utf8');
+  const regular = page.indexOf('<RegularSchedule');
+  const cta = page.indexOf('<FirstVisitCta');
+
+  assert.ok(
+    cta > regular,
+    'la carte doit venir après les horaires, pas avant.',
+  );
+  assert.match(page, /content=\{schedulePageData\.firstVisitCta\}/);
+});
+
+/* -------------------------------------------------------------------------
+ * La date de vérification
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Le 1er septembre 2026, deux messes ont été ajoutées au document `massSchedule`
+ * sans que `lastReviewedAt` bouge. La page a continué d'afficher « Dernière mise
+ * à jour : 29 juillet 2026 » au-dessus d'horaires qui, eux, avaient changé.
+ *
+ * Le champ est une date de vérification saisie à la main, et il le restera : une
+ * date d'enregistrement ne prouve pas qu'on a téléphoné au secrétariat. Ce qui
+ * change, c'est que le site cesse de la présenter comme autre chose.
+ */
+test('le site nomme la date qu’il affiche, sans promettre une mise à jour', () => {
+  for (const file of [
+    'src/components/sections/schedules/BeforeYouVisitBanner.astro',
+    'src/components/sections/schedules/RegularSchedule.astro',
+    'src/components/sections/home/MassSchedulePreview.astro',
+  ]) {
+    const source = readFileSync(`${rootPath}/${file}`, 'utf8');
+
+    assert.match(
+      source,
+      /Horaires vérifiés le/,
+      `${file} doit nommer la vérification, pas la mise à jour.`,
+    );
+    assert.ok(
+      !source.includes('Dernière mise à jour'),
+      `${file} promet encore une fraîcheur que le champ ne garantit pas.`,
+    );
+  }
+});
+
+/** L'avertissement du Studio est la seule chose qui pose la question à temps. */
+test('le Studio avertit quand la date de vérification a pris du retard', () => {
+  const schema = readFileSync(
+    `${rootPath}/studio/schemaTypes/documents/massScheduleType.ts`,
+    'utf8',
+  );
+
+  assert.match(schema, /_updatedAt/);
+  assert.match(schema, /\.warning\(\)/);
 });

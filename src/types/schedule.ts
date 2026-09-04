@@ -102,6 +102,18 @@ export interface BeforeYouVisitContent {
   readonly contactLink: ScheduleLink;
 }
 
+/**
+ * La carte qui mène à Première visite, sous les horaires réguliers.
+ *
+ * Elle a remplacé l'onglet permanent : la question « où est-ce que j'entre? »
+ * se pose juste après avoir lu l'heure, pas en haut de chaque page.
+ */
+export interface FirstVisitCtaContent {
+  readonly title: string;
+  readonly message: string;
+  readonly link: ScheduleLink;
+}
+
 export interface ScheduleSidebarContent {
   readonly office: {
     readonly eyebrow: string;
@@ -131,8 +143,20 @@ export interface ScheduleFaqItem {
 export interface MassScheduleData {
   readonly regularSchedule: SchedulePeriod;
   readonly seasonalSchedules: readonly SchedulePeriod[];
-  /** Absent tant qu’aucune vérification n’a été datée dans Sanity. */
-  readonly lastUpdatedLabel?: string;
+  /**
+   * Date de la dernière vérification des horaires auprès de la paroisse, mise
+   * en forme en français. Absente tant qu’aucune vérification n’est datée dans
+   * Sanity.
+   *
+   * Le nom compte. Le champ s’appelait `lastUpdatedLabel` et s’affichait
+   * « Dernière mise à jour », alors qu’il porte la date saisie à la main dans
+   * « Horaires vérifiés le ». Les deux ne disent pas la même chose : le
+   * 1er septembre 2026, deux messes ont été ajoutées sans que la date de
+   * vérification bouge, et la page a annoncé pendant deux jours des horaires
+   * « mis à jour le 29 juillet » qui ne l’étaient plus. Un libellé qui promet
+   * une fraîcheur que le champ ne garantit pas est pire qu’aucun libellé.
+   */
+  readonly reviewedAtLabel?: string;
 }
 
 /** Contenu propre à la page `/horaires`, affiché nulle part ailleurs. */
@@ -143,6 +167,7 @@ export interface SchedulePageData {
   readonly specialCelebrations: readonly SpecialCelebration[];
   readonly specialCelebrationsEmptyMessage: string;
   readonly beforeYouVisit: BeforeYouVisitContent;
+  readonly firstVisitCta: FirstVisitCtaContent;
   readonly sidebar: ScheduleSidebarContent;
   readonly faq: readonly ScheduleFaqItem[];
 }

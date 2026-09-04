@@ -143,13 +143,19 @@ test('la page reste utile sans annonceur confirmé', () => {
   assert.match(page, /page\.settings\.showAdvertisers/);
 });
 
-test('la route dédiée existe et la navigation est active', () => {
+/**
+ * « Nos annonceurs » était une entrée du menu « Informations », derrière un
+ * geste que personne ne faisait. La paroisse a demandé un onglet : les
+ * annonceurs paient pour être vus, et la page les remercie mal si elle est
+ * introuvable.
+ */
+test('la route dédiée existe et l’onglet est au premier niveau', () => {
   const navigation = readFileSync(`${rootPath}/src/lib/navigation.ts`, 'utf8');
 
   assert.equal(existsSync(`${rootPath}/src/pages/nos-annonceurs.astro`), true);
   assert.match(
     navigation,
-    /\{\s*label:\s*'Nos annonceurs',\s*href:\s*'\/nos-annonceurs',\s*active:\s*true\s*\}/,
+    /export const primaryNavigation = \[[^\]]*\{ label: 'Nos annonceurs', href: '\/nos-annonceurs' \}/s,
   );
 });
 

@@ -157,7 +157,6 @@ function entry(overrides) {
     title: 'Messe dominicale',
     note: null,
     active: true,
-    order: 0,
     ...overrides,
   };
 }
@@ -184,15 +183,33 @@ test('une heure écrite à la main ne fait plus disparaître la messe', () => {
   );
 });
 
-test('les heures se classent sur leur forme normalisée', () => {
+/**
+ * Les heures d'un même jour s'affichent dans l'ordre du tableau Sanity, quelle
+ * que soit la forme saisie. Le site les triait autrefois sur leur forme
+ * normalisée; il ne trie plus rien — voir `normalizeSanityMassSchedule`, où le
+ * champ « Ordre d'affichage » et le glisser-déposer se contredisaient. La
+ * normalisation reste indispensable : sans elle, « 8:00 » ne produit aucun
+ * libellé et la messe disparaît, ce que vérifie le test précédent.
+ */
+test('les heures d’un même jour suivent l’ordre choisi dans le Studio', () => {
   const result = scheduleFrom([
-    entry({ _key: 'soir', time: '16:00' }),
     entry({ _key: 'matin', time: '8:00' }),
+    entry({ _key: 'soir', time: '16:00' }),
   ]);
 
   const [dimanche] = result.regularSchedule.entries;
   assert.deepEqual(
     dimanche.times.map((time) => time.label),
     ['8 h', '16 h'],
+  );
+
+  const inverse = scheduleFrom([
+    entry({ _key: 'soir', time: '16:00' }),
+    entry({ _key: 'matin', time: '8:00' }),
+  ]);
+
+  assert.deepEqual(
+    inverse.regularSchedule.entries[0].times.map((time) => time.label),
+    ['16 h', '8 h'],
   );
 });

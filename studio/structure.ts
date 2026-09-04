@@ -29,6 +29,7 @@ export const SINGLETON_TYPES = [
   'parishLifePage',
   'firstVisitPage',
   'advertisersPage',
+  'roomRentalPage',
   'contactPage',
   'aboutPage',
 ]
@@ -117,6 +118,10 @@ export const structure: StructureResolver = (S) =>
                 .title('Page Nos annonceurs')
                 .icon(DocumentTextIcon)
                 .child(S.document().schemaType('advertisersPage').documentId('advertisersPage')),
+              S.listItem()
+                .title('Page Location de salle')
+                .icon(DocumentTextIcon)
+                .child(S.document().schemaType('roomRentalPage').documentId('roomRentalPage')),
               S.listItem()
                 .title('Page Contact')
                 .icon(DocumentTextIcon)

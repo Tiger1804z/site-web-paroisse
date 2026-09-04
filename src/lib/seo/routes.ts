@@ -71,20 +71,25 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   { path: '/contact/', indexable: true, documentId: 'contactPage' },
   { path: '/notre-paroisse/', indexable: true, documentId: 'aboutPage' },
   { path: '/premiere-visite/', indexable: true, documentId: 'firstVisitPage' },
+  // Rouverte le 2026-09-03, sur demande de la paroisse. L'adresse existait
+  // depuis l'ancien site et n'a jamais cessé de recevoir des visites; elle
+  // renvoyait vers une section de /nos-services/, ce qui coûtait un clic à
+  // qui cherchait exactement cette page. Elle a maintenant son contenu, donc
+  // elle est canonique d'elle-même : plus aucune canonique du registre ne la
+  // désigne, et /nos-services/ ne parle plus de location de salle.
+  {
+    path: '/location-de-salle/',
+    indexable: true,
+    documentId: 'roomRentalPage',
+  },
 
-  // Trois adresses de l'ancien site, gardées pour ne pas casser les liens
+  // Deux adresses de l'ancien site, gardées pour ne pas casser les liens
   // existants. Elles renvoient leur autorité à la page qui les remplace.
   {
     path: '/sacrements/',
     indexable: false,
     canonicalPath: '/nos-services/',
     closedBecause: 'Ancienne adresse, remplacée par /nos-services/.',
-  },
-  {
-    path: '/location-de-salle/',
-    indexable: false,
-    canonicalPath: '/nos-services/',
-    closedBecause: 'Ancienne adresse, devenue une section de /nos-services/.',
   },
   {
     path: '/merci-a-nos-annonceurs/',

@@ -26,7 +26,9 @@ const SERVICE_TARGETS: Readonly<Record<HomeServiceTarget, string>> = {
   'sacrements-et-initiation': '/nos-services/#sacrements-et-initiation',
   'accompagnement-et-documents': '/nos-services/#accompagnement-et-documents',
   'priere-et-memoire': '/nos-services/#priere-et-memoire',
-  'location-de-salle': '/nos-services/#location-de-salle',
+  // Seule destination qui n'est pas une ancre de Nos services : la location
+  // de salle a sa propre page depuis le 2026-09-03.
+  'location-de-salle': '/location-de-salle/',
 };
 
 /**

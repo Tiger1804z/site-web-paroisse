@@ -5,10 +5,10 @@ import type { BeforeYouVisitContent } from '@/types/schedule';
 
 interface Props {
   content: BeforeYouVisitContent;
-  lastUpdatedLabel?: string;
+  reviewedAtLabel?: string;
 }
 
-const { content, lastUpdatedLabel } = Astro.props;
+const { content, reviewedAtLabel } = Astro.props;
 ---
 
 <section
@@ -38,10 +38,10 @@ const { content, lastUpdatedLabel } = Astro.props;
         <h2 id="visit-banner-title">{content.title}</h2>
         <p>{content.message}</p>
         {
-          lastUpdatedLabel && (
+          reviewedAtLabel && (
             <p class="visit-banner__updated">
-              <span>Dernière mise à jour</span>
-              <strong>{lastUpdatedLabel}</strong>
+              <span>Horaires vérifiés le</span>
+              <strong>{reviewedAtLabel}</strong>
             </p>
           )
         }

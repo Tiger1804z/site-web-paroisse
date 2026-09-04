@@ -35,7 +35,7 @@ export const serviceChapterType = defineType({
       title: 'Ancre',
       type: 'slug',
       description:
-        'Identifiant du chapitre dans l’adresse, après le #. Le sommaire de la page et la redirection de /location-de-salle/ s’en servent : ne plus le changer une fois publié.',
+        'Identifiant du chapitre dans l’adresse, après le #. Le sommaire de la page et les raccourcis de l’accueil s’en servent : ne plus le changer une fois publié.',
       options: {source: 'title', maxLength: 60},
       validation: (rule) => rule.required(),
     }),
