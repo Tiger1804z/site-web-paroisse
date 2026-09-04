@@ -55,6 +55,17 @@ export const schedulePageData = {
       href: '/contact/',
     },
   },
+  // Le texte demandé par la paroisse, mot pour mot. La destination reste au
+  // code : c'est une route du site, pas du contenu.
+  firstVisitCta: {
+    title: 'C’est votre première visite?',
+    message:
+      'Découvrez où entrer, où vous stationner, à quoi vous attendre et les informations utiles avant de venir.',
+    link: {
+      label: 'Préparer ma première visite',
+      href: '/premiere-visite/',
+    },
+  },
   sidebar: {
     office: {
       eyebrow: 'Secrétariat',
@@ -85,7 +96,7 @@ export const schedulePageData = {
       id: 'confirmer-heure',
       question: 'Comment confirmer une heure avant de me déplacer?',
       answer:
-        'Consultez la date de dernière mise à jour ou communiquez avec le secrétariat à partir de la page Contact.',
+        'Consultez la date de vérification affichée avec les horaires ou communiquez avec le secrétariat à partir de la page Contact.',
       active: true,
     },
   ],

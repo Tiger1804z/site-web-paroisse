@@ -125,13 +125,6 @@ export const scheduleEntryType = defineType({
       type: 'boolean',
       initialValue: true,
     }),
-    defineField({
-      name: 'order',
-      title: 'Ordre d’affichage',
-      type: 'number',
-      description: 'Facultatif. Sans valeur, l’ordre du tableau (glisser-déposer) est utilisé.',
-      validation: (rule) => rule.integer().min(0),
-    }),
   ],
   preview: {
     select: {

@@ -222,7 +222,7 @@ test('un raccourci vers une destination inconnue est écarté', () => {
     {
       label: 'Location de salle',
       target: 'location-de-salle',
-      href: '/nos-services/#location-de-salle',
+      href: '/location-de-salle/',
     },
   ]);
 });

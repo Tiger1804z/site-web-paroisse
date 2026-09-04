@@ -55,7 +55,6 @@ export const MASS_SCHEDULE_QUERY = defineQuery(`
       validFrom,
       validUntil,
       active,
-      order,
       entries[]{
         _key,
         recurrenceType,
@@ -64,8 +63,7 @@ export const MASS_SCHEDULE_QUERY = defineQuery(`
         time,
         title,
         note,
-        active,
-        order
+        active
       }
     },
     seasonalSchedules[]{
@@ -75,7 +73,6 @@ export const MASS_SCHEDULE_QUERY = defineQuery(`
       validFrom,
       validUntil,
       active,
-      order,
       entries[]{
         _key,
         recurrenceType,
@@ -84,8 +81,7 @@ export const MASS_SCHEDULE_QUERY = defineQuery(`
         time,
         title,
         note,
-        active,
-        order
+        active
       }
     },
     lastReviewedAt
@@ -759,6 +755,97 @@ export const SERVICES_PAGE_QUERY = defineQuery(`
 `);
 
 /**
+ * Contenu propre à la page `/location-de-salle`.
+ *
+ * Les ancres des salles sont projetées depuis `slug.current`, comme celles des
+ * chapitres de Nos services : ce sont des fragments d'adresse publique, saisis
+ * explicitement plutôt que dérivés de `_key`, qu'une réorganisation du tableau
+ * ferait bouger.
+ *
+ * Ni téléphone ni adresse de bouton : le numéro vient de `siteSettings` et le
+ * bouton mène toujours à `/contact/`.
+ */
+export const ROOM_RENTAL_PAGE_QUERY = defineQuery(`
+  *[_type == "roomRentalPage"][0]{
+    seo {
+      title,
+      description,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
+    hero {
+      eyebrow,
+      title,
+      introduction,
+      image {
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
+    },
+    offer {
+      eyebrow,
+      title,
+      periodLabel,
+      paragraphs
+    },
+    amenities {
+      title,
+      items
+    },
+    rooms[]{
+      "slug": slug.current,
+      name,
+      location,
+      capacity,
+      price,
+      description
+    },
+    practical {
+      title,
+      items[]{
+        _key,
+        label,
+        value
+      }
+    },
+    finalCta {
+      title,
+      description
+    }
+  }
+`);
+
+/**
  * Contenu propre à la page `/vie-paroissiale`.
  *
  * Comme pour les services, les ancres sont projetées depuis `slug.current` :
@@ -1209,6 +1296,11 @@ export const SCHEDULE_PAGE_QUERY = defineQuery(`
     beforeYouVisit {
       title,
       message
+    },
+    firstVisitCta {
+      title,
+      message,
+      linkLabel
     },
     sidebar {
       officeEyebrow,

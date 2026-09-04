@@ -1,5 +1,6 @@
 import type {
   BeforeYouVisitContent,
+  FirstVisitCtaContent,
   ScheduleFaqItem,
   ScheduleHero,
   ScheduleLink,
@@ -97,6 +98,21 @@ function normalizeBeforeYouVisit(
   };
 }
 
+function normalizeFirstVisitCta(
+  raw: RawSchedulePage['firstVisitCta'] | undefined,
+  fallback: FirstVisitCtaContent,
+): FirstVisitCtaContent {
+  return {
+    title: cleanString(raw?.title) ?? fallback.title,
+    message: cleanString(raw?.message) ?? fallback.message,
+    link: {
+      label: cleanString(raw?.linkLabel) ?? fallback.link.label,
+      // La destination reste au code, comme celle du bandeau.
+      href: fallback.link.href,
+    },
+  };
+}
+
 function normalizeSidebar(
   raw: RawSchedulePage['sidebar'] | undefined,
   fallback: ScheduleSidebarContent,
@@ -157,6 +173,10 @@ export function normalizeSanitySchedulePage(
     beforeYouVisit: normalizeBeforeYouVisit(
       raw?.beforeYouVisit ?? undefined,
       fallback.beforeYouVisit,
+    ),
+    firstVisitCta: normalizeFirstVisitCta(
+      raw?.firstVisitCta ?? undefined,
+      fallback.firstVisitCta,
     ),
     sidebar: normalizeSidebar(
       raw?.sidebar ?? undefined,

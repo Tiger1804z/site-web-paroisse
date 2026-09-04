@@ -8,6 +8,7 @@ import type {
   THRIFT_STORE_QUERY_RESULT,
   THRIFT_STORE_PAGE_QUERY_RESULT,
   SERVICES_PAGE_QUERY_RESULT,
+  ROOM_RENTAL_PAGE_QUERY_RESULT,
   PARISH_LIFE_PAGE_QUERY_RESULT,
   FIRST_VISIT_PAGE_QUERY_RESULT,
   ADVERTISERS_QUERY_RESULT,
@@ -74,6 +75,14 @@ export type SanityThriftStorePageResult = THRIFT_STORE_PAGE_QUERY_RESULT;
  * Les ancres y sont déjà des chaînes : la projection extrait `slug.current`.
  */
 export type SanityServicesPageResult = SERVICES_PAGE_QUERY_RESULT;
+
+/**
+ * Type brut du contenu de page renvoyé par ROOM_RENTAL_PAGE_QUERY.
+ *
+ * Les ancres des salles y sont déjà des chaînes : la projection extrait
+ * `slug.current`.
+ */
+export type SanityRoomRentalPageResult = ROOM_RENTAL_PAGE_QUERY_RESULT;
 
 /**
  * Type brut du contenu de page renvoyé par PARISH_LIFE_PAGE_QUERY.

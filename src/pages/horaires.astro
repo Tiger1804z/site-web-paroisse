@@ -1,5 +1,6 @@
 ---
 import BeforeYouVisitBanner from '@/components/sections/schedules/BeforeYouVisitBanner.astro';
+import FirstVisitCta from '@/components/sections/schedules/FirstVisitCta.astro';
 import RegularSchedule from '@/components/sections/schedules/RegularSchedule.astro';
 import ScheduleFaq from '@/components/sections/schedules/ScheduleFaq.astro';
 import ScheduleNotice from '@/components/sections/schedules/ScheduleNotice.astro';
@@ -22,7 +23,7 @@ const schedulePageData = await getSchedulePageData();
   <SchedulesHero hero={schedulePageData.hero} />
   <BeforeYouVisitBanner
     content={schedulePageData.beforeYouVisit}
-    lastUpdatedLabel={schedulePageData.lastUpdatedLabel}
+    reviewedAtLabel={schedulePageData.reviewedAtLabel}
   />
 
   <section class="schedules-content" aria-label="Horaires de la paroisse">
@@ -32,8 +33,9 @@ const schedulePageData = await getSchedulePageData();
           <ScheduleNotice notice={schedulePageData.notice} />
           <RegularSchedule
             period={schedulePageData.regularSchedule}
-            lastUpdatedLabel={schedulePageData.lastUpdatedLabel}
+            reviewedAtLabel={schedulePageData.reviewedAtLabel}
           />
+          <FirstVisitCta content={schedulePageData.firstVisitCta} />
           <SeasonalSchedules schedules={schedulePageData.seasonalSchedules} />
           <SpecialCelebrations
             celebrations={schedulePageData.specialCelebrations}

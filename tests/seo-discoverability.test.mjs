@@ -144,10 +144,11 @@ const navigation = await import('../src/lib/navigation.ts');
 
 const NAVIGATION_LINKS = [
   ...navigation.primaryNavigation,
-  ...navigation.informationNavigation,
+  ...navigation.footerSecondaryNavigation,
   ...navigation.legalNavigation,
   navigation.firstVisitNavigation,
   navigation.scheduleNavigation,
+  navigation.contactNavigation,
 ];
 
 test('chaque lien de menu mène à une route qui existe', () => {

@@ -12,10 +12,10 @@ import type { WeeklyMassEntry } from '@/types/schedule';
 interface Props {
   content: HomeMassPreviewContent;
   masses?: readonly WeeklyMassEntry[];
-  lastUpdatedLabel?: string;
+  reviewedAtLabel?: string;
 }
 
-const { content, masses = [], lastUpdatedLabel } = Astro.props;
+const { content, masses = [], reviewedAtLabel } = Astro.props;
 
 const schedule = masses.map((mass) => ({
   id: mass.id,
@@ -82,7 +82,7 @@ const introduction =
           </div>
         </div>
         {
-          lastUpdatedLabel && (
+          reviewedAtLabel && (
             <p class="mass-schedule__updated">
               <svg
                 aria-hidden="true"
@@ -99,7 +99,7 @@ const introduction =
                   stroke-linejoin="round"
                 />
               </svg>
-              Dernière mise à jour&nbsp;: {lastUpdatedLabel}
+              Horaires vérifiés le&nbsp;{reviewedAtLabel}
             </p>
           )
         }

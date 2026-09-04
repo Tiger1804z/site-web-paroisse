@@ -83,14 +83,6 @@ export const schedulePeriodType = defineType({
       type: 'boolean',
       initialValue: true,
     }),
-    defineField({
-      name: 'order',
-      title: 'Ordre d’affichage',
-      type: 'number',
-      description:
-        'Pour classer les groupes saisonniers. Sans effet pour l’horaire régulier unique.',
-      validation: (rule) => rule.integer().min(0),
-    }),
   ],
   preview: {
     select: {

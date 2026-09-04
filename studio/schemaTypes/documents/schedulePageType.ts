@@ -88,6 +88,38 @@ export const schedulePageType = defineType({
         }),
       ],
     }),
+    /**
+     * La carte qui mène à Première visite.
+     *
+     * Elle est ici plutôt que dans la barre de navigation parce que c'est ici
+     * que la question se pose : quelqu'un vient de lire à quelle heure venir,
+     * et se demande où entrer et où stationner. Un onglet permanent posait la
+     * même question à qui vient chaque dimanche depuis trente ans.
+     *
+     * L'adresse du bouton reste dans le code, comme celle du bandeau.
+     */
+    defineField({
+      name: 'firstVisitCta',
+      title: 'Carte « Première visite »',
+      type: 'object',
+      group: 'aside',
+      description:
+        'Affichée sous les horaires réguliers. Le bouton mène à la page Première visite; sa destination ne se saisit pas ici.',
+      fields: [
+        defineField({name: 'title', title: 'Titre', type: 'string'}),
+        defineField({
+          name: 'message',
+          title: 'Message',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'linkLabel',
+          title: 'Libellé du bouton',
+          type: 'string',
+        }),
+      ],
+    }),
     defineField({
       name: 'sidebar',
       title: 'Encadré latéral',

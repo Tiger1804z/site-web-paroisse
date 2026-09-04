@@ -1,7 +1,12 @@
 import {defineType, defineField} from 'sanity'
 
 /**
- * Les quatre sections de la page Nos services vers lesquelles l'accueil pointe.
+ * Les quatre destinations vers lesquelles l'accueil pointe.
+ *
+ * Trois sont des sections de la page Nos services; « Location de salle » est
+ * une page à part entière depuis le 2026-09-03, et le code envoie ce choix
+ * vers `/location-de-salle/`. La valeur stockée n'a pas changé : renommer une
+ * valeur choisie dans un document aurait vidé les raccourcis déjà saisis.
  *
  * Une liste fermée plutôt qu'une adresse à saisir : c'est la règle du projet —
  * les adresses sont des routes du site, pas du contenu. Le Studio choisit une
@@ -15,7 +20,7 @@ const TARGETS = [
 ]
 
 /**
- * Un raccourci de l'accueil vers une section de Nos services.
+ * Un raccourci de l'accueil vers un service de la paroisse.
  *
  * Le libellé, lui, est bien du contenu : « Mariage et baptême » regroupe
  * volontairement deux démarches sous une seule ligne, ce que le titre de la
@@ -37,7 +42,7 @@ export const homeServiceLinkType = defineType({
       title: 'Destination',
       type: 'string',
       options: {list: TARGETS},
-      description: 'Section de la page Nos services vers laquelle le lien descend.',
+      description: 'Ce vers quoi le lien mène. La page qui convient est choisie par le site.',
       validation: (rule) => rule.required(),
     }),
   ],

@@ -3,10 +3,10 @@ import type { SchedulePeriod } from '@/types/schedule';
 
 interface Props {
   period: SchedulePeriod;
-  lastUpdatedLabel?: string;
+  reviewedAtLabel?: string;
 }
 
-const { period, lastUpdatedLabel } = Astro.props;
+const { period, reviewedAtLabel } = Astro.props;
 ---
 
 {
@@ -52,7 +52,7 @@ const { period, lastUpdatedLabel } = Astro.props;
         <p class="schedule-list__empty">Horaires à confirmer.</p>
       )}
 
-      {lastUpdatedLabel && (
+      {reviewedAtLabel && (
         <p class="regular-schedule__updated">
           <svg
             aria-hidden="true"
@@ -69,7 +69,7 @@ const { period, lastUpdatedLabel } = Astro.props;
               stroke-linejoin="round"
             />
           </svg>
-          <span>Dernière mise à jour : {lastUpdatedLabel}</span>
+          <span>Horaires vérifiés le {reviewedAtLabel}</span>
         </p>
       )}
     </section>
