@@ -250,6 +250,27 @@ Le jeton est **inliné dans le paquet serveur au moment du build**. Il doit donc
 être disponible pendant le build, pas seulement à l'exécution — c'est le cas des
 variables Cloudflare. Changer le jeton exige un redéploiement.
 
+### Quand le webhook manque une publication
+
+**Observé le 2026-09-04.** Le document `advertisersPage` a été publié à
+02:35 UTC; vingt minutes plus tard, la production servait encore l'ancien
+texte. Ce n'était pas du cache — les pages sont servies en
+`Cache-Control: public, max-age=0, must-revalidate`, et une requête sans cache
+renvoyait la même chose. Aucun déploiement n'avait démarré. D'autres
+publications faites dans la même demi-heure, elles, avaient bien reconstruit.
+
+Le webhook n'est donc pas fiable à 100 %, et il faut le savoir avant de conclure
+qu'une correction de contenu « n'a pas marché ». Vérifier dans l'ordre :
+
+1. le document est-il vraiment publié (et non resté en brouillon)?
+2. la page produite contient-elle le texte? Si oui, c'est un cache de
+   navigateur, pas le site.
+3. sinon, un déploiement a-t-il démarré sur le projet Pages public?
+
+Faute de déploiement, un commit poussé sur `main` en relance un. Le tableau de
+bord Cloudflare offre aussi « Retry deployment » sur le dernier build, qui
+reconstruit à partir du contenu Sanity du moment.
+
 ### Le site public n'est pas touché
 
 Rien de ce qui précède ne concerne le projet Pages existant. Sa commande de
