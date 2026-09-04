@@ -15,7 +15,6 @@ import {
   formatTimeLabel,
   WEEKDAY_LABELS,
 } from '../schedules/schedule-format.ts';
-import { normalizeScheduleTime } from '../schedules/schedule-time.ts';
 
 type RawMassSchedule = NonNullable<SanityMassScheduleResult>;
 type RawPeriod = NonNullable<RawMassSchedule['regularSchedule']>;
@@ -29,8 +28,6 @@ interface UsableEntry {
   readonly timeLabel?: string;
   readonly title?: string;
   readonly note?: string;
-  readonly order: number;
-  readonly time: string;
 }
 
 /**
@@ -40,21 +37,12 @@ interface UsableEntry {
  * schéma l'interdit déjà, mais un document ancien ou partiel ne doit jamais
  * produire une ligne d'horaire vide sur le site.
  */
-function toUsableEntry(
-  entry: RawEntry,
-  index: number,
-): UsableEntry | undefined {
+function toUsableEntry(entry: RawEntry): UsableEntry | undefined {
   if (entry.active === false) return undefined;
 
   const title = cleanString(entry.title);
   const note = cleanString(entry.note);
   const timeLabel = formatTimeLabel(entry.time);
-  // Sans numéro explicite, la position dans le tableau Sanity fait foi :
-  // l'éditrice réorganise par glisser-déposer, sans champ à remplir.
-  const order = typeof entry.order === 'number' ? entry.order : index;
-  // Clé de tri, comparée en texte : elle doit être la forme normalisée, sinon
-  // « 8:00 » se classerait après « 16:00 ».
-  const time = normalizeScheduleTime(entry.time) ?? '';
 
   if (entry.recurrenceType === 'custom') {
     const displayLabel = cleanString(entry.displayLabel);
@@ -67,8 +55,6 @@ function toUsableEntry(
       timeLabel,
       title,
       note,
-      order,
-      time,
     };
   }
 
@@ -82,8 +68,6 @@ function toUsableEntry(
     timeLabel,
     title,
     note,
-    order,
-    time,
   };
 }
 
@@ -135,20 +119,24 @@ function groupEntries(usable: readonly UsableEntry[]): ScheduleEntry[] {
   });
 }
 
+/**
+ * L'ordre du tableau Sanity fait foi, et rien d'autre.
+ *
+ * Un champ « Ordre d'affichage » facultatif coexistait avec le glisser-déposer.
+ * Il n'a pas tenu : le 1er septembre 2026, deux célébrations ajoutées à la main
+ * n'en avaient pas, les anciennes en avaient un, et le dimanche s'est affiché
+ * « 10 h » puis « 8 h 30 » sur le site public — l'inverse de ce que montrait le
+ * Studio. Deux façons d'ordonner une même liste, dont une invisible dans
+ * l'interface : celle qu'on ne voit pas gagne, et personne ne comprend pourquoi.
+ *
+ * Le champ est supprimé du schéma. Ce que l'éditrice voit dans sa liste est ce
+ * que la page affiche.
+ */
 function normalizeEntries(entries: readonly RawEntry[]): ScheduleEntry[] {
-  const usable = entries
-    .map((entry, index) => ({ entry: toUsableEntry(entry, index), index }))
-    .filter(
-      (candidate): candidate is { entry: UsableEntry; index: number } =>
-        candidate.entry !== undefined,
-    )
-    .sort(
-      (first, second) =>
-        first.entry.order - second.entry.order ||
-        first.entry.time.localeCompare(second.entry.time) ||
-        first.index - second.index,
-    )
-    .map((candidate) => candidate.entry);
+  const usable = entries.flatMap((entry) => {
+    const candidate = toUsableEntry(entry);
+    return candidate ? [candidate] : [];
+  });
 
   return groupEntries(usable);
 }
@@ -199,7 +187,7 @@ export function normalizeSanityMassSchedule(
   return {
     regularSchedule,
     seasonalSchedules,
-    lastUpdatedLabel:
-      formatReviewedAtLabel(raw?.lastReviewedAt) ?? fallback.lastUpdatedLabel,
+    reviewedAtLabel:
+      formatReviewedAtLabel(raw?.lastReviewedAt) ?? fallback.reviewedAtLabel,
   };
 }

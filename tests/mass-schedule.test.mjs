@@ -23,7 +23,6 @@ function entry(overrides = {}) {
     title: 'Messe dominicale',
     note: null,
     active: true,
-    order: 0,
     ...overrides,
   };
 }
@@ -35,7 +34,6 @@ function period(overrides = {}) {
     validFrom: null,
     validUntil: null,
     active: true,
-    order: 0,
     entries: [entry()],
     ...overrides,
   };
@@ -71,8 +69,8 @@ test('deux messes le même jour forment une seule ligne à deux heures', () => {
     document({
       regularSchedule: period({
         entries: [
-          entry({ weekday: 'sunday', time: '09:00', order: 1 }),
-          entry({ weekday: 'sunday', time: '11:00', order: 1 }),
+          entry({ weekday: 'sunday', time: '09:00' }),
+          entry({ weekday: 'sunday', time: '11:00' }),
         ],
       }),
     }),
@@ -119,19 +117,14 @@ test('des titres différents dans un groupe passent en note par heure', () => {
   assert.equal(line.times[1].note, 'Messe en italien · Chorale');
 });
 
-test('les entrées sont triées par ordre puis par heure', () => {
+test('l’ordre du tableau fait foi, heures comprises', () => {
   const result = normalizeSanityMassSchedule(
     document({
       regularSchedule: period({
         entries: [
-          entry({ weekday: 'sunday', time: '11:00', order: 2 }),
-          entry({
-            weekday: 'saturday',
-            time: '16:00',
-            order: 1,
-            title: 'Vigile',
-          }),
-          entry({ weekday: 'sunday', time: '09:00', order: 2 }),
+          entry({ weekday: 'saturday', time: '16:00', title: 'Vigile' }),
+          entry({ weekday: 'sunday', time: '09:00' }),
+          entry({ weekday: 'sunday', time: '11:00' }),
         ],
       }),
     }),
@@ -148,29 +141,33 @@ test('les entrées sont triées par ordre puis par heure', () => {
   );
 });
 
-test('sans numéro d’ordre, la position dans le tableau fait foi', () => {
+/**
+ * Le défaut du 1er septembre 2026, tel qu’il s’est produit.
+ *
+ * Deux messes ont été ajoutées par glisser-déposer dans le Studio. Les entrées
+ * d’origine portaient un « Ordre d’affichage » hérité, les nouvelles non — et
+ * le champ l’emportait sur la position. Le Studio montrait 8 h 30 puis 10 h; le
+ * site public affichait 10 h puis 8 h 30.
+ *
+ * Le champ n’existe plus. Ce test garde la porte fermée : même si un ancien
+ * document en porte encore la valeur, elle ne doit rien réordonner.
+ */
+test('un « order » résiduel ne réordonne plus rien', () => {
   const result = normalizeSanityMassSchedule(
     document({
       regularSchedule: period({
         entries: [
-          entry({
-            weekday: 'saturday',
-            time: '16:00',
-            title: 'Vigile',
-            order: null,
-          }),
-          entry({ weekday: 'sunday', time: '09:00', order: null }),
+          entry({ weekday: 'sunday', time: '08:30' }),
+          { ...entry({ weekday: 'sunday', time: '10:00' }), order: 3 },
         ],
       }),
     }),
     fallback,
   );
 
-  // Sans cette règle, le tri par heure remonterait le dimanche 9 h avant le
-  // samedi 16 h, à rebours de l’ordre choisi dans le Studio.
   assert.deepEqual(
-    result.regularSchedule.entries.map(({ dayLabel }) => dayLabel),
-    ['Samedi', 'Dimanche'],
+    result.regularSchedule.entries[0].times.map(({ label }) => label),
+    ['8 h 30', '10 h'],
   );
 });
 
@@ -280,14 +277,14 @@ test('lastReviewedAt est lu dans le fuseau de la paroisse', () => {
     fallback,
   );
 
-  assert.equal(sameDay.lastUpdatedLabel, '11 août 2026');
-  assert.equal(previousEvening.lastUpdatedLabel, '10 août 2026');
+  assert.equal(sameDay.reviewedAtLabel, '11 août 2026');
+  assert.equal(previousEvening.reviewedAtLabel, '10 août 2026');
 });
 
 test('sans lastReviewedAt aucune date n’est inventée', () => {
   const result = normalizeSanityMassSchedule(document(), fallback);
 
-  assert.equal(result.lastUpdatedLabel, undefined);
+  assert.equal(result.reviewedAtLabel, undefined);
 });
 
 test('le repli local ne contient aucune heure en dur', () => {

@@ -22,7 +22,6 @@ function rawEntry(overrides = {}) {
     title: 'Messe dominicale',
     note: null,
     active: true,
-    order: 0,
     ...overrides,
   };
 }
@@ -35,7 +34,6 @@ function rawDocument(regularOverrides = {}, documentOverrides = {}) {
       validFrom: null,
       validUntil: null,
       active: true,
-      order: 0,
       entries: [rawEntry()],
       ...regularOverrides,
     },
@@ -112,36 +110,23 @@ test('les entrées non calculables sont écartées', () => {
   );
 });
 
-test('les entrées calculables sont triées par ordre puis par heure', () => {
+test('l’ordre du tableau est conservé tel quel', () => {
   const entries = toWeeklyMassEntries(
     rawDocument({
       entries: [
-        rawEntry({ weekday: 'sunday', time: '11:00', order: 2 }),
-        rawEntry({ weekday: 'saturday', time: '16:00', order: 1 }),
-        rawEntry({ weekday: 'sunday', time: '09:00', order: 2 }),
+        rawEntry({ weekday: 'sunday', time: '11:00' }),
+        rawEntry({ weekday: 'saturday', time: '16:00' }),
+        rawEntry({ weekday: 'sunday', time: '09:00' }),
       ],
     }),
   );
 
+  // Le classement chronologique n’est pas le travail de cette fonction :
+  // `getUpcomingMasses` calcule la prochaine messe à partir du jour et de
+  // l’heure, quel que soit l’ordre de la liste.
   assert.deepEqual(
     entries.map(({ weekday, time }) => `${weekday} ${time}`),
-    ['saturday 16:00', 'sunday 09:00', 'sunday 11:00'],
-  );
-});
-
-test('sans numéro d’ordre, l’ordre du tableau est conservé', () => {
-  const entries = toWeeklyMassEntries(
-    rawDocument({
-      entries: [
-        rawEntry({ weekday: 'sunday', time: '11:00', order: null }),
-        rawEntry({ weekday: 'saturday', time: '16:00', order: null }),
-      ],
-    }),
-  );
-
-  assert.deepEqual(
-    entries.map(({ weekday }) => weekday),
-    ['sunday', 'saturday'],
+    ['sunday 11:00', 'saturday 16:00', 'sunday 09:00'],
   );
 });
 
@@ -158,7 +143,6 @@ test('les horaires saisonniers n’alimentent pas le calcul', () => {
             validFrom: null,
             validUntil: null,
             active: true,
-            order: 0,
             entries: [rawEntry({ weekday: 'sunday', time: '10:00' })],
           },
         ],

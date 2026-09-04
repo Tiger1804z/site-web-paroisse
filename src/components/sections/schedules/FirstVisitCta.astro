@@ -1,0 +1,92 @@
+---
+import Button from '@/components/ui/Button.astro';
+import type { FirstVisitCtaContent } from '@/types/schedule';
+
+interface Props {
+  content: FirstVisitCtaContent;
+}
+
+const { content } = Astro.props;
+---
+
+<aside class="first-visit-cta" aria-labelledby="first-visit-cta-title">
+  <svg
+    class="first-visit-cta__icon"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+  >
+    <path
+      d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+
+  <div class="first-visit-cta__copy">
+    <h2 id="first-visit-cta-title">{content.title}</h2>
+    <p>{content.message}</p>
+  </div>
+
+  <div class="first-visit-cta__action">
+    <Button href={content.link.href} variant="light"
+      >{content.link.label}</Button
+    >
+  </div>
+</aside>
+
+<style>
+  /*
+   * Le seul bloc sombre au milieu d'une page ivoire : c'est ce qui le rend
+   * visible sans qu'il ait à crier. Il s'arrête là — pas de bordure dorée, pas
+   * d'ombre portée; le contraste de fond suffit, et la page garde son calme.
+   */
+  .first-visit-cta {
+    display: grid;
+    gap: 1.5rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    background: var(--color-burgundy);
+    color: var(--color-ivory);
+  }
+
+  .first-visit-cta__icon {
+    flex: 0 0 auto;
+    color: var(--color-gold);
+  }
+
+  .first-visit-cta h2 {
+    margin: 0;
+    color: var(--color-ivory);
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2.125rem);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .first-visit-cta p {
+    max-width: 34rem;
+    margin: 0.75rem 0 0;
+    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .first-visit-cta__action {
+    align-self: start;
+  }
+
+  @media (min-width: 48rem) {
+    .first-visit-cta {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .first-visit-cta__action {
+      align-self: center;
+    }
+  }
+</style>

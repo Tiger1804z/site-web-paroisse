@@ -27,30 +27,14 @@ export function toWeeklyMassEntries(
   const period = raw?.regularSchedule;
   if (!period || period.active === false) return [];
 
-  return (period.entries ?? [])
-    .map((entry, index) => ({
-      entry: toWeeklyMassEntry(entry),
-      // Même règle que le normalizer : la position dans le tableau sert
-      // d'ordre par défaut.
-      order: typeof entry.order === 'number' ? entry.order : index,
-      index,
-    }))
-    .filter(
-      (
-        candidate,
-      ): candidate is {
-        entry: WeeklyMassEntry;
-        order: number;
-        index: number;
-      } => candidate.entry !== undefined,
-    )
-    .sort(
-      (first, second) =>
-        first.order - second.order ||
-        first.entry.time.localeCompare(second.entry.time) ||
-        first.index - second.index,
-    )
-    .map((candidate) => candidate.entry);
+  // Même règle que le normalizer : l'ordre du tableau Sanity fait foi. Le
+  // classement chronologique de « la prochaine messe » ne dépend de toute
+  // façon pas de cet ordre — `getUpcomingMasses` calcule à partir du jour et
+  // de l'heure.
+  return (period.entries ?? []).flatMap((entry) => {
+    const candidate = toWeeklyMassEntry(entry);
+    return candidate ? [candidate] : [];
+  });
 }
 
 function toWeeklyMassEntry(entry: RawEntry): WeeklyMassEntry | undefined {
