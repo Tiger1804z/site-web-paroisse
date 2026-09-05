@@ -19,13 +19,21 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
   data-parish-life-hero
   data-lens-active="false"
 >
-  <div class="parish-life-hero__media" aria-hidden="true">
+  {
+    /*
+    Les illustrations du hero portent leur texte alternatif, et il dit ce
+    qu'elles sont : des scènes dessinées, pas des photographies de la paroisse.
+    Une seule est exposée à la fois — celle qui est à l'écran.
+  */
+  }
+  <div class="parish-life-hero__media">
     {
       hero.images.map((slide, index) => (
         <div
           class="parish-life-hero__slide"
           data-parish-life-hero-slide
           data-active={index === 0 ? 'true' : 'false'}
+          aria-hidden={index === 0 ? 'false' : 'true'}
           style={[
             slide.kind === 'image'
               ? `--parish-life-hero-position-desktop: ${slide.desktopPosition ?? 'center'}`
@@ -40,7 +48,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
           {slide.kind === 'image' ? (
             <Image
               src={slide.image}
-              alt=""
+              alt={slide.alt}
               widths={[640, 960, 1280, 1600, 1920]}
               sizes="100vw"
               loading={index === 0 ? 'eager' : 'lazy'}
@@ -51,7 +59,6 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
           ) : (
             <RemoteImage
               image={slide.image}
-              alt=""
               sizes="100vw"
               loading={index === 0 ? 'eager' : 'lazy'}
               fetchpriority={index === 0 ? 'high' : 'low'}
@@ -98,6 +105,8 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
             .filter(Boolean)
             .join('; ')}
         >
+          {/* Copie de la même illustration, révélée dans la loupe : un effet
+              visuel, pas une seconde image. D'où le texte alternatif vide. */}
           {slide.kind === 'image' ? (
             <Image
               src={slide.image}
@@ -204,7 +213,12 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
       const selectSlide = (index: number) => {
         activeIndex = index;
         slides.forEach((slide, slideIndex) => {
-          slide.dataset.active = String(slideIndex === index);
+          const isActive = slideIndex === index;
+          slide.dataset.active = String(isActive);
+          // Ce que l'œil voit et ce qu'un lecteur d'écran lit changent
+          // ensemble : sans cette ligne, l'illustration annoncée resterait la
+          // première pendant que l'écran en affiche une autre.
+          slide.setAttribute('aria-hidden', String(!isActive));
         });
         indicators.forEach((indicator, indicatorIndex) => {
           indicator.setAttribute(
