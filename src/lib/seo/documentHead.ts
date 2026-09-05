@@ -45,6 +45,17 @@ export interface DocumentHeadInput {
 export interface ShareImage {
   readonly url: string;
   readonly alt: string;
+  /**
+   * Dimensions de la vignette réellement servie.
+   *
+   * Annoncées, elles évitent au réseau de télécharger le fichier avant de
+   * réserver la place de l'aperçu — c'est ce qui fait qu'un lien collé dans
+   * Messenger s'affiche d'un coup au lieu de se déplier. Absentes quand
+   * l'image ne vient pas du normalizer de partage et que sa taille servie
+   * n'est donc pas connue.
+   */
+  readonly width?: number;
+  readonly height?: number;
 }
 
 export interface DocumentHead {
@@ -115,7 +126,15 @@ function resolveShareImage(
   const url = absoluteImageUrl(siteUrl, image.src);
   if (!url) return undefined;
 
-  return { url, alt: image.alt };
+  return {
+    url,
+    alt: image.alt,
+    // Les deux dimensions vont ensemble : une largeur sans hauteur ne réserve
+    // rien et laisse le réseau calculer quand même.
+    ...(image.width && image.height
+      ? { width: image.width, height: image.height }
+      : {}),
+  };
 }
 
 /**

@@ -86,17 +86,50 @@ export const resolveImageQuality = (
  */
 export const FALLBACK_SOURCE_WIDTH = 1920;
 
-export type RemoteImageProfileName = 'default' | 'hero';
+/**
+ * Format de la vignette de partage, imposé par les réseaux.
+ *
+ * Facebook, Messenger, WhatsApp et LinkedIn recadrent eux-mêmes toute image
+ * qui n'est pas au format 1,91:1, et ils recadrent depuis le centre. Une photo
+ * en 4:3 y perd donc le haut et le bas — sur la vue extérieure de l'église,
+ * exactement les cloches. Mieux vaut recadrer ici, où le point focal choisi
+ * dans le Studio décide de ce qu'on garde.
+ */
+export const SHARE_IMAGE_WIDTH = 1200;
+export const SHARE_IMAGE_HEIGHT = 630;
+export const SHARE_IMAGE_ASPECT_RATIO = SHARE_IMAGE_WIDTH / SHARE_IMAGE_HEIGHT;
+
+/**
+ * La vignette de partage n'est jamais choisie par le navigateur : elle est lue
+ * par un robot qui télécharge une adresse et s'arrête là. Un seul barreau, donc,
+ * et une qualité un peu plus haute que le courant — l'image est petite, elle
+ * représente la paroisse, et personne ne la paie deux fois.
+ */
+export const SHARE_IMAGE_QUALITY_LADDER: ImageQualityLadder = [
+  { fromWidth: 0, quality: 82 },
+];
+
+export type RemoteImageProfileName = 'default' | 'hero' | 'share';
 
 export const REMOTE_IMAGE_PROFILES: Record<
   RemoteImageProfileName,
-  { readonly widths: readonly number[]; readonly quality: ImageQualityLadder }
+  {
+    readonly widths: readonly number[];
+    readonly quality: ImageQualityLadder;
+    /** Format imposé au profil, quand le cadre de destination est fixe. */
+    readonly aspectRatio?: number;
+  }
 > = {
   default: {
     widths: DEFAULT_IMAGE_WIDTHS,
     quality: DEFAULT_IMAGE_QUALITY_LADDER,
   },
   hero: { widths: HERO_IMAGE_WIDTHS, quality: HERO_IMAGE_QUALITY_LADDER },
+  share: {
+    widths: [SHARE_IMAGE_WIDTH],
+    quality: SHARE_IMAGE_QUALITY_LADDER,
+    aspectRatio: SHARE_IMAGE_ASPECT_RATIO,
+  },
 };
 
 export interface RemoteImageOptions {
@@ -226,6 +259,10 @@ export const createRemoteImageSources = (config: RemoteImageBuilderConfig) => {
         ? profile.quality
         : [{ fromWidth: 0, quality: options.quality }];
     const widths = resolveImageWidths(requested, readSourceWidth(source));
+    // Le format du profil sert de valeur par défaut : l'appelant garde le
+    // dernier mot, mais un profil au cadre fixe n'a pas à être rappelé à chaque
+    // appel — c'est ainsi qu'un recadrage finit par manquer à un endroit.
+    const aspectRatio = options.aspectRatio ?? profile.aspectRatio;
 
     const url = (width: number): string => {
       const image = builder
@@ -234,14 +271,14 @@ export const createRemoteImageSources = (config: RemoteImageBuilderConfig) => {
         .auto('format')
         .quality(resolveImageQuality(ladder, width));
 
-      // Un format imposé n'est demandé que si l'appelant en fournit un. Sans
-      // hauteur, Sanity renvoie l'image entière : le cadrage est alors fait par
-      // le navigateur, via le point focal posé en `object-position`. C'est ce
-      // qu'il faut ici, parce que plusieurs cadres du site s'étirent à la
-      // hauteur de leur colonne et n'ont pas de format connu à l'avance.
-      if (options.aspectRatio) {
+      // Un format n'est imposé que si l'appelant ou le profil en fournit un.
+      // Sans hauteur, Sanity renvoie l'image entière : le cadrage est alors
+      // fait par le navigateur, via le point focal posé en `object-position`.
+      // C'est ce qu'il faut pour la plupart des cadres du site, qui s'étirent à
+      // la hauteur de leur colonne et n'ont pas de format connu à l'avance.
+      if (aspectRatio) {
         return image
-          .height(Math.round(width / options.aspectRatio))
+          .height(Math.round(width / aspectRatio))
           .fit('crop')
           .url();
       }

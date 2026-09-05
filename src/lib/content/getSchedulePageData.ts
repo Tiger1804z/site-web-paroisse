@@ -2,6 +2,7 @@ import { loadQuery } from '@/lib/sanity/preview';
 import { schedulePageData } from '@/data/schedules';
 import { buildImageSources } from '@/lib/sanity/image';
 import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
+import { normalizeShareImage } from '@/lib/content/normalizeShareImage';
 import type { SchedulePageView } from '@/types/schedule';
 import { SCHEDULE_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanitySchedulePageResult } from '@/lib/sanity/types';
@@ -52,7 +53,7 @@ export async function getSchedulePageData(): Promise<SchedulePageView> {
     'hero',
   );
 
-  const shareImage = normalizeSanityImage(raw?.seo?.image, buildImageSources);
+  const shareImage = normalizeShareImage(raw?.seo?.image, buildImageSources);
 
   return {
     ...page,

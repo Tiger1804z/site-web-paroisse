@@ -182,6 +182,39 @@ test('une adresse d’image relative est rendue absolue', () => {
   assert.equal(head.openGraph.image?.url, 'https://exemple.ca/partage.jpg');
 });
 
+test('les dimensions de la vignette traversent jusqu’à l’en-tête', () => {
+  const head = buildDocumentHead({
+    ...base,
+    seo,
+    siteShareImage: { ...siteImage, width: 1200, height: 630 },
+  });
+
+  assert.equal(head.openGraph.image?.width, 1200);
+  assert.equal(head.openGraph.image?.height, 630);
+});
+
+/**
+ * Une largeur seule ne réserve rien : le réseau doit quand même télécharger le
+ * fichier pour connaître la hauteur. Autant ne rien annoncer.
+ */
+test('une dimension isolée n’est pas annoncée', () => {
+  const head = buildDocumentHead({
+    ...base,
+    seo,
+    siteShareImage: { ...siteImage, width: 1200 },
+  });
+
+  assert.equal(head.openGraph.image?.width, undefined);
+  assert.equal(head.openGraph.image?.height, undefined);
+});
+
+test('une image sans dimensions connues reste publiable', () => {
+  const head = buildDocumentHead({ ...base, seo, siteShareImage: siteImage });
+
+  assert.equal(head.openGraph.image?.url, siteImage.src);
+  assert.equal(head.openGraph.image?.width, undefined);
+});
+
 /**
  * Les tests suivants lisent la source plutôt qu'un comportement.
  *
@@ -265,6 +298,9 @@ test('le layout compose son en-tête au lieu de l’écrire à la main', () => {
     'og:site_name',
     'og:locale',
     'og:image',
+    'og:image:alt',
+    'og:image:width',
+    'og:image:height',
     'twitter:card',
   ]) {
     assert.ok(source.includes(tag), `BaseLayout n’émet pas ${tag}.`);
