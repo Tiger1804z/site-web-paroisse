@@ -3,10 +3,10 @@ import type { PageSeo } from '@/types/seo';
 // `node --test`, qui ne résout pas l'alias `@/`. L'alias reste réservé aux
 // imports de types, effacés à l'exécution.
 import {
-  normalizeSanityImage,
   type ImageSourceBuilder,
   type RawSanityImage,
 } from './normalizeSanityImage.ts';
+import { normalizeShareImage } from './normalizeShareImage.ts';
 
 interface RawSeo {
   readonly title?: string | null;
@@ -38,7 +38,7 @@ export function normalizeSanitySeo(
   buildSources?: ImageSourceBuilder,
 ): PageSeo {
   const shareImage = buildSources
-    ? normalizeSanityImage(raw?.image, buildSources)
+    ? normalizeShareImage(raw?.image, buildSources)
     : undefined;
 
   return {

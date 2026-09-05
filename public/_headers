@@ -1,0 +1,21 @@
+# En-têtes HTTP de Cloudflare Pages.
+#
+# Ce fichier est copié tel quel dans `dist/` par Astro, et lu par Pages au
+# déploiement. Il ne concerne que les fichiers statiques : la fonction
+# `functions/api/contact.ts` écrit ses propres en-têtes et n'est pas touchée.
+#
+# Une seule règle, et elle est volontairement étroite.
+#
+# Astro écrit dans `/_astro/` des fichiers dont le nom porte une empreinte du
+# contenu — `index.jgEKEwOe.css`. Changer le fichier change son nom : l'adresse
+# ne peut donc jamais servir un contenu différent de celui qu'un navigateur a
+# gardé. C'est exactement le cas que décrit `immutable`, et par défaut Pages
+# servait ces fichiers en `max-age=0, must-revalidate` — une requête de
+# revalidation à chaque visite, pour une réponse qui ne change jamais.
+#
+# Le HTML, lui, n'est PAS listé ici, et ne doit pas l'être : son adresse reste
+# la même quand la page change. Une publication faite dans le Studio doit
+# atteindre le visiteur au rechargement suivant, pas dans un an. Il garde donc
+# le réglage par défaut de Pages.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

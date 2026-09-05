@@ -6,6 +6,7 @@ import { ROOM_RENTAL_PAGE_QUERY } from '@/lib/sanity/queries';
 import type { SanityRoomRentalPageResult } from '@/lib/sanity/types';
 import { normalizeSanityRoomRentalPage } from '@/lib/content/normalizeSanityRoomRentalPage';
 import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
+import { normalizeShareImage } from '@/lib/content/normalizeShareImage';
 import type { RoomRentalPageData } from '@/types/roomRental';
 
 async function fetchRoomRentalPageRaw(): Promise<SanityRoomRentalPageResult> {
@@ -39,7 +40,7 @@ export async function getRoomRentalPageData(): Promise<RoomRentalPageData> {
 
   // L'image de partage suit la même route que celle du premier écran : le
   // normalizer n'a pas le constructeur d'adresses du CDN.
-  const shareImage = normalizeSanityImage(raw?.seo?.image, buildImageSources);
+  const shareImage = normalizeShareImage(raw?.seo?.image, buildImageSources);
 
   return {
     ...page,
