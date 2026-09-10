@@ -69,7 +69,10 @@ export const schedulePageType = defineType({
       type: 'scheduleNotice',
       group: 'notice',
       description:
-        'Encadré ponctuel affiché au-dessus des horaires. Laisser vide s’il n’y a rien à signaler.',
+        'Encadré ponctuel affiché au-dessus des horaires. Laisser vide s’il n’y a rien à signaler. ' +
+        'Pour annoncer une célébration datée — fête patronale, messe spéciale —, créer plutôt une ' +
+        'activité dans Événements avec la catégorie « Célébration » : elle s’ajoute d’elle-même à la ' +
+        'section « Célébrations spéciales » de cette page, et disparaît une fois la date passée.',
     }),
     defineField({
       name: 'beforeYouVisit',
