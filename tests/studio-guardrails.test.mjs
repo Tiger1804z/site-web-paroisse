@@ -104,3 +104,17 @@ test('l’heure se saisit dans un champ qui la met en forme', () => {
   assert.match(entry, /WEEKDAY_LABELS\[weekday as string\]/);
   assert.match(entry, /formatTimeLabel\(time\)/);
 });
+
+test('le Studio dit où se saisit une célébration datée', () => {
+  // La section « Célébrations spéciales » de /horaires n'a aucun champ : elle
+  // lit les Événements. Sans ces deux phrases, la secrétaire n'a aucun moyen de
+  // deviner où saisir une fête patronale — et la taperait dans l'avis, qui
+  // n'est pas fait pour ça et ne disparaît pas tout seul.
+  const schedulePage = read('studio/schemaTypes/documents/schedulePageType.ts');
+  assert.match(schedulePage, /activité dans Événements avec la catégorie/);
+  assert.match(schedulePage, /« Célébrations spéciales »/);
+
+  const parishEvent = read('studio/schemaTypes/documents/parishEventType.ts');
+  assert.match(parishEvent, /« Célébration » place aussi l’activité/);
+  assert.match(parishEvent, /page[\s\S]{0,40}Horaires/);
+});

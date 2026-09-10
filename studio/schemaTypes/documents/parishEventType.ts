@@ -91,6 +91,9 @@ export const parishEventType = defineType({
       title: 'Catégorie',
       type: 'string',
       group: 'essentiel',
+      description:
+        '« Célébration » place aussi l’activité dans la section « Célébrations spéciales » de la page ' +
+        'Horaires, jusqu’à ce que sa date soit passée. Les autres catégories restent sur la page Événements.',
       options: {list: CATEGORIES},
       initialValue: 'other',
       validation: (rule) => rule.required(),
