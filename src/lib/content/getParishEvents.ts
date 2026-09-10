@@ -16,6 +16,7 @@ import {
   selectPastParishEvents,
   selectUpcomingParishEvents,
 } from '@/lib/events/parish-events';
+import { selectSpecialCelebrations } from '@/lib/schedules/special-celebrations';
 import type {
   EventsPageSettings,
   HomepageEventsSettings,
@@ -23,6 +24,7 @@ import type {
   ParishEvent,
   ParishEventWithTemporalStatus,
 } from '@/types/parish-events';
+import type { SpecialCelebration } from '@/types/schedule';
 
 /**
  * Source unique des événements : la collection Sanity.
@@ -82,6 +84,20 @@ export async function getPastParishEvents(
   ]);
 
   return selectPastParishEvents(events, now, settings.pastLimit);
+}
+
+/**
+ * Les célébrations datées affichées par `/horaires`.
+ *
+ * Aucun réglage propre à la page Horaires : la limite d'affichage des
+ * activités appartient à `/evenements/` et n'a pas à décider ce que voit
+ * quelqu'un qui cherche l'heure d'une messe.
+ */
+export async function getSpecialCelebrations(
+  now: Date,
+): Promise<readonly SpecialCelebration[]> {
+  const events = await getParishEventSource();
+  return selectSpecialCelebrations(events, now);
 }
 
 export async function getHomepageParishEvents(
