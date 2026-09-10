@@ -113,6 +113,18 @@ const structuredData =
         <>
           <meta property="og:image" content={head.openGraph.image.url} />
           <meta property="og:image:alt" content={head.openGraph.image.alt} />
+          {head.openGraph.image.width && head.openGraph.image.height && (
+            <>
+              <meta
+                property="og:image:width"
+                content={String(head.openGraph.image.width)}
+              />
+              <meta
+                property="og:image:height"
+                content={String(head.openGraph.image.height)}
+              />
+            </>
+          )}
         </>
       )
     }

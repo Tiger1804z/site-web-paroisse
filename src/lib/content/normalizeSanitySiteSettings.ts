@@ -2,10 +2,8 @@ import type { PublicContactDetails, PublicEmail } from '@/types/siteSettings';
 import type { SanitySiteSettingsResult } from '@/lib/sanity/types';
 // Chemin relatif et extension explicite : ce module est chargé tel quel par
 // `node --test`, qui ne résout pas l'alias `@/`.
-import {
-  normalizeSanityImage,
-  type ImageSourceBuilder,
-} from './normalizeSanityImage.ts';
+import { type ImageSourceBuilder } from './normalizeSanityImage.ts';
+import { normalizeShareImage } from './normalizeShareImage.ts';
 
 function cleanString(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -75,7 +73,7 @@ export function normalizeSanitySiteSettings(
   buildSources?: ImageSourceBuilder,
 ): PublicContactDetails {
   const shareImage = buildSources
-    ? normalizeSanityImage(raw?.shareImage, buildSources)
+    ? normalizeShareImage(raw?.shareImage, buildSources)
     : undefined;
 
   return {

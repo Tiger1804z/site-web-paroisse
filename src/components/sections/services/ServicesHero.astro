@@ -18,17 +18,26 @@ const lensClipId = 'services-hero-organic-lens-clip';
   data-services-hero
   data-lens-active="false"
 >
-  <div class="services-hero__media" aria-hidden="true">
+  {
+    /*
+    Les images du hero portent leur texte alternatif : ce sont les seules
+    images de la page, et elles montrent quelque chose — un geste de baptême,
+    un cierge de première communion. Seule celle qui est affichée est exposée;
+    les deux autres sont cachées jusqu'à leur tour, sans quoi un lecteur
+    d'écran annoncerait trois photographies dont une seule est à l'écran.
+  */
+  }
+  <div class="services-hero__media">
     {
       hero.slides.map((slide, index) => (
         <div
           class="services-hero__slide"
           data-services-hero-slide
           data-active={index === 0 ? 'true' : 'false'}
+          aria-hidden={index === 0 ? 'false' : 'true'}
         >
           <RemoteImage
             image={slide.image}
-            alt=""
             sizes="100vw"
             loading={index === 0 ? 'eager' : 'lazy'}
             fetchpriority={index === 0 ? 'high' : 'low'}
@@ -64,6 +73,8 @@ const lensClipId = 'services-hero-organic-lens-clip';
           data-organic-lens-layer
           data-active={index === 1 ? 'true' : 'false'}
         >
+          {/* Copie de la même photographie, révélée dans la loupe : un effet
+              visuel, pas une seconde image. D'où le texte alternatif vide. */}
           <RemoteImage
             image={slide.image}
             alt=""
@@ -154,7 +165,12 @@ const lensClipId = 'services-hero-organic-lens-clip';
       const selectSlide = (index: number) => {
         activeIndex = index;
         slides.forEach((slide, slideIndex) => {
-          slide.dataset.active = String(slideIndex === index);
+          const isActive = slideIndex === index;
+          slide.dataset.active = String(isActive);
+          // Ce que l'œil voit et ce qu'un lecteur d'écran lit changent
+          // ensemble : sans cette ligne, la photographie annoncée resterait la
+          // première pendant que l'écran en affiche une autre.
+          slide.setAttribute('aria-hidden', String(!isActive));
         });
         indicators.forEach((indicator, indicatorIndex) => {
           indicator.setAttribute(

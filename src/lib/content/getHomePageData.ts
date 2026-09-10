@@ -6,6 +6,7 @@ import type { SanityHomePageResult } from '@/lib/sanity/types';
 import { getParishLifePageData } from '@/lib/content/getParishLifePageData';
 import { normalizeSanityHomeGallery } from '@/lib/content/normalizeSanityHomeGallery';
 import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
+import { normalizeShareImage } from '@/lib/content/normalizeShareImage';
 import {
   normalizeSanityHomePage,
   type ParishGroupNames,
@@ -82,7 +83,7 @@ export async function getHomePageData(): Promise<HomePageData> {
   });
 
   // L'image de partage suit la même route que les illustrations de section.
-  const shareImage = normalizeSanityImage(raw?.seo?.image, buildImageSources);
+  const shareImage = normalizeShareImage(raw?.seo?.image, buildImageSources);
 
   return {
     ...page,
