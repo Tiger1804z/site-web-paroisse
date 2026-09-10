@@ -30,17 +30,26 @@ const lensClipId = 'thrift-store-hero-lens-clip';
     </defs>
   </svg>
 
-  <div class="thrift-hero__slides" aria-hidden="true">
+  {
+    /*
+    Les images du hero portent leur texte alternatif : ce sont les seules
+    images de la page, et il dit ce qu'elles montrent — des vêtements sur un
+    portant, des bottes — sans laisser croire qu'on photographie le local de la
+    paroisse. `initializeHeroSlideshow` déplace `aria-hidden` d'une image à
+    l'autre : une seule est exposée, celle qui est à l'écran.
+  */
+  }
+  <div class="thrift-hero__slides">
     {
       hero.slides.map((visual, index) => (
         <div
           class="thrift-hero__slide"
           data-hero-slide
           data-active={index === 0 ? 'true' : 'false'}
+          aria-hidden={index === 0 ? 'false' : 'true'}
         >
           <RemoteImage
             image={visual.image}
-            alt=""
             sizes="100vw"
             loading={index === 0 ? 'eager' : 'lazy'}
             fetchpriority={index === 0 ? 'high' : 'low'}
@@ -63,6 +72,8 @@ const lensClipId = 'thrift-store-hero-lens-clip';
           data-organic-lens-layer
           data-active={index === 1 ? 'true' : 'false'}
         >
+          {/* Copie de la même photographie, révélée dans la loupe : un effet
+              visuel, pas une seconde image. D'où le texte alternatif vide. */}
           <RemoteImage
             image={visual.image}
             alt=""

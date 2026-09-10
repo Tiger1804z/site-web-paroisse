@@ -68,6 +68,7 @@ const pages = htmlFiles().map((file) => {
 
   return {
     file,
+    html,
     path: routePathOf(file),
     canonical: attribute(html, /<link rel="canonical" href="([^"]*)"/),
     robots: attribute(html, /<meta name="robots" content="([^"]*)"/),
@@ -278,6 +279,130 @@ for (const page of pages) {
         `« ${page.path} » : données structurées illisibles — ${error.message}`,
       );
     }
+  }
+}
+
+// --- 5. Vignette de partage -------------------------------------------------
+
+/**
+ * Une page publique sans `og:image` se partage en rectangle gris.
+ *
+ * Le repli est global : il suffit que `siteSettings` porte une image pour que
+ * toutes les pages en héritent. Une page publique qui n'en a pas veut donc dire
+ * que le champ a été vidé dans le Studio, ou que la requête n'a rien rapporté
+ * au moment du build — deux pannes silencieuses que seule la sortie révèle.
+ */
+for (const page of pages) {
+  const route = registered.get(page.path);
+  if (!route?.indexable) continue;
+
+  const shareImage = attribute(
+    page.html,
+    /<meta property="og:image" content="([^"]*)"/,
+  );
+
+  if (!shareImage) {
+    fail(
+      `« ${page.path} » n’a pas d’og:image : le partage social affichera un cadre vide. Vérifier « Image de partage par défaut » dans les réglages du site.`,
+    );
+    continue;
+  }
+
+  if (!/^https?:\/\//.test(shareImage)) {
+    fail(
+      `« ${page.path} » : og:image « ${shareImage} » n’est pas une adresse absolue — les réseaux ne la récupéreront pas.`,
+    );
+  }
+
+  if (
+    !attribute(page.html, /<meta property="og:image:alt" content="([^"]*)"/)
+  ) {
+    fail(`« ${page.path} » : og:image sans og:image:alt.`);
+  }
+
+  const width = attribute(
+    page.html,
+    /<meta property="og:image:width" content="([^"]*)"/,
+  );
+  const height = attribute(
+    page.html,
+    /<meta property="og:image:height" content="([^"]*)"/,
+  );
+
+  if (!width || !height) {
+    fail(
+      `« ${page.path} » : og:image sans dimensions annoncées — l’aperçu se dépliera après téléchargement.`,
+    );
+  }
+
+  const card = attribute(
+    page.html,
+    /<meta name="twitter:card" content="([^"]*)"/,
+  );
+  if (card !== 'summary_large_image') {
+    fail(
+      `« ${page.path} » : twitter:card vaut « ${card} » alors qu’une image est disponible.`,
+    );
+  }
+}
+
+// --- 6. Les images de contenu sont décrites ---------------------------------
+
+/**
+ * Le défaut du 5 septembre : trois pages n'avaient plus une seule image
+ * décrite, parce que leur en-tête forçait `alt=""` et cachait tout le bloc.
+ * Rien dans le code ne paraissait faux — chaque composant avait raison de son
+ * côté, et Sophie remplissait un champ que la page jetait.
+ *
+ * Le logo de la paroisse est écarté du compte : il est décoratif partout, le
+ * lien qui le porte étant déjà nommé.
+ */
+for (const page of pages) {
+  const images = [...page.html.matchAll(/<img\b[^>]*>/g)]
+    .map((match) => match[0])
+    .filter((tag) => !tag.includes('brand-logo__image'));
+
+  if (images.length === 0) continue;
+
+  const missingAttribute = images.filter((tag) => !/\balt\b/.test(tag));
+  if (missingAttribute.length > 0) {
+    fail(
+      `« ${page.path} » : ${missingAttribute.length} image(s) sans attribut alt.`,
+    );
+  }
+
+  const described = images.filter((tag) => /\balt="[^"]+"/.test(tag));
+  if (described.length === 0) {
+    fail(
+      `« ${page.path} » : ${images.length} image(s) de contenu, aucune décrite. Un en-tête qui force alt="" prive la page de tout texte alternatif.`,
+    );
+  }
+}
+
+// --- 7. En-têtes HTTP livrés ------------------------------------------------
+
+/**
+ * `public/_headers` ne sert à rien s'il n'atteint pas `dist/` : Cloudflare Pages
+ * lit le fichier livré, pas celui du dépôt. Un test de source ne peut pas voir
+ * cette panne-là.
+ */
+const headersPath = `${distPath}/_headers`;
+
+if (!existsSync(headersPath)) {
+  fail(
+    '_headers est absent de dist/ : les fichiers versionnés seront revalidés à chaque visite.',
+  );
+} else {
+  const headers = readFileSync(headersPath, 'utf8');
+
+  if (!/^\/_astro\/\*$/m.test(headers)) {
+    fail('dist/_headers ne couvre plus /_astro/*.');
+  }
+
+  if (!/max-age=31536000/.test(headers) || !/immutable/.test(headers)) {
+    fail(
+      'dist/_headers ne pose plus de cache long sur les fichiers versionnés.',
+    );
   }
 }
 

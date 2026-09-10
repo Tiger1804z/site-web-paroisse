@@ -14,6 +14,7 @@ import type {
 import { normalizeSanityAdvertisers } from '@/lib/content/normalizeSanityAdvertisers';
 import { normalizeSanityAdvertisersPage } from '@/lib/content/normalizeSanityAdvertisersPage';
 import { normalizeSanityImage } from '@/lib/content/normalizeSanityImage';
+import { normalizeShareImage } from '@/lib/content/normalizeShareImage';
 import type { AdvertisersPageData } from '@/types/advertisers';
 
 async function fetchAdvertisersPageRaw(): Promise<SanityAdvertisersPageResult> {
@@ -79,7 +80,7 @@ export async function getAdvertisersPageData(): Promise<AdvertisersPageData> {
 
   // L'image de partage suit la même route que celle du premier écran : le
   // normalizer n'a pas le constructeur d'adresses du CDN.
-  const shareImage = normalizeSanityImage(
+  const shareImage = normalizeShareImage(
     rawPage?.seo?.image,
     buildImageSources,
   );

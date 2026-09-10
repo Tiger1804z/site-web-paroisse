@@ -41,8 +41,10 @@ export const schedulePageData = {
   // Aucun avis par défaut : un encadré ne s’affiche que si la paroisse en
   // publie un dans Sanity. Un avis gabarit vaut moins que pas d’avis.
   //
-  // Les célébrations datées relèveront du modèle Événements, pas des horaires :
-  // une même célébration ne peut pas avoir deux sources de vérité.
+  // Les célébrations datées viennent du modèle Événements, jamais des horaires :
+  // une même célébration ne peut pas avoir deux sources de vérité. Ce tableau
+  // vide n'est donc pas un repli — il n'existe aucun contenu local à afficher.
+  // `getSchedulePageData` le remplace par les célébrations à venir publiées.
   specialCelebrations: [],
   specialCelebrationsEmptyMessage:
     'Aucune célébration spéciale n’est actuellement publiée.',
