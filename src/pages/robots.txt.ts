@@ -9,7 +9,7 @@ import { absoluteUrl } from '@/lib/seo/urls';
  * **Aucun `Disallow` sur les pages fermées.** C'est contre-intuitif, et c'est
  * pourtant l'inverse qui casserait : interdire l'exploration d'une page
  * empêche Google d'y lire son `noindex`. La page reste alors indexable — sans
- * titre ni description, puisqu'il n'a pas eu le droit de la lire. Les huit
+ * titre ni description, puisqu'il n'a pas eu le droit de la lire. Les
  * pages fermées le disent chacune dans son `<head>`, et c'est suffisant.
  *
  * Un environnement de prévisualisation, lui, ferme tout : il sert des

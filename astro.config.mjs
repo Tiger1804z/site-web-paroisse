@@ -1,12 +1,15 @@
 // @ts-check
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { URL } from 'node:url';
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import sanity from '@sanity/astro';
 import cloudflare from '@astrojs/cloudflare';
 import { loadEnv } from 'vite';
+import { legacyRedirectRules } from './src/lib/seo/redirects.ts';
+import { SITE_ROUTES } from './src/lib/seo/routes.ts';
 
 /**
  * Choisit l'entrée d'un paquet : `exports['.']` d'abord, sinon `module`, sinon
@@ -146,6 +149,12 @@ const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
  */
 const previewDeployment = process.env.PREVIEW_DEPLOYMENT === 'true';
 
+// Les variables privées de .env peuvent autrement écraser celles du processus.
+// Cloudflare et la CI doivent décider de l'origine réellement compilée.
+const configuredSiteUrl =
+  process.env.SITE_URL ??
+  loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), '').SITE_URL;
+
 /** Alias corrects, déclarés avant ceux de l'intégration. */
 const sanityPackageAliases = [
   { find: /^styled-components$/, name: 'styled-components' },
@@ -182,6 +191,21 @@ export default defineConfig({
     ? { adapter: cloudflare({ imageService: 'compile' }) }
     : {}),
   integrations: [
+    {
+      name: 'paroisse:legacy-redirects',
+      hooks: {
+        'astro:build:done': ({ dir }) => {
+          if (previewDeployment) return;
+          const body = legacyRedirectRules(SITE_ROUTES)
+            .map(
+              ({ source, destination, status }) =>
+                `${source} ${destination} ${status}`,
+            )
+            .join('\n');
+          writeFileSync(new URL('_redirects', dir), `${body}\n`);
+        },
+      },
+    },
     react(),
     sanity({
       projectId: PUBLIC_SANITY_PROJECT_ID,
@@ -212,6 +236,7 @@ export default defineConfig({
      * redécouvrir.
      */
     define: {
+      'import.meta.env.SITE_URL': JSON.stringify(configuredSiteUrl ?? ''),
       'import.meta.env.PREVIEW_DEPLOYMENT': JSON.stringify(
         previewDeployment ? 'true' : 'false',
       ),

@@ -11,7 +11,7 @@ faite, et c'est délibéré.
 18 août 2026.** Trois ressources en ligne :
 
 ```text
-public   https://paroisse-saint-rene-goupil.pages.dev                 (Pages, branche main)
+public   https://paroissesaintrenegoupil.com                          (Pages, branche main)
 Studio   https://site-web-paroisse.pages.dev                          (Pages, branche main)
 preview  https://paroisse-preview.sebastieneugene123600.workers.dev   (Workers, branche staging)
 ```
@@ -163,9 +163,9 @@ Les images IA, externes, temporaires ou sans consentement ne sont pas mélangée
 
 ## Compatibilité
 
-- `/sacrements/` redirige statiquement vers `/nos-services/`;
-- `/location-de-salle/` redirige statiquement vers
-  `/nos-services/#location-de-salle`;
+- Les anciennes adresses confirmées, dont `/sacrements/`, utilisent les 301
+  Cloudflare Pages générés depuis le registre et un repli HTML `noindex`;
+- `/location-de-salle/` est une page dédiée canonique depuis le 3 septembre;
 - `/feuillets-paroissiaux/` n’existe plus : décision du 29 juillet 2026 de ne
   pas publier de page Web de feuillets PDF. Route, entrée de navigation,
   composant d’accueil et CTA supprimés.
@@ -173,8 +173,8 @@ Les images IA, externes, temporaires ou sans consentement ne sont pas mélangée
 ## Navigation et header
 
 La source canonique est `src/lib/navigation.ts`. Contact est actif dans le menu
-Informations desktop/mobile et le footer. Galerie et Location de salle y restent
-inactifs; Location de salle demeure intégrée à Nos services.
+Informations desktop/mobile et le footer. Galerie reste inactive; Location de
+salle dispose de sa page et de son entrée de navigation.
 
 Le header reste translucide au sommet et après défilement, avec fallback
 lisible lorsque `backdrop-filter` n’est pas pris en charge.
@@ -183,7 +183,8 @@ lisible lorsque `backdrop-filter` n’est pas pris en charge.
 
 La nouvelle route `/nos-annonceurs/` est active dans la source canonique de
 navigation. L’ancienne route locale `/merci-a-nos-annonceurs/` est un alias
-`noindex` avec canonical et redirection HTML.
+`noindex` avec canonical, redirection HTML de repli et 301 Cloudflare Pages
+généré depuis le registre (voir l’audit SEO).
 
 **Contenu migré vers Sanity le 31 juillet 2026** : la collection `advertiser` et
 le document `advertisersPage`. La révision du 10 août se fait donc dans le
@@ -290,5 +291,7 @@ Pages Function le porte, hors du build statique. Le site public est déployé su
 Cloudflare Pages et reste un tas de fichiers HTML — le dossier `functions/` vit à
 la racine du dépôt, jamais dans `dist/`.
 
-Le domaine `paroissesaintrenegoupil.com` sert encore l’ancien site : le nouveau
-répond pour l’instant sur son adresse `*.pages.dev`.
+Le domaine officiel `https://paroissesaintrenegoupil.com` sert maintenant le
+site public sur Cloudflare Pages. `www` redirige en 301 vers le domaine sans
+www. Les anciennes routes et les contrôles du build sont documentés dans
+[`SEO_MIGRATION_AUDIT.md`](./SEO_MIGRATION_AUDIT.md).

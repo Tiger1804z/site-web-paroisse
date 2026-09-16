@@ -16,6 +16,10 @@ export default [
     ],
   },
   js.configs.recommended,
+  {
+    files: ['src/lib/seo/*.mjs'],
+    languageOptions: { globals: { URL: 'readonly' } },
+  },
   ...tseslint.configs.recommended,
   ...astro.configs['flat/recommended'],
   ...astro.configs['flat/jsx-a11y-recommended'],
