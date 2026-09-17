@@ -61,14 +61,7 @@ const { hero } = Astro.props;
 
   .events-hero__overlay {
     z-index: -1;
-    background:
-      linear-gradient(
-        90deg,
-        rgb(28 25 24 / 78%) 0%,
-        rgb(28 25 24 / 45%) 55%,
-        rgb(28 25 24 / 28%) 100%
-      ),
-      linear-gradient(to top, rgb(28 25 24 / 72%), transparent 72%);
+    background: var(--overlay-hero-gradient);
   }
 
   .events-hero__container {
