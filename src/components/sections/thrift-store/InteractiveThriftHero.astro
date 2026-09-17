@@ -231,14 +231,7 @@ const lensClipId = 'thrift-store-hero-lens-clip';
 
   .thrift-hero__scrim {
     z-index: -2;
-    background:
-      linear-gradient(
-        90deg,
-        rgb(28 25 24 / 78%) 0%,
-        rgb(28 25 24 / 52%) 48%,
-        rgb(28 25 24 / 24%) 100%
-      ),
-      linear-gradient(0deg, rgb(28 25 24 / 62%) 0%, transparent 64%);
+    background: var(--overlay-hero-gradient);
     pointer-events: none;
   }
 
@@ -371,17 +364,6 @@ const lensClipId = 'thrift-store-hero-lens-clip';
 
     .thrift-hero__indicators {
       left: 0.5rem;
-    }
-
-    .thrift-hero__scrim {
-      background:
-        linear-gradient(
-          0deg,
-          rgb(28 25 24 / 80%) 0%,
-          rgb(28 25 24 / 46%) 62%,
-          rgb(28 25 24 / 32%) 100%
-        ),
-        linear-gradient(90deg, rgb(28 25 24 / 28%), transparent);
     }
   }
 

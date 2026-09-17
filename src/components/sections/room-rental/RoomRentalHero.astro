@@ -60,14 +60,7 @@ const { hero } = Astro.props;
 
   .rental-hero__overlay {
     z-index: -2;
-    background:
-      linear-gradient(
-        90deg,
-        rgb(28 25 24 / 86%) 0%,
-        rgb(46 16 25 / 64%) 48%,
-        rgb(28 25 24 / 44%) 100%
-      ),
-      linear-gradient(to top, rgb(28 25 24 / 66%), transparent 55%);
+    background: var(--overlay-hero-gradient);
   }
 
   .rental-hero__line {
@@ -121,12 +114,6 @@ const { hero } = Astro.props;
   @media (max-width: 47.999rem) {
     .rental-hero {
       min-height: 30rem;
-    }
-
-    .rental-hero__overlay {
-      background:
-        linear-gradient(to right, rgb(28 25 24 / 78%), rgb(46 16 25 / 52%)),
-        linear-gradient(to top, rgb(28 25 24 / 76%), transparent 65%);
     }
   }
 </style>

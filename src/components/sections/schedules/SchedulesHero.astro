@@ -59,18 +59,7 @@ const { hero } = Astro.props;
   }
 
   .schedules-hero__overlay {
-    background:
-      linear-gradient(
-        to right,
-        color-mix(in srgb, var(--color-burgundy) 82%, transparent) 0%,
-        color-mix(in srgb, var(--color-burgundy) 70%, transparent) 52%,
-        color-mix(in srgb, var(--color-burgundy-dark) 58%, transparent) 100%
-      ),
-      linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--color-charcoal) 18%, transparent),
-        color-mix(in srgb, var(--color-charcoal) 35%, transparent)
-      );
+    background: var(--overlay-hero-gradient);
   }
 
   .schedules-hero__content {

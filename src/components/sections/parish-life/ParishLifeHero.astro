@@ -323,15 +323,7 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
 
   .parish-life-hero__overlay {
     z-index: 3;
-    background:
-      linear-gradient(
-        90deg,
-        rgb(16 16 16 / 91%) 0%,
-        rgb(23 21 21 / 76%) 42%,
-        rgb(28 27 26 / 43%) 72%,
-        rgb(28 27 26 / 28%) 100%
-      ),
-      linear-gradient(0deg, rgb(16 16 16 / 82%), transparent 68%);
+    background: var(--overlay-hero-gradient);
   }
 
   .parish-life-hero__lens-definition {
@@ -474,12 +466,6 @@ const lensClipId = 'parish-life-hero-organic-lens-clip';
   @media (max-width: 47.99rem) {
     .parish-life-hero {
       min-height: 34rem;
-    }
-
-    .parish-life-hero__overlay {
-      background:
-        linear-gradient(0deg, rgb(15 15 15 / 92%), transparent 92%),
-        rgb(24 23 23 / 55%);
     }
 
     .parish-life-hero__indicators {
