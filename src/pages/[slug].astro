@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegacyRedirect from '@/components/LegacyRedirect.astro';
+import { routeFor, SITE_ROUTES } from '@/lib/seo/routes';
 
 interface PlaceholderPage {
   slug: string;
@@ -29,10 +31,16 @@ export function placeholderPages() {
 }
 
 export function getStaticPaths() {
-  return placeholderPages().map((page) => ({
+  const placeholders = placeholderPages().map((page) => ({
     params: { slug: page.slug },
     props: page,
   }));
+  const aliases = SITE_ROUTES.filter((route) => route.canonicalPath).map(
+    (route) => ({
+      params: { slug: route.path.slice(1, -1) },
+    }),
+  );
+  return [...placeholders, ...aliases];
 }
 
 /**
@@ -53,42 +61,51 @@ const page =
     ? placeholderPages().find((entry) => entry.slug === Astro.params.slug)
     : (Astro.props as PlaceholderPage);
 
-if (!page) {
+const destination = routeFor(Astro.url.pathname).canonicalPath;
+if (!page && !destination) {
   return new Response(null, { status: 404 });
 }
-
-const { title, description } = page;
 ---
 
-<BaseLayout seo={{ title, description }} headerVariant="light">
-  <section
-    class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
-    aria-labelledby="placeholder-title"
-  >
-    <div class="mx-auto max-w-[1280px] px-5 md:px-10 lg:px-20">
-      <div class="max-w-[680px]">
-        <p
-          class="mb-4 text-[0.6875rem] font-semibold tracking-[0.2em] text-muted uppercase"
+{
+  destination ? (
+    <LegacyRedirect destination={destination} />
+  ) : (
+    page && (
+      <BaseLayout
+        seo={{ title: page.title, description: page.description }}
+        headerVariant="light"
+      >
+        <section
+          class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
+          aria-labelledby="placeholder-title"
         >
-          Page en préparation
-        </p>
-        <h1
-          id="placeholder-title"
-          class="font-display text-[3rem] leading-[1.05] font-semibold text-charcoal md:text-[4.25rem]"
-        >
-          {title}
-        </h1>
-        <p class="mt-6 max-w-[38rem] text-lg leading-relaxed text-muted">
-          Cette route réserve la structure du futur site. Son contenu complet
-          sera migré fidèlement depuis l’export Figma dans un ticket dédié.
-        </p>
-        <a
-          class="mt-10 inline-flex min-h-12 items-center border border-burgundy px-6 py-3 text-sm font-semibold tracking-wide text-burgundy transition-colors duration-200 hover:bg-burgundy hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-burgundy"
-          href="/"
-        >
-          Retour à l’accueil
-        </a>
-      </div>
-    </div>
-  </section>
-</BaseLayout>
+          <div class="mx-auto max-w-[1280px] px-5 md:px-10 lg:px-20">
+            <div class="max-w-[680px]">
+              <p class="mb-4 text-[0.6875rem] font-semibold tracking-[0.2em] text-muted uppercase">
+                Page en préparation
+              </p>
+              <h1
+                id="placeholder-title"
+                class="font-display text-[3rem] leading-[1.05] font-semibold text-charcoal md:text-[4.25rem]"
+              >
+                {page.title}
+              </h1>
+              <p class="mt-6 max-w-[38rem] text-lg leading-relaxed text-muted">
+                Cette route réserve la structure du futur site. Son contenu
+                complet sera migré fidèlement depuis l’export Figma dans un
+                ticket dédié.
+              </p>
+              <a
+                class="mt-10 inline-flex min-h-12 items-center border border-burgundy px-6 py-3 text-sm font-semibold tracking-wide text-burgundy transition-colors duration-200 hover:bg-burgundy hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-burgundy"
+                href="/"
+              >
+                Retour à l’accueil
+              </a>
+            </div>
+          </div>
+        </section>
+      </BaseLayout>
+    )
+  )
+}

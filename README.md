@@ -268,9 +268,12 @@ coordonnées doivent être confirmés par la paroisse avant publication.
 ## Variables d’environnement
 
 Copier `.env.example` vers un fichier `.env` local ignoré par Git. Le projet ID
-et le dataset Sanity sont publics. `SITE_URL` doit contenir l’origine finale
-pour tout build destiné au déploiement; la validation locale peut utiliser
-`http://localhost:4321`. Le jeton `SANITY_API_READ_TOKEN` est serveur seulement
+et le dataset Sanity sont publics. `SITE_URL` doit valoir
+`https://paroissesaintrenegoupil.com` pour le build public et `pnpm validate`.
+Le Worker de prévisualisation conserve sa propre origine; le développement
+sans configuration utilise `http://localhost:4321`.
+Voir [l’audit SEO et les redirections](docs/SEO_MIGRATION_AUDIT.md).
+Le jeton `SANITY_API_READ_TOKEN` est serveur seulement
 et requis uniquement pour un environnement de prévisualisation avec brouillons.
 Ne jamais committer sa valeur ni activer
 `PUBLIC_SANITY_VISUAL_EDITING_ENABLED` dans le build public.

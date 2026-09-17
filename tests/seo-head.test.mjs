@@ -316,7 +316,8 @@ test('l’absence de domaine fait échouer le build de production', () => {
   const source = read('src/lib/seo/siteUrl.ts');
 
   assert.ok(source.includes('import.meta.env.PROD'));
-  assert.ok(source.includes('throw new Error'));
+  assert.ok(source.includes('resolveSiteOrigin'));
+  assert.ok(read('src/lib/seo/siteOrigin.mjs').includes('throw new Error'));
   assert.ok(
     read('.env.example').includes('SITE_URL='),
     'SITE_URL n’est pas documentée dans .env.example.',

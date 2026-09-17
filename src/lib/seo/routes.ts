@@ -83,8 +83,50 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
     documentId: 'roomRentalPage',
   },
 
-  // Deux adresses de l'ancien site, gardées pour ne pas casser les liens
-  // existants. Elles renvoient leur autorité à la page qui les remplace.
+  // Anciennes adresses confirmées : canonical, repli HTML et 301 Cloudflare
+  // sont déduits de canonicalPath. Voir docs/SEO_MIGRATION_AUDIT.md.
+  {
+    path: '/accueil/',
+    indexable: false,
+    canonicalPath: '/',
+    closedBecause: 'Ancienne adresse de l’accueil.',
+  },
+  {
+    path: '/événements-à-venir/',
+    indexable: false,
+    canonicalPath: '/evenements/',
+    closedBecause: 'Ancienne adresse encore présente dans Google.',
+  },
+  {
+    path: '/évènements-à-venir/',
+    indexable: false,
+    canonicalPath: '/evenements/',
+    closedBecause: 'Orthographe relevée dans l’audit de l’ancien site.',
+  },
+  {
+    path: '/pèlerinages/',
+    indexable: false,
+    canonicalPath: '/evenements/',
+    closedBecause: 'Les pèlerinages sont intégrés aux événements datés.',
+  },
+  {
+    path: '/inscription-à-la-catéchèse/',
+    indexable: false,
+    canonicalPath: '/nos-services/',
+    closedBecause: 'Les parcours et inscriptions sont dans Nos services.',
+  },
+  {
+    path: '/soutien-à-la-communauté/',
+    indexable: false,
+    canonicalPath: '/friperie/',
+    closedBecause: 'L’accueil et le soutien ponctuel sont dans Friperie.',
+  },
+  {
+    path: '/merci-à-nos-annonceurs/',
+    indexable: false,
+    canonicalPath: '/nos-annonceurs/',
+    closedBecause: 'Ancienne adresse accentuée de la page des annonceurs.',
+  },
   {
     path: '/sacrements/',
     indexable: false,

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  destination: string;
+}
+const { destination } = Astro.props;
+---
+
+<BaseLayout
+  seo={{
+    title: 'Adresse mise à jour',
+    description:
+      'Cette ancienne adresse mène maintenant à une nouvelle page de la Paroisse Saint-René-Goupil.',
+  }}
+>
+  <section
+    class="bg-ivory pt-32 pb-24 md:pt-40 md:pb-32"
+    aria-labelledby="legacy-route-title"
+  >
+    <div class="mx-auto max-w-[1280px] px-5 md:px-10 lg:px-20">
+      <h1 id="legacy-route-title" class="font-display text-4xl text-charcoal">
+        Adresse mise à jour
+      </h1>
+      <p class="mt-6 text-lg leading-relaxed text-muted">
+        Cette page a une nouvelle adresse.
+      </p>
+      <a
+        class="mt-10 inline-flex min-h-12 items-center bg-burgundy px-6 py-3 text-sm font-semibold text-ivory"
+        href={destination}
+      >
+        Continuer vers la page
+      </a>
+    </div>
+  </section>
+</BaseLayout>

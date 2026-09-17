@@ -123,7 +123,7 @@ test('l’indexation ne se décide plus ailleurs que dans le registre', () => {
 
     for (const term of ['noIndex', 'canonicalPath']) {
       assert.ok(
-        !source.includes(term),
+        !new RegExp(`\\b${term}\\s*[:=]`).test(source),
         `${file} contient encore \`${term}\` : cette décision appartient à src/lib/seo/routes.ts.`,
       );
     }

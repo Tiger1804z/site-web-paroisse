@@ -168,7 +168,7 @@ Trois ressources Cloudflare, indépendantes :
 
 | Ressource        | Produit | Adresse                                                      | Branche de production |
 | ---------------- | ------- | ------------------------------------------------------------ | --------------------- |
-| public           | Pages   | `https://paroisse-saint-rene-goupil.pages.dev`               | `main`                |
+| public           | Pages   | `https://paroissesaintrenegoupil.com`                        | `main`                |
 | Studio           | Pages   | `https://site-web-paroisse.pages.dev`                        | `main`                |
 | prévisualisation | Workers | `https://paroisse-preview.sebastieneugene123600.workers.dev` | `staging`             |
 
@@ -655,10 +655,10 @@ curl -s https://paroisse-preview.sebastieneugene123600.workers.dev/robots.txt
 #   User-agent: *
 #   Disallow: /
 
-curl -s https://paroisse-saint-rene-goupil.pages.dev/robots.txt
+curl -s https://paroissesaintrenegoupil.com/robots.txt
 #   User-agent: *
 #   Allow: /
-#   Sitemap: ...
+#   Sitemap: https://paroissesaintrenegoupil.com/sitemap.xml
 ```
 
 ## Ce qui est normal, et ne se corrige pas
