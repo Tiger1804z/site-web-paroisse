@@ -60,9 +60,30 @@
     --font-size-micro: 0.75rem;
 
     --border-thin: 1px;
-    --overlay-hero-start: rgb(28 25 24 / 65%);
-    --overlay-hero-middle: rgb(28 25 24 / 45%);
-    --overlay-hero-end: rgb(28 25 24 / 70%);
+    --overlay-hero-start: rgb(28 25 24 / 45%);
+    --overlay-hero-middle: rgb(28 25 24 / 25%);
+    --overlay-hero-end: rgb(28 25 24 / 12%);
+    /* Protection localisée du texte, sans voile bourgogne sur toute la photo. */
+    --overlay-hero-gradient:
+      radial-gradient(
+        ellipse 75% 100% at 0% 70%,
+        rgb(28 25 24 / 40%) 0%,
+        rgb(28 25 24 / 40%) 30%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to right,
+        var(--overlay-hero-start) 0%,
+        var(--overlay-hero-middle) 55%,
+        var(--overlay-hero-end) 100%
+      );
+    /* Sur mobile, le texte occupe la largeur : protéger surtout le bas. */
+    --overlay-hero-gradient-mobile: linear-gradient(
+      to top,
+      rgb(28 25 24 / 60%) 0%,
+      rgb(28 25 24 / 52%) 60%,
+      var(--overlay-hero-middle) 100%
+    );
 
     --motion-duration-fast: 220ms;
     --motion-duration-normal: 400ms;
@@ -153,6 +174,12 @@
   ::selection {
     background: var(--color-rose);
     color: var(--color-burgundy-dark);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  :root {
+    --overlay-hero-gradient: var(--overlay-hero-gradient-mobile);
   }
 }
 
