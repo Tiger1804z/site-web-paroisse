@@ -22,9 +22,12 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import { SITE_ROUTES } from '../src/lib/seo/routes.ts';
+import { legacyRedirectRules } from '../src/lib/seo/redirects.ts';
+import { OFFICIAL_SITE_URL } from '../src/lib/seo/siteOrigin.mjs';
 import { absoluteUrl, normalizeRoutePath } from '../src/lib/seo/urls.ts';
 
-const distPath = fileURLToPath(new URL('../dist', import.meta.url));
+const distPath =
+  process.argv[2] ?? fileURLToPath(new URL('../dist', import.meta.url));
 
 /** @type {string[]} */
 const problems = [];
@@ -84,6 +87,75 @@ const pages = htmlFiles().map((file) => {
 
 const registered = new Map(SITE_ROUTES.map((route) => [route.path, route]));
 const produced = new Set(pages.map((page) => page.path));
+
+for (const page of pages) {
+  const route = registered.get(page.path);
+  if (route) {
+    const expectedCanonical = absoluteUrl(
+      OFFICIAL_SITE_URL,
+      route.canonicalPath ?? route.path,
+    );
+    if (page.canonical !== expectedCanonical) {
+      fail(
+        `« ${page.path} » : canonical officiel attendu ${expectedCanonical}, reçu ${page.canonical}.`,
+      );
+    }
+    const ogUrl = attribute(
+      page.html,
+      /<meta property="og:url" content="([^"]*)"/,
+    );
+    if (ogUrl !== expectedCanonical) {
+      fail(
+        `« ${page.path} » : og:url ne correspond pas au canonical officiel.`,
+      );
+    }
+    if (route.canonicalPath) {
+      const refresh = attribute(
+        page.html,
+        /<meta http-equiv="refresh" content="([^"]*)"/,
+      );
+      if (refresh !== `0;url=${route.canonicalPath}`) {
+        fail(
+          `« ${page.path} » : redirection HTML de repli absente ou incorrecte.`,
+        );
+      }
+    }
+  }
+  // Inclut les images de partage, les données structurées et les liens absolus.
+  if (
+    /https?:\/\/(?:[^/\s"<>]*\.pages\.dev|localhost(?=[:/\s"<>])|127\.0\.0\.1(?=[:/\s"<>])|www\.paroissesaintrenegoupil\.com)(?=[:/\s"<>])/i.test(
+      page.html,
+    )
+  ) {
+    fail(
+      `« ${page.path} » contient une URL publique sur pages.dev, localhost ou www.`,
+    );
+  }
+}
+
+// Le fichier réellement livré à Pages doit correspondre exactement au registre.
+const redirectsPath = `${distPath}/_redirects`;
+if (!existsSync(redirectsPath)) {
+  fail(
+    '_redirects est absent de dist/ : les anciennes URLs ne recevront pas de 301.',
+  );
+} else {
+  const delivered = readFileSync(redirectsPath, 'utf8')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#'));
+  const expected = legacyRedirectRules(SITE_ROUTES).map(
+    ({ source, destination, status }) => `${source} ${destination} ${status}`,
+  );
+  if (
+    delivered.length !== expected.length ||
+    delivered.some((line, index) => line !== expected[index])
+  ) {
+    fail(
+      'dist/_redirects ne correspond pas aux 301 du registre (sources, destinations canoniques ou statuts incorrects).',
+    );
+  }
+}
 
 for (const page of pages) {
   if (!registered.has(page.path)) {
@@ -164,7 +236,10 @@ if (!existsSync(sitemapPath)) {
     );
   }
 
-  const origin = [...origins][0];
+  if (origins.size !== 1 || !origins.has(OFFICIAL_SITE_URL)) {
+    fail(`Le sitemap doit utiliser exclusivement ${OFFICIAL_SITE_URL}.`);
+  }
+  const origin = OFFICIAL_SITE_URL;
   const expected = SITE_ROUTES.filter((route) => route.indexable);
 
   if (origin) {
@@ -232,6 +307,13 @@ if (!existsSync(sitemapPath)) {
     } else {
       const robots = readFileSync(robotsPath, 'utf8');
       const sitemapLine = `Sitemap: ${origin}/sitemap.xml`;
+
+      if (
+        !/^User-agent:\s*\*\s*$/m.test(robots) ||
+        !/^Allow:\s*\/\s*$/m.test(robots)
+      ) {
+        fail('robots.txt public doit autoriser explicitement le crawl.');
+      }
 
       if (!robots.includes(sitemapLine)) {
         fail(

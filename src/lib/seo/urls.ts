@@ -18,7 +18,13 @@
  * `/contact/`.
  */
 export function normalizeRoutePath(pathname: string): string {
-  const trimmed = pathname.trim();
+  // decodeURI accepte les accents encodés, mais conserve les séparateurs %2F.
+  let trimmed = pathname.trim();
+  try {
+    trimmed = decodeURI(trimmed);
+  } catch {
+    // Un encodage invalide reste une route inconnue.
+  }
   const withoutIndex = trimmed.replace(/index\.html?$/i, '');
   const withLeadingSlash = withoutIndex.startsWith('/')
     ? withoutIndex

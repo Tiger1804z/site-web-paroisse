@@ -28,7 +28,7 @@ interface Props {
    * Référencement de la page, en un seul objet.
    *
    * Les pages branchées sur Sanity passent le bloc que leur normalizer a
-   * composé; les trois anciennes adresses, la page 404 et la page de
+   * composé; les anciennes adresses, la page 404 et la page de
    * vérification l'écrivent à la main — elles n'ont pas de document.
    */
   seo: PageSeo;
@@ -36,7 +36,6 @@ interface Props {
   pageClass?: string;
   headerVariant?: 'light' | 'transparent';
   footerVariant?: 'default' | 'compact';
-  redirectTo?: string;
   /**
    * Données structurées propres à la page. Vide sur la plupart d'entre elles :
    * on ne décrit à un moteur que ce qu'on sait décrire.
@@ -50,12 +49,12 @@ const {
   pageClass,
   headerVariant = 'light',
   footerVariant = 'default',
-  redirectTo,
   jsonLd = [],
 } = Astro.props;
 
 // L'indexation et l'adresse canonique viennent du registre, jamais du contenu.
 const route = routeFor(Astro.url.pathname);
+const redirectTo = route.canonicalPath;
 
 // Image de partage générale, servie aux pages qui n'ont pas la leur. Le nom de
 // la paroisse, lui, reste la constante locale : en prévisualisation, une

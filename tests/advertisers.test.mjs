@@ -118,12 +118,9 @@ test('les liens commerciaux sont explicitement commandités', () => {
 });
 
 test('l’ancienne route est noindex et canonique', () => {
-  const aliasPage = readFileSync(
-    `${rootPath}/src/pages/merci-a-nos-annonceurs.astro`,
-    'utf8',
-  );
+  const aliasPage = readFileSync(`${rootPath}/src/pages/[slug].astro`, 'utf8');
 
-  assert.match(aliasPage, /redirectTo="\/nos-annonceurs\/"/);
+  assert.match(aliasPage, /SITE_ROUTES\.filter/);
 
   // Depuis l'étape 4 du lot SEO, l'indexation et la canonique se lisent au
   // registre de routes, pas dans la page.
