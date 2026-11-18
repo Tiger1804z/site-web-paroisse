@@ -28,6 +28,7 @@ export interface RoomRentalRoom {
   /** « 22 h » — heure limite de départ. */
   readonly curfew?: string;
   readonly description?: string;
+  readonly photos?: readonly SanityRenderableImage[];
 }
 
 /**

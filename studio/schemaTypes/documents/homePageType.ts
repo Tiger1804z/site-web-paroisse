@@ -37,6 +37,14 @@ export const homePageType = defineType({
   ],
   fields: [
     defineField({
+      name: 'temporaryTitle',
+      title: 'Titre temporaire de la page d’accueil',
+      type: 'string',
+      group: 'hero',
+      description:
+        'Ajoutez un titre ici pour l’afficher sous le grand visuel de la page d’accueil. Laissez ce champ vide pour ne rien afficher.',
+    }),
+    defineField({
       name: 'seo',
       title: 'Apparence sur Google et dans les partages',
       type: 'seo',

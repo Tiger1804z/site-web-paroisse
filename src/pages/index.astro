@@ -9,6 +9,8 @@ import SpiritualInterlude from '@/components/sections/home/SpiritualInterlude.as
 import UpcomingActivitiesSection from '@/components/sections/home/UpcomingActivitiesSection.astro';
 import VisitSection from '@/components/sections/home/VisitSection.astro';
 import WelcomeSection from '@/components/sections/home/WelcomeSection.astro';
+import Container from '@/components/ui/Container.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import {
   getHomepageEventsSettings,
@@ -40,6 +42,17 @@ const weeklyMasses = await getWeeklyMasses();
   headerVariant="transparent"
 >
   <HomeHero content={homePage.hero} masses={weeklyMasses} />
+  {
+    homePage.temporaryTitle && (
+      <section class="home-temporary-title" aria-labelledby="temporary-title">
+        <Container>
+          <SectionHeading headingId="temporary-title" align="center">
+            {homePage.temporaryTitle}
+          </SectionHeading>
+        </Container>
+      </section>
+    )
+  }
   <WelcomeSection content={homePage.welcome} />
   <MassSchedulePreview content={homePage.massPreview} masses={weeklyMasses} />
   {
@@ -62,3 +75,13 @@ const weeklyMasses = await getWeeklyMasses();
   <VisitSection content={homePage.visit} contact={siteSettings} />
   <MotionController />
 </BaseLayout>
+
+<style>
+  .home-temporary-title {
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-gold) 30%, transparent);
+    background: var(--color-paper);
+    overflow-wrap: anywhere;
+  }
+</style>

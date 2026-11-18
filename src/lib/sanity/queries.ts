@@ -284,6 +284,7 @@ export const EVENTS_PAGE_QUERY = defineQuery(`
  */
 export const HOME_PAGE_QUERY = defineQuery(`
   *[_type == "homePage"][0]{
+    temporaryTitle,
     seo {
       title,
       description,
@@ -830,7 +831,26 @@ export const ROOM_RENTAL_PAGE_QUERY = defineQuery(`
       price,
       hourlyExtra,
       curfew,
-      description
+      description,
+      photos[]{
+        _key,
+        alt,
+        credit,
+        image {
+          ...,
+          asset->{
+            _id,
+            metadata {
+              lqip,
+              dimensions {
+                width,
+                height,
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     },
     church {
       eyebrow,
