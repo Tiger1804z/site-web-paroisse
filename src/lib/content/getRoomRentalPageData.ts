@@ -30,7 +30,7 @@ export async function getRoomRentalPageData(): Promise<RoomRentalPageData> {
   const fallback = buildRoomRentalPageData(siteSettings);
 
   const raw = await fetchRoomRentalPageRaw();
-  const page = normalizeSanityRoomRentalPage(raw, fallback);
+  const page = normalizeSanityRoomRentalPage(raw, fallback, buildImageSources);
 
   const heroImage = normalizeSanityImage(
     raw?.hero?.image,

@@ -11,6 +11,10 @@ import type { SanityRoomRentalPageResult } from '@/lib/sanity/types';
 // `node --test`, qui ne résout pas l'alias `@/`. L'alias reste réservé aux
 // imports de types, effacés à l'exécution.
 import { normalizeSanitySeo } from './normalizeSanitySeo.ts';
+import {
+  normalizeSanityImage,
+  type ImageSourceBuilder,
+} from './normalizeSanityImage.ts';
 
 type RawPage = NonNullable<SanityRoomRentalPageResult>;
 type RawRoom = NonNullable<RawPage['rooms']>[number];
@@ -40,7 +44,10 @@ function cleanList(
  * tarif n'est pas arrêté s'affiche sans ligne de tarif — le contraire
  * publierait un cadre vide, ou pire, un prix deviné.
  */
-function normalizeRoom(raw: RawRoom): RoomRentalRoom | undefined {
+function normalizeRoom(
+  raw: RawRoom,
+  buildSources?: ImageSourceBuilder,
+): RoomRentalRoom | undefined {
   const id = cleanString(raw.slug);
   const name = cleanString(raw.name);
   if (!id || !name) return undefined;
@@ -51,6 +58,12 @@ function normalizeRoom(raw: RawRoom): RoomRentalRoom | undefined {
   const hourlyExtra = cleanString(raw.hourlyExtra);
   const curfew = cleanString(raw.curfew);
   const description = cleanString(raw.description);
+  const photos = buildSources
+    ? (raw.photos ?? []).flatMap((photo) => {
+        const image = normalizeSanityImage(photo, buildSources);
+        return image ? [image] : [];
+      })
+    : [];
 
   return {
     id,
@@ -61,6 +74,7 @@ function normalizeRoom(raw: RawRoom): RoomRentalRoom | undefined {
     ...(hourlyExtra ? { hourlyExtra } : {}),
     ...(curfew ? { curfew } : {}),
     ...(description ? { description } : {}),
+    ...(photos.length > 0 ? { photos } : {}),
   };
 }
 
@@ -174,11 +188,12 @@ function normalizeDetails(
 export function normalizeSanityRoomRentalPage(
   raw: SanityRoomRentalPageResult,
   fallback: RoomRentalPageData,
+  buildSources?: ImageSourceBuilder,
 ): RoomRentalPageData {
   const paragraphs = cleanList(raw?.offer?.paragraphs);
   const amenities = cleanList(raw?.amenities?.items);
   const rooms = (raw?.rooms ?? []).flatMap((room) => {
-    const normalized = normalizeRoom(room);
+    const normalized = normalizeRoom(room, buildSources);
     return normalized ? [normalized] : [];
   });
   const practicalItems = normalizeDetails(raw?.practical?.items);

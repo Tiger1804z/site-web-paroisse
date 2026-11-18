@@ -54,6 +54,26 @@ test('un document vide ne vide pas la page', () => {
   assert.equal(result.massPreview.eyebrow, 'Célébrations');
 });
 
+test('le titre temporaire est facultatif et disparaît quand Sophie le vide', () => {
+  for (const temporaryTitle of [undefined, null, '', '  \n  ']) {
+    const result = normalizeSanityHomePage({ temporaryTitle }, homePageData);
+
+    assert.deepEqual(result, normalizeSanityHomePage({}, homePageData));
+    assert.equal(Object.hasOwn(result, 'temporaryTitle'), false);
+  }
+});
+
+test('le titre temporaire s’ajoute sans remplacer les autres textes', () => {
+  const result = normalizeSanityHomePage(
+    { temporaryTitle: '  Titre temporaire  ' },
+    homePageData,
+  );
+
+  const { temporaryTitle, ...rest } = result;
+  assert.equal(temporaryTitle, 'Titre temporaire');
+  assert.deepEqual(rest, normalizeSanityHomePage({}, homePageData));
+});
+
 test('les textes saisis dans le Studio remplacent le repli', () => {
   const result = normalizeSanityHomePage(
     {

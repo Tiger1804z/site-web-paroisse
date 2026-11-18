@@ -1,4 +1,4 @@
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, defineArrayMember} from 'sanity'
 
 /**
  * Une salle offerte à la location.
@@ -73,6 +73,14 @@ export const rentalRoomType = defineType({
       type: 'text',
       rows: 3,
       description: 'Facultatif. Ce qui distingue cette salle des autres.',
+    }),
+    defineField({
+      name: 'photos',
+      title: 'Photos de la salle',
+      type: 'array',
+      of: [defineArrayMember({type: 'eventImage'})],
+      description:
+        'Ajoutez, supprimez ou déplacez les photos pour choisir leur ordre sur le site. Décrivez chaque photo dans son texte alternatif et ajustez son cadrage au besoin. Laissez cette liste vide pour ne pas afficher de galerie.',
     }),
   ],
   preview: {

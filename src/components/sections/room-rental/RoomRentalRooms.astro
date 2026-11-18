@@ -1,6 +1,7 @@
 ---
 import Container from '@/components/ui/Container.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
+import EditorialImageFrame from '@/components/ui/EditorialImageFrame.astro';
 import type { RoomRentalPageData } from '@/types/roomRental';
 
 interface Props {
@@ -71,6 +72,22 @@ const { offer, amenities, rooms, deposit } = Astro.props;
                     </div>
                   )}
                 </dl>
+              )}
+              {room.photos && room.photos.length > 0 && (
+                <ul
+                  class="rental-room__photos"
+                  aria-label={`Photos de ${room.name}`}
+                >
+                  {room.photos.map((image) => (
+                    <li>
+                      <EditorialImageFrame
+                        image={image}
+                        variant="landscape"
+                        sizes="(min-width: 64rem) 240px, (min-width: 36rem) 40vw, 75vw"
+                      />
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
           </article>
@@ -225,6 +242,26 @@ const { offer, amenities, rooms, deposit } = Astro.props;
     color: var(--color-charcoal);
     font-size: 1.0625rem;
     font-weight: 600;
+  }
+
+  .rental-room__photos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rental-room__photos li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 36rem) {
+    .rental-room__photos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   /*
