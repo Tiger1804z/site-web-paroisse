@@ -153,8 +153,10 @@ export function normalizeSanityHomePage(
   const interlude = raw?.interlude;
   const gallery = raw?.gallery;
   const visit = raw?.visit;
+  const temporaryTitle = cleanString(raw?.temporaryTitle);
 
   return {
+    ...(temporaryTitle ? { temporaryTitle } : {}),
     // Sans constructeur d'adresses ici : le getter compose l'image de partage,
     // comme il compose déjà les diapositives et les illustrations de section.
     seo: normalizeSanitySeo(raw?.seo, fallback.seo),

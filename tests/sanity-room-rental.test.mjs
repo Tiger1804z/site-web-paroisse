@@ -4,6 +4,7 @@ import test from 'node:test';
 import { fileURLToPath, URL } from 'node:url';
 import { buildRoomRentalPageData } from '../src/data/roomRental.ts';
 import { normalizeSanityRoomRentalPage } from '../src/lib/content/normalizeSanityRoomRentalPage.ts';
+import { createRemoteImageSources } from '../src/lib/sanity/image-sources.ts';
 import { findRoute } from '../src/lib/seo/routes.ts';
 
 const rootPath = fileURLToPath(new URL('..', import.meta.url));
@@ -149,6 +150,68 @@ test('un tarif ou une capacité absente disparaît, sans texte de remplacement',
   assert.equal(only.price, undefined);
   assert.equal(only.capacity, undefined);
   assert.equal(only.location, 'Située au jubé');
+});
+
+const buildPhotoSources = createRemoteImageSources({
+  projectId: 'projet',
+  dataset: 'production',
+});
+const photo = (alt) => ({
+  alt,
+  credit: 'Photographie de la paroisse',
+  image: {
+    asset: { _id: 'image-abcdef0123456789-2400x1600-jpg' },
+    crop: { left: 0.1, right: 0.1, top: 0, bottom: 0 },
+    hotspot: { x: 0.7, y: 0.4, width: 0.1, height: 0.1 },
+  },
+});
+const withPhotos = (photos) =>
+  normalizeSanityRoomRentalPage(
+    document({ rooms: [room({ photos }), room({ slug: 'autre-salle' })] }),
+    fallback,
+    buildPhotoSources,
+  );
+
+test('une salle sans photo conserve toutes ses informations sans galerie vide', () => {
+  const withoutPhotos = withPhotos(undefined);
+  for (const photos of [null, [], [photo('  '), { alt: 'Sans fichier' }]]) {
+    assert.deepEqual(withPhotos(photos), withoutPhotos);
+  }
+  assert.equal(Object.hasOwn(withoutPhotos.rooms[0], 'photos'), false);
+});
+
+test('les photos gardent leurs alt, crédits, recadrage et sources optimisées', () => {
+  const [roomWithPhotos, otherRoom] = withPhotos([
+    photo('  Vue de la salle  '),
+    { alt: 'Fichier supprimé', image: { asset: null } },
+  ]).rooms;
+  const [image] = roomWithPhotos.photos;
+
+  assert.equal(roomWithPhotos.photos.length, 1);
+  assert.equal(image.alt, 'Vue de la salle');
+  assert.equal(image.credit, 'Photographie de la paroisse');
+  assert.deepEqual(image.focalPoint, { x: 0.7, y: 0.4 });
+  const source = new URL(image.src);
+  assert.equal(source.searchParams.get('auto'), 'format');
+  assert.equal(source.searchParams.get('rect'), '240,0,1920,1600');
+  assert.match(image.srcSet, /480w/);
+  assert.equal(otherRoom.photos, undefined);
+});
+
+test('réorganiser ou supprimer une photo se répercute sans changer la salle', () => {
+  const first = photo('Première vue');
+  const second = photo('Deuxième vue');
+  assert.deepEqual(
+    withPhotos([second, first]).rooms[0].photos.map(({ alt }) => alt),
+    ['Deuxième vue', 'Première vue'],
+  );
+  assert.deepEqual(
+    withPhotos([first]).rooms[0].photos.map(({ alt }) => alt),
+    ['Première vue'],
+  );
+  const { photos, ...roomWithPhotos } = withPhotos([first]).rooms[0];
+  assert.equal(photos.length, 1);
+  assert.deepEqual(roomWithPhotos, withPhotos([]).rooms[0]);
 });
 
 /**

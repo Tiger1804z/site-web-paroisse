@@ -177,6 +177,7 @@ export interface HomeGalleryContent {
 }
 
 export interface HomePageData {
+  readonly temporaryTitle?: string;
   readonly seo: PageSeo;
   readonly hero: HomeHeroContent;
   readonly welcome: HomeWelcomeContent;
